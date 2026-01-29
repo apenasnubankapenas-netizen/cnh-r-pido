@@ -59,13 +59,15 @@ import AdminStudents from './pages/AdminStudents';
 import Chat from './pages/Chat';
 import Home from './pages/Home';
 import Instructors from './pages/Instructors';
+import Landing from './pages/Landing';
 import MyLessons from './pages/MyLessons';
 import Payment from './pages/Payment';
 import Simulados from './pages/Simulados';
 import StudentProfile from './pages/StudentProfile';
 import StudentRegister from './pages/StudentRegister';
 import SuperAdminLogin from './pages/SuperAdminLogin';
-import Landing from './pages/Landing';
+import InstructorRegister from './pages/InstructorRegister';
+import InstructorProfile from './pages/InstructorProfile';
 import __Layout from './Layout.jsx';
 
 
@@ -82,13 +84,15 @@ export const PAGES = {
     "Chat": Chat,
     "Home": Home,
     "Instructors": Instructors,
+    "Landing": Landing,
     "MyLessons": MyLessons,
     "Payment": Payment,
     "Simulados": Simulados,
     "StudentProfile": StudentProfile,
     "StudentRegister": StudentRegister,
     "SuperAdminLogin": SuperAdminLogin,
-    "Landing": Landing,
+    "InstructorRegister": InstructorRegister,
+    "InstructorProfile": InstructorProfile,
 }
 
 export const pagesConfig = {
