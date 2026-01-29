@@ -215,21 +215,26 @@ export default function Layout({ children, currentPageName }) {
         </div>
 
         <div className="flex items-center gap-3">
-          {/* Botões discretos separados de admin */}
-          {!isAdmin && (
-            <>
-              <Link to={createPageUrl('AdminLogin')}>
-                <button className="text-[10px] text-[#30363d] hover:text-[#0969da] px-2 py-1 rounded transition-colors font-semibold">
-                  ADMIN
-                </button>
-              </Link>
-              <Link to={createPageUrl('SuperAdminLogin')}>
-                <button className="text-[10px] text-[#30363d] hover:text-[#f0c41b] px-2 py-1 rounded transition-colors font-semibold">
-                  SUPER
-                </button>
-              </Link>
-            </>
-          )}
+          {/* Botões de acesso separados */}
+              <div className="flex items-center gap-1">
+                <Link to={createPageUrl('Home')}>
+                  <button className="text-[11px] text-[#30363d] hover:text-[#e6edf3] px-2 py-1 rounded transition-colors font-semibold">
+                    APP
+                  </button>
+                </Link>
+                <span className="text-[#30363d] text-[10px]">|</span>
+                <Link to={createPageUrl('AdminLogin')}>
+                  <button className="text-[11px] text-[#30363d] hover:text-[#0969da] px-2 py-1 rounded transition-colors font-semibold">
+                    ADMIN
+                  </button>
+                </Link>
+                <span className="text-[#30363d] text-[10px]">|</span>
+                <Link to={createPageUrl('SuperAdminLogin')}>
+                  <button className="text-[11px] text-[#30363d] hover:text-[#f0c41b] px-2 py-1 rounded transition-colors font-semibold">
+                    SUPER
+                  </button>
+                </Link>
+              </div>
           
           <span className="text-sm text-[#e6edf3] hidden sm:block font-semibold">{user?.full_name || user?.email}</span>
           <button onClick={handleLogout} className="p-2 hover:bg-[#1a2332] rounded text-[#ef4444]">
