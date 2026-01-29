@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { 
   Car, 
@@ -12,7 +13,8 @@ import {
   Image as ImageIcon,
   ChevronLeft,
   ChevronRight,
-  X
+  X,
+  ArrowLeft
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -117,9 +119,21 @@ export default function Instructors() {
     );
   }
 
+  const navigate = useNavigate();
+
   return (
     <div className="max-w-6xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold">Nossos Instrutores</h1>
+      <div className="flex items-center gap-3">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black"
+          onClick={() => navigate(-1)}
+        >
+          <ArrowLeft size={18} />
+        </Button>
+        <h1 className="text-2xl font-bold">Nossos Instrutores</h1>
+      </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         {instructors.map((instructor) => {
