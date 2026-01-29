@@ -60,18 +60,23 @@ export default function Layout({ children, currentPageName }) {
     try {
       if (!user) return;
       
+      // HIERARQUIA 1: SUPERADMINISTRADOR (acesso total)
       if (user.role === 'admin' && user.email === 'tcnhpara@gmail.com') {
         setUserType('superadmin');
         return;
       }
       
+      // HIERARQUIA 2: VENDEDORES (admin sem ser super)
       if (user.role === 'admin') {
         const sellers = await base44.entities.Seller.filter({ email: user.email });
         if (sellers.length > 0 && sellers[0].active) {
           setUserType('seller');
           return;
         }
-        
+      }
+      
+      // HIERARQUIA 3: INSTRUTORES (admin sem ser super nem vendedor)
+      if (user.role === 'admin') {
         const instructors = await base44.entities.Instructor.filter({ user_email: user.email });
         if (instructors.length > 0 && instructors[0].active) {
           setUserType('instructor');
@@ -80,14 +85,22 @@ export default function Layout({ children, currentPageName }) {
         }
       }
       
+      // HIERARQUIA 4: ALUNOS (user com cadastro de student)
       if (user.role === 'user' && student) {
         setUserType('student');
+        return;
+      }
+      
+      // Se admin mas não é vendedor nem instrutor, pode ser um admin genérico
+      if (user.role === 'admin') {
+        setUserType('admin');
         return;
       }
       
       setUserType(null);
     } catch (e) {
       console.log(e);
+      setUserType(null);
     }
   };
 
@@ -98,17 +111,7 @@ export default function Layout({ children, currentPageName }) {
   const getMenuItems = () => {
     if (!userType) return [];
     
-    // ALUNOS: Apenas Instrutores, Aulas e Conversas
-    if (userType === 'student') {
-      return [
-        { name: 'Instrutores', icon: Users, page: 'Instructors' },
-        { name: 'Minhas Aulas', icon: Calendar, page: 'MyLessons' },
-        { name: 'Conversas', icon: MessageSquare, page: 'Chat' },
-        { name: 'Meu Perfil', icon: GraduationCap, page: 'StudentProfile' },
-      ];
-    }
-    
-    // SUPERADMIN: Acesso total
+    // HIERARQUIA 1: SUPERADMINISTRADOR - Acesso TOTAL a tudo
     if (userType === 'superadmin') {
       return [
         { name: 'Dashboard', icon: Home, page: 'AdminDashboard' },
@@ -122,7 +125,7 @@ export default function Layout({ children, currentPageName }) {
       ];
     }
     
-    // VENDEDORES: Dashboard, Alunos, Aulas, Conversas e Pagamentos (sem Configurações)
+    // HIERARQUIA 2: VENDEDORES - Dashboard, Alunos, Aulas, Conversas, Pagamentos (SEM Configurações)
     if (userType === 'seller') {
       return [
         { name: 'Dashboard', icon: Home, page: 'AdminDashboard' },
@@ -133,7 +136,7 @@ export default function Layout({ children, currentPageName }) {
       ];
     }
     
-    // INSTRUTORES: Dashboard, Alunos, Aulas, Conversas + permissões personalizadas
+    // HIERARQUIA 3: INSTRUTORES - Dashboard, Alunos, Aulas, Conversas + permissões personalizadas
     if (userType === 'instructor') {
       const items = [
         { name: 'Dashboard', icon: Home, page: 'AdminDashboard' },
@@ -155,6 +158,27 @@ export default function Layout({ children, currentPageName }) {
       }
       
       return items;
+    }
+    
+    // ADMIN GENÉRICO (caso exista admin que não seja nenhum dos acima)
+    if (userType === 'admin') {
+      return [
+        { name: 'Dashboard', icon: Home, page: 'AdminDashboard' },
+        { name: 'Alunos', icon: Users, page: 'AdminStudents' },
+        { name: 'Instrutores', icon: Car, page: 'AdminInstructors' },
+        { name: 'Aulas', icon: Calendar, page: 'AdminLessons' },
+        { name: 'Conversas', icon: MessageSquare, page: 'AdminChats' },
+      ];
+    }
+    
+    // HIERARQUIA 4: ALUNOS - Apenas Instrutores, Minhas Aulas, Conversas, Meu Perfil
+    if (userType === 'student') {
+      return [
+        { name: 'Instrutores', icon: Users, page: 'Instructors' },
+        { name: 'Minhas Aulas', icon: Calendar, page: 'MyLessons' },
+        { name: 'Conversas', icon: MessageSquare, page: 'Chat' },
+        { name: 'Meu Perfil', icon: GraduationCap, page: 'StudentProfile' },
+      ];
     }
     
     return [];
