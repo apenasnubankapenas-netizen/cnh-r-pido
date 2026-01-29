@@ -92,47 +92,109 @@ export default function Layout({ children, currentPageName }) {
   return (
     <div className="min-h-screen bg-[#0a0e1a] text-white font-mono">
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        
         :root {
           --bg-primary: #0a0e1a;
-          --bg-secondary: #111827;
-          --bg-card: #1a2332;
-          --accent-blue: #1e40af;
-          --accent-blue-light: #3b82f6;
-          --accent-yellow: #fbbf24;
-          --text-primary: #ffffff;
-          --text-secondary: #9ca3af;
-          --border-color: #374151;
+          --bg-secondary: #0d1117;
+          --bg-card: #161b22;
+          --accent-blue: #0969da;
+          --accent-blue-dark: #0550ae;
+          --accent-blue-light: #2f81f7;
+          --accent-yellow: #f0c41b;
+          --accent-yellow-dark: #d4aa00;
+          --text-primary: #e6edf3;
+          --text-secondary: #7d8590;
+          --border-color: #30363d;
+          --shadow-blue: rgba(9, 105, 218, 0.4);
+          --shadow-yellow: rgba(240, 196, 27, 0.4);
         }
         
         * {
-          font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
           font-weight: 500;
+          letter-spacing: -0.01em;
+        }
+        
+        body {
+          background: linear-gradient(135deg, #0a0e1a 0%, #0d1117 100%);
+          background-attachment: fixed;
         }
         
         .terminal-glow {
-          box-shadow: 0 0 20px rgba(30, 64, 175, 0.3);
+          box-shadow: 0 0 30px var(--shadow-blue), 0 4px 12px rgba(0, 0, 0, 0.3);
+          border: 1px solid rgba(9, 105, 218, 0.3);
         }
         
         .yellow-glow {
-          box-shadow: 0 0 10px rgba(251, 191, 36, 0.4);
+          box-shadow: 0 0 20px var(--shadow-yellow), 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .terminal-border {
+          border: 1px solid var(--accent-blue);
+          box-shadow: 0 0 15px var(--shadow-blue);
+        }
+        
+        .scan-line {
+          animation: scan 8s linear infinite;
+        }
+        
+        @keyframes scan {
+          0%, 100% { opacity: 0.05; transform: translateY(0); }
+          50% { opacity: 0.1; transform: translateY(100vh); }
+        }
+        
+        @keyframes pulse-glow {
+          0%, 100% { box-shadow: 0 0 20px var(--shadow-blue); }
+          50% { box-shadow: 0 0 40px var(--shadow-blue); }
+        }
+        
+        .pulse-glow {
+          animation: pulse-glow 3s ease-in-out infinite;
         }
         
         ::-webkit-scrollbar {
-          width: 6px;
+          width: 8px;
+          height: 8px;
         }
         
         ::-webkit-scrollbar-track {
           background: var(--bg-secondary);
+          border-radius: 4px;
         }
         
         ::-webkit-scrollbar-thumb {
           background: var(--accent-blue);
-          border-radius: 3px;
+          border-radius: 4px;
+          border: 2px solid var(--bg-secondary);
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+          background: var(--accent-blue-light);
+        }
+        
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+          font-weight: 700;
+          letter-spacing: -0.02em;
+        }
+        
+        /* Button hover effects */
+        button:hover {
+          transform: translateY(-1px);
+          transition: all 0.2s ease;
+        }
+        
+        button:active {
+          transform: translateY(0);
         }
       `}</style>
 
+      {/* Scan Line Effect */}
+      <div className="scan-line fixed top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#0969da] to-transparent opacity-20 pointer-events-none z-50" />
+      
       {/* Top Bar com login admin discreto */}
-      <div className="fixed top-0 left-0 right-0 h-12 bg-[#111827] border-b border-[#374151] z-50 flex items-center justify-between px-4">
+      <div className="fixed top-0 left-0 right-0 h-14 bg-[#0d1117] border-b border-[#30363d] z-40 flex items-center justify-between px-4 backdrop-blur-sm bg-opacity-95">
         <div className="flex items-center gap-3">
           <button 
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -141,8 +203,10 @@ export default function Layout({ children, currentPageName }) {
             {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
           <div className="flex items-center gap-2">
-            <Car className="text-[#fbbf24]" size={24} />
-            <span className="text-lg font-bold text-[#fbbf24]">CNH PARA TODOS</span>
+            <Car className="text-[#f0c41b]" size={26} />
+            <span className="text-xl font-extrabold bg-gradient-to-r from-[#f0c41b] to-[#ffd93d] bg-clip-text text-transparent tracking-tight">
+              CNH PARA TODOS
+            </span>
           </div>
         </div>
 
@@ -177,7 +241,7 @@ export default function Layout({ children, currentPageName }) {
       </div>
 
       {/* Sidebar */}
-      <aside className={`fixed top-12 left-0 h-[calc(100vh-48px)] w-64 bg-[#111827] border-r border-[#374151] z-40 transform transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
+      <aside className={`fixed top-14 left-0 h-[calc(100vh-56px)] w-64 bg-[#0d1117] border-r border-[#30363d] z-30 transform transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 backdrop-blur-sm bg-opacity-95`}>
         <nav className="p-4 space-y-2">
           {menuItems.map((item) => {
             const Icon = item.icon;
@@ -189,11 +253,11 @@ export default function Layout({ children, currentPageName }) {
                 onClick={() => setIsSidebarOpen(false)}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                   isActive 
-                    ? 'bg-[#1e40af] text-white terminal-glow' 
-                    : 'hover:bg-[#1a2332] text-[#9ca3af] hover:text-white'
+                    ? 'bg-gradient-to-r from-[#0969da] to-[#0550ae] text-white terminal-glow shadow-lg' 
+                    : 'hover:bg-[#161b22] text-[#7d8590] hover:text-white'
                 }`}
               >
-                <Icon size={20} className={isActive ? 'text-[#fbbf24]' : ''} />
+                <Icon size={20} className={isActive ? 'text-[#f0c41b] drop-shadow-lg' : ''} />
                 <span className="text-sm">{item.name}</span>
               </Link>
             );
@@ -202,7 +266,7 @@ export default function Layout({ children, currentPageName }) {
 
         {/* User Status */}
         {student && (
-          <div className="absolute bottom-4 left-4 right-4 p-3 bg-[#1a2332] rounded-lg border border-[#374151]">
+          <div className="absolute bottom-4 left-4 right-4 p-3 bg-[#161b22] rounded-lg border border-[#30363d] terminal-glow">
             <div className="text-xs text-[#9ca3af] mb-1">Status do Processo</div>
             <div className="space-y-1">
               <div className="flex items-center gap-2 text-xs">
@@ -223,7 +287,7 @@ export default function Layout({ children, currentPageName }) {
       </aside>
 
       {/* Main Content */}
-      <main className="lg:ml-64 pt-12 min-h-screen">
+      <main className="lg:ml-64 pt-14 min-h-screen">
         <div className="p-4 md:p-6">
           {children}
         </div>
