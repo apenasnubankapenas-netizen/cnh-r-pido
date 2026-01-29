@@ -11,7 +11,9 @@ import {
   ArrowRight,
   CheckCircle,
   Bus,
-  Truck
+  Truck,
+  LogIn,
+  UserPlus
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -43,42 +45,102 @@ export default function Landing() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0a0e1a] to-[#0d1117]">
+    <div className="min-h-screen bg-[#0a0e1a] relative overflow-hidden">
+      {/* Animated background gradient */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0e1a] via-[#1e40af]/10 to-[#0a0e1a]" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#fbbf24]/10 rounded-full filter blur-3xl animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#1e40af]/10 rounded-full filter blur-3xl animate-pulse" style={{animationDelay: '2s'}} />
+      </div>
+
       {/* Hero Section */}
-      <div className="max-w-6xl mx-auto px-4 py-16">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-6xl font-extrabold mb-4">
-            Bem-vindo à <span className="text-[#f0c41b]">CNH PARA TODOS</span>
-          </h1>
-          <p className="text-xl text-[#9ca3af] mb-8">
-            A sua autoescola completa para conquista da habilitação
-          </p>
-          
-          {user ? (
-            <Link to={createPageUrl('Home')}>
-              <Button className="bg-[#f0c41b] text-black hover:bg-[#d4aa00] px-8 py-6 text-lg font-bold">
-                Acessar Minha Área
-                <ArrowRight className="ml-2" />
-              </Button>
-            </Link>
-          ) : (
-            <div className="flex gap-4 justify-center">
-              <Button 
-                className="bg-[#1e40af] hover:bg-[#3b82f6] px-8 py-6 text-lg font-bold"
-                onClick={() => base44.auth.redirectToLogin(window.location.pathname)}
-              >
-                Fazer Login
-              </Button>
-              <Button 
-                className="bg-[#f0c41b] text-black hover:bg-[#d4aa00] px-8 py-6 text-lg font-bold"
-                onClick={() => base44.auth.redirectToLogin(createPageUrl('StudentRegister'))}
-              >
-                Cadastrar Agora
-                <ArrowRight className="ml-2" />
-              </Button>
+      <div className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl w-full">
+          <div className="text-center mb-12">
+            {/* Logo Icon */}
+            <div className="flex justify-center mb-8">
+              <div className="relative group">
+                <div className="absolute inset-0 bg-gradient-to-r from-[#fbbf24] to-[#1e40af] rounded-2xl blur-xl opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
+                <div className="relative bg-gradient-to-br from-[#0d1117] to-[#1a2332] p-6 rounded-2xl border border-[#374151]">
+                  <Car className="h-16 w-16 text-[#fbbf24]" />
+                </div>
+              </div>
             </div>
-          )}
+            
+            {/* Title */}
+            <h1 className="text-6xl md:text-8xl font-black mb-6 tracking-tight">
+              <span className="bg-gradient-to-r from-[#fbbf24] via-[#fcd34d] to-[#fbbf24] bg-clip-text text-transparent" style={{backgroundSize: '200% auto', animation: 'gradient 3s ease infinite'}}>
+                CNH PARA TODOS
+              </span>
+            </h1>
+            
+            {/* Subtitle */}
+            <p className="text-lg md:text-xl text-[#9ca3af] mb-4 max-w-2xl mx-auto font-medium">
+              O futuro da sua habilitação está aqui
+            </p>
+            <p className="text-base text-[#6b7280] mb-12 max-w-xl mx-auto">
+              Plataforma completa para gestão, acompanhamento e conquista da sua CNH com tecnologia de ponta
+            </p>
+          </div>
+
+          {/* Login/Register Cards */}
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-16">
+            {user ? (
+              <div className="md:col-span-2">
+                <Link to={createPageUrl('Home')}>
+                  <button className="group relative w-full bg-gradient-to-r from-[#1e40af] to-[#3b82f6] hover:from-[#1e3a8a] hover:to-[#2563eb] text-white p-8 rounded-2xl shadow-2xl hover:shadow-[#3b82f6]/50 transition-all duration-300 transform hover:scale-105 border-2 border-[#3b82f6]/30">
+                    <div className="flex items-center justify-center gap-3">
+                      <div className="bg-white/10 p-3 rounded-xl">
+                        <ArrowRight className="h-8 w-8" />
+                      </div>
+                      <div className="text-left">
+                        <div className="text-2xl font-bold">Acessar Minha Área</div>
+                        <div className="text-sm text-white/80">Continue sua jornada</div>
+                      </div>
+                    </div>
+                  </button>
+                </Link>
+              </div>
+            ) : (
+              <>
+                {/* Login Card */}
+                <button 
+                  onClick={() => base44.auth.redirectToLogin(createPageUrl('Home'))}
+                  className="group relative bg-gradient-to-br from-[#1a2332] to-[#0d1117] p-8 rounded-2xl border-2 border-[#1e40af]/30 hover:border-[#3b82f6] transition-all duration-300 hover:shadow-2xl hover:shadow-[#1e40af]/30 transform hover:scale-105"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#1e40af]/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="relative">
+                    <div className="flex justify-center mb-4">
+                      <div className="bg-gradient-to-br from-[#1e40af] to-[#3b82f6] p-4 rounded-xl">
+                        <LogIn className="h-8 w-8 text-white" />
+                      </div>
+                    </div>
+                    <h3 className="text-2xl font-bold text-white mb-2">Já tenho conta</h3>
+                    <p className="text-[#9ca3af] text-sm">Acesse sua área de aluno e continue seu progresso</p>
+                  </div>
+                </button>
+
+                {/* Register Card */}
+                <button 
+                  onClick={() => base44.auth.redirectToLogin(createPageUrl('StudentRegister'))}
+                  className="group relative bg-gradient-to-br from-[#1a2332] to-[#0d1117] p-8 rounded-2xl border-2 border-[#fbbf24]/30 hover:border-[#fcd34d] transition-all duration-300 hover:shadow-2xl hover:shadow-[#fbbf24]/30 transform hover:scale-105"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#fbbf24]/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="relative">
+                    <div className="flex justify-center mb-4">
+                      <div className="bg-gradient-to-br from-[#fbbf24] to-[#fcd34d] p-4 rounded-xl">
+                        <UserPlus className="h-8 w-8 text-black" />
+                      </div>
+                    </div>
+                    <h3 className="text-2xl font-bold text-white mb-2">Sou novo aqui</h3>
+                    <p className="text-[#9ca3af] text-sm">Comece sua jornada rumo à habilitação agora mesmo</p>
+                  </div>
+                </button>
+              </>
+            )}
+          </div>
         </div>
+      </div>
 
         {/* Categorias */}
         <div className="mb-16">

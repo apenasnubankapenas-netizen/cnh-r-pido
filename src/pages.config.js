@@ -58,6 +58,8 @@ import AdminSettings from './pages/AdminSettings';
 import AdminStudents from './pages/AdminStudents';
 import Chat from './pages/Chat';
 import Home from './pages/Home';
+import InstructorProfile from './pages/InstructorProfile';
+import InstructorRegister from './pages/InstructorRegister';
 import Instructors from './pages/Instructors';
 import Landing from './pages/Landing';
 import MyLessons from './pages/MyLessons';
@@ -66,8 +68,6 @@ import Simulados from './pages/Simulados';
 import StudentProfile from './pages/StudentProfile';
 import StudentRegister from './pages/StudentRegister';
 import SuperAdminLogin from './pages/SuperAdminLogin';
-import InstructorRegister from './pages/InstructorRegister';
-import InstructorProfile from './pages/InstructorProfile';
 import __Layout from './Layout.jsx';
 
 
@@ -83,6 +83,8 @@ export const PAGES = {
     "AdminStudents": AdminStudents,
     "Chat": Chat,
     "Home": Home,
+    "InstructorProfile": InstructorProfile,
+    "InstructorRegister": InstructorRegister,
     "Instructors": Instructors,
     "Landing": Landing,
     "MyLessons": MyLessons,
@@ -91,8 +93,6 @@ export const PAGES = {
     "StudentProfile": StudentProfile,
     "StudentRegister": StudentRegister,
     "SuperAdminLogin": SuperAdminLogin,
-    "InstructorRegister": InstructorRegister,
-    "InstructorProfile": InstructorProfile,
 }
 
 export const pagesConfig = {
