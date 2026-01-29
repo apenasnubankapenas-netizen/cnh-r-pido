@@ -56,7 +56,7 @@ export default function Layout({ children, currentPageName }) {
   const isSuperAdmin = user?.role === 'admin' && user?.email?.includes('super');
 
   const studentMenuItems = [
-    { name: 'Início', icon: Home, page: 'Home' },
+    { name: 'Dashboard', icon: Home, page: 'Home' },
     { name: 'Minhas Aulas', icon: Calendar, page: 'MyLessons' },
     { name: 'Instrutores', icon: Users, page: 'Instructors' },
     { name: 'Simulados', icon: BookOpen, page: 'Simulados' },
@@ -206,7 +206,7 @@ export default function Layout({ children, currentPageName }) {
           >
             {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
-          <Link to={createPageUrl('Home')} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <Link to={createPageUrl('Landing')} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <Car className="text-[#f0c41b]" size={26} />
             <span className="text-xl font-extrabold bg-gradient-to-r from-[#f0c41b] to-[#ffd93d] bg-clip-text text-transparent tracking-tight">
               CNH PARA TODOS
@@ -217,9 +217,9 @@ export default function Layout({ children, currentPageName }) {
         <div className="flex items-center gap-3">
           {/* Botões de acesso separados */}
               <div className="flex items-center gap-1">
-                <Link to={createPageUrl('Home')}>
+                <Link to={createPageUrl('Landing')}>
                   <button className="text-[11px] text-[#30363d] hover:text-[#e6edf3] px-2 py-1 rounded transition-colors font-semibold">
-                    APP
+                    INÍCIO
                   </button>
                 </Link>
                 <span className="text-[#30363d] text-[10px]">|</span>
