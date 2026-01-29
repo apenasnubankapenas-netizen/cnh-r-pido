@@ -86,11 +86,27 @@ export default function MyLessons() {
   const availableTimeSlots = generateTimeSlots();
 
   const filteredInstructors = instructors.filter(i => {
-    if (selectedType === 'carro') return i.teaches_car;
-    if (selectedType === 'moto') return i.teaches_moto;
-    if (selectedType === 'onibus') return i.teaches_bus;
-    if (selectedType === 'caminhao') return i.teaches_truck;
-    if (selectedType === 'carreta') return i.teaches_trailer;
+    // Filtrar por especialidade
+    let matchesType = false;
+    if (selectedType === 'carro') matchesType = i.teaches_car;
+    if (selectedType === 'moto') matchesType = i.teaches_moto;
+    if (selectedType === 'onibus') matchesType = i.teaches_bus;
+    if (selectedType === 'caminhao') matchesType = i.teaches_truck;
+    if (selectedType === 'carreta') matchesType = i.teaches_trailer;
+    
+    if (!matchesType) return false;
+    
+    // Filtrar: se aluno já tem instrutor para esse tipo, só mostrar esse instrutor
+    const existingCarInstructor = lessons.find(l => l.type === 'carro' && (l.status === 'agendada' || l.status === 'realizada'));
+    if (selectedType === 'carro' && existingCarInstructor) {
+      return i.id === existingCarInstructor.instructor_id;
+    }
+    
+    const existingMotoInstructor = lessons.find(l => l.type === 'moto' && (l.status === 'agendada' || l.status === 'realizada'));
+    if (selectedType === 'moto' && existingMotoInstructor) {
+      return i.id === existingMotoInstructor.instructor_id;
+    }
+    
     return true;
   });
 
@@ -118,6 +134,33 @@ export default function MyLessons() {
         return;
       }
       
+      // REGRA: Aluno deve manter o mesmo instrutor para carro
+      const existingCarInstructor = lessons.find(l => l.type === 'carro' && (l.status === 'agendada' || l.status === 'realizada'));
+      if (selectedType === 'carro' && existingCarInstructor && existingCarInstructor.instructor_id !== selectedInstructor) {
+        alert(`Você já está fazendo aulas de carro com ${existingCarInstructor.instructor_name}. Não é permitido trocar de instrutor.`);
+        return;
+      }
+      
+      // REGRA: Aluno deve manter o mesmo instrutor para moto
+      const existingMotoInstructor = lessons.find(l => l.type === 'moto' && (l.status === 'agendada' || l.status === 'realizada'));
+      if (selectedType === 'moto' && existingMotoInstructor && existingMotoInstructor.instructor_id !== selectedInstructor) {
+        alert(`Você já está fazendo aulas de moto com ${existingMotoInstructor.instructor_name}. Não é permitido trocar de instrutor.`);
+        return;
+      }
+      
+      // REGRA: Verificar conflito de horário - buscar todas as aulas desse instrutor
+      const allLessons = await base44.entities.Lesson.filter({ 
+        instructor_id: selectedInstructor,
+        date: selectedDate,
+        time: selectedTime,
+        status: 'agendada'
+      });
+      
+      if (allLessons.length > 0) {
+        alert('Este horário já está ocupado com outro aluno. Por favor, escolha outro horário ou outro instrutor.');
+        return;
+      }
+      
       const instructor = instructors.find(i => i.id === selectedInstructor);
       await base44.entities.Lesson.create({
         student_id: student.id,
@@ -134,8 +177,10 @@ export default function MyLessons() {
       
       setShowScheduleDialog(false);
       loadData();
+      alert('Aula agendada com sucesso!');
     } catch (e) {
       console.log(e);
+      alert('Erro ao agendar aula. Tente novamente.');
     }
   };
 
