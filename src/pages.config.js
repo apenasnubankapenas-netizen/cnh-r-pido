@@ -60,6 +60,11 @@ import AdminStudents from './pages/AdminStudents';
 import AdminInstructors from './pages/AdminInstructors';
 import AdminLessons from './pages/AdminLessons';
 import AdminChats from './pages/AdminChats';
+import AdminPayments from './pages/AdminPayments';
+import AdminSellers from './pages/AdminSellers';
+import AdminSettings from './pages/AdminSettings';
+import AdminLogin from './pages/AdminLogin';
+import SuperAdminLogin from './pages/SuperAdminLogin';
 import __Layout from './Layout.jsx';
 
 
@@ -77,6 +82,11 @@ export const PAGES = {
     "AdminInstructors": AdminInstructors,
     "AdminLessons": AdminLessons,
     "AdminChats": AdminChats,
+    "AdminPayments": AdminPayments,
+    "AdminSellers": AdminSellers,
+    "AdminSettings": AdminSettings,
+    "AdminLogin": AdminLogin,
+    "SuperAdminLogin": SuperAdminLogin,
 }
 
 export const pagesConfig = {
