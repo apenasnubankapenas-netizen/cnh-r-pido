@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { 
   Users, 
@@ -15,7 +16,8 @@ import {
   X,
   Upload,
   Link as LinkIcon,
-  Copy
+  Copy,
+  ArrowLeft
 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
@@ -184,13 +186,25 @@ export default function AdminInstructors() {
     );
   }
 
+  const navigate = useNavigate();
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold flex items-center gap-2">
-          <Users className="text-[#fbbf24]" />
-          Gerenciar Instrutores
-        </h1>
+        <div className="flex items-center gap-3">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black"
+            onClick={() => navigate(-1)}
+          >
+            <ArrowLeft size={18} />
+          </Button>
+          <h1 className="text-2xl font-bold flex items-center gap-2">
+            <Users className="text-[#fbbf24]" />
+            Gerenciar Instrutores
+          </h1>
+        </div>
         <div className="flex gap-2">
           {user?.email === 'tcnhpara@gmail.com' && (
             <Button 
