@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 10 14 26;
+    --foreground: 230 237 243;
+    --card: 22 27 34;
+    --card-foreground: 230 237 243;
+    --popover: 13 17 23;
+    --popover-foreground: 230 237 243;
+    --primary: 9 105 218;
+    --primary-foreground: 255 255 255;
+    --secondary: 22 27 34;
+    --secondary-foreground: 230 237 243;
+    --muted: 48 54 61;
+    --muted-foreground: 125 133 144;
+    --accent: 240 196 27;
+    --accent-foreground: 10 14 26;
+    --destructive: 220 38 38;
+    --destructive-foreground: 255 255 255;
+    --border: 48 54 61;
+    --input: 48 54 61;
+    --ring: 9 105 218;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* Terminal Kali Linux Theme */
+.terminal-card {
+  background: linear-gradient(135deg, rgba(13, 17, 23, 0.9) 0%, rgba(22, 27, 34, 0.9) 100%);
+  border: 1px solid rgba(9, 105, 218, 0.3);
+  box-shadow: 0 0 20px rgba(9, 105, 218, 0.2), 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.terminal-input {
+  background: rgba(13, 17, 23, 0.8);
+  border: 1px solid rgba(48, 54, 61, 0.5);
+  color: #e6edf3;
+  transition: all 0.2s ease;
+}
+
+.terminal-input:focus {
+  border-color: rgba(9, 105, 218, 0.8);
+  box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.1), 0 0 15px rgba(9, 105, 218, 0.3);
+  outline: none;
+}
+
+.terminal-button {
+  background: linear-gradient(135deg, #0969da 0%, #0550ae 100%);
+  color: white;
+  font-weight: 600;
+  border: none;
+  box-shadow: 0 0 20px rgba(9, 105, 218, 0.4), 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
+}
+
+.terminal-button:hover {
+  box-shadow: 0 0 30px rgba(9, 105, 218, 0.6), 0 6px 12px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+.terminal-button:active {
+  transform: translateY(0);
+}
+
+.yellow-accent {
+  color: #f0c41b;
+  text-shadow: 0 0 10px rgba(240, 196, 27, 0.5);
+}
+
+.yellow-button {
+  background: linear-gradient(135deg, #f0c41b 0%, #d4aa00 100%);
+  color: #0a0e1a;
+  font-weight: 700;
+  border: none;
+  box-shadow: 0 0 20px rgba(240, 196, 27, 0.4), 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.yellow-button:hover {
+  box-shadow: 0 0 30px rgba(240, 196, 27, 0.6), 0 6px 12px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Glow effects */
+.glow-blue {
+  box-shadow: 0 0 20px rgba(9, 105, 218, 0.5);
+}
+
+.glow-yellow {
+  box-shadow: 0 0 20px rgba(240, 196, 27, 0.5);
+}
+
+/* Animations */
+@keyframes terminal-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.terminal-cursor::after {
+  content: '▋';
+  animation: terminal-blink 1s infinite;
+  margin-left: 2px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(13, 17, 23, 0.5);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #0969da 0%, #0550ae 100%);
+  border-radius: 5px;
+  border: 2px solid rgba(13, 17, 23, 0.5);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #2f81f7 0%, #0969da 100%);
+}
+
+/* Selection */
+::selection {
+  background: rgba(9, 105, 218, 0.3);
+  color: #f0c41b;
+}
+
+::-moz-selection {
+  background: rgba(9, 105, 218, 0.3);
+  color: #f0c41b;
+}
