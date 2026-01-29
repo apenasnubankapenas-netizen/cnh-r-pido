@@ -12,10 +12,8 @@ import {
   CheckCircle,
   Bus,
   Truck,
-  Shield,
-  Clock,
-  Award,
-  Zap
+  LogIn,
+  UserPlus
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -48,200 +46,207 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen bg-[#0a0e1a] relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-[#1e40af] opacity-20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-[#f0c41b] opacity-10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-[#3b82f6] opacity-15 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+      {/* Animated background gradient */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0e1a] via-[#1e40af]/10 to-[#0a0e1a]" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#fbbf24]/10 rounded-full filter blur-3xl animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#1e40af]/10 rounded-full filter blur-3xl animate-pulse" style={{animationDelay: '2s'}} />
       </div>
 
       {/* Hero Section */}
-      <div className="relative max-w-7xl mx-auto px-4 py-20">
-        {/* Main Hero */}
-        <div className="text-center mb-24">
-          <div className="inline-block mb-6 px-4 py-2 bg-gradient-to-r from-[#1e40af]/20 to-[#f0c41b]/20 rounded-full border border-[#f0c41b]/30">
-            <span className="text-[#f0c41b] font-bold text-sm">✨ Sua habilitação começa aqui</span>
+      <div className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl w-full">
+          <div className="text-center mb-12">
+            {/* Logo Icon */}
+            <div className="flex justify-center mb-8">
+              <div className="relative group">
+                <div className="absolute inset-0 bg-gradient-to-r from-[#fbbf24] to-[#1e40af] rounded-2xl blur-xl opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
+                <div className="relative bg-gradient-to-br from-[#0d1117] to-[#1a2332] p-6 rounded-2xl border border-[#374151]">
+                  <Car className="h-16 w-16 text-[#fbbf24]" />
+                </div>
+              </div>
+            </div>
+            
+            {/* Title */}
+            <h1 className="text-6xl md:text-8xl font-black mb-6 tracking-tight">
+              <span className="bg-gradient-to-r from-[#fbbf24] via-[#fcd34d] to-[#fbbf24] bg-clip-text text-transparent" style={{backgroundSize: '200% auto', animation: 'gradient 3s ease infinite'}}>
+                CNH PARA TODOS
+              </span>
+            </h1>
+            
+            {/* Subtitle */}
+            <p className="text-lg md:text-xl text-[#9ca3af] mb-4 max-w-2xl mx-auto font-medium">
+              O futuro da sua habilitação está aqui
+            </p>
+            <p className="text-base text-[#6b7280] mb-12 max-w-xl mx-auto">
+              Plataforma completa para gestão, acompanhamento e conquista da sua CNH com tecnologia de ponta
+            </p>
           </div>
-          
-          <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
-            Bem-vindo à
-            <br />
-            <span className="bg-gradient-to-r from-[#f0c41b] via-[#ffd700] to-[#f0c41b] bg-clip-text text-transparent animate-pulse">
-              CNH PARA TODOS
-            </span>
-          </h1>
-          
-          <p className="text-xl md:text-2xl text-[#9ca3af] mb-12 max-w-3xl mx-auto font-medium">
-            Sistema completo e profissional para conquistar sua habilitação com segurança e confiança
-          </p>
-          
-          {user ? (
-            <Link to={createPageUrl('Home')}>
-              <Button className="bg-gradient-to-r from-[#f0c41b] to-[#ffd700] text-black hover:shadow-2xl hover:shadow-[#f0c41b]/50 px-12 py-8 text-xl font-black rounded-2xl transition-all transform hover:scale-105">
-                <Zap className="mr-3" size={24} />
-                Acessar Minha Área
-                <ArrowRight className="ml-3" size={24} />
-              </Button>
-            </Link>
-          ) : (
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button 
-                className="bg-gradient-to-r from-[#1e40af] to-[#3b82f6] hover:shadow-2xl hover:shadow-[#1e40af]/50 px-10 py-7 text-lg font-bold rounded-2xl transition-all transform hover:scale-105 w-full sm:w-auto"
-                onClick={() => base44.auth.redirectToLogin(window.location.pathname)}
-              >
-                <Shield className="mr-2" size={20} />
-                Fazer Login
-              </Button>
-              <Button 
-                className="bg-gradient-to-r from-[#f0c41b] to-[#ffd700] text-black hover:shadow-2xl hover:shadow-[#f0c41b]/50 px-10 py-7 text-lg font-black rounded-2xl transition-all transform hover:scale-105 w-full sm:w-auto"
-                onClick={() => base44.auth.redirectToLogin(createPageUrl('StudentRegister'))}
-              >
-                <Award className="mr-2" size={20} />
-                Cadastrar Agora
-                <ArrowRight className="ml-2" size={20} />
-              </Button>
-            </div>
-          )}
-          
-          {/* Trust Badges */}
-          <div className="flex flex-wrap justify-center gap-8 mt-16">
-            <div className="flex items-center gap-2 text-[#9ca3af]">
-              <CheckCircle className="text-green-500" size={20} />
-              <span className="text-sm font-semibold">Instrutores Certificados</span>
-            </div>
-            <div className="flex items-center gap-2 text-[#9ca3af]">
-              <CheckCircle className="text-green-500" size={20} />
-              <span className="text-sm font-semibold">+500 Alunos Aprovados</span>
-            </div>
-            <div className="flex items-center gap-2 text-[#9ca3af]">
-              <CheckCircle className="text-green-500" size={20} />
-              <span className="text-sm font-semibold">Suporte 24/7</span>
-            </div>
+
+          {/* Login/Register Cards */}
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-16">
+            {user ? (
+              <div className="md:col-span-2">
+                <Link to={createPageUrl('Home')}>
+                  <button className="group relative w-full bg-gradient-to-r from-[#1e40af] to-[#3b82f6] hover:from-[#1e3a8a] hover:to-[#2563eb] text-white p-8 rounded-2xl shadow-2xl hover:shadow-[#3b82f6]/50 transition-all duration-300 transform hover:scale-105 border-2 border-[#3b82f6]/30">
+                    <div className="flex items-center justify-center gap-3">
+                      <div className="bg-white/10 p-3 rounded-xl">
+                        <ArrowRight className="h-8 w-8" />
+                      </div>
+                      <div className="text-left">
+                        <div className="text-2xl font-bold">Acessar Minha Área</div>
+                        <div className="text-sm text-white/80">Continue sua jornada</div>
+                      </div>
+                    </div>
+                  </button>
+                </Link>
+              </div>
+            ) : (
+              <>
+                {/* Login Card */}
+                <button 
+                  onClick={() => base44.auth.redirectToLogin(createPageUrl('Home'))}
+                  className="group relative bg-gradient-to-br from-[#1a2332] to-[#0d1117] p-8 rounded-2xl border-2 border-[#1e40af]/30 hover:border-[#3b82f6] transition-all duration-300 hover:shadow-2xl hover:shadow-[#1e40af]/30 transform hover:scale-105"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#1e40af]/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="relative">
+                    <div className="flex justify-center mb-4">
+                      <div className="bg-gradient-to-br from-[#1e40af] to-[#3b82f6] p-4 rounded-xl">
+                        <LogIn className="h-8 w-8 text-white" />
+                      </div>
+                    </div>
+                    <h3 className="text-2xl font-bold text-white mb-2">Já tenho conta</h3>
+                    <p className="text-[#9ca3af] text-sm">Acesse sua área de aluno e continue seu progresso</p>
+                  </div>
+                </button>
+
+                {/* Register Card */}
+                <button 
+                  onClick={() => base44.auth.redirectToLogin(createPageUrl('StudentRegister'))}
+                  className="group relative bg-gradient-to-br from-[#1a2332] to-[#0d1117] p-8 rounded-2xl border-2 border-[#fbbf24]/30 hover:border-[#fcd34d] transition-all duration-300 hover:shadow-2xl hover:shadow-[#fbbf24]/30 transform hover:scale-105"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#fbbf24]/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="relative">
+                    <div className="flex justify-center mb-4">
+                      <div className="bg-gradient-to-br from-[#fbbf24] to-[#fcd34d] p-4 rounded-xl">
+                        <UserPlus className="h-8 w-8 text-black" />
+                      </div>
+                    </div>
+                    <h3 className="text-2xl font-bold text-white mb-2">Sou novo aqui</h3>
+                    <p className="text-[#9ca3af] text-sm">Comece sua jornada rumo à habilitação agora mesmo</p>
+                  </div>
+                </button>
+              </>
+            )}
           </div>
         </div>
+      </div>
 
-        {/* Categorias */}
-        <div className="mb-24">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-black mb-4">
-              Escolha sua <span className="bg-gradient-to-r from-[#f0c41b] to-[#ffd700] bg-clip-text text-transparent">Categoria</span>
-            </h2>
-            <p className="text-[#9ca3af] text-lg">Oferecemos todas as categorias de habilitação</p>
-          </div>
-          <div className="grid md:grid-cols-5 gap-6">
-            <Card className="bg-gradient-to-br from-[#1a2332] to-[#0d1117] border-2 border-[#374151] hover:border-[#f0c41b] hover:shadow-2xl hover:shadow-[#f0c41b]/30 transition-all transform hover:scale-105 group">
+      {/* Categorias */}
+      <div className="relative max-w-6xl mx-auto px-4 pb-16">
+        <div className="mb-16">
+          <h2 className="text-2xl font-bold text-center mb-8">
+            Escolha sua <span className="text-[#f0c41b]">Categoria</span>
+          </h2>
+          <div className="grid md:grid-cols-5 gap-4">
+            <Card className="bg-[#1a2332] border-[#374151] hover:border-[#f0c41b] transition-all">
               <CardContent className="p-6 text-center">
-                <div className="w-20 h-20 bg-gradient-to-br from-[#f0c41b] to-[#ffd700] rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform shadow-lg">
-                  <Bike className="text-black" size={36} />
+                <div className="w-16 h-16 bg-[#f0c41b]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Bike className="text-[#f0c41b]" size={32} />
                 </div>
-                <h3 className="font-black text-lg mb-2">Categoria A</h3>
-                <p className="text-[#9ca3af] text-sm mb-3 font-semibold">Motocicleta</p>
-                <p className="text-[#f0c41b] font-black text-xl">
-                  R$ {settings?.category_a_price || 548}
+                <h3 className="font-bold mb-2">Categoria A</h3>
+                <p className="text-[#9ca3af] text-sm mb-2">Moto</p>
+                <p className="text-[#f0c41b] font-bold">
+                  A partir de R$ {settings?.category_a_price || 548},00
                 </p>
-                <p className="text-[#9ca3af] text-xs mt-1">em até 10x</p>
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-[#1a2332] to-[#0d1117] border-2 border-[#374151] hover:border-[#3b82f6] hover:shadow-2xl hover:shadow-[#3b82f6]/30 transition-all transform hover:scale-105 group">
+            <Card className="bg-[#1a2332] border-[#374151] hover:border-[#f0c41b] transition-all">
               <CardContent className="p-6 text-center">
-                <div className="w-20 h-20 bg-gradient-to-br from-[#1e40af] to-[#3b82f6] rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform shadow-lg">
-                  <Car className="text-white" size={36} />
+                <div className="w-16 h-16 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Car className="text-[#3b82f6]" size={32} />
                 </div>
-                <h3 className="font-black text-lg mb-2">Categoria B</h3>
-                <p className="text-[#9ca3af] text-sm mb-3 font-semibold">Automóvel</p>
-                <p className="text-[#3b82f6] font-black text-xl">
-                  R$ {settings?.category_b_price || 548}
+                <h3 className="font-bold mb-2">Categoria B</h3>
+                <p className="text-[#9ca3af] text-sm mb-2">Carro</p>
+                <p className="text-[#f0c41b] font-bold">
+                  A partir de R$ {settings?.category_b_price || 548},00
                 </p>
-                <p className="text-[#9ca3af] text-xs mt-1">em até 10x</p>
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-[#1a2332] to-[#0d1117] border-2 border-[#f0c41b] shadow-2xl shadow-[#f0c41b]/20 transform scale-105 relative">
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-[#f0c41b] to-[#ffd700] text-black px-4 py-1 rounded-full text-xs font-black">
-                MAIS POPULAR
-              </div>
+            <Card className="bg-[#1a2332] border-[#374151] hover:border-[#f0c41b] transition-all">
               <CardContent className="p-6 text-center">
-                <div className="w-20 h-20 bg-gradient-to-br from-[#f0c41b] via-[#ffd700] to-[#1e40af] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl">
+                <div className="w-16 h-16 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <div className="flex gap-1">
-                    <Car className="text-white" size={28} />
-                    <Bike className="text-white" size={28} />
+                    <Car className="text-[#3b82f6]" size={24} />
+                    <Bike className="text-[#f0c41b]" size={24} />
                   </div>
                 </div>
-                <h3 className="font-black text-lg mb-2">Categoria AB</h3>
-                <p className="text-[#9ca3af] text-sm mb-3 font-semibold">Carro + Moto</p>
-                <p className="bg-gradient-to-r from-[#f0c41b] to-[#ffd700] bg-clip-text text-transparent font-black text-2xl">
-                  R$ {settings?.category_ab_price || 992}
+                <h3 className="font-bold mb-2">Categoria AB</h3>
+                <p className="text-[#9ca3af] text-sm mb-2">Carro + Moto</p>
+                <p className="text-[#f0c41b] font-bold">
+                  A partir de R$ {settings?.category_ab_price || 992},00
                 </p>
-                <p className="text-[#9ca3af] text-xs mt-1">em até 10x</p>
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-[#1a2332] to-[#0d1117] border-2 border-[#374151] hover:border-[#3b82f6] hover:shadow-2xl hover:shadow-[#3b82f6]/30 transition-all transform hover:scale-105 group">
+            <Card className="bg-[#1a2332] border-[#374151] hover:border-[#f0c41b] transition-all">
               <CardContent className="p-6 text-center">
-                <div className="w-20 h-20 bg-gradient-to-br from-[#1e40af] to-[#3b82f6] rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform shadow-lg">
-                  <Bus className="text-white" size={36} />
+                <div className="w-16 h-16 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Bus className="text-[#3b82f6]" size={32} />
                 </div>
-                <h3 className="font-black text-lg mb-2">Ônibus</h3>
-                <p className="text-[#9ca3af] text-sm mb-3 font-semibold">Categoria D</p>
-                <p className="text-[#3b82f6] font-black text-xl">Consulte</p>
+                <h3 className="font-bold mb-2">Ônibus</h3>
+                <p className="text-[#9ca3af] text-sm mb-2">Categoria D</p>
+                <p className="text-[#f0c41b] font-bold">Consulte</p>
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-[#1a2332] to-[#0d1117] border-2 border-[#374151] hover:border-[#3b82f6] hover:shadow-2xl hover:shadow-[#3b82f6]/30 transition-all transform hover:scale-105 group">
+            <Card className="bg-[#1a2332] border-[#374151] hover:border-[#f0c41b] transition-all">
               <CardContent className="p-6 text-center">
-                <div className="w-20 h-20 bg-gradient-to-br from-[#1e40af] to-[#3b82f6] rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform shadow-lg">
-                  <Truck className="text-white" size={36} />
+                <div className="w-16 h-16 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Truck className="text-[#3b82f6]" size={32} />
                 </div>
-                <h3 className="font-black text-lg mb-2">Carreta</h3>
-                <p className="text-[#9ca3af] text-sm mb-3 font-semibold">Categoria E</p>
-                <p className="text-[#3b82f6] font-black text-xl">Consulte</p>
+                <h3 className="font-bold mb-2">Carreta</h3>
+                <p className="text-[#9ca3af] text-sm mb-2">Categoria E</p>
+                <p className="text-[#f0c41b] font-bold">Consulte</p>
               </CardContent>
             </Card>
           </div>
         </div>
 
         {/* Vantagens */}
-        <div className="mb-24">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-black mb-4">
-              Por que escolher a <span className="bg-gradient-to-r from-[#f0c41b] to-[#ffd700] bg-clip-text text-transparent">CNH PARA TODOS?</span>
-            </h2>
-            <p className="text-[#9ca3af] text-lg">Vantagens que fazem a diferença na sua jornada</p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="bg-gradient-to-br from-[#1a2332] to-[#0d1117] border-2 border-[#374151] hover:border-[#f0c41b] hover:shadow-2xl hover:shadow-[#f0c41b]/20 transition-all group">
-              <CardContent className="p-8">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#f0c41b] to-[#ffd700] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
-                  <Award className="text-black" size={32} />
-                </div>
-                <h3 className="font-black mb-3 text-xl">Instrutores Qualificados</h3>
-                <p className="text-[#9ca3af] leading-relaxed">
-                  Equipe experiente e certificada para te ensinar com segurança e profissionalismo
+        <div className="mb-16">
+          <h2 className="text-2xl font-bold text-center mb-8">
+            Por que escolher a <span className="text-[#f0c41b]">CNH PARA TODOS?</span>
+          </h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            <Card className="bg-[#1a2332] border-[#374151]">
+              <CardContent className="p-6">
+                <CheckCircle className="text-[#f0c41b] mb-4" size={40} />
+                <h3 className="font-bold mb-2 text-lg">Instrutores Qualificados</h3>
+                <p className="text-[#9ca3af]">
+                  Equipe experiente e preparada para te ensinar com segurança
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-[#1a2332] to-[#0d1117] border-2 border-[#374151] hover:border-[#3b82f6] hover:shadow-2xl hover:shadow-[#3b82f6]/20 transition-all group">
-              <CardContent className="p-8">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#1e40af] to-[#3b82f6] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
-                  <CreditCard className="text-white" size={32} />
-                </div>
-                <h3 className="font-black mb-3 text-xl">Pagamento Facilitado</h3>
-                <p className="text-[#9ca3af] leading-relaxed">
-                  Parcelamento em até 10x sem juros no cartão de crédito ou desconto no PIX
+            <Card className="bg-[#1a2332] border-[#374151]">
+              <CardContent className="p-6">
+                <CheckCircle className="text-[#f0c41b] mb-4" size={40} />
+                <h3 className="font-bold mb-2 text-lg">Pagamento Facilitado</h3>
+                <p className="text-[#9ca3af]">
+                  Parcelamento em até 10x sem juros no cartão de crédito
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-[#1a2332] to-[#0d1117] border-2 border-[#374151] hover:border-[#f0c41b] hover:shadow-2xl hover:shadow-[#f0c41b]/20 transition-all group">
-              <CardContent className="p-8">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#f0c41b] to-[#ffd700] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
-                  <Clock className="text-black" size={32} />
-                </div>
-                <h3 className="font-black mb-3 text-xl">Agendamento Online</h3>
-                <p className="text-[#9ca3af] leading-relaxed">
-                  Marque suas aulas direto pelo sistema quando e onde quiser, 24 horas por dia
+            <Card className="bg-[#1a2332] border-[#374151]">
+              <CardContent className="p-6">
+                <CheckCircle className="text-[#f0c41b] mb-4" size={40} />
+                <h3 className="font-bold mb-2 text-lg">Agendamento Online</h3>
+                <p className="text-[#9ca3af]">
+                  Marque suas aulas direto pelo aplicativo quando quiser
                 </p>
               </CardContent>
             </Card>
@@ -290,35 +295,29 @@ export default function Landing() {
         </Card>
 
         {/* CTA Final */}
-        <div className="text-center">
-          <Card className="bg-gradient-to-br from-[#1e40af] via-[#3b82f6] to-[#1e40af] border-2 border-[#3b82f6] shadow-2xl shadow-[#3b82f6]/50 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-[#f0c41b]/10 to-transparent opacity-50"></div>
-            <CardContent className="p-12 relative">
-              <div className="inline-block mb-4 px-4 py-2 bg-[#f0c41b]/20 rounded-full border border-[#f0c41b]">
-                <span className="text-[#f0c41b] font-bold text-sm">🚀 Comece agora mesmo</span>
-              </div>
-              <h2 className="text-4xl md:text-5xl font-black mb-6">
+        <div className="text-center max-w-4xl mx-auto">
+          <Card className="bg-gradient-to-r from-[#1e40af] to-[#3b82f6] border-none">
+            <CardContent className="p-8">
+              <h2 className="text-3xl font-bold mb-4">
                 Pronto para começar sua jornada?
               </h2>
-              <p className="text-xl mb-10 opacity-90 max-w-2xl mx-auto font-medium">
-                Cadastre-se agora e dê o primeiro passo rumo à sua habilitação com a melhor autoescola da região
+              <p className="text-lg mb-6 opacity-90">
+                Cadastre-se agora e dê o primeiro passo rumo à sua habilitação
               </p>
               {user ? (
                 <Link to={createPageUrl('StudentRegister')}>
-                  <Button className="bg-gradient-to-r from-[#f0c41b] to-[#ffd700] text-black hover:shadow-2xl hover:shadow-[#f0c41b]/50 px-12 py-8 text-xl font-black rounded-2xl transition-all transform hover:scale-105">
-                    <Zap className="mr-2" size={24} />
+                  <Button className="bg-[#f0c41b] text-black hover:bg-[#d4aa00] px-8 py-6 text-lg font-bold">
                     Fazer Meu Cadastro
-                    <ArrowRight className="ml-2" size={24} />
+                    <ArrowRight className="ml-2" />
                   </Button>
                 </Link>
               ) : (
                 <Button 
-                  className="bg-gradient-to-r from-[#f0c41b] to-[#ffd700] text-black hover:shadow-2xl hover:shadow-[#f0c41b]/50 px-12 py-8 text-xl font-black rounded-2xl transition-all transform hover:scale-105"
+                  className="bg-[#f0c41b] text-black hover:bg-[#d4aa00] px-8 py-6 text-lg font-bold"
                   onClick={() => base44.auth.redirectToLogin(createPageUrl('StudentRegister'))}
                 >
-                  <Zap className="mr-2" size={24} />
                   Cadastrar Agora
-                  <ArrowRight className="ml-2" size={24} />
+                  <ArrowRight className="ml-2" />
                 </Button>
               )}
             </CardContent>
