@@ -384,16 +384,20 @@ export default function StudentRegister() {
               </div>
             )}
 
-            <div className="flex gap-3 mt-4">
-              <Button variant="outline" className="border-[#374151]" onClick={() => setStep(1)}>
-                <ArrowLeft className="mr-2" size={18} /> Voltar
+            <div className="flex gap-3 mt-6">
+              <Button 
+                variant="outline" 
+                className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black px-6 py-6 text-base font-bold" 
+                onClick={() => setStep(1)}
+              >
+                <ArrowLeft className="mr-2" size={20} /> VOLTAR
               </Button>
               <Button 
-                className="flex-1 bg-[#1e40af] hover:bg-[#3b82f6]"
+                className="flex-1 bg-[#1e40af] hover:bg-[#3b82f6] px-6 py-6 text-base font-bold"
                 onClick={() => setStep(3)}
                 disabled={!formData.category || (formData.category === 'A' && formData.has_cnh === null)}
               >
-                Continuar <ArrowRight className="ml-2" size={18} />
+                CONTINUAR <ArrowRight className="ml-2" size={20} />
               </Button>
             </div>
           </CardContent>
@@ -512,15 +516,19 @@ export default function StudentRegister() {
               <p className="text-sm text-[#9ca3af] mt-1">Parcelamento em até 10x com juros</p>
             </div>
 
-            <div className="flex gap-3 mt-4">
-              <Button variant="outline" className="border-[#374151]" onClick={() => setStep(2)}>
-                <ArrowLeft className="mr-2" size={18} /> Voltar
+            <div className="flex gap-3 mt-6">
+              <Button 
+                variant="outline" 
+                className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black px-6 py-6 text-base font-bold" 
+                onClick={() => setStep(2)}
+              >
+                <ArrowLeft className="mr-2" size={20} /> VOLTAR
               </Button>
               <Button 
-                className="flex-1 bg-[#1e40af] hover:bg-[#3b82f6]"
+                className="flex-1 bg-[#1e40af] hover:bg-[#3b82f6] px-6 py-6 text-base font-bold"
                 onClick={() => setStep(4)}
               >
-                Continuar <ArrowRight className="ml-2" size={18} />
+                CONTINUAR <ArrowRight className="ml-2" size={20} />
               </Button>
             </div>
           </CardContent>
@@ -564,18 +572,22 @@ export default function StudentRegister() {
               </div>
             </div>
 
-            <div className="flex gap-3 mt-4">
-              <Button variant="outline" className="border-[#374151]" onClick={() => setStep(3)}>
-                <ArrowLeft className="mr-2" size={18} /> Voltar
+            <div className="flex gap-3 mt-6">
+              <Button 
+                variant="outline" 
+                className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black px-6 py-6 text-base font-bold" 
+                onClick={() => setStep(3)}
+              >
+                <ArrowLeft className="mr-2" size={20} /> VOLTAR
               </Button>
               <Button 
-                className="flex-1 bg-[#fbbf24] text-black hover:bg-[#fbbf24]/80"
+                className="flex-1 bg-[#fbbf24] text-black hover:bg-[#fbbf24]/80 px-6 py-6 text-base font-bold"
                 onClick={handleSubmit}
                 disabled={loading}
               >
-                {loading ? 'Processando...' : (
+                {loading ? 'PROCESSANDO...' : (
                   <>
-                    <CreditCard className="mr-2" size={18} /> Ir para Pagamento
+                    <CreditCard className="mr-2" size={20} /> IR PARA PAGAMENTO
                   </>
                 )}
               </Button>
