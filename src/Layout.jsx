@@ -67,14 +67,18 @@ export default function Layout({ children, currentPageName }) {
   const adminMenuItems = [
     { name: 'Dashboard', icon: Home, page: 'AdminDashboard' },
     { name: 'Alunos', icon: Users, page: 'AdminStudents' },
-    { name: 'Instrutores', icon: Car, page: 'AdminInstructors' },
     { name: 'Aulas', icon: Calendar, page: 'AdminLessons' },
     { name: 'Conversas', icon: MessageSquare, page: 'AdminChats' },
     { name: 'Pagamentos', icon: DollarSign, page: 'AdminPayments' },
   ];
 
   const superAdminMenuItems = [
-    ...adminMenuItems,
+    { name: 'Dashboard', icon: Home, page: 'AdminDashboard' },
+    { name: 'Alunos', icon: Users, page: 'AdminStudents' },
+    { name: 'Instrutores', icon: Car, page: 'AdminInstructors' },
+    { name: 'Aulas', icon: Calendar, page: 'AdminLessons' },
+    { name: 'Conversas', icon: MessageSquare, page: 'AdminChats' },
+    { name: 'Pagamentos', icon: DollarSign, page: 'AdminPayments' },
     { name: 'Vendedores', icon: UserCog, page: 'AdminSellers' },
     { name: 'Configurações', icon: Settings, page: 'AdminSettings' },
   ];
@@ -210,30 +214,24 @@ export default function Layout({ children, currentPageName }) {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          {/* Botões discretos de admin */}
+        <div className="flex items-center gap-3">
+          {/* Botões discretos separados de admin */}
           {!isAdmin && (
-            <div className="relative">
-              <button 
-                onClick={() => setShowAdminMenu(!showAdminMenu)}
-                className="text-[8px] text-[#374151] hover:text-[#6b7280] px-1"
-              >
-                •••
-              </button>
-              {showAdminMenu && (
-                <div className="absolute right-0 top-6 bg-[#1a2332] border border-[#374151] rounded p-2 text-xs space-y-1 min-w-[120px]">
-                  <Link to={createPageUrl('AdminLogin')} className="block hover:text-[#fbbf24] text-[10px]">
-                    Admin
-                  </Link>
-                  <Link to={createPageUrl('SuperAdminLogin')} className="block hover:text-[#fbbf24] text-[10px]">
-                    Super Admin
-                  </Link>
-                </div>
-              )}
-            </div>
+            <>
+              <Link to={createPageUrl('AdminLogin')}>
+                <button className="text-[10px] text-[#30363d] hover:text-[#0969da] px-2 py-1 rounded transition-colors font-semibold">
+                  ADMIN
+                </button>
+              </Link>
+              <Link to={createPageUrl('SuperAdminLogin')}>
+                <button className="text-[10px] text-[#30363d] hover:text-[#f0c41b] px-2 py-1 rounded transition-colors font-semibold">
+                  SUPER
+                </button>
+              </Link>
+            </>
           )}
           
-          <span className="text-sm text-[#9ca3af] hidden sm:block">{user?.full_name || user?.email}</span>
+          <span className="text-sm text-[#e6edf3] hidden sm:block font-semibold">{user?.full_name || user?.email}</span>
           <button onClick={handleLogout} className="p-2 hover:bg-[#1a2332] rounded text-[#ef4444]">
             <LogOut size={18} />
           </button>
@@ -258,7 +256,7 @@ export default function Layout({ children, currentPageName }) {
                 }`}
               >
                 <Icon size={20} className={isActive ? 'text-[#f0c41b] drop-shadow-lg' : ''} />
-                <span className="text-sm">{item.name}</span>
+                <span className="text-sm font-semibold">{item.name}</span>
               </Link>
             );
           })}
@@ -267,19 +265,19 @@ export default function Layout({ children, currentPageName }) {
         {/* User Status */}
         {student && (
           <div className="absolute bottom-4 left-4 right-4 p-3 bg-[#161b22] rounded-lg border border-[#30363d] terminal-glow">
-            <div className="text-xs text-[#9ca3af] mb-1">Status do Processo</div>
+            <div className="text-xs text-[#7d8590] mb-1 font-semibold">Status do Processo</div>
             <div className="space-y-1">
               <div className="flex items-center gap-2 text-xs">
                 <div className={`w-2 h-2 rounded-full ${student.exam_done ? 'bg-green-500' : 'bg-[#374151]'}`} />
-                <span>Exames</span>
+                <span className="text-[#e6edf3] font-medium">Exames</span>
               </div>
               <div className="flex items-center gap-2 text-xs">
                 <div className={`w-2 h-2 rounded-full ${student.theoretical_test_done ? 'bg-green-500' : 'bg-[#374151]'}`} />
-                <span>Prova Teórica</span>
+                <span className="text-[#e6edf3] font-medium">Prova Teórica</span>
               </div>
               <div className="flex items-center gap-2 text-xs">
                 <div className={`w-2 h-2 rounded-full ${student.practical_test_done ? 'bg-green-500' : 'bg-[#374151]'}`} />
-                <span>Prova Prática</span>
+                <span className="text-[#e6edf3] font-medium">Prova Prática</span>
               </div>
             </div>
           </div>
