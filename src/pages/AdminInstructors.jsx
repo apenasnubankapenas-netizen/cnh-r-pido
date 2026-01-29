@@ -31,6 +31,7 @@ export default function AdminInstructors() {
   const [instructors, setInstructors] = useState([]);
   const [lessons, setLessons] = useState([]);
   const [settings, setSettings] = useState(null);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showDialog, setShowDialog] = useState(false);
   const [showInviteDialog, setShowInviteDialog] = useState(false);
@@ -56,6 +57,9 @@ export default function AdminInstructors() {
 
   const loadData = async () => {
     try {
+      const currentUser = await base44.auth.me();
+      setUser(currentUser);
+
       const [instructorsData, lessonsData, settingsData] = await Promise.all([
         base44.entities.Instructor.list(),
         base44.entities.Lesson.list(),
@@ -188,13 +192,15 @@ export default function AdminInstructors() {
           Gerenciar Instrutores
         </h1>
         <div className="flex gap-2">
-          <Button 
-            className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
-            onClick={generateInviteLink}
-          >
-            <LinkIcon className="mr-2" size={18} />
-            Gerar Link de Convite
-          </Button>
+          {user?.email === 'tcnhpara@gmail.com' && (
+            <Button 
+              className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
+              onClick={generateInviteLink}
+            >
+              <LinkIcon className="mr-2" size={18} />
+              Gerar Link de Convite
+            </Button>
+          )}
           <Button 
             className="bg-[#1e40af] hover:bg-[#3b82f6]"
             onClick={() => { resetForm(); setShowDialog(true); }}

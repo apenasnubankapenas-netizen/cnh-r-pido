@@ -53,7 +53,8 @@ export default function Layout({ children, currentPageName }) {
   };
 
   const isAdmin = user?.role === 'admin';
-  const isSuperAdmin = user?.role === 'admin' && user?.email?.includes('super');
+  // Super Admin é identificado por email específico
+  const isSuperAdmin = user?.role === 'admin' && user?.email === 'tcnhpara@gmail.com';
 
   const studentMenuItems = [
     { name: 'Dashboard', icon: Home, page: 'Home' },
