@@ -24,10 +24,12 @@ import { Textarea } from "@/components/ui/textarea";
 export default function Instructors() {
   const [instructors, setInstructors] = useState([]);
   const [reviews, setReviews] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedInstructor, setSelectedInstructor] = useState(null);
   const [activeTab, setActiveTab] = useState('sobre');
-  const [newReview, setNewReview] = useState({ rating: 5, comment: '' });
+  const [newComment, setNewComment] = useState({ rating: 0, comment: '' });
   const [student, setStudent] = useState(null);
   const [mediaIndex, setMediaIndex] = useState(0);
 
@@ -46,6 +48,12 @@ export default function Instructors() {
 
       const allReviews = await base44.entities.InstructorReview.list();
       setReviews(allReviews);
+
+      const allComments = await base44.entities.InstructorComment.list();
+      setComments(allComments);
+
+      const allPosts = await base44.entities.InstructorPost.list();
+      setPosts(allPosts);
     } catch (e) {
       console.log(e);
     } finally {
@@ -64,23 +72,31 @@ export default function Instructors() {
     return (sum / instructorReviews.length).toFixed(1);
   };
 
-  const handleSubmitReview = async () => {
-    if (!selectedInstructor || !student) return;
+  const handleSubmitComment = async () => {
+    if (!selectedInstructor || !student || !newComment.comment) return;
     
     try {
-      await base44.entities.InstructorReview.create({
+      await base44.entities.InstructorComment.create({
         instructor_id: selectedInstructor.id,
         student_id: student.id,
         student_name: student.full_name,
-        rating: newReview.rating,
-        comment: newReview.comment
+        rating: newComment.rating,
+        comment: newComment.comment
       });
       
-      setNewReview({ rating: 5, comment: '' });
+      setNewComment({ rating: 0, comment: '' });
       loadData();
     } catch (e) {
       console.log(e);
     }
+  };
+
+  const getInstructorPosts = (instructorId) => {
+    return posts.filter(p => p.instructor_id === instructorId);
+  };
+
+  const getInstructorComments = (instructorId) => {
+    return comments.filter(c => c.instructor_id === instructorId);
   };
 
   const getVehicleBadges = (instructor) => {
@@ -253,11 +269,16 @@ export default function Instructors() {
                 </TabsContent>
 
                 <TabsContent value="fotos" className="mt-4">
-                  {selectedInstructor.images?.length > 0 ? (
+                  {getInstructorPosts(selectedInstructor.id).length > 0 ? (
                     <div className="grid grid-cols-3 gap-2">
-                      {selectedInstructor.images.map((img, idx) => (
-                        <div key={idx} className="aspect-square bg-[#111827] rounded-lg overflow-hidden">
-                          <img src={img} alt="" className="w-full h-full object-cover" />
+                      {getInstructorPosts(selectedInstructor.id).map((post) => (
+                        <div key={post.id} className="aspect-square bg-[#111827] rounded-lg overflow-hidden relative">
+                          <img src={post.image_url} alt="" className="w-full h-full object-cover" />
+                          {post.caption && (
+                            <div className="absolute bottom-0 left-0 right-0 p-2 bg-black/70">
+                              <p className="text-xs text-white">{post.caption}</p>
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -272,58 +293,62 @@ export default function Instructors() {
                 <TabsContent value="avaliacoes" className="mt-4 space-y-4">
                   {student && (
                     <div className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
-                      <h4 className="font-bold mb-3">Deixe sua avaliação</h4>
-                      <div className="flex gap-1 mb-3">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <button 
-                            key={star}
-                            onClick={() => setNewReview({...newReview, rating: star})}
-                          >
-                            <Star 
-                              size={24} 
-                              className={star <= newReview.rating ? 'text-[#fbbf24] fill-[#fbbf24]' : 'text-[#374151]'} 
-                            />
-                          </button>
-                        ))}
+                      <h4 className="font-bold mb-3">Deixe seu comentário</h4>
+                      <div className="mb-3">
+                        <label className="text-sm text-[#9ca3af] mb-2 block">Avaliação (opcional)</label>
+                        <div className="flex gap-1">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <button 
+                              key={star}
+                              onClick={() => setNewComment({...newComment, rating: star})}
+                            >
+                              <Star 
+                                size={24} 
+                                className={star <= newComment.rating ? 'text-[#fbbf24] fill-[#fbbf24]' : 'text-[#374151]'} 
+                              />
+                            </button>
+                          ))}
+                        </div>
                       </div>
                       <Textarea 
                         className="bg-[#1a2332] border-[#374151] mb-3"
                         placeholder="Escreva seu comentário..."
-                        value={newReview.comment}
-                        onChange={(e) => setNewReview({...newReview, comment: e.target.value})}
+                        value={newComment.comment}
+                        onChange={(e) => setNewComment({...newComment, comment: e.target.value})}
                       />
                       <Button 
                         className="bg-[#1e40af] hover:bg-[#3b82f6]"
-                        onClick={handleSubmitReview}
+                        onClick={handleSubmitComment}
+                        disabled={!newComment.comment}
                       >
-                        Enviar Avaliação
+                        Enviar Comentário
                       </Button>
                     </div>
                   )}
 
                   <div className="space-y-3">
-                    {getInstructorReviews(selectedInstructor.id).map((review) => (
-                      <div key={review.id} className="p-3 bg-[#111827] rounded-lg border border-[#374151]">
+                    {getInstructorComments(selectedInstructor.id).map((comment) => (
+                      <div key={comment.id} className="p-3 bg-[#111827] rounded-lg border border-[#374151]">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="font-medium">{review.student_name}</span>
-                          <div className="flex">
-                            {[1, 2, 3, 4, 5].map((star) => (
-                              <Star 
-                                key={star}
-                                size={14} 
-                                className={star <= review.rating ? 'text-[#fbbf24] fill-[#fbbf24]' : 'text-[#374151]'} 
-                              />
-                            ))}
-                          </div>
+                          <span className="font-medium">{comment.student_name}</span>
+                          {comment.rating > 0 && (
+                            <div className="flex">
+                              {[1, 2, 3, 4, 5].map((star) => (
+                                <Star 
+                                  key={star}
+                                  size={14} 
+                                  className={star <= comment.rating ? 'text-[#fbbf24] fill-[#fbbf24]' : 'text-[#374151]'} 
+                                />
+                              ))}
+                            </div>
+                          )}
                         </div>
-                        {review.comment && (
-                          <p className="text-sm text-[#9ca3af]">{review.comment}</p>
-                        )}
+                        <p className="text-sm text-[#9ca3af]">{comment.comment}</p>
                       </div>
                     ))}
-                    {getInstructorReviews(selectedInstructor.id).length === 0 && (
+                    {getInstructorComments(selectedInstructor.id).length === 0 && (
                       <div className="text-center py-4 text-[#9ca3af]">
-                        <p>Nenhuma avaliação ainda</p>
+                        <p>Nenhum comentário ainda</p>
                       </div>
                     )}
                   </div>
