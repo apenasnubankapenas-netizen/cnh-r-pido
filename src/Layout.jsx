@@ -207,38 +207,35 @@ export default function Layout({ children, currentPageName }) {
           >
             {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
-          <Link to={createPageUrl('Landing')} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <Link to={createPageUrl('Landing')} className="flex items-center hover:opacity-80 transition-opacity">
             <Car className="text-[#f0c41b]" size={26} />
-            <span className="text-xl font-extrabold bg-gradient-to-r from-[#f0c41b] to-[#ffd93d] bg-clip-text text-transparent tracking-tight">
-              CNH PARA TODOS
-            </span>
           </Link>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {/* Botões de acesso separados */}
-              <div className="flex items-center gap-1">
-                <Link to={createPageUrl('Landing')}>
-                  <button className="text-[11px] text-[#30363d] hover:text-[#e6edf3] px-2 py-1 rounded transition-colors font-semibold">
-                    INÍCIO
-                  </button>
-                </Link>
-                <span className="text-[#30363d] text-[10px]">|</span>
-                <Link to={createPageUrl('AdminLogin')}>
-                  <button className="text-[11px] text-[#30363d] hover:text-[#0969da] px-2 py-1 rounded transition-colors font-semibold">
-                    ADMIN
-                  </button>
-                </Link>
-                <span className="text-[#30363d] text-[10px]">|</span>
-                <Link to={createPageUrl('SuperAdminLogin')}>
-                  <button className="text-[11px] text-[#30363d] hover:text-[#f0c41b] px-2 py-1 rounded transition-colors font-semibold">
-                    SUPER
-                  </button>
-                </Link>
-              </div>
-          
+          <div className="flex items-center gap-0.5">
+            <Link to={createPageUrl('Landing')}>
+              <button className="text-[10px] sm:text-[11px] text-[#30363d] hover:text-[#e6edf3] px-3 py-2 rounded transition-colors font-semibold min-h-[36px]">
+                INÍCIO
+              </button>
+            </Link>
+            <span className="text-[#30363d] text-[10px]">|</span>
+            <Link to={createPageUrl('AdminLogin')}>
+              <button className="text-[10px] sm:text-[11px] text-[#30363d] hover:text-[#0969da] px-3 py-2 rounded transition-colors font-semibold min-h-[36px]">
+                ADMIN
+              </button>
+            </Link>
+            <span className="text-[#30363d] text-[10px]">|</span>
+            <Link to={createPageUrl('SuperAdminLogin')}>
+              <button className="text-[10px] sm:text-[11px] text-[#30363d] hover:text-[#f0c41b] px-3 py-2 rounded transition-colors font-semibold min-h-[36px]">
+                SUPER
+              </button>
+            </Link>
+          </div>
+
           <span className="text-sm text-[#e6edf3] hidden sm:block font-semibold">{user?.full_name || user?.email}</span>
-          <button onClick={handleLogout} className="p-2 hover:bg-[#1a2332] rounded text-[#ef4444]">
+          <button onClick={handleLogout} className="p-2 hover:bg-[#1a2332] rounded text-[#ef4444] min-h-[36px] min-w-[36px]">
             <LogOut size={18} />
           </button>
         </div>
