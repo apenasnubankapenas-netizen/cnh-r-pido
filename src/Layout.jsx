@@ -325,18 +325,18 @@ export default function Layout({ children, currentPageName }) {
         }
         
         .terminal-glow {
-          box-shadow: 0 0 30px var(--shadow-blue), 0 4px 12px rgba(0, 0, 0, 0.3);
-          border: 1px solid rgba(9, 105, 218, 0.3);
-        }
+                        box-shadow: 0 0 10px var(--shadow-blue), 0 2px 6px rgba(0, 0, 0, 0.2);
+                        border: 1px solid rgba(9, 105, 218, 0.2);
+                      }
         
         .yellow-glow {
-          box-shadow: 0 0 20px var(--shadow-yellow), 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
+                        box-shadow: 0 0 8px var(--shadow-yellow), 0 2px 4px rgba(0, 0, 0, 0.2);
+                      }
         
         .terminal-border {
-          border: 1px solid var(--accent-blue);
-          box-shadow: 0 0 15px var(--shadow-blue);
-        }
+                        border: 1px solid var(--accent-blue);
+                        box-shadow: 0 0 6px var(--shadow-blue);
+                      }
         
         .scan-line {
           animation: scan 8s linear infinite;
@@ -393,7 +393,7 @@ export default function Layout({ children, currentPageName }) {
       `}</style>
 
       {/* Scan Line Effect */}
-      <div className="scan-line fixed top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#0969da] to-transparent opacity-20 pointer-events-none z-50" />
+      <div className="scan-line fixed top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#0969da] to-transparent opacity-10 pointer-events-none z-50" />
       
       {/* Top Bar */}
       <div className="fixed top-0 left-0 right-0 h-14 bg-[#0d1117] border-b border-[#30363d] z-40 flex items-center justify-between px-3 backdrop-blur-sm bg-opacity-95">

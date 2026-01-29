@@ -31,34 +31,30 @@
 
 @layer base {
   * {
-    @apply border-border;
-    color: #e6edf3 !important;
-  }
+            @apply border-border;
+          }
   body {
-    @apply bg-background text-foreground;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-weight: 500;
-    color: #e6edf3 !important;
-  }
+            @apply bg-background text-foreground;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-weight: 500;
+          }
 
   h1, h2, h3, h4, h5, h6 {
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    color: #e6edf3 !important;
-  }
+            font-weight: 800;
+            letter-spacing: -0.02em;
+          }
 
   p, span, div, label, button, input, textarea, select {
-    color: #e6edf3 !important;
-    font-weight: 500;
-  }
+            font-weight: 500;
+          }
 
   /* Exceção para botões amarelos que precisam de texto preto */
   .text-black, [class*="text-black"] {
-    color: #0a0e1a !important;
-  }
+            color: #0a0e1a;
+          }
 }
 
 /* Terminal Kali Linux Theme */
