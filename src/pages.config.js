@@ -49,12 +49,22 @@
  */
 import Home from './pages/Home';
 import StudentRegister from './pages/StudentRegister';
+import MyLessons from './pages/MyLessons';
+import Instructors from './pages/Instructors';
+import Simulados from './pages/Simulados';
+import Chat from './pages/Chat';
+import StudentProfile from './pages/StudentProfile';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "Home": Home,
     "StudentRegister": StudentRegister,
+    "MyLessons": MyLessons,
+    "Instructors": Instructors,
+    "Simulados": Simulados,
+    "Chat": Chat,
+    "StudentProfile": StudentProfile,
 }
 
 export const pagesConfig = {
