@@ -162,15 +162,99 @@ export default function Layout({ children, currentPageName }) {
 
   const menuItems = getMenuItems();
 
-  // Páginas públicas sem menu (Landing, Login pages, Chat público)
+  // Páginas públicas sem menu lateral (Landing, Login pages, Chat público)
   const publicPages = ['Landing', 'AdminLogin', 'SuperAdminLogin', 'StudentRegister', 'InstructorRegister'];
   const isPublicPage = publicPages.includes(currentPageName);
   
-  // Se não está logado OU está em página pública OU não tem tipo de usuário identificado
-  if (!user || isPublicPage || (user && userType === null && user.role === 'user')) {
+  // Se não está logado
+  if (!user) {
     return (
       <div className="min-h-screen bg-[#0a0e1a] text-white font-mono">
         {children}
+      </div>
+    );
+  }
+
+  // Se está em página pública ou não tem cadastro, mostrar top bar mas sem sidebar
+  if (isPublicPage || (userType === null && user.role === 'user')) {
+    return (
+      <div className="min-h-screen bg-[#0a0e1a] text-white font-mono">
+        <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        
+        :root {
+          --bg-primary: #0a0e1a;
+          --bg-secondary: #0d1117;
+          --bg-card: #161b22;
+          --accent-blue: #0969da;
+          --accent-blue-dark: #0550ae;
+          --accent-blue-light: #2f81f7;
+          --accent-yellow: #f0c41b;
+          --accent-yellow-dark: #d4aa00;
+          --text-primary: #e6edf3;
+          --text-secondary: #7d8590;
+          --border-color: #30363d;
+          --shadow-blue: rgba(9, 105, 218, 0.4);
+          --shadow-yellow: rgba(240, 196, 27, 0.4);
+        }
+        
+        * {
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+          font-weight: 500;
+          letter-spacing: -0.01em;
+        }
+        
+        body {
+          background: linear-gradient(135deg, #0a0e1a 0%, #0d1117 100%);
+          background-attachment: fixed;
+        }
+      `}</style>
+
+        {/* Top Bar */}
+        <div className="fixed top-0 left-0 right-0 h-14 bg-[#0d1117] border-b border-[#30363d] z-40 flex items-center justify-between px-3 backdrop-blur-sm bg-opacity-95">
+          <div className="flex items-center gap-2">
+            <Link 
+              to={createPageUrl('Landing')} 
+              className="flex items-center hover:opacity-80 transition-opacity p-1.5"
+            >
+              <Car className="text-[#f0c41b]" size={24} />
+            </Link>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-0">
+              <Link to={createPageUrl('Landing')}>
+                <button className="text-[10px] sm:text-xs text-[#30363d] hover:text-[#e6edf3] px-2.5 py-1.5 rounded transition-colors font-semibold">
+                  INÍCIO
+                </button>
+              </Link>
+              <span className="text-[#30363d] text-xs">|</span>
+              <Link to={createPageUrl('AdminLogin')}>
+                <button className="text-[10px] sm:text-xs text-[#30363d] hover:text-[#0969da] px-2.5 py-1.5 rounded transition-colors font-semibold">
+                  ADMIN
+                </button>
+              </Link>
+              <span className="text-[#30363d] text-xs">|</span>
+              <Link to={createPageUrl('SuperAdminLogin')}>
+                <button className="text-[10px] sm:text-xs text-[#30363d] hover:text-[#f0c41b] px-2.5 py-1.5 rounded transition-colors font-semibold">
+                  SUPER
+                </button>
+              </Link>
+            </div>
+
+            <span className="text-xs text-[#e6edf3] hidden md:block font-medium truncate max-w-[120px]">{user?.full_name || user?.email}</span>
+            <button 
+              onClick={handleLogout} 
+              className="p-2 hover:bg-[#1a2332] rounded text-[#ef4444] hover:text-[#ff5555] transition-colors"
+            >
+              <LogOut size={18} />
+            </button>
+          </div>
+        </div>
+
+        <main className="pt-14 min-h-screen">
+          {children}
+        </main>
       </div>
     );
   }
