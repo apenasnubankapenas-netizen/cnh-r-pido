@@ -199,50 +199,56 @@ export default function Layout({ children, currentPageName }) {
       <div className="scan-line fixed top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#0969da] to-transparent opacity-20 pointer-events-none z-50" />
       
       {/* Top Bar com login admin discreto */}
-      <div className="fixed top-0 left-0 right-0 h-14 bg-[#0d1117] border-b border-[#30363d] z-40 flex items-center justify-between px-4 backdrop-blur-sm bg-opacity-95">
-        <div className="flex items-center gap-3">
+      <div className="fixed top-0 left-0 right-0 h-16 bg-[#0d1117] border-b border-[#30363d] z-40 flex items-center justify-between px-2 sm:px-4 backdrop-blur-sm bg-opacity-95">
+        <div className="flex items-center gap-2">
           <button 
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="lg:hidden p-2 hover:bg-[#1a2332] rounded"
+            className="lg:hidden p-3 hover:bg-[#1a2332] active:bg-[#21262d] rounded touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors"
           >
-            {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
+            {isSidebarOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
-          <Link to={createPageUrl('Landing')} className="flex items-center hover:opacity-80 transition-opacity">
+          <Link 
+            to={createPageUrl('Landing')} 
+            className="flex items-center hover:opacity-80 active:opacity-60 transition-opacity p-2 rounded touch-manipulation min-h-[44px] min-w-[44px] justify-center"
+          >
             <Car className="text-[#f0c41b]" size={26} />
           </Link>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
           {/* Botões de acesso separados */}
-          <div className="flex items-center gap-0.5">
+          <div className="flex items-center gap-0">
             <Link to={createPageUrl('Landing')}>
-              <button className="text-[10px] sm:text-[11px] text-[#30363d] hover:text-[#e6edf3] px-3 py-2 rounded transition-colors font-semibold min-h-[36px]">
+              <button className="text-[10px] sm:text-[11px] text-[#30363d] hover:text-[#e6edf3] active:text-white px-2 sm:px-3 py-2 rounded transition-colors font-semibold touch-manipulation min-h-[44px] flex items-center justify-center">
                 INÍCIO
               </button>
             </Link>
-            <span className="text-[#30363d] text-[10px]">|</span>
+            <span className="text-[#30363d] text-[10px] px-1">|</span>
             <Link to={createPageUrl('AdminLogin')}>
-              <button className="text-[10px] sm:text-[11px] text-[#30363d] hover:text-[#0969da] px-3 py-2 rounded transition-colors font-semibold min-h-[36px]">
+              <button className="text-[10px] sm:text-[11px] text-[#30363d] hover:text-[#0969da] active:text-[#2f81f7] px-2 sm:px-3 py-2 rounded transition-colors font-semibold touch-manipulation min-h-[44px] flex items-center justify-center">
                 ADMIN
               </button>
             </Link>
-            <span className="text-[#30363d] text-[10px]">|</span>
+            <span className="text-[#30363d] text-[10px] px-1">|</span>
             <Link to={createPageUrl('SuperAdminLogin')}>
-              <button className="text-[10px] sm:text-[11px] text-[#30363d] hover:text-[#f0c41b] px-3 py-2 rounded transition-colors font-semibold min-h-[36px]">
+              <button className="text-[10px] sm:text-[11px] text-[#30363d] hover:text-[#f0c41b] active:text-[#ffd93d] px-2 sm:px-3 py-2 rounded transition-colors font-semibold touch-manipulation min-h-[44px] flex items-center justify-center">
                 SUPER
               </button>
             </Link>
           </div>
 
-          <span className="text-sm text-[#e6edf3] hidden sm:block font-semibold">{user?.full_name || user?.email}</span>
-          <button onClick={handleLogout} className="p-2 hover:bg-[#1a2332] rounded text-[#ef4444] min-h-[36px] min-w-[36px]">
-            <LogOut size={18} />
+          <span className="text-xs sm:text-sm text-[#e6edf3] hidden md:block font-semibold truncate max-w-[120px]">{user?.full_name || user?.email}</span>
+          <button 
+            onClick={handleLogout} 
+            className="p-3 hover:bg-[#1a2332] active:bg-[#21262d] rounded text-[#ef4444] hover:text-[#ff5555] touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors"
+          >
+            <LogOut size={20} />
           </button>
         </div>
       </div>
 
       {/* Sidebar */}
-      <aside className={`fixed top-14 left-0 h-[calc(100vh-56px)] w-64 bg-[#0d1117] border-r border-[#30363d] z-30 transform transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 backdrop-blur-sm bg-opacity-95 overflow-y-auto`}>
+      <aside className={`fixed top-16 left-0 h-[calc(100vh-64px)] w-64 bg-[#0d1117] border-r border-[#30363d] z-30 transform transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 backdrop-blur-sm bg-opacity-95 overflow-y-auto`}>
         <nav className="p-4 space-y-2">
           {menuItems.map((item) => {
             const Icon = item.icon;
@@ -294,7 +300,7 @@ export default function Layout({ children, currentPageName }) {
       </aside>
 
       {/* Main Content */}
-      <main className="lg:ml-64 pt-14 min-h-screen">
+      <main className="lg:ml-64 pt-16 min-h-screen">
         <div className="p-4 md:p-6">
           {children}
         </div>
