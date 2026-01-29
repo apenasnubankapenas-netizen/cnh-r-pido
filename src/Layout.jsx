@@ -162,8 +162,12 @@ export default function Layout({ children, currentPageName }) {
 
   const menuItems = getMenuItems();
 
-  // Se não está logado OU não tem tipo de usuário identificado (não está cadastrado)
-  if (!user || (user && userType === null && user.role === 'user')) {
+  // Páginas públicas sem menu (Landing, Login pages, Chat público)
+  const publicPages = ['Landing', 'AdminLogin', 'SuperAdminLogin', 'StudentRegister', 'InstructorRegister'];
+  const isPublicPage = publicPages.includes(currentPageName);
+  
+  // Se não está logado OU está em página pública OU não tem tipo de usuário identificado
+  if (!user || isPublicPage || (user && userType === null && user.role === 'user')) {
     return (
       <div className="min-h-screen bg-[#0a0e1a] text-white font-mono">
         {children}
