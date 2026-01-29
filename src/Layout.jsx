@@ -242,7 +242,7 @@ export default function Layout({ children, currentPageName }) {
       </div>
 
       {/* Sidebar */}
-      <aside className={`fixed top-14 left-0 h-[calc(100vh-56px)] w-64 bg-[#0d1117] border-r border-[#30363d] z-30 transform transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 backdrop-blur-sm bg-opacity-95`}>
+      <aside className={`fixed top-14 left-0 h-[calc(100vh-56px)] w-64 bg-[#0d1117] border-r border-[#30363d] z-30 transform transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 backdrop-blur-sm bg-opacity-95 overflow-y-auto`}>
         <nav className="p-4 space-y-2">
           {menuItems.map((item) => {
             const Icon = item.icon;
@@ -251,14 +251,20 @@ export default function Layout({ children, currentPageName }) {
               <Link
                 key={item.page}
                 to={createPageUrl(item.page)}
-                onClick={() => setIsSidebarOpen(false)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsSidebarOpen(false);
+                  setTimeout(() => {
+                    navigate(createPageUrl(item.page));
+                  }, 100);
+                }}
+                className={`flex items-center gap-3 px-4 py-4 rounded-lg transition-all touch-manipulation cursor-pointer min-h-[48px] ${
                   isActive 
                     ? 'bg-gradient-to-r from-[#0969da] to-[#0550ae] text-white terminal-glow shadow-lg' 
-                    : 'hover:bg-[#161b22] text-[#7d8590] hover:text-white'
+                    : 'hover:bg-[#161b22] text-[#7d8590] hover:text-white active:bg-[#1a2332]'
                 }`}
               >
-                <Icon size={20} className={isActive ? 'text-[#f0c41b] drop-shadow-lg' : ''} />
+                <Icon size={22} className={isActive ? 'text-[#f0c41b] drop-shadow-lg' : ''} />
                 <span className="text-sm font-semibold">{item.name}</span>
               </Link>
             );
@@ -297,7 +303,7 @@ export default function Layout({ children, currentPageName }) {
       {/* Overlay for mobile */}
       {isSidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+          className="fixed inset-0 bg-black/50 z-20 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
