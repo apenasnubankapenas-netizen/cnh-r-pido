@@ -13,8 +13,11 @@ import {
   DollarSign,
   Save,
   X,
-  Upload
+  Upload,
+  Link as LinkIcon,
+  Copy
 } from 'lucide-react';
+import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -30,6 +33,8 @@ export default function AdminInstructors() {
   const [settings, setSettings] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showDialog, setShowDialog] = useState(false);
+  const [showInviteDialog, setShowInviteDialog] = useState(false);
+  const [inviteLink, setInviteLink] = useState('');
   const [editingInstructor, setEditingInstructor] = useState(null);
   const [formData, setFormData] = useState({
     full_name: '',
@@ -127,6 +132,29 @@ export default function AdminInstructors() {
     }
   };
 
+  const generateInviteLink = async () => {
+    try {
+      const token = Math.random().toString(36).substring(2, 15);
+      await base44.entities.Instructor.create({
+        full_name: 'Pendente',
+        cpf: 'pendente',
+        registration_token: token,
+        active: false
+      });
+      
+      const link = `${window.location.origin}${createPageUrl('InstructorRegister')}?token=${token}`;
+      setInviteLink(link);
+      setShowInviteDialog(true);
+    } catch (e) {
+      alert('Erro ao gerar link de convite');
+    }
+  };
+
+  const copyInviteLink = () => {
+    navigator.clipboard.writeText(inviteLink);
+    alert('Link copiado para a área de transferência!');
+  };
+
   const resetForm = () => {
     setEditingInstructor(null);
     setFormData({
@@ -159,13 +187,22 @@ export default function AdminInstructors() {
           <Users className="text-[#fbbf24]" />
           Gerenciar Instrutores
         </h1>
-        <Button 
-          className="bg-[#1e40af] hover:bg-[#3b82f6]"
-          onClick={() => { resetForm(); setShowDialog(true); }}
-        >
-          <Plus className="mr-2" size={18} />
-          Novo Instrutor
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
+            onClick={generateInviteLink}
+          >
+            <LinkIcon className="mr-2" size={18} />
+            Gerar Link de Convite
+          </Button>
+          <Button 
+            className="bg-[#1e40af] hover:bg-[#3b82f6]"
+            onClick={() => { resetForm(); setShowDialog(true); }}
+          >
+            <Plus className="mr-2" size={18} />
+            Novo Instrutor
+          </Button>
+        </div>
       </div>
 
       {/* Lista de Instrutores */}
@@ -398,6 +435,30 @@ export default function AdminInstructors() {
               Salvar
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog de Link de Convite */}
+      <Dialog open={showInviteDialog} onOpenChange={setShowInviteDialog}>
+        <DialogContent className="bg-[#1a2332] border-[#374151] text-white">
+          <DialogHeader>
+            <DialogTitle>Link de Convite Gerado</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-[#9ca3af]">
+              Compartilhe este link com o instrutor para que ele complete o cadastro:
+            </p>
+            <div className="p-3 bg-[#111827] rounded border border-[#374151] break-all text-sm">
+              {inviteLink}
+            </div>
+            <Button 
+              className="w-full bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
+              onClick={copyInviteLink}
+            >
+              <Copy className="mr-2" size={18} />
+              Copiar Link
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
