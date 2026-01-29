@@ -26,11 +26,19 @@ export default function Layout({ children, currentPageName }) {
   const [student, setStudent] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showAdminMenu, setShowAdminMenu] = useState(false);
+  const [userType, setUserType] = useState(null);
+  const [instructor, setInstructor] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     loadUser();
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      loadUserType();
+    }
+  }, [user, student]);
 
   const loadUser = async () => {
     try {
@@ -48,48 +56,126 @@ export default function Layout({ children, currentPageName }) {
     }
   };
 
+  const loadUserType = async () => {
+    try {
+      if (!user) return;
+      
+      if (user.role === 'admin' && user.email === 'tcnhpara@gmail.com') {
+        setUserType('superadmin');
+        return;
+      }
+      
+      if (user.role === 'admin') {
+        const sellers = await base44.entities.Seller.filter({ email: user.email });
+        if (sellers.length > 0 && sellers[0].active) {
+          setUserType('seller');
+          return;
+        }
+        
+        const instructors = await base44.entities.Instructor.filter({ user_email: user.email });
+        if (instructors.length > 0 && instructors[0].active) {
+          setUserType('instructor');
+          setInstructor(instructors[0]);
+          return;
+        }
+      }
+      
+      if (user.role === 'user' && student) {
+        setUserType('student');
+        return;
+      }
+      
+      setUserType(null);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const handleLogout = () => {
     base44.auth.logout();
   };
 
-  const isAdmin = user?.role === 'admin';
-  // Super Admin é identificado por email específico
-  const isSuperAdmin = user?.role === 'admin' && user?.email === 'tcnhpara@gmail.com';
+  const getMenuItems = () => {
+    if (!userType) return [];
+    
+    // ALUNOS: Apenas Instrutores, Aulas e Conversas
+    if (userType === 'student') {
+      return [
+        { name: 'Instrutores', icon: Users, page: 'Instructors' },
+        { name: 'Minhas Aulas', icon: Calendar, page: 'MyLessons' },
+        { name: 'Conversas', icon: MessageSquare, page: 'Chat' },
+        { name: 'Meu Perfil', icon: GraduationCap, page: 'StudentProfile' },
+      ];
+    }
+    
+    // SUPERADMIN: Acesso total
+    if (userType === 'superadmin') {
+      return [
+        { name: 'Dashboard', icon: Home, page: 'AdminDashboard' },
+        { name: 'Alunos', icon: Users, page: 'AdminStudents' },
+        { name: 'Instrutores', icon: Car, page: 'AdminInstructors' },
+        { name: 'Aulas', icon: Calendar, page: 'AdminLessons' },
+        { name: 'Conversas', icon: MessageSquare, page: 'AdminChats' },
+        { name: 'Pagamentos', icon: DollarSign, page: 'AdminPayments' },
+        { name: 'Vendedores', icon: UserCog, page: 'AdminSellers' },
+        { name: 'Configurações', icon: Settings, page: 'AdminSettings' },
+      ];
+    }
+    
+    // VENDEDORES: Dashboard, Alunos, Aulas, Conversas e Pagamentos (sem Configurações)
+    if (userType === 'seller') {
+      return [
+        { name: 'Dashboard', icon: Home, page: 'AdminDashboard' },
+        { name: 'Alunos', icon: Users, page: 'AdminStudents' },
+        { name: 'Aulas', icon: Calendar, page: 'AdminLessons' },
+        { name: 'Conversas', icon: MessageSquare, page: 'AdminChats' },
+        { name: 'Pagamentos', icon: DollarSign, page: 'AdminPayments' },
+      ];
+    }
+    
+    // INSTRUTORES: Dashboard, Alunos, Aulas, Conversas + permissões personalizadas
+    if (userType === 'instructor') {
+      const items = [
+        { name: 'Dashboard', icon: Home, page: 'AdminDashboard' },
+        { name: 'Alunos', icon: Users, page: 'AdminStudents' },
+        { name: 'Aulas', icon: Calendar, page: 'AdminLessons' },
+        { name: 'Conversas', icon: MessageSquare, page: 'AdminChats' },
+      ];
+      
+      if (instructor?.can_view_payments) {
+        items.push({ name: 'Pagamentos', icon: DollarSign, page: 'AdminPayments' });
+      }
+      
+      if (instructor?.can_view_sellers) {
+        items.push({ name: 'Vendedores', icon: UserCog, page: 'AdminSellers' });
+      }
+      
+      if (instructor?.can_view_settings) {
+        items.push({ name: 'Configurações', icon: Settings, page: 'AdminSettings' });
+      }
+      
+      return items;
+    }
+    
+    return [];
+  };
 
-  const studentMenuItems = [
-    { name: 'Dashboard', icon: Home, page: 'Home' },
-    { name: 'Minhas Aulas', icon: Calendar, page: 'MyLessons' },
-    { name: 'Instrutores', icon: Users, page: 'Instructors' },
-    { name: 'Simulados', icon: BookOpen, page: 'Simulados' },
-    { name: 'Chat', icon: MessageSquare, page: 'Chat' },
-    { name: 'Meu Perfil', icon: GraduationCap, page: 'StudentProfile' },
-  ];
+  const menuItems = getMenuItems();
 
-  const adminMenuItems = [
-    { name: 'Dashboard', icon: Home, page: 'AdminDashboard' },
-    { name: 'Alunos', icon: Users, page: 'AdminStudents' },
-    { name: 'Aulas', icon: Calendar, page: 'AdminLessons' },
-    { name: 'Conversas', icon: MessageSquare, page: 'AdminChats' },
-    { name: 'Pagamentos', icon: DollarSign, page: 'AdminPayments' },
-  ];
-
-  const superAdminMenuItems = [
-    { name: 'Dashboard', icon: Home, page: 'AdminDashboard' },
-    { name: 'Alunos', icon: Users, page: 'AdminStudents' },
-    { name: 'Instrutores', icon: Car, page: 'AdminInstructors' },
-    { name: 'Aulas', icon: Calendar, page: 'AdminLessons' },
-    { name: 'Conversas', icon: MessageSquare, page: 'AdminChats' },
-    { name: 'Pagamentos', icon: DollarSign, page: 'AdminPayments' },
-    { name: 'Vendedores', icon: UserCog, page: 'AdminSellers' },
-    { name: 'Configurações', icon: Settings, page: 'AdminSettings' },
-  ];
-
-  const menuItems = isSuperAdmin ? superAdminMenuItems : (isAdmin ? adminMenuItems : studentMenuItems);
-
-  if (!user) {
+  // Se não está logado OU não tem tipo de usuário identificado (não está cadastrado)
+  if (!user || (user && userType === null && user.role === 'user')) {
     return (
       <div className="min-h-screen bg-[#0a0e1a] text-white font-mono">
         {children}
+      </div>
+    );
+  }
+
+  // Se está logado mas ainda carregando o tipo de usuário
+  if (!userType) {
+    return (
+      <div className="min-h-screen bg-[#0a0e1a] text-white font-mono flex items-center justify-center">
+        <div className="animate-pulse text-[#fbbf24]">Carregando...</div>
       </div>
     );
   }
