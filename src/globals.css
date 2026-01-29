@@ -32,6 +32,7 @@
 @layer base {
   * {
     @apply border-border;
+    color: #e6edf3 !important;
   }
   body {
     @apply bg-background text-foreground;
@@ -40,18 +41,23 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-weight: 500;
-    color: #e6edf3;
+    color: #e6edf3 !important;
   }
-  
+
   h1, h2, h3, h4, h5, h6 {
     font-weight: 800;
     letter-spacing: -0.02em;
-    color: #e6edf3;
+    color: #e6edf3 !important;
   }
-  
-  p, span, div, label {
-    color: #e6edf3;
+
+  p, span, div, label, button, input, textarea, select {
+    color: #e6edf3 !important;
     font-weight: 500;
+  }
+
+  /* Exceção para botões amarelos que precisam de texto preto */
+  .text-black, [class*="text-black"] {
+    color: #0a0e1a !important;
   }
 }
 
