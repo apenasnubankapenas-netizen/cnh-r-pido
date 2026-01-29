@@ -126,7 +126,7 @@ export default function AdminChats() {
             {conversations.map((conv) => (
               <div
                 key={conv.id}
-                className={`p-4 border-b border-[#374151] cursor-pointer transition-all ${
+                className={`p-3 border-b border-[#374151] cursor-pointer transition-colors ${
                   selectedConversation?.id === conv.id 
                     ? 'bg-[#1e40af]/20' 
                     : 'hover:bg-[#111827]'

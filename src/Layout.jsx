@@ -185,71 +185,69 @@ export default function Layout({ children, currentPageName }) {
         }
         
         /* Button hover effects */
-        button:hover {
-          transform: translateY(-1px);
-          transition: all 0.2s ease;
+        button {
+          transition: all 0.15s ease;
         }
         
         button:active {
-          transform: translateY(0);
+          transform: scale(0.98);
         }
       `}</style>
 
       {/* Scan Line Effect */}
       <div className="scan-line fixed top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#0969da] to-transparent opacity-20 pointer-events-none z-50" />
       
-      {/* Top Bar com login admin discreto */}
-      <div className="fixed top-0 left-0 right-0 h-16 bg-[#0d1117] border-b border-[#30363d] z-40 flex items-center justify-between px-2 sm:px-4 backdrop-blur-sm bg-opacity-95">
+      {/* Top Bar */}
+      <div className="fixed top-0 left-0 right-0 h-14 bg-[#0d1117] border-b border-[#30363d] z-40 flex items-center justify-between px-3 backdrop-blur-sm bg-opacity-95">
         <div className="flex items-center gap-2">
           <button 
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="lg:hidden p-3 hover:bg-[#1a2332] active:bg-[#21262d] rounded touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors"
+            className="lg:hidden p-2 hover:bg-[#1a2332] rounded transition-colors"
           >
-            {isSidebarOpen ? <X size={22} /> : <Menu size={22} />}
+            {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
           <Link 
             to={createPageUrl('Landing')} 
-            className="flex items-center hover:opacity-80 active:opacity-60 transition-opacity p-2 rounded touch-manipulation min-h-[44px] min-w-[44px] justify-center"
+            className="flex items-center hover:opacity-80 transition-opacity p-1.5"
           >
-            <Car className="text-[#f0c41b]" size={26} />
+            <Car className="text-[#f0c41b]" size={24} />
           </Link>
         </div>
 
-        <div className="flex items-center gap-1 sm:gap-2">
-          {/* Botões de acesso separados */}
+        <div className="flex items-center gap-2">
           <div className="flex items-center gap-0">
             <Link to={createPageUrl('Landing')}>
-              <button className="text-[10px] sm:text-[11px] text-[#30363d] hover:text-[#e6edf3] active:text-white px-2 sm:px-3 py-2 rounded transition-colors font-semibold touch-manipulation min-h-[44px] flex items-center justify-center">
+              <button className="text-[10px] sm:text-xs text-[#30363d] hover:text-[#e6edf3] px-2.5 py-1.5 rounded transition-colors font-semibold">
                 INÍCIO
               </button>
             </Link>
-            <span className="text-[#30363d] text-[10px] px-1">|</span>
+            <span className="text-[#30363d] text-xs">|</span>
             <Link to={createPageUrl('AdminLogin')}>
-              <button className="text-[10px] sm:text-[11px] text-[#30363d] hover:text-[#0969da] active:text-[#2f81f7] px-2 sm:px-3 py-2 rounded transition-colors font-semibold touch-manipulation min-h-[44px] flex items-center justify-center">
+              <button className="text-[10px] sm:text-xs text-[#30363d] hover:text-[#0969da] px-2.5 py-1.5 rounded transition-colors font-semibold">
                 ADMIN
               </button>
             </Link>
-            <span className="text-[#30363d] text-[10px] px-1">|</span>
+            <span className="text-[#30363d] text-xs">|</span>
             <Link to={createPageUrl('SuperAdminLogin')}>
-              <button className="text-[10px] sm:text-[11px] text-[#30363d] hover:text-[#f0c41b] active:text-[#ffd93d] px-2 sm:px-3 py-2 rounded transition-colors font-semibold touch-manipulation min-h-[44px] flex items-center justify-center">
+              <button className="text-[10px] sm:text-xs text-[#30363d] hover:text-[#f0c41b] px-2.5 py-1.5 rounded transition-colors font-semibold">
                 SUPER
               </button>
             </Link>
           </div>
 
-          <span className="text-xs sm:text-sm text-[#e6edf3] hidden md:block font-semibold truncate max-w-[120px]">{user?.full_name || user?.email}</span>
+          <span className="text-xs text-[#e6edf3] hidden md:block font-medium truncate max-w-[120px]">{user?.full_name || user?.email}</span>
           <button 
             onClick={handleLogout} 
-            className="p-3 hover:bg-[#1a2332] active:bg-[#21262d] rounded text-[#ef4444] hover:text-[#ff5555] touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors"
+            className="p-2 hover:bg-[#1a2332] rounded text-[#ef4444] hover:text-[#ff5555] transition-colors"
           >
-            <LogOut size={20} />
+            <LogOut size={18} />
           </button>
         </div>
       </div>
 
       {/* Sidebar */}
-      <aside className={`fixed top-16 left-0 h-[calc(100vh-64px)] w-64 bg-[#0d1117] border-r border-[#30363d] z-30 transform transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 backdrop-blur-sm bg-opacity-95 overflow-y-auto`}>
-        <nav className="p-4 space-y-2">
+      <aside className={`fixed top-14 left-0 h-[calc(100vh-56px)] w-64 bg-[#0d1117] border-r border-[#30363d] z-30 transform transition-transform duration-200 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 backdrop-blur-sm bg-opacity-95 overflow-y-auto`}>
+        <nav className="p-3 space-y-1">
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentPageName === item.page;
@@ -257,21 +255,15 @@ export default function Layout({ children, currentPageName }) {
               <Link
                 key={item.page}
                 to={createPageUrl(item.page)}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setIsSidebarOpen(false);
-                  setTimeout(() => {
-                    navigate(createPageUrl(item.page));
-                  }, 100);
-                }}
-                className={`flex items-center gap-3 px-4 py-4 rounded-lg transition-all touch-manipulation cursor-pointer min-h-[48px] ${
+                onClick={() => setIsSidebarOpen(false)}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer ${
                   isActive 
-                    ? 'bg-gradient-to-r from-[#0969da] to-[#0550ae] text-white terminal-glow shadow-lg' 
-                    : 'hover:bg-[#161b22] text-[#7d8590] hover:text-white active:bg-[#1a2332]'
+                    ? 'bg-gradient-to-r from-[#0969da] to-[#0550ae] text-white shadow-md' 
+                    : 'hover:bg-[#161b22] text-[#7d8590] hover:text-white'
                 }`}
               >
-                <Icon size={22} className={isActive ? 'text-[#f0c41b] drop-shadow-lg' : ''} />
-                <span className="text-sm font-semibold">{item.name}</span>
+                <Icon size={20} className={isActive ? 'text-[#f0c41b]' : ''} />
+                <span className="text-sm font-medium">{item.name}</span>
               </Link>
             );
           })}
@@ -300,7 +292,7 @@ export default function Layout({ children, currentPageName }) {
       </aside>
 
       {/* Main Content */}
-      <main className="lg:ml-64 pt-16 min-h-screen">
+      <main className="lg:ml-64 pt-14 min-h-screen">
         <div className="p-4 md:p-6">
           {children}
         </div>
