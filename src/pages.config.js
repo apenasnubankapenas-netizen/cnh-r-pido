@@ -54,6 +54,9 @@ import Instructors from './pages/Instructors';
 import Simulados from './pages/Simulados';
 import Chat from './pages/Chat';
 import StudentProfile from './pages/StudentProfile';
+import Payment from './pages/Payment';
+import AdminDashboard from './pages/AdminDashboard';
+import AdminStudents from './pages/AdminStudents';
 import __Layout from './Layout.jsx';
 
 
@@ -65,6 +68,9 @@ export const PAGES = {
     "Simulados": Simulados,
     "Chat": Chat,
     "StudentProfile": StudentProfile,
+    "Payment": Payment,
+    "AdminDashboard": AdminDashboard,
+    "AdminStudents": AdminStudents,
 }
 
 export const pagesConfig = {

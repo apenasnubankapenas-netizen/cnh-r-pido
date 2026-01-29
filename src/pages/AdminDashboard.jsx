@@ -1,0 +1,291 @@
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
+import { base44 } from '@/api/base44Client';
+import { 
+  Users, 
+  Calendar, 
+  DollarSign, 
+  Car, 
+  TrendingUp,
+  AlertCircle,
+  CheckCircle,
+  Clock,
+  Search
+} from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+
+export default function AdminDashboard() {
+  const [students, setStudents] = useState([]);
+  const [lessons, setLessons] = useState([]);
+  const [payments, setPayments] = useState([]);
+  const [instructors, setInstructors] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    try {
+      const [studentsData, lessonsData, paymentsData, instructorsData] = await Promise.all([
+        base44.entities.Student.list(),
+        base44.entities.Lesson.list(),
+        base44.entities.Payment.list(),
+        base44.entities.Instructor.list()
+      ]);
+      
+      setStudents(studentsData);
+      setLessons(lessonsData);
+      setPayments(paymentsData);
+      setInstructors(instructorsData);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const todayLessons = lessons.filter(l => {
+    const today = new Date().toISOString().split('T')[0];
+    return l.date === today;
+  });
+
+  const pendingPayments = payments.filter(p => p.status === 'pendente');
+  const totalRevenue = payments.filter(p => p.status === 'aprovado').reduce((acc, p) => acc + (p.amount || 0), 0);
+
+  const studentsAwaitingConfirmation = students.filter(s => s.all_lessons_completed && !s.admin_confirmed);
+
+  const filteredStudents = students.filter(s => 
+    s.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    s.renach?.includes(searchTerm) ||
+    s.cpf?.includes(searchTerm)
+  );
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-pulse text-[#fbbf24]">Carregando...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold">Dashboard Administrativo</h1>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Card className="bg-[#1a2332] border-[#374151]">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[#9ca3af] text-xs">Total Alunos</p>
+                <p className="text-2xl font-bold">{students.length}</p>
+              </div>
+              <Users className="text-[#3b82f6]" size={32} />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-[#1a2332] border-[#374151]">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[#9ca3af] text-xs">Aulas Hoje</p>
+                <p className="text-2xl font-bold">{todayLessons.length}</p>
+              </div>
+              <Calendar className="text-[#fbbf24]" size={32} />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-[#1a2332] border-[#374151]">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[#9ca3af] text-xs">Pagamentos Pendentes</p>
+                <p className="text-2xl font-bold text-orange-400">{pendingPayments.length}</p>
+              </div>
+              <AlertCircle className="text-orange-400" size={32} />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-[#1a2332] border-[#374151]">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[#9ca3af] text-xs">Receita Total</p>
+                <p className="text-2xl font-bold text-green-400">R$ {totalRevenue.toFixed(0)}</p>
+              </div>
+              <TrendingUp className="text-green-400" size={32} />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Alunos Aguardando Confirmação */}
+      {studentsAwaitingConfirmation.length > 0 && (
+        <Card className="bg-[#1a2332] border-[#fbbf24]/50">
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2 text-[#fbbf24]">
+              <AlertCircle />
+              Alunos Aguardando Confirmação ({studentsAwaitingConfirmation.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {studentsAwaitingConfirmation.map((student) => (
+                <div key={student.id} className="flex items-center justify-between p-3 bg-[#111827] rounded-lg border border-[#374151]">
+                  <div>
+                    <p className="font-medium">{student.full_name}</p>
+                    <p className="text-xs text-[#9ca3af]">RENACH: {student.renach}</p>
+                  </div>
+                  <Link to={createPageUrl('AdminStudents') + `?id=${student.id}`}>
+                    <Button size="sm" className="bg-[#1e40af] hover:bg-[#3b82f6]">
+                      Confirmar
+                    </Button>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Busca de Alunos */}
+      <Card className="bg-[#1a2332] border-[#374151]">
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Search className="text-[#fbbf24]" />
+            Buscar Aluno
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Input 
+            className="bg-[#111827] border-[#374151] mb-4"
+            placeholder="Buscar por nome, RENACH ou CPF..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          
+          {searchTerm && (
+            <div className="space-y-2 max-h-64 overflow-y-auto">
+              {filteredStudents.map((student) => (
+                <Link 
+                  key={student.id} 
+                  to={createPageUrl('AdminStudents') + `?id=${student.id}`}
+                  className="block"
+                >
+                  <div className="flex items-center justify-between p-3 bg-[#111827] rounded-lg border border-[#374151] hover:border-[#3b82f6] transition-all">
+                    <div>
+                      <p className="font-medium">{student.full_name}</p>
+                      <p className="text-xs text-[#9ca3af]">
+                        RENACH: {student.renach} | Categoria: {student.category}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {student.exam_done && <CheckCircle className="text-green-500" size={16} />}
+                      {student.theoretical_test_done && <CheckCircle className="text-blue-500" size={16} />}
+                      {student.practical_test_done && <CheckCircle className="text-[#fbbf24]" size={16} />}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+              {filteredStudents.length === 0 && (
+                <p className="text-center text-[#9ca3af] py-4">Nenhum aluno encontrado</p>
+              )}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Aulas de Hoje */}
+      <Card className="bg-[#1a2332] border-[#374151]">
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Calendar className="text-[#fbbf24]" />
+            Aulas de Hoje
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {todayLessons.length > 0 ? (
+            <div className="space-y-2">
+              {todayLessons.sort((a, b) => a.time.localeCompare(b.time)).map((lesson) => (
+                <div key={lesson.id} className="flex items-center justify-between p-3 bg-[#111827] rounded-lg border border-[#374151]">
+                  <div className="flex items-center gap-3">
+                    <div className="text-center min-w-[60px]">
+                      <p className="font-bold text-[#fbbf24]">{lesson.time}</p>
+                    </div>
+                    <div>
+                      <p className="font-medium">{lesson.student_name}</p>
+                      <p className="text-xs text-[#9ca3af]">
+                        {lesson.type === 'carro' ? '🚗' : '🏍️'} {lesson.instructor_name}
+                      </p>
+                    </div>
+                  </div>
+                  <Badge className={
+                    lesson.status === 'agendada' ? 'bg-blue-500/20 text-blue-400' :
+                    lesson.status === 'realizada' ? 'bg-green-500/20 text-green-400' :
+                    'bg-red-500/20 text-red-400'
+                  }>
+                    {lesson.status}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-[#9ca3af]">
+              <Calendar className="mx-auto mb-2" size={32} />
+              <p>Nenhuma aula agendada para hoje</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Quick Links */}
+      <div className="grid md:grid-cols-3 gap-4">
+        <Link to={createPageUrl('AdminStudents')}>
+          <Card className="bg-[#1a2332] border-[#374151] hover:border-[#3b82f6] transition-all cursor-pointer">
+            <CardContent className="p-6 flex items-center gap-4">
+              <Users className="text-[#3b82f6]" size={32} />
+              <div>
+                <h3 className="font-bold">Gerenciar Alunos</h3>
+                <p className="text-sm text-[#9ca3af]">{students.length} alunos cadastrados</p>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link to={createPageUrl('AdminLessons')}>
+          <Card className="bg-[#1a2332] border-[#374151] hover:border-[#fbbf24] transition-all cursor-pointer">
+            <CardContent className="p-6 flex items-center gap-4">
+              <Calendar className="text-[#fbbf24]" size={32} />
+              <div>
+                <h3 className="font-bold">Gerenciar Aulas</h3>
+                <p className="text-sm text-[#9ca3af]">{lessons.length} aulas registradas</p>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link to={createPageUrl('AdminPayments')}>
+          <Card className="bg-[#1a2332] border-[#374151] hover:border-green-500 transition-all cursor-pointer">
+            <CardContent className="p-6 flex items-center gap-4">
+              <DollarSign className="text-green-500" size={32} />
+              <div>
+                <h3 className="font-bold">Pagamentos</h3>
+                <p className="text-sm text-[#9ca3af]">{pendingPayments.length} pendentes</p>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+      </div>
+    </div>
+  );
+}
