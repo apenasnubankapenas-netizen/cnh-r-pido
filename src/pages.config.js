@@ -57,6 +57,9 @@ import StudentProfile from './pages/StudentProfile';
 import Payment from './pages/Payment';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminStudents from './pages/AdminStudents';
+import AdminInstructors from './pages/AdminInstructors';
+import AdminLessons from './pages/AdminLessons';
+import AdminChats from './pages/AdminChats';
 import __Layout from './Layout.jsx';
 
 
@@ -71,6 +74,9 @@ export const PAGES = {
     "Payment": Payment,
     "AdminDashboard": AdminDashboard,
     "AdminStudents": AdminStudents,
+    "AdminInstructors": AdminInstructors,
+    "AdminLessons": AdminLessons,
+    "AdminChats": AdminChats,
 }
 
 export const pagesConfig = {
