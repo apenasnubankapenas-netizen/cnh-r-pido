@@ -47,45 +47,45 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
-import Home from './pages/Home';
-import StudentRegister from './pages/StudentRegister';
-import MyLessons from './pages/MyLessons';
-import Instructors from './pages/Instructors';
-import Simulados from './pages/Simulados';
-import Chat from './pages/Chat';
-import StudentProfile from './pages/StudentProfile';
-import Payment from './pages/Payment';
+import AdminChats from './pages/AdminChats';
 import AdminDashboard from './pages/AdminDashboard';
-import AdminStudents from './pages/AdminStudents';
 import AdminInstructors from './pages/AdminInstructors';
 import AdminLessons from './pages/AdminLessons';
-import AdminChats from './pages/AdminChats';
+import AdminLogin from './pages/AdminLogin';
 import AdminPayments from './pages/AdminPayments';
 import AdminSellers from './pages/AdminSellers';
 import AdminSettings from './pages/AdminSettings';
-import AdminLogin from './pages/AdminLogin';
+import AdminStudents from './pages/AdminStudents';
+import Chat from './pages/Chat';
+import Home from './pages/Home';
+import Instructors from './pages/Instructors';
+import MyLessons from './pages/MyLessons';
+import Payment from './pages/Payment';
+import Simulados from './pages/Simulados';
+import StudentProfile from './pages/StudentProfile';
+import StudentRegister from './pages/StudentRegister';
 import SuperAdminLogin from './pages/SuperAdminLogin';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "Home": Home,
-    "StudentRegister": StudentRegister,
-    "MyLessons": MyLessons,
-    "Instructors": Instructors,
-    "Simulados": Simulados,
-    "Chat": Chat,
-    "StudentProfile": StudentProfile,
-    "Payment": Payment,
+    "AdminChats": AdminChats,
     "AdminDashboard": AdminDashboard,
-    "AdminStudents": AdminStudents,
     "AdminInstructors": AdminInstructors,
     "AdminLessons": AdminLessons,
-    "AdminChats": AdminChats,
+    "AdminLogin": AdminLogin,
     "AdminPayments": AdminPayments,
     "AdminSellers": AdminSellers,
     "AdminSettings": AdminSettings,
-    "AdminLogin": AdminLogin,
+    "AdminStudents": AdminStudents,
+    "Chat": Chat,
+    "Home": Home,
+    "Instructors": Instructors,
+    "MyLessons": MyLessons,
+    "Payment": Payment,
+    "Simulados": Simulados,
+    "StudentProfile": StudentProfile,
+    "StudentRegister": StudentRegister,
     "SuperAdminLogin": SuperAdminLogin,
 }
 

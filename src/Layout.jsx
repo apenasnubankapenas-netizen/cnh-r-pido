@@ -206,12 +206,12 @@ export default function Layout({ children, currentPageName }) {
           >
             {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
-          <div className="flex items-center gap-2">
+          <Link to={createPageUrl('Home')} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <Car className="text-[#f0c41b]" size={26} />
             <span className="text-xl font-extrabold bg-gradient-to-r from-[#f0c41b] to-[#ffd93d] bg-clip-text text-transparent tracking-tight">
               CNH PARA TODOS
             </span>
-          </div>
+          </Link>
         </div>
 
         <div className="flex items-center gap-3">
