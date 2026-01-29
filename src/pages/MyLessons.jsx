@@ -98,6 +98,26 @@ export default function MyLessons() {
     if (!selectedDate || !selectedTime || !selectedInstructor) return;
     
     try {
+      // Contar aulas agendadas + realizadas por tipo
+      const carLessonsCount = lessons.filter(l => 
+        l.type === 'carro' && (l.status === 'agendada' || l.status === 'realizada')
+      ).length;
+      
+      const motoLessonsCount = lessons.filter(l => 
+        l.type === 'moto' && (l.status === 'agendada' || l.status === 'realizada')
+      ).length;
+      
+      // Verificar limite
+      if (selectedType === 'carro' && carLessonsCount >= (student.total_car_lessons || 0)) {
+        alert('Você já agendou todas as aulas de carro disponíveis. Contrate mais aulas para continuar.');
+        return;
+      }
+      
+      if (selectedType === 'moto' && motoLessonsCount >= (student.total_moto_lessons || 0)) {
+        alert('Você já agendou todas as aulas de moto disponíveis. Contrate mais aulas para continuar.');
+        return;
+      }
+      
       const instructor = instructors.find(i => i.id === selectedInstructor);
       await base44.entities.Lesson.create({
         student_id: student.id,
@@ -189,7 +209,25 @@ export default function MyLessons() {
         <h1 className="text-2xl font-bold">Minhas Aulas</h1>
         <Button 
           className="bg-[#1e40af] hover:bg-[#3b82f6]"
-          onClick={() => setShowScheduleDialog(true)}
+          onClick={() => {
+            const carLessonsCount = lessons.filter(l => 
+              l.type === 'carro' && (l.status === 'agendada' || l.status === 'realizada')
+            ).length;
+            
+            const motoLessonsCount = lessons.filter(l => 
+              l.type === 'moto' && (l.status === 'agendada' || l.status === 'realizada')
+            ).length;
+            
+            const totalPurchased = (student.total_car_lessons || 0) + (student.total_moto_lessons || 0);
+            const totalUsed = carLessonsCount + motoLessonsCount;
+            
+            if (totalUsed >= totalPurchased) {
+              alert('Você já utilizou todas as suas aulas. Contrate mais aulas para continuar agendando.');
+              return;
+            }
+            
+            setShowScheduleDialog(true);
+          }}
         >
           <Calendar className="mr-2" size={18} />
           Agendar Nova Aula
