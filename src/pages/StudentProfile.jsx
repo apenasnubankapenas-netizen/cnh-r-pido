@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { 
   User, 
@@ -13,7 +14,8 @@ import {
   Clock,
   AlertCircle,
   Edit,
-  Save
+  Save,
+  ArrowLeft
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -107,10 +109,22 @@ export default function StudentProfile() {
     );
   }
 
+  const navigate = useNavigate();
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Meu Perfil</h1>
+        <div className="flex items-center gap-3">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black"
+            onClick={() => navigate(-1)}
+          >
+            <ArrowLeft size={18} />
+          </Button>
+          <h1 className="text-2xl font-bold">Meu Perfil</h1>
+        </div>
         <Button 
           variant={editing ? "default" : "outline"}
           className={editing ? "bg-green-600 hover:bg-green-700" : "border-[#374151]"}

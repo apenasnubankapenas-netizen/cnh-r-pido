@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { 
   Calendar, 
@@ -11,7 +12,8 @@ import {
   Filter,
   Edit,
   Save,
-  MessageSquare
+  MessageSquare,
+  ArrowLeft
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -121,13 +123,25 @@ export default function AdminLessons() {
     );
   }
 
+  const navigate = useNavigate();
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold flex items-center gap-2">
-          <Calendar className="text-[#fbbf24]" />
-          Gerenciar Aulas
-        </h1>
+        <div className="flex items-center gap-3">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black"
+            onClick={() => navigate(-1)}
+          >
+            <ArrowLeft size={18} />
+          </Button>
+          <h1 className="text-2xl font-bold flex items-center gap-2">
+            <Calendar className="text-[#fbbf24]" />
+            Gerenciar Aulas
+          </h1>
+        </div>
         <Badge className="bg-[#1e40af]">{filteredLessons.length} aulas</Badge>
       </div>
 

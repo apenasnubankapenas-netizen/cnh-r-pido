@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { Send, MessageCircle } from 'lucide-react';
+import { Send, MessageCircle, ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -132,11 +133,21 @@ export default function Chat() {
     );
   }
 
+  const navigate = useNavigate();
+
   return (
     <div className="max-w-3xl mx-auto">
       <Card className="bg-[#1a2332] border-[#374151] h-[calc(100vh-180px)] flex flex-col">
         <CardHeader className="border-b border-[#374151] py-3">
           <CardTitle className="text-lg flex items-center gap-2">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="mr-2"
+              onClick={() => navigate(-1)}
+            >
+              <ArrowLeft size={18} />
+            </Button>
             <MessageCircle className="text-[#fbbf24]" />
             Chat com a Autoescola
           </CardTitle>

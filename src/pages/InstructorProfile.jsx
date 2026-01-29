@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { Upload, Trash2, Edit, Image as ImageIcon } from 'lucide-react';
+import { Upload, Trash2, Edit, Image as ImageIcon, ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -116,9 +117,22 @@ export default function InstructorProfile() {
     );
   }
 
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-[#0a0e1a] p-4">
       <div className="max-w-4xl mx-auto">
+        {/* Back Button */}
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black mb-4"
+          onClick={() => navigate(-1)}
+        >
+          <ArrowLeft size={18} className="mr-2" />
+          Voltar
+        </Button>
+
         {/* Cover Photo */}
         {instructor.cover_photo && (
           <div className="h-64 rounded-t-lg overflow-hidden">
