@@ -22,6 +22,7 @@ import { Badge } from "@/components/ui/badge";
 
 export default function MyLessons() {
   const [student, setStudent] = useState(null);
+  const [payments, setPayments] = useState([]);
   const [lessons, setLessons] = useState([]);
   const [instructors, setInstructors] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -51,6 +52,8 @@ export default function MyLessons() {
         setStudent(students[0]);
         const studentLessons = await base44.entities.Lesson.filter({ student_id: students[0].id });
         setLessons(studentLessons);
+        const pay = await base44.entities.Payment.filter({ student_id: students[0].id });
+        setPayments(pay);
       }
 
       const allInstructors = await base44.entities.Instructor.filter({ active: true });
@@ -96,6 +99,8 @@ export default function MyLessons() {
 
   const availableTimeSlots = generateTimeSlots();
 
+  const canSchedule = (student?.payment_status === 'pago') || payments.some(p => p.status === 'aprovado');
+
   const filteredInstructors = instructors.filter(i => {
     // Filtrar por especialidade
     let matchesType = false;
@@ -122,6 +127,7 @@ export default function MyLessons() {
   });
 
   const handleSchedule = async () => {
+    if (!canSchedule) { alert('Seu pagamento ainda não foi confirmado. Assim que for aprovado, o agendamento será liberado.'); return; }
     if (!selectedDate || !selectedTime || !selectedInstructor) return;
     
     try {
@@ -267,7 +273,12 @@ export default function MyLessons() {
         <h1 className="text-2xl font-bold">Minhas Aulas</h1>
         <Button 
           className="bg-[#1e40af] hover:bg-[#3b82f6]"
+          disabled={!canSchedule}
           onClick={() => {
+            if (!canSchedule) {
+              alert('Seu pagamento ainda não foi confirmado. Assim que for aprovado, o agendamento será liberado.');
+              return;
+            }
             const carLessonsCount = lessons.filter(l => 
               l.type === 'carro' && (l.status === 'agendada' || l.status === 'realizada' || l.status === 'falta')
             ).length;
