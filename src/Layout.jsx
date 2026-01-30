@@ -216,7 +216,7 @@ export default function Layout({ children, currentPageName }) {
           --accent-yellow: #f0c41b;
           --accent-yellow-dark: #d4aa00;
           --text-primary: #e6edf3;
-          --text-secondary: #9ca3af;
+          --text-secondary: #e6edf3;
           --border-color: #30363d;
           --shadow-blue: rgba(9, 105, 218, 0.4);
           --shadow-yellow: rgba(240, 196, 27, 0.4);
@@ -246,7 +246,22 @@ export default function Layout({ children, currentPageName }) {
         h1 { font-weight: 800; letter-spacing: -0.02em; }
         h2 { font-weight: 700; letter-spacing: -0.015em; }
         h3 { font-weight: 600; letter-spacing: -0.01em; }
-      `}</style>
+
+        /* Force light text everywhere */
+        body, p, span, a, label, input, textarea, select, button, small, li, dt, dd, div, h1, h2, h3, h4, h5, h6 {
+          color: var(--text-primary, #e6edf3) !important;
+        }
+        .text-muted, .text-muted-foreground, .muted, .text-secondary {
+          color: #eef2f7 !important;
+        }
+        ::placeholder, input::placeholder, textarea::placeholder {
+          color: #dbeafe !important; opacity: 1 !important;
+        }
+        input, textarea, select, [contenteditable="true"] {
+          color: #e6edf3 !important; caret-color: #f0c41b !important;
+        }
+        .disabled, [disabled] { color: #e6edf3 !important; opacity: 0.7; }
+        `}</style>
 
         {/* Top Bar */}
         <div className="fixed top-0 left-0 right-0 h-14 bg-[#0d1117] border-b border-[#30363d] z-40 flex items-center justify-between px-3 backdrop-blur-sm bg-opacity-95">
@@ -262,19 +277,19 @@ export default function Layout({ children, currentPageName }) {
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-0">
               <Link to={createPageUrl('Landing')}>
-                <button className="text-[10px] sm:text-xs text-[#30363d] hover:text-[#e6edf3] px-2.5 py-1.5 rounded transition-colors font-semibold">
+                <button className="text-[10px] sm:text-xs text-[#cbd5e1] hover:text-[#e6edf3] px-2.5 py-1.5 rounded transition-colors font-semibold">
                   INÍCIO
                 </button>
               </Link>
-              <span className="text-[#30363d] text-xs">|</span>
+              <span className="text-[#cbd5e1] text-xs">|</span>
               <Link to={createPageUrl('AdminLogin')}>
-                <button className="text-[10px] sm:text-xs text-[#30363d] hover:text-[#0969da] px-2.5 py-1.5 rounded transition-colors font-semibold">
+                <button className="text-[10px] sm:text-xs text-[#cbd5e1] hover:text-[#0969da] px-2.5 py-1.5 rounded transition-colors font-semibold">
                   ADMIN
                 </button>
               </Link>
-              <span className="text-[#30363d] text-xs">|</span>
+              <span className="text-[#cbd5e1] text-xs">|</span>
               <Link to={createPageUrl('SuperAdminLogin')}>
-                <button className="text-[10px] sm:text-xs text-[#30363d] hover:text-[#f0c41b] px-2.5 py-1.5 rounded transition-colors font-semibold">
+                <button className="text-[10px] sm:text-xs text-[#cbd5e1] hover:text-[#f0c41b] px-2.5 py-1.5 rounded transition-colors font-semibold">
                   SUPER
                 </button>
               </Link>
@@ -321,7 +336,7 @@ export default function Layout({ children, currentPageName }) {
           --accent-yellow: #f0c41b;
           --accent-yellow-dark: #d4aa00;
           --text-primary: #e6edf3;
-          --text-secondary: #9ca3af;
+          --text-secondary: #e6edf3;
           --border-color: #30363d;
           --shadow-blue: rgba(9, 105, 218, 0.4);
           --shadow-yellow: rgba(240, 196, 27, 0.4);
@@ -423,6 +438,21 @@ export default function Layout({ children, currentPageName }) {
         /* Ajustes adicionais de acessibilidade */
         .text-muted { color: var(--text-secondary); }
         .badge-outline { border-color: #4b5563; }
+
+        /* Force light text everywhere */
+        body, p, span, a, label, input, textarea, select, button, small, li, dt, dd, div, h1, h2, h3, h4, h5, h6 {
+          color: var(--text-primary, #e6edf3) !important;
+        }
+        .text-muted, .text-muted-foreground, .muted, .text-secondary {
+          color: #eef2f7 !important;
+        }
+        ::placeholder, input::placeholder, textarea::placeholder {
+          color: #dbeafe !important; opacity: 1 !important;
+        }
+        input, textarea, select, [contenteditable="true"] {
+          color: #e6edf3 !important; caret-color: #f0c41b !important;
+        }
+        .disabled, [disabled] { color: #e6edf3 !important; opacity: 0.7; }
         
       `}</style>
 
@@ -449,19 +479,19 @@ export default function Layout({ children, currentPageName }) {
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-0">
             <Link to={createPageUrl('Landing')}>
-              <button className="text-[10px] sm:text-xs text-[#30363d] hover:text-[#e6edf3] px-2.5 py-1.5 rounded transition-colors font-semibold">
+              <button className="text-[10px] sm:text-xs text-[#cbd5e1] hover:text-[#e6edf3] px-2.5 py-1.5 rounded transition-colors font-semibold">
                 INÍCIO
               </button>
             </Link>
-            <span className="text-[#30363d] text-xs">|</span>
+            <span className="text-[#cbd5e1] text-xs">|</span>
             <Link to={createPageUrl('AdminLogin')}>
-              <button className="text-[10px] sm:text-xs text-[#30363d] hover:text-[#0969da] px-2.5 py-1.5 rounded transition-colors font-semibold">
+              <button className="text-[10px] sm:text-xs text-[#cbd5e1] hover:text-[#0969da] px-2.5 py-1.5 rounded transition-colors font-semibold">
                 ADMIN
               </button>
             </Link>
-            <span className="text-[#30363d] text-xs">|</span>
+            <span className="text-[#cbd5e1] text-xs">|</span>
             <Link to={createPageUrl('SuperAdminLogin')}>
-              <button className="text-[10px] sm:text-xs text-[#30363d] hover:text-[#f0c41b] px-2.5 py-1.5 rounded transition-colors font-semibold">
+              <button className="text-[10px] sm:text-xs text-[#cbd5e1] hover:text-[#f0c41b] px-2.5 py-1.5 rounded transition-colors font-semibold">
                 SUPER
               </button>
             </Link>
@@ -491,7 +521,7 @@ export default function Layout({ children, currentPageName }) {
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer ${
                   isActive 
                     ? 'bg-gradient-to-r from-[#0969da] to-[#0550ae] text-white shadow-md' 
-                    : 'hover:bg-[#161b22] text-[#7d8590] hover:text-white'
+                    : 'hover:bg-[#161b22] text-[#cbd5e1] hover:text-white'
                 }`}
               >
                 <Icon size={20} className={isActive ? 'text-[#f0c41b]' : ''} />
@@ -504,7 +534,7 @@ export default function Layout({ children, currentPageName }) {
         {/* User Status */}
         {student && (
           <div className="absolute bottom-4 left-4 right-4 p-3 bg-[#161b22] rounded-lg border border-[#30363d] terminal-glow">
-            <div className="text-xs text-[#7d8590] mb-1 font-semibold">Status do Processo</div>
+            <div className="text-xs text-[#cbd5e1] mb-1 font-semibold">Status do Processo</div>
             <div className="space-y-1">
               <div className="flex items-center gap-2 text-xs">
                 <div className={`w-2 h-2 rounded-full ${student.exam_done ? 'bg-green-500' : 'bg-[#374151]'}`} />
