@@ -22,7 +22,6 @@ import { Badge } from "@/components/ui/badge";
 
 export default function MyLessons() {
   const [student, setStudent] = useState(null);
-  const [payments, setPayments] = useState([]);
   const [lessons, setLessons] = useState([]);
   const [instructors, setInstructors] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -36,6 +35,7 @@ export default function MyLessons() {
   const [showBuyDialog, setShowBuyDialog] = useState(false);
   const [purchaseType, setPurchaseType] = useState('carro');
   const [purchaseQty, setPurchaseQty] = useState('1');
+  const [showPaymentRequired, setShowPaymentRequired] = useState(false);
 
   const navigate = useNavigate();
 
@@ -52,8 +52,6 @@ export default function MyLessons() {
         setStudent(students[0]);
         const studentLessons = await base44.entities.Lesson.filter({ student_id: students[0].id });
         setLessons(studentLessons);
-        const pay = await base44.entities.Payment.filter({ student_id: students[0].id });
-        setPayments(pay);
       }
 
       const allInstructors = await base44.entities.Instructor.filter({ active: true });
@@ -99,8 +97,6 @@ export default function MyLessons() {
 
   const availableTimeSlots = generateTimeSlots();
 
-  const canSchedule = (student?.payment_status === 'pago') || payments.some(p => p.status === 'aprovado');
-
   const filteredInstructors = instructors.filter(i => {
     // Filtrar por especialidade
     let matchesType = false;
@@ -127,8 +123,8 @@ export default function MyLessons() {
   });
 
   const handleSchedule = async () => {
-    if (!canSchedule) { alert('Seu pagamento ainda não foi confirmado. Assim que for aprovado, o agendamento será liberado.'); return; }
     if (!selectedDate || !selectedTime || !selectedInstructor) return;
+    if (student.payment_status !== 'pago') { setShowPaymentRequired(true); return; }
     
     try {
       // Contar aulas agendadas + realizadas por tipo
@@ -273,12 +269,12 @@ export default function MyLessons() {
         <h1 className="text-2xl font-bold">Minhas Aulas</h1>
         <Button 
           className="bg-[#1e40af] hover:bg-[#3b82f6]"
-          disabled={!canSchedule}
           onClick={() => {
-            if (!canSchedule) {
-              alert('Seu pagamento ainda não foi confirmado. Assim que for aprovado, o agendamento será liberado.');
+            if (student.payment_status !== 'pago') {
+              setShowPaymentRequired(true);
               return;
             }
+
             const carLessonsCount = lessons.filter(l => 
               l.type === 'carro' && (l.status === 'agendada' || l.status === 'realizada' || l.status === 'falta')
             ).length;
@@ -422,6 +418,34 @@ export default function MyLessons() {
           )}
         </CardContent>
       </Card>
+
+      {/* Pagamento Necessário */}
+      <Dialog open={showPaymentRequired} onOpenChange={setShowPaymentRequired}>
+        <DialogContent className="bg-[#1a2332] border-[#374151] text-white max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-[#fbbf24]">Pagamento necessário</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <p className="text-sm text-[#e5e7eb]">
+              Para agendar uma aula, finalize o pagamento. Assim que o pagamento for confirmado, o agendamento será liberado.
+            </p>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" className="border-[#374151]" onClick={() => setShowPaymentRequired(false)}>
+              Fechar
+            </Button>
+            <Button
+              className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
+              onClick={() => {
+                const amount = (settings?.registration_fee || settings?.lesson_price || 0);
+                navigate(createPageUrl('Payment') + `?amount=${amount}&type=inscricao&qty=1`);
+              }}
+            >
+              Ir para Pagamento
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Dialog de Agendamento */}
       <Dialog open={showScheduleDialog} onOpenChange={setShowScheduleDialog}>
