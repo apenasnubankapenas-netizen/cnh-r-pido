@@ -23,8 +23,6 @@ export default function AdminPayments() {
 
   const navigate = useNavigate();
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     loadData();
   }, []);

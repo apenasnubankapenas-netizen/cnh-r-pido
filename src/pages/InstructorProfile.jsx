@@ -19,8 +19,6 @@ export default function InstructorProfile() {
 
   const navigate = useNavigate();
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     loadData();
   }, []);

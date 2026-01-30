@@ -33,8 +33,6 @@ export default function StudentProfile() {
 
   const navigate = useNavigate();
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     loadData();
   }, []);

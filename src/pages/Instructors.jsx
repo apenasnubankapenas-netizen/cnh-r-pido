@@ -37,8 +37,6 @@ export default function Instructors() {
 
   const navigate = useNavigate();
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     loadData();
   }, []);

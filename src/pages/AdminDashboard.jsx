@@ -29,8 +29,6 @@ export default function AdminDashboard() {
 
   const navigate = useNavigate();
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     loadData();
   }, []);
