@@ -34,6 +34,9 @@ export default function AdminStudents() {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [editing, setEditing] = useState(false);
   const [editData, setEditData] = useState({});
+  const [user, setUser] = useState(null);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const urlParams = new URLSearchParams(window.location.search);
   const studentIdFromUrl = urlParams.get('id');
@@ -42,6 +45,12 @@ export default function AdminStudents() {
 
   useEffect(() => {
     loadData();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      try { const u = await base44.auth.me(); setUser(u); } catch (e) {}
+    })();
   }, []);
 
   useEffect(() => {
@@ -110,6 +119,19 @@ export default function AdminStudents() {
   const openEdit = () => {
     setEditData(selectedStudent);
     setEditing(true);
+  };
+
+  const handleDeleteStudent = async () => {
+    if (!selectedStudent) return;
+    setDeleting(true);
+    try {
+      await base44.functions.invoke('deleteStudentCascade', { studentId: selectedStudent.id });
+      setConfirmDeleteOpen(false);
+      setSelectedStudent(null);
+      await loadData();
+    } finally {
+      setDeleting(false);
+    }
   };
 
   if (loading) {
@@ -215,14 +237,21 @@ export default function AdminStudents() {
               <DialogHeader>
                 <div className="flex items-center justify-between">
                   <DialogTitle className="text-xl">{selectedStudent.full_name}</DialogTitle>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="border-[#374151]"
-                    onClick={editing ? handleSaveEdit : openEdit}
-                  >
-                    {editing ? <><Save size={16} className="mr-1" /> Salvar</> : <><Edit size={16} className="mr-1" /> Editar</>}
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    {user?.email === 'tcnhpara@gmail.com' && (
+                      <Button variant="destructive" size="sm" onClick={() => setConfirmDeleteOpen(true)}>
+                        <Trash size={16} className="mr-1" /> Apagar
+                      </Button>
+                    )}
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="border-[#374151]"
+                      onClick={editing ? handleSaveEdit : openEdit}
+                    >
+                      {editing ? <><Save size={16} className="mr-1" /> Salvar</> : <><Edit size={16} className="mr-1" /> Editar</>}
+                    </Button>
+                  </div>
                 </div>
               </DialogHeader>
 
@@ -406,6 +435,19 @@ export default function AdminStudents() {
               </Tabs>
             </>
           )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={confirmDeleteOpen} onOpenChange={setConfirmDeleteOpen}>
+        <DialogContent className="bg-[#1a2332] border-[#374151] text-white">
+          <DialogHeader>
+            <DialogTitle>Apagar aluno e todos os dados</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-[#e5e7eb]">Esta ação é permanente e irá apagar o aluno, todas as aulas agendadas/realizadas, pagamentos, conversas e mensagens.</p>
+          <DialogFooter>
+            <Button variant="outline" className="border-[#374151]" onClick={() => setConfirmDeleteOpen(false)}>Cancelar</Button>
+            <Button variant="destructive" onClick={handleDeleteStudent} disabled={deleting}>{deleting ? 'Apagando...' : 'Apagar tudo'}</Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
