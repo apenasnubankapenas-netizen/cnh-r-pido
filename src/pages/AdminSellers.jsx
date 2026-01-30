@@ -31,6 +31,8 @@ export default function AdminSellers() {
     active: true
   });
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     loadData();
   }, []);
