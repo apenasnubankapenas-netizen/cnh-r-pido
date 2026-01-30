@@ -90,11 +90,11 @@ export default function AdminLogin() {
             </>
           )}
 
-          {user && !seller && (
+          {user && user.role !== 'admin' && (
             <div className="text-center space-y-3">
-              <p className="text-sm">Bem-vindo, {user.full_name || user.email}.</p>
-              <Button className="w-full bg-[#1e40af] hover:bg-[#3b82f6]" onClick={() => navigate(createPageUrl('AdminDashboard'))}>
-                Ir para o Dashboard
+              <p className="text-sm text-red-400">Acesso administrativo proibido para alunos.</p>
+              <Button variant="outline" className="w-full border-[#374151]" onClick={() => navigate(createPageUrl('Home'))}>
+                <ArrowLeft className="mr-2" size={18} /> Voltar para o início
               </Button>
             </div>
           )}
@@ -108,6 +108,15 @@ export default function AdminLogin() {
               </div>
               {error && <p className="text-red-400 text-sm">{error}</p>}
               <Button className="w-full bg-[#1e40af] hover:bg-[#3b82f6]" onClick={handleEnterSeller}>Entrar</Button>
+            </div>
+          )}
+
+          {user && user.role === 'admin' && !seller && (
+            <div className="text-center space-y-3">
+              <p className="text-sm">Bem-vindo, {user.full_name || user.email}.</p>
+              <Button className="w-full bg-[#1e40af] hover:bg-[#3b82f6]" onClick={() => navigate(createPageUrl('AdminDashboard'))}>
+                Ir para o Dashboard
+              </Button>
             </div>
           )}
         </CardContent>
