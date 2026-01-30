@@ -29,6 +29,8 @@ export default function Payment() {
 
   const urlParams = new URLSearchParams(window.location.search);
   const amount = parseFloat(urlParams.get('amount')) || 0;
+  const purchaseType = urlParams.get('type');
+  const purchaseQty = parseInt(urlParams.get('qty') || '0');
 
   useEffect(() => {
     loadData();
@@ -64,13 +66,14 @@ export default function Payment() {
   const handlePayment = async () => {
     setProcessing(true);
     try {
+      const description = purchaseType ? JSON.stringify({ kind: 'lessons_purchase', type: purchaseType, qty: purchaseQty || 1 }) : `Pagamento - Categoria ${student.category}`;
       await base44.entities.Payment.create({
         student_id: student.id,
         student_name: student.full_name,
         amount: amount,
         method: paymentMethod,
         installments: parseInt(installments),
-        description: `Pagamento - Categoria ${student.category}`,
+        description,
         status: 'pendente'
       });
 

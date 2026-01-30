@@ -50,6 +50,26 @@ export default function AdminPayments() {
             payment_status: 'pago',
             total_paid: (students[0].total_paid || 0) + payment.amount
           });
+
+          // Se for compra de aulas, incrementar o saldo de aulas
+          try {
+            const meta = JSON.parse(payment.description || '{}');
+            const qty = parseInt(meta.qty || 0);
+            if (qty > 0) {
+              const updates = {};
+              if (meta.type === 'carro') {
+                updates.total_car_lessons = (students[0].total_car_lessons || 0) + qty;
+              }
+              if (meta.type === 'moto') {
+                updates.total_moto_lessons = (students[0].total_moto_lessons || 0) + qty;
+              }
+              if (Object.keys(updates).length > 0) {
+                await base44.entities.Student.update(students[0].id, updates);
+              }
+            }
+          } catch (_) {
+            // descrição não é JSON - ignore
+          }
         }
       }
       
