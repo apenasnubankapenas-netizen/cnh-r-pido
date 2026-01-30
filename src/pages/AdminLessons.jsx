@@ -35,6 +35,8 @@ export default function AdminLessons() {
   const [selectedLesson, setSelectedLesson] = useState(null);
   const [editData, setEditData] = useState({});
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     loadData();
   }, []);
@@ -123,7 +125,6 @@ export default function AdminLessons() {
     );
   }
 
-  const navigate = useNavigate();
 
   return (
     <div className="space-y-6">
