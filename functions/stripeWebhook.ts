@@ -5,6 +5,9 @@ Deno.serve(async (req) => {
   const stripe = new Stripe(Deno.env.get('STRIPE_API_KEY') || '', { apiVersion: '2023-10-16' });
 
   try {
+    // Initialize Base44 client BEFORE validating signature (platform requirement)
+    const base44 = createClientFromRequest(req);
+
     const body = await req.text();
     const sig = req.headers.get('stripe-signature') || '';
     const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET') || '';
@@ -15,9 +18,6 @@ Deno.serve(async (req) => {
     } catch (err) {
       return Response.json({ error: `Webhook Error: ${err.message}` }, { status: 400 });
     }
-
-    // Only now initialize Base44 client (after verifying Stripe signature)
-    const base44 = createClientFromRequest(req);
 
     switch (event.type) {
       case 'checkout.session.completed': {
@@ -35,6 +35,24 @@ Deno.serve(async (req) => {
             // swallow and continue to ack webhook
           }
         }
+        // Update student status and package if provided
+        try {
+          const studentId = session.metadata?.student_id;
+          if (studentId) {
+            const arr = await base44.asServiceRole.entities.Student.filter({ id: studentId });
+            if (arr.length > 0) {
+              const st = arr[0];
+              const updates = { payment_status: 'pago' };
+              const qty = parseInt(session.metadata?.purchase_qty || '0');
+              const ptype = session.metadata?.purchase_type || '';
+              if (qty > 0 && (ptype === 'carro' || ptype === 'moto')) {
+                const field = ptype === 'carro' ? 'total_car_lessons' : 'total_moto_lessons';
+                updates[field] = (st[field] || 0) + qty;
+              }
+              await base44.asServiceRole.entities.Student.update(st.id, updates);
+            }
+          }
+        } catch (_) {}
         break;
       }
       case 'payment_intent.payment_failed': {
