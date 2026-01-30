@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { useNavigate } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { 
   Calendar, 
   Car, 
@@ -29,6 +31,12 @@ export default function MyLessons() {
   const [selectedInstructor, setSelectedInstructor] = useState('');
   const [selectedType, setSelectedType] = useState('carro');
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [settings, setSettings] = useState(null);
+  const [showBuyDialog, setShowBuyDialog] = useState(false);
+  const [purchaseType, setPurchaseType] = useState('carro');
+  const [purchaseQty, setPurchaseQty] = useState('1');
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadData();
@@ -47,6 +55,9 @@ export default function MyLessons() {
 
       const allInstructors = await base44.entities.Instructor.filter({ active: true });
       setInstructors(allInstructors);
+
+      const settingsData = await base44.entities.AppSettings.list();
+      if (settingsData.length > 0) setSettings(settingsData[0]);
     } catch (e) {
       console.log(e);
     } finally {
@@ -116,21 +127,23 @@ export default function MyLessons() {
     try {
       // Contar aulas agendadas + realizadas por tipo
       const carLessonsCount = lessons.filter(l => 
-        l.type === 'carro' && (l.status === 'agendada' || l.status === 'realizada')
+        l.type === 'carro' && (l.status === 'agendada' || l.status === 'realizada' || l.status === 'falta')
       ).length;
       
       const motoLessonsCount = lessons.filter(l => 
-        l.type === 'moto' && (l.status === 'agendada' || l.status === 'realizada')
+        l.type === 'moto' && (l.status === 'agendada' || l.status === 'realizada' || l.status === 'falta')
       ).length;
       
       // Verificar limite
       if (selectedType === 'carro' && carLessonsCount >= (student.total_car_lessons || 0)) {
-        alert('Você já agendou todas as aulas de carro disponíveis. Contrate mais aulas para continuar.');
+        setPurchaseType('carro');
+        setShowBuyDialog(true);
         return;
       }
       
       if (selectedType === 'moto' && motoLessonsCount >= (student.total_moto_lessons || 0)) {
-        alert('Você já agendou todas as aulas de moto disponíveis. Contrate mais aulas para continuar.');
+        setPurchaseType('moto');
+        setShowBuyDialog(true);
         return;
       }
       
@@ -256,21 +269,22 @@ export default function MyLessons() {
           className="bg-[#1e40af] hover:bg-[#3b82f6]"
           onClick={() => {
             const carLessonsCount = lessons.filter(l => 
-              l.type === 'carro' && (l.status === 'agendada' || l.status === 'realizada')
+              l.type === 'carro' && (l.status === 'agendada' || l.status === 'realizada' || l.status === 'falta')
             ).length;
-            
+
             const motoLessonsCount = lessons.filter(l => 
-              l.type === 'moto' && (l.status === 'agendada' || l.status === 'realizada')
+              l.type === 'moto' && (l.status === 'agendada' || l.status === 'realizada' || l.status === 'falta')
             ).length;
-            
+
             const totalPurchased = (student.total_car_lessons || 0) + (student.total_moto_lessons || 0);
             const totalUsed = carLessonsCount + motoLessonsCount;
-            
+
             if (totalUsed >= totalPurchased) {
-              alert('Você já utilizou todas as suas aulas. Contrate mais aulas para continuar agendando.');
+              setPurchaseType('carro');
+              setShowBuyDialog(true);
               return;
             }
-            
+
             setShowScheduleDialog(true);
           }}
         >
@@ -469,6 +483,65 @@ export default function MyLessons() {
               disabled={!selectedDate || !selectedTime || !selectedInstructor}
             >
               Confirmar Agendamento
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Comprar Mais Aulas */}
+      <Dialog open={showBuyDialog} onOpenChange={setShowBuyDialog}>
+        <DialogContent className="bg-[#1a2332] border-[#374151] text-white max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="text-[#fbbf24]">Comprar Mais Aulas</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm text-[#9ca3af] block mb-2">Tipo de Aula</label>
+              <Select value={purchaseType} onValueChange={setPurchaseType}>
+                <SelectTrigger className="bg-[#111827] border-[#374151]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-[#1a2332] border-[#374151]">
+                  <SelectItem value="carro">Carro</SelectItem>
+                  <SelectItem value="moto">Moto</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <label className="text-sm text-[#9ca3af] block mb-2">Quantidade</label>
+              <Select value={purchaseQty} onValueChange={setPurchaseQty}>
+                <SelectTrigger className="bg-[#111827] border-[#374151]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-[#1a2332] border-[#374151] max-h-48">
+                  {[1,2,3,4,5,6,7,8,9,10].map((n) => (
+                    <SelectItem key={n} value={String(n)}>{n}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="p-3 bg-[#111827] rounded border border-[#374151] flex items-center justify-between">
+              <span>Total</span>
+              <span className="text-[#fbbf24] font-bold">
+                R$ {(((settings?.lesson_price || 98) * parseInt(purchaseQty || '1'))).toFixed(2)}
+              </span>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" className="border-[#374151]" onClick={() => setShowBuyDialog(false)}>
+              Cancelar
+            </Button>
+            <Button 
+              className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
+              onClick={() => {
+                const total = (settings?.lesson_price || 98) * parseInt(purchaseQty || '1');
+                navigate(createPageUrl('Payment') + `?amount=${total}&type=${purchaseType}&qty=${purchaseQty}`);
+              }}
+            >
+              Ir para Pagamento
             </Button>
           </DialogFooter>
         </DialogContent>
