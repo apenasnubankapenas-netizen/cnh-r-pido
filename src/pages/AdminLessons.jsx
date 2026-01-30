@@ -38,10 +38,29 @@ export default function AdminLessons() {
   const [editingLesson, setEditingLesson] = useState(null);
   const [editForm, setEditForm] = useState({ date: '', time: '', instructor_id: '' });
   const [editError, setEditError] = useState('');
+  const [user, setUser] = useState(null);
+  const [instructorId, setInstructorId] = useState(null);
+  const [isInstructor, setIsInstructor] = useState(false);
+  const [rescheduleOpen, setRescheduleOpen] = useState(false);
+  const [rescheduleLesson, setRescheduleLesson] = useState(null);
+  const [rescheduleAccident, setRescheduleAccident] = useState(false);
+  const [rescheduleDate, setRescheduleDate] = useState('');
+  const [rescheduleTime, setRescheduleTime] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
     loadData();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const u = await base44.auth.me();
+        setUser(u);
+        const ins = u ? await base44.entities.Instructor.filter({ user_email: u.email }) : [];
+        if (ins.length > 0) { setIsInstructor(true); setInstructorId(ins[0].id); }
+      } catch (e) {}
+    })();
   }, []);
 
   const loadData = async () => {
@@ -117,13 +136,23 @@ export default function AdminLessons() {
 
   const filteredLessons = lessons.filter(l => {
     const dateMatch = !filterDate || l.date === filterDate;
-    const instructorMatch = filterInstructor === 'all' || l.instructor_id === filterInstructor;
+    const instructorFilterMatch = filterInstructor === 'all' || l.instructor_id === filterInstructor;
+    const instructorScopeMatch = !isInstructor || l.instructor_id === instructorId;
     const statusMatch = filterStatus === 'all' || l.status === filterStatus;
-    return dateMatch && instructorMatch && statusMatch;
+    return dateMatch && instructorFilterMatch && statusMatch && instructorScopeMatch;
   }).sort((a, b) => a.time.localeCompare(b.time));
 
   const handleStatusChange = async (lesson, newStatus) => {
     try {
+      if (newStatus === 'falta' && isInstructor) {
+        setRescheduleLesson(lesson);
+        setRescheduleAccident(false);
+        setRescheduleDate('');
+        setRescheduleTime('');
+        setRescheduleOpen(true);
+        return;
+      }
+
       await base44.entities.Lesson.update(lesson.id, { status: newStatus });
       
       // Atualizar contadores do aluno
@@ -222,20 +251,22 @@ export default function AdminLessons() {
                 onChange={(e) => setFilterDate(e.target.value)}
               />
             </div>
-            <div>
-              <Label>Instrutor</Label>
-              <Select value={filterInstructor} onValueChange={setFilterInstructor}>
-                <SelectTrigger className="bg-[#111827] border-[#374151] mt-1">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-[#1a2332] border-[#374151]">
-                  <SelectItem value="all">Todos</SelectItem>
-                  {instructors.map(i => (
-                    <SelectItem key={i.id} value={i.id}>{i.full_name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            {!isInstructor && (
+              <div>
+                <Label>Instrutor</Label>
+                <Select value={filterInstructor} onValueChange={setFilterInstructor}>
+                  <SelectTrigger className="bg-[#111827] border-[#374151] mt-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-[#1a2332] border-[#374151]">
+                    <SelectItem value="all">Todos</SelectItem>
+                    {instructors.map(i => (
+                      <SelectItem key={i.id} value={i.id}>{i.full_name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
             <div>
               <Label>Status</Label>
               <Select value={filterStatus} onValueChange={setFilterStatus}>
@@ -284,7 +315,7 @@ export default function AdminLessons() {
                 <div className="flex items-center gap-3">
                   {getStatusBadge(lesson.status)}
                   
-                  {lesson.status === 'agendada' && (
+                  {lesson.status === 'agendada' && (new Date(`${lesson.date}T${lesson.time}:00`) <= new Date()) && (
                     <div className="flex gap-1">
                       <Button 
                         size="sm" 
@@ -482,6 +513,72 @@ export default function AdminLessons() {
               <Save className="mr-2" size={18} />
               Salvar Avaliação
             </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog de Faltou / Remarcação */}
+      <Dialog open={rescheduleOpen} onOpenChange={setRescheduleOpen}>
+        <DialogContent className="bg-[#1a2332] border-[#374151] text-white">
+          <DialogHeader>
+            <DialogTitle>Confirmar presença da aula</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-[#9ca3af]">Marque se houve acidente/imprevisto para remarcação gratuita.</p>
+            <div className="flex items-center gap-2">
+              <input
+                id="accident"
+                type="checkbox"
+                className="h-4 w-4"
+                checked={rescheduleAccident}
+                onChange={(e) => setRescheduleAccident(e.target.checked)}
+              />
+              <label htmlFor="accident" className="text-sm">Foi acidente/imprevisto?</label>
+            </div>
+            {rescheduleAccident && (
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <Label>Nova data</Label>
+                  <Input type="date" className="bg-[#111827] border-[#374151] mt-1" value={rescheduleDate} onChange={(e)=>setRescheduleDate(e.target.value)} />
+                </div>
+                <div>
+                  <Label>Novo horário</Label>
+                  <Input type="time" className="bg-[#111827] border-[#374151] mt-1" value={rescheduleTime} onChange={(e)=>setRescheduleTime(e.target.value)} />
+                </div>
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" className="border-[#374151]" onClick={() => setRescheduleOpen(false)}>Cancelar</Button>
+            <Button className="bg-[#1e40af] hover:bg-[#3b82f6]" onClick={async ()=>{
+              if (!rescheduleLesson) { setRescheduleOpen(false); return; }
+              try {
+                if (rescheduleAccident && rescheduleDate && rescheduleTime) {
+                  await base44.entities.Lesson.update(rescheduleLesson.id, { status: 'remarcada' });
+                  await base44.entities.Lesson.create({
+                    student_id: rescheduleLesson.student_id,
+                    student_name: rescheduleLesson.student_name,
+                    student_renach: rescheduleLesson.student_renach,
+                    instructor_id: rescheduleLesson.instructor_id,
+                    instructor_name: rescheduleLesson.instructor_name,
+                    date: rescheduleDate,
+                    time: rescheduleTime,
+                    type: rescheduleLesson.type,
+                    status: 'agendada'
+                  });
+                } else {
+                  await base44.entities.Lesson.update(rescheduleLesson.id, { status: 'falta' });
+                }
+              } catch (e) { console.log(e); }
+              finally {
+                setRescheduleOpen(false);
+                setRescheduleLesson(null);
+                setRescheduleAccident(false);
+                setRescheduleDate('');
+                setRescheduleTime('');
+                loadData();
+              }
+            }}>Confirmar</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

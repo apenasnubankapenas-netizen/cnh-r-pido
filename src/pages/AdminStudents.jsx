@@ -36,6 +36,7 @@ export default function AdminStudents() {
   const [editing, setEditing] = useState(false);
   const [editData, setEditData] = useState({});
   const [user, setUser] = useState(null);
+  const [instructorId, setInstructorId] = useState(null);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -53,6 +54,16 @@ export default function AdminStudents() {
       try { const u = await base44.auth.me(); setUser(u); } catch (e) {}
     })();
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        if (!user) return;
+        const ins = await base44.entities.Instructor.filter({ user_email: user.email });
+        if (ins.length > 0) setInstructorId(ins[0].id);
+      } catch (e) {}
+    })();
+  }, [user]);
 
   useEffect(() => {
     if (studentIdFromUrl && students.length > 0) {
@@ -76,14 +87,16 @@ export default function AdminStudents() {
     }
   };
 
-  const filteredStudents = students.filter(s => 
-    s.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    s.renach?.includes(searchTerm) ||
-    s.cpf?.includes(searchTerm)
-  );
+  const filteredStudents = students
+    .filter(s => !instructorId || lessons.some(l => l.instructor_id === instructorId && l.student_id === s.id))
+    .filter(s => 
+      s.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      s.renach?.includes(searchTerm) ||
+      s.cpf?.includes(searchTerm)
+    );
 
   const getStudentLessons = (studentId) => {
-    return lessons.filter(l => l.student_id === studentId);
+    return lessons.filter(l => l.student_id === studentId && (!instructorId || l.instructor_id === instructorId));
   };
 
   const handleConfirmCompletion = async (student) => {

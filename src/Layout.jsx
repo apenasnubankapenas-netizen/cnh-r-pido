@@ -145,9 +145,7 @@ export default function Layout({ children, currentPageName }) {
         { name: 'Conversas', icon: MessageSquare, page: 'AdminChats' },
       ];
       
-      if (instructor?.can_view_payments) {
-        items.push({ name: 'Pagamentos', icon: DollarSign, page: 'AdminPayments' });
-      }
+      // Pagamentos não disponíveis para instrutores
       
       if (instructor?.can_view_sellers) {
         items.push({ name: 'Vendedores', icon: UserCog, page: 'AdminSellers' });
@@ -242,6 +240,13 @@ export default function Layout({ children, currentPageName }) {
       navigate(createPageUrl('Home'));
     }
   }, [userType, user, currentPageName]);
+
+  // Block instructors from payments page
+  useEffect(() => {
+    if (userType === 'instructor' && currentPageName === 'AdminPayments') {
+      navigate(createPageUrl('AdminDashboard'));
+    }
+  }, [userType, currentPageName]);
 
    // Páginas públicas sem menu lateral (Landing, Login pages, Chat público)
    const publicPages = ['Landing', 'AdminLogin', 'SuperAdminLogin', 'SellerLogin', 'InstructorLogin', 'StudentRegister', 'InstructorRegister'];
