@@ -17,7 +17,8 @@ import {
   Upload,
   Link as LinkIcon,
   Copy,
-  ArrowLeft
+  ArrowLeft,
+  Lock
 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
