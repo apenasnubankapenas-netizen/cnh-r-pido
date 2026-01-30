@@ -13,7 +13,8 @@ import {
   Edit,
   Save,
   MessageSquare,
-  ArrowLeft
+  ArrowLeft,
+  Trash
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -34,6 +35,9 @@ export default function AdminLessons() {
   const [filterStatus, setFilterStatus] = useState('all');
   const [selectedLesson, setSelectedLesson] = useState(null);
   const [editData, setEditData] = useState({});
+  const [editingLesson, setEditingLesson] = useState(null);
+  const [editForm, setEditForm] = useState({ date: '', time: '', instructor_id: '' });
+  const [editError, setEditError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -55,6 +59,60 @@ export default function AdminLessons() {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Edição de aulas (vendedores podem remarcar/alterar instrutor/excluir)
+  const validateConflicts = (newDate, newTime, newInstructorId, lessonId) => {
+    const conflictInstructor = lessons.some(l =>
+      l.id !== lessonId &&
+      l.instructor_id === newInstructorId &&
+      l.date === newDate &&
+      l.time === newTime &&
+      l.status !== 'cancelada'
+    );
+    if (conflictInstructor) return 'Conflito: instrutor já possui aula neste horário.';
+
+    const current = lessons.find(l => l.id === lessonId);
+    if (current) {
+      const conflictStudent = lessons.some(l =>
+        l.id !== lessonId &&
+        l.student_id === current.student_id &&
+        l.date === newDate &&
+        l.time === newTime &&
+        l.status !== 'cancelada'
+      );
+      if (conflictStudent) return 'Conflito: aluno já possui aula neste horário.';
+    }
+    return null;
+  };
+
+  const handleOpenEdit = (lesson) => {
+    setEditingLesson(lesson);
+    setEditForm({ date: lesson.date, time: lesson.time, instructor_id: lesson.instructor_id });
+    setEditError('');
+  };
+
+  const handleUpdateLesson = async () => {
+    if (!editingLesson) return;
+    const err = validateConflicts(editForm.date, editForm.time, editForm.instructor_id, editingLesson.id);
+    if (err) { setEditError(err); return; }
+    const instr = instructors.find(i => i.id === editForm.instructor_id);
+    const payload = {
+      date: editForm.date,
+      time: editForm.time,
+      instructor_id: editForm.instructor_id,
+      instructor_name: instr ? instr.full_name : editingLesson.instructor_name
+    };
+    await base44.entities.Lesson.update(editingLesson.id, payload);
+    setEditingLesson(null);
+    loadData();
+  };
+
+  const handleDeleteLesson = async () => {
+    if (!editingLesson) return;
+    await base44.entities.Lesson.delete(editingLesson.id);
+    setEditingLesson(null);
+    loadData();
   };
 
   const filteredLessons = lessons.filter(l => {
@@ -244,6 +302,15 @@ export default function AdminLessons() {
                       </Button>
                     </div>
                   )}
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="border-[#374151]"
+                    onClick={() => handleOpenEdit(lesson)}
+                  >
+                    <Edit size={14} className="mr-1" />
+                    Editar
+                  </Button>
 
                   <Button 
                     variant="outline" 
@@ -287,6 +354,78 @@ export default function AdminLessons() {
           </CardContent>
         </Card>
       )}
+
+      {/* Dialog de Edição de Aula */}
+      <Dialog open={!!editingLesson} onOpenChange={() => setEditingLesson(null)}>
+        <DialogContent className="bg-[#1a2332] border-[#374151] text-white">
+          <DialogHeader>
+            <DialogTitle>Editar Aula</DialogTitle>
+          </DialogHeader>
+
+          {editingLesson && (
+            <div className="space-y-4">
+              <div className="grid md:grid-cols-3 gap-4">
+                <div>
+                  <Label>Data</Label>
+                  <Input
+                    type="date"
+                    className="bg-[#111827] border-[#374151] mt-1"
+                    value={editForm.date}
+                    onChange={(e) => setEditForm({ ...editForm, date: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label>Horário</Label>
+                  <Input
+                    type="time"
+                    className="bg-[#111827] border-[#374151] mt-1"
+                    value={editForm.time}
+                    onChange={(e) => setEditForm({ ...editForm, time: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label>Instrutor</Label>
+                  <Select
+                    value={editForm.instructor_id}
+                    onValueChange={(value) => setEditForm({ ...editForm, instructor_id: value })}
+                  >
+                    <SelectTrigger className="bg-[#111827] border-[#374151] mt-1">
+                      <SelectValue placeholder="Selecione..." />
+                    </SelectTrigger>
+                    <SelectContent className="bg-[#1a2332] border-[#374151]">
+                      {instructors.map((i) => (
+                        <SelectItem key={i.id} value={i.id}>{i.full_name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {editError && (
+                <div className="p-2 text-sm text-red-400 bg-red-500/10 border border-red-500/40 rounded">
+                  {editError}
+                </div>
+              )}
+            </div>
+          )}
+
+          <DialogFooter className="flex w-full justify-between">
+            <Button variant="destructive" onClick={handleDeleteLesson}>
+              <Trash className="mr-2" size={18} />
+              Excluir Aula
+            </Button>
+            <div className="flex gap-2">
+              <Button variant="outline" className="border-[#374151]" onClick={() => setEditingLesson(null)}>
+                Cancelar
+              </Button>
+              <Button className="bg-[#1e40af] hover:bg-[#3b82f6]" onClick={handleUpdateLesson}>
+                <Save className="mr-2" size={18} />
+                Salvar Alterações
+              </Button>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Dialog de Avaliação */}
       <Dialog open={!!selectedLesson} onOpenChange={() => setSelectedLesson(null)}>
