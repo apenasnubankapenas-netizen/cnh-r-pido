@@ -118,7 +118,7 @@ export default function StudentProfile() {
           <Button 
             variant="outline" 
             size="sm" 
-            className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black"
+            className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-white"
             onClick={() => navigate(-1)}
           >
             <ArrowLeft size={18} />

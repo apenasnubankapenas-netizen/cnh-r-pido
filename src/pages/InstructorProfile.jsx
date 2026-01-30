@@ -126,7 +126,7 @@ export default function InstructorProfile() {
         <Button 
           variant="outline" 
           size="sm" 
-          className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black mb-4"
+          className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-white mb-4"
           onClick={() => navigate(-1)}
         >
           <ArrowLeft size={18} className="mr-2" />
@@ -156,7 +156,7 @@ export default function InstructorProfile() {
                 <p className="text-[#9ca3af] mt-1">{instructor.bio}</p>
                 <div className="flex gap-2 mt-3">
                   {instructor.teaches_car && <span className="px-3 py-1 bg-[#0969da] rounded-full text-xs">Carro</span>}
-                  {instructor.teaches_moto && <span className="px-3 py-1 bg-[#f0c41b] text-black rounded-full text-xs">Moto</span>}
+                  {instructor.teaches_moto && <span className="px-3 py-1 bg-[#f0c41b] text-white rounded-full text-xs">Moto</span>}
                   {instructor.teaches_bus && <span className="px-3 py-1 bg-[#0969da] rounded-full text-xs">Ônibus</span>}
                   {instructor.teaches_truck && <span className="px-3 py-1 bg-[#0969da] rounded-full text-xs">Caminhão</span>}
                   {instructor.teaches_trailer && <span className="px-3 py-1 bg-[#0969da] rounded-full text-xs">Carreta</span>}
@@ -172,7 +172,7 @@ export default function InstructorProfile() {
             <h2 className="text-xl font-bold text-white">Minhas Fotos</h2>
             <Button
               onClick={() => setShowPostDialog(true)}
-              className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
+              className="bg-[#f0c41b] text-white hover:bg-[#d4aa00]"
             >
               <ImageIcon className="mr-2" size={18} />
               Nova Foto
@@ -277,7 +277,7 @@ export default function InstructorProfile() {
             />
             <Button
               onClick={handleCreatePost}
-              className="w-full bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
+              className="w-full bg-[#f0c41b] text-white hover:bg-[#d4aa00]"
               disabled={!newPost.image_url}
             >
               Publicar

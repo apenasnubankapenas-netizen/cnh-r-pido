@@ -53,7 +53,7 @@
 
   /* Exceção para botões amarelos que precisam de texto preto */
   .text-black, [class*="text-black"] {
-            color: #0a0e1a;
+            color: inherit;
           }
 }
 
@@ -103,13 +103,13 @@
 }
 
 .yellow-button {
-  background: linear-gradient(135deg, #f0c41b 0%, #d4aa00 100%);
-  color: #0a0e1a;
-  font-weight: 800;
-  border: none;
-  box-shadow: 0 0 25px rgba(240, 196, 27, 0.5), 0 4px 8px rgba(0, 0, 0, 0.4);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-}
+        background: linear-gradient(135deg, #f0c41b 0%, #d4aa00 100%);
+        color: #ffffff;
+        font-weight: 800;
+        border: none;
+        box-shadow: 0 0 25px rgba(240, 196, 27, 0.5), 0 4px 8px rgba(0, 0, 0, 0.4);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      }
 
 .yellow-button:hover {
   box-shadow: 0 0 30px rgba(240, 196, 27, 0.6), 0 6px 12px rgba(0, 0, 0, 0.4);

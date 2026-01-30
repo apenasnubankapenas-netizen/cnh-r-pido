@@ -99,7 +99,7 @@ export default function AdminSettings() {
           <Button 
             variant="outline" 
             size="sm" 
-            className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black"
+            className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-white"
             onClick={() => navigate(-1)}
           >
             <ArrowLeft size={18} />
@@ -110,7 +110,7 @@ export default function AdminSettings() {
           </h1>
         </div>
         <Button 
-          className="bg-[#fbbf24] text-black hover:bg-[#fbbf24]/80"
+          className="bg-[#fbbf24] text-white hover:bg-[#fbbf24]/80"
           onClick={handleSave}
           disabled={saving}
         >
@@ -351,7 +351,7 @@ export default function AdminSettings() {
       </Card>
 
       <Button 
-        className="w-full bg-[#fbbf24] text-black hover:bg-[#fbbf24]/80 py-6"
+        className="w-full bg-[#fbbf24] text-white hover:bg-[#fbbf24]/80 py-6"
         onClick={handleSave}
         disabled={saving}
       >

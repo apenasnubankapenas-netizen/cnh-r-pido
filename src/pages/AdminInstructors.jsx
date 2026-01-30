@@ -195,7 +195,7 @@ export default function AdminInstructors() {
           <Button 
             variant="outline" 
             size="sm" 
-            className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black"
+            className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-white"
             onClick={() => navigate(-1)}
           >
             <ArrowLeft size={18} />
@@ -208,7 +208,7 @@ export default function AdminInstructors() {
         <div className="flex gap-2">
           {user?.email === 'tcnhpara@gmail.com' && (
             <Button 
-              className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
+              className="bg-[#f0c41b] text-white hover:bg-[#d4aa00]"
               onClick={generateInviteLink}
             >
               <LinkIcon className="mr-2" size={18} />
@@ -472,7 +472,7 @@ export default function AdminInstructors() {
               {inviteLink}
             </div>
             <Button 
-              className="w-full bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
+              className="w-full bg-[#f0c41b] text-white hover:bg-[#d4aa00]"
               onClick={copyInviteLink}
             >
               <Copy className="mr-2" size={18} />
