@@ -324,13 +324,20 @@ export default function StudentProfile() {
             )}
 
             {!student.all_lessons_completed && (
-              <Button 
-                className="w-full bg-[#1e40af] hover:bg-[#3b82f6]"
-                onClick={() => handleStatusUpdate('all_lessons_completed', true)}
-                disabled={progressPercentage() < 100}
-              >
-                Marcar como Finalizado
-              </Button>
+              <div className="space-y-2">
+                <Button 
+                  className="w-full bg-[#1e40af] hover:bg-[#3b82f6]"
+                  onClick={() => handleStatusUpdate('all_lessons_completed', true)}
+                  disabled={progressPercentage() < 100 || (student.completed_car_lessons || 0) < 2 || (student.completed_moto_lessons || 0) < 2}
+                >
+                  Marcar como Finalizado
+                </Button>
+                {(progressPercentage() < 100 || (student.completed_car_lessons || 0) < 2 || (student.completed_moto_lessons || 0) < 2) && (
+                  <p className="text-xs text-[#9ca3af]">
+                    Para finalizar, é obrigatório ter pelo menos 2 aulas de carro e 2 aulas de moto realizadas.
+                  </p>
+                )}
+              </div>
             )}
           </div>
         </CardContent>
