@@ -28,6 +28,7 @@ export default function StudentRegister() {
   const [loading, setLoading] = useState(false);
   const [settings, setSettings] = useState(null);
   const [user, setUser] = useState(null);
+  const [isInstructor, setIsInstructor] = useState(false);
 
   const [formData, setFormData] = useState({
     renach: '',
@@ -53,6 +54,11 @@ export default function StudentRegister() {
     try {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
+      
+      const instructorMatches = currentUser?.email ? await base44.entities.Instructor.filter({ user_email: currentUser.email }) : [];
+      if (instructorMatches.length > 0) {
+        setIsInstructor(true);
+      }
       
       const settingsData = await base44.entities.AppSettings.list();
       if (settingsData.length > 0) {
@@ -132,6 +138,10 @@ export default function StudentRegister() {
   };
 
   const handleSubmit = async () => {
+    if (isInstructor) {
+      alert('Instrutores não podem se cadastrar como alunos.');
+      return;
+    }
     setLoading(true);
     try {
       let totalCarLessons = 0;
@@ -184,6 +194,21 @@ export default function StudentRegister() {
     { value: 'onibus', label: 'Ônibus', icon: Bus, desc: 'Categoria D' },
     { value: 'carreta', label: 'Carreta', icon: Truck, desc: 'Categoria E' },
   ];
+
+  if (isInstructor) {
+    return (
+      <div className="min-h-screen bg-[#0a0e1a] flex items-center justify-center p-4">
+        <Card className="bg-[#1a2332] border-[#374151] max-w-md w-full">
+          <CardContent className="p-6 text-center">
+            <p className="text-white font-semibold">Instrutores não podem se cadastrar como alunos.</p>
+            <Button className="mt-4" onClick={() => navigate(createPageUrl('Home'))}>
+              Voltar
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-2xl mx-auto">
