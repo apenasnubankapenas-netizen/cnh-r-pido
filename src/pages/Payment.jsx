@@ -66,21 +66,20 @@ export default function Payment() {
   const handlePayment = async () => {
     setProcessing(true);
     try {
-      const description = purchaseType ? JSON.stringify({ kind: 'lessons_purchase', type: purchaseType, qty: purchaseQty || 1 }) : `Pagamento - Categoria ${student.category}`;
-      await base44.entities.Payment.create({
-        student_id: student.id,
-        student_name: student.full_name,
-        amount: amount,
-        method: paymentMethod,
-        installments: parseInt(installments),
-        description,
-        status: 'pendente'
+      const { data } = await base44.functions.invoke('createStripeCheckout', {
+        amount,
+        purchaseType,
+        purchaseQty,
       });
-
-      alert('Pagamento registrado! Aguarde a confirmação.');
-      navigate(createPageUrl('Home'));
+      const url = data?.url;
+      if (url) {
+        window.location.href = url;
+        return;
+      }
+      alert('Não foi possível iniciar o checkout.');
     } catch (e) {
       console.log(e);
+      alert('Erro ao iniciar o pagamento.');
     } finally {
       setProcessing(false);
     }
@@ -270,13 +269,11 @@ export default function Payment() {
       </Card>
 
       <Button 
-        className="w-full bg-[#fbbf24] text-black hover:bg-[#fbbf24]/80 py-6 text-lg"
-        onClick={handlePayment}
-        disabled={processing}
+       className="w-full bg-[#635bff] text-white hover:bg-[#4f46e5] py-6 text-lg"
+       onClick={handlePayment}
+       disabled={processing}
       >
-        {processing ? 'Processando...' : (
-          paymentMethod === 'pix' ? 'Já fiz o PIX' : 'Finalizar Pagamento'
-        )}
+       {processing ? 'Redirecionando…' : 'Pagar com Stripe'}
       </Button>
     </div>
   );
