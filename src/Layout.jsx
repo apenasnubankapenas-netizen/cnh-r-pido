@@ -377,14 +377,15 @@ export default function Layout({ children, currentPageName }) {
         }
         
         /* Typography */
-        h1, h2, h3, h4, h5, h6 {
-          font-weight: 700;
-          letter-spacing: -0.02em;
-        }
+        h1 { font-weight: 800; letter-spacing: -0.02em; }
+        h2 { font-weight: 700; letter-spacing: -0.015em; }
+        h3 { font-weight: 600; letter-spacing: -0.01em; }
+        h4, h5, h6 { font-weight: 600; letter-spacing: -0.01em; }
         
         /* Button hover effects */
         button {
           transition: all 0.15s ease;
+          min-height: 40px;
         }
         
         button:active {
