@@ -36,8 +36,6 @@ export default function AdminLessons() {
   const [editData, setEditData] = useState({});
   const navigate = useNavigate();
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     loadData();
   }, []);
