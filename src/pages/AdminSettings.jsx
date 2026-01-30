@@ -42,6 +42,8 @@ export default function AdminSettings() {
     detran_url: 'https://goias.gov.br/detran/agendamento-detran/'
   });
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     loadData();
   }, []);
@@ -90,7 +92,6 @@ export default function AdminSettings() {
     );
   }
 
-  const navigate = useNavigate();
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
