@@ -53,6 +53,8 @@ export default function AdminInstructors() {
     active: true
   });
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     loadData();
   }, []);

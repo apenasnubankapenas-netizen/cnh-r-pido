@@ -27,6 +27,8 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     loadData();
   }, []);

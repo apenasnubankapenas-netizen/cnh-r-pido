@@ -21,6 +21,8 @@ export default function AdminPayments() {
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState('all');
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     loadData();
   }, []);

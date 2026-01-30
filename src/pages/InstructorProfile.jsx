@@ -17,6 +17,8 @@ export default function InstructorProfile() {
   const [newPost, setNewPost] = useState({ image_url: '', caption: '' });
   const [uploadingImage, setUploadingImage] = useState(false);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     loadData();
   }, []);

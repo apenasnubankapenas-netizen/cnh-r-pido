@@ -31,6 +31,8 @@ export default function StudentProfile() {
   const [editing, setEditing] = useState(false);
   const [editData, setEditData] = useState({});
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     loadData();
   }, []);

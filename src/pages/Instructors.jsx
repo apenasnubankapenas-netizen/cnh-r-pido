@@ -35,6 +35,8 @@ export default function Instructors() {
   const [student, setStudent] = useState(null);
   const [mediaIndex, setMediaIndex] = useState(0);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     loadData();
   }, []);

@@ -133,7 +133,7 @@ export default function Chat() {
     );
   }
 
-  const navigate = useNavigate();
+
 
   return (
     <div className="max-w-3xl mx-auto">
