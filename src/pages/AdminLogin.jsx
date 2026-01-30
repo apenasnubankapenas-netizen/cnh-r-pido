@@ -110,7 +110,7 @@ export default function AdminLogin() {
               <Button className="w-full bg-[#1e40af] hover:bg-[#3b82f6]" onClick={handleEnterSeller}>Entrar</Button>
             </div>
           )}
-        </CardContent
+        </CardContent>
       </Card>
     </div>
   );
