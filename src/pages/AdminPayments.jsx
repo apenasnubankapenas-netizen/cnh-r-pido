@@ -23,6 +23,8 @@ export default function AdminPayments() {
 
   const navigate = useNavigate();
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     loadData();
   }, []);
@@ -91,7 +93,6 @@ export default function AdminPayments() {
     );
   }
 
-  const navigate = useNavigate();
 
   return (
     <div className="space-y-6">

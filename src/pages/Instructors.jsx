@@ -37,6 +37,8 @@ export default function Instructors() {
 
   const navigate = useNavigate();
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     loadData();
   }, []);
@@ -121,7 +123,6 @@ export default function Instructors() {
     );
   }
 
-  const navigate = useNavigate();
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">

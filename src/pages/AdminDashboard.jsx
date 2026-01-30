@@ -29,6 +29,8 @@ export default function AdminDashboard() {
 
   const navigate = useNavigate();
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     loadData();
   }, []);
@@ -77,7 +79,6 @@ export default function AdminDashboard() {
     );
   }
 
-  const navigate = useNavigate();
 
   return (
     <div className="space-y-6">

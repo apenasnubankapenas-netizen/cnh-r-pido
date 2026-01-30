@@ -38,6 +38,8 @@ export default function AdminStudents() {
   const urlParams = new URLSearchParams(window.location.search);
   const studentIdFromUrl = urlParams.get('id');
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     loadData();
   }, []);

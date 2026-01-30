@@ -33,6 +33,8 @@ export default function StudentProfile() {
 
   const navigate = useNavigate();
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     loadData();
   }, []);
@@ -111,7 +113,6 @@ export default function StudentProfile() {
     );
   }
 
-  const navigate = useNavigate();
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">

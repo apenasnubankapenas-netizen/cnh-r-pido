@@ -19,6 +19,8 @@ export default function InstructorProfile() {
 
   const navigate = useNavigate();
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     loadData();
   }, []);
@@ -119,7 +121,6 @@ export default function InstructorProfile() {
     );
   }
 
-  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-[#0a0e1a] p-4">

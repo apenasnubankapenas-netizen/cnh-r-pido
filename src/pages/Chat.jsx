@@ -15,6 +15,8 @@ export default function Chat() {
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef(null);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     loadData();
   }, []);
