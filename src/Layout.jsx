@@ -216,7 +216,7 @@ export default function Layout({ children, currentPageName }) {
           --accent-yellow: #f0c41b;
           --accent-yellow-dark: #d4aa00;
           --text-primary: #e6edf3;
-          --text-secondary: #7d8590;
+          --text-secondary: #9ca3af;
           --border-color: #30363d;
           --shadow-blue: rgba(9, 105, 218, 0.4);
           --shadow-yellow: rgba(240, 196, 27, 0.4);
@@ -232,6 +232,20 @@ export default function Layout({ children, currentPageName }) {
           background: linear-gradient(135deg, #0a0e1a 0%, #0d1117 100%);
           background-attachment: fixed;
         }
+
+        /* Focus visível acessível */
+        a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+          outline: 2px solid var(--accent-blue-light);
+          outline-offset: 2px;
+        }
+
+        /* Raio padronizado */
+        .rounded, .rounded-md, .rounded-lg, .rounded-xl { border-radius: var(--radius); }
+
+        /* Hierarquia tipográfica */
+        h1 { font-weight: 800; letter-spacing: -0.02em; }
+        h2 { font-weight: 700; letter-spacing: -0.015em; }
+        h3 { font-weight: 600; letter-spacing: -0.01em; }
       `}</style>
 
         {/* Top Bar */}
@@ -307,7 +321,7 @@ export default function Layout({ children, currentPageName }) {
           --accent-yellow: #f0c41b;
           --accent-yellow-dark: #d4aa00;
           --text-primary: #e6edf3;
-          --text-secondary: #7d8590;
+          --text-secondary: #9ca3af;
           --border-color: #30363d;
           --shadow-blue: rgba(9, 105, 218, 0.4);
           --shadow-yellow: rgba(240, 196, 27, 0.4);
@@ -323,6 +337,20 @@ export default function Layout({ children, currentPageName }) {
           background: linear-gradient(135deg, #0a0e1a 0%, #0d1117 100%);
           background-attachment: fixed;
         }
+
+        /* Focus visível acessível */
+        a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+          outline: 2px solid var(--accent-blue-light);
+          outline-offset: 2px;
+        }
+
+        /* Raio padronizado */
+        .rounded, .rounded-md, .rounded-lg, .rounded-xl { border-radius: var(--radius); }
+
+        /* Hierarquia tipográfica */
+        h1 { font-weight: 800; letter-spacing: -0.02em; }
+        h2 { font-weight: 700; letter-spacing: -0.015em; }
+        h3 { font-weight: 600; letter-spacing: -0.01em; }
         
         .terminal-glow {
                         box-shadow: 0 0 10px var(--shadow-blue), 0 2px 6px rgba(0, 0, 0, 0.2);
@@ -391,6 +419,11 @@ export default function Layout({ children, currentPageName }) {
         button:active {
           transform: scale(0.98);
         }
+        
+        /* Ajustes adicionais de acessibilidade */
+        .text-muted { color: var(--text-secondary); }
+        .badge-outline { border-color: #4b5563; }
+        
       `}</style>
 
       {/* Scan Line Effect */}
