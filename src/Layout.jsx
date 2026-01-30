@@ -186,6 +186,31 @@ export default function Layout({ children, currentPageName }) {
 
   const menuItems = getMenuItems();
 
+  // Enforce seller password session; logout if version mismatch
+  useEffect(() => {
+    const enforceSellerSession = async () => {
+      try {
+        if (userType !== 'seller' || !user) return;
+        const sellers = await base44.entities.Seller.filter({ email: user.email });
+        if (sellers.length === 0) return;
+        const s = sellers[0];
+        const key = `seller_session_version:${user.email}`;
+        const stored = localStorage.getItem(key);
+        const current = String(s.session_version || 1);
+        if (stored !== current) {
+          // Força logout e redireciona para ADMIN
+          base44.auth.logout();
+          setTimeout(() => {
+            navigate(createPageUrl('AdminLogin'));
+          }, 200);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    enforceSellerSession();
+  }, [userType, user]);
+
   // Páginas públicas sem menu lateral (Landing, Login pages, Chat público)
   const publicPages = ['Landing', 'AdminLogin', 'SuperAdminLogin', 'StudentRegister', 'InstructorRegister'];
   const isPublicPage = publicPages.includes(currentPageName);

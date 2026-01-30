@@ -30,6 +30,9 @@ export default function AdminSellers() {
     phone: '',
     active: true
   });
+  const [showPasswordDialog, setShowPasswordDialog] = useState(false);
+  const [passwordSeller, setPasswordSeller] = useState(null);
+  const [newPassword, setNewPassword] = useState('');
 
   const navigate = useNavigate();
 
@@ -63,10 +66,33 @@ export default function AdminSellers() {
     }
   };
 
+  const openPasswordDialog = (seller) => {
+    setPasswordSeller(seller);
+    setNewPassword('');
+    setShowPasswordDialog(true);
+  };
+
   const handleEdit = (seller) => {
     setEditingSeller(seller);
     setFormData(seller);
     setShowDialog(true);
+  };
+
+  const savePassword = async () => {
+    if (!passwordSeller || !newPassword) return;
+    try {
+      await base44.entities.Seller.update(passwordSeller.id, {
+        password: newPassword,
+        session_version: (passwordSeller.session_version || 1) + 1
+      });
+      alert('Senha atualizada. O vendedor será desconectado.');
+      setShowPasswordDialog(false);
+      setPasswordSeller(null);
+      setNewPassword('');
+      loadData();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const handleDelete = async (sellerId) => {
@@ -169,6 +195,14 @@ export default function AdminSellers() {
                 <Button 
                   variant="outline" 
                   size="sm" 
+                  className="border-[#374151]"
+                  onClick={() => openPasswordDialog(seller)}
+                >
+                  <Lock size={14} className="mr-1" /> Senha
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
                   className="border-red-500/50 text-red-400"
                   onClick={() => handleDelete(seller.id)}
                 >
@@ -252,6 +286,37 @@ export default function AdminSellers() {
             >
               <Save className="mr-2" size={18} />
               Salvar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog de Senha */}
+      <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
+        <DialogContent className="bg-[#1a2332] border-[#374151] text-white">
+          <DialogHeader>
+            <DialogTitle>Definir/Alterar Senha do Vendedor</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="text-sm text-[#9ca3af]">
+              Ao alterar a senha, o vendedor será desconectado na próxima tentativa de acesso.
+            </div>
+            <div>
+              <Label>Nova Senha</Label>
+              <Input 
+                type="password"
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" className="border-[#374151]" onClick={() => setShowPasswordDialog(false)}>
+              Cancelar
+            </Button>
+            <Button className="bg-[#1e40af] hover:bg-[#3b82f6]" onClick={savePassword} disabled={!newPassword}>
+              <Save className="mr-2" size={18} /> Salvar Senha
             </Button>
           </DialogFooter>
         </DialogContent>
