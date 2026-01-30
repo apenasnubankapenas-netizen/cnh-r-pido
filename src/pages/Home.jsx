@@ -24,6 +24,8 @@ export default function Home() {
   const [settings, setSettings] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const [isInstructor, setIsInstructor] = useState(false);
+
   useEffect(() => {
     loadData();
   }, []);
@@ -32,6 +34,12 @@ export default function Home() {
     try {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
+
+      // Verifica se o usuário é instrutor para bloquear cadastro de aluno
+      const instructorMatches = currentUser ? await base44.entities.Instructor.filter({ user_email: currentUser.email }) : [];
+      if (instructorMatches.length > 0) {
+        setIsInstructor(true);
+      }
 
       const settingsData = await base44.entities.AppSettings.list();
       if (settingsData.length > 0) {
@@ -67,6 +75,23 @@ export default function Home() {
   }
 
   if (!student) {
+    if (isInstructor) {
+      return (
+        <div className="max-w-4xl mx-auto">
+          <Card className="bg-[#1a2332] border-[#374151] terminal-glow">
+            <CardHeader>
+              <CardTitle className="text-[#fbbf24]">Acesso de Instrutor</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-[#9ca3af]">Instrutores não podem se cadastrar como alunos.</p>
+              <Link to={createPageUrl('AdminDashboard')}>
+                <Button className="bg-[#1e40af] hover:bg-[#3b82f6]">Ir para o Painel</Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
+      );
+    }
     return (
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
