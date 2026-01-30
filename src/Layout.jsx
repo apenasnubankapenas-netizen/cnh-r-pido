@@ -201,7 +201,7 @@ export default function Layout({ children, currentPageName }) {
           // Força logout e redireciona para ADMIN
           base44.auth.logout();
           setTimeout(() => {
-            navigate(createPageUrl('AdminLogin'));
+            navigate(createPageUrl('SellerLogin'));
           }, 200);
         }
       } catch (e) {
