@@ -34,6 +34,7 @@ export default function AdminLessons() {
   const [filterStatus, setFilterStatus] = useState('all');
   const [selectedLesson, setSelectedLesson] = useState(null);
   const [editData, setEditData] = useState({});
+  const navigate = useNavigate();
 
   const navigate = useNavigate();
 
