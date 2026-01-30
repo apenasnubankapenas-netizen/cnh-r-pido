@@ -58,18 +58,18 @@ import AdminSettings from './pages/AdminSettings';
 import AdminStudents from './pages/AdminStudents';
 import Chat from './pages/Chat';
 import Home from './pages/Home';
+import InstructorLogin from './pages/InstructorLogin';
 import InstructorProfile from './pages/InstructorProfile';
 import InstructorRegister from './pages/InstructorRegister';
 import Instructors from './pages/Instructors';
 import Landing from './pages/Landing';
 import MyLessons from './pages/MyLessons';
 import Payment from './pages/Payment';
+import SellerLogin from './pages/SellerLogin';
 import Simulados from './pages/Simulados';
 import StudentProfile from './pages/StudentProfile';
 import StudentRegister from './pages/StudentRegister';
 import SuperAdminLogin from './pages/SuperAdminLogin';
-import SellerLogin from './pages/SellerLogin';
-import InstructorLogin from './pages/InstructorLogin';
 import __Layout from './Layout.jsx';
 
 
@@ -85,18 +85,18 @@ export const PAGES = {
     "AdminStudents": AdminStudents,
     "Chat": Chat,
     "Home": Home,
+    "InstructorLogin": InstructorLogin,
     "InstructorProfile": InstructorProfile,
     "InstructorRegister": InstructorRegister,
     "Instructors": Instructors,
     "Landing": Landing,
     "MyLessons": MyLessons,
     "Payment": Payment,
+    "SellerLogin": SellerLogin,
     "Simulados": Simulados,
     "StudentProfile": StudentProfile,
     "StudentRegister": StudentRegister,
     "SuperAdminLogin": SuperAdminLogin,
-    "SellerLogin": SellerLogin,
-    "InstructorLogin": InstructorLogin,
 }
 
 export const pagesConfig = {

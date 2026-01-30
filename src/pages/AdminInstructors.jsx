@@ -177,7 +177,9 @@ export default function AdminInstructors() {
         active: false
       });
       
-      const link = `${window.location.origin}${createPageUrl('InstructorRegister')}?token=${token}`;
+      const base = new URL(window.location.origin + createPageUrl('InstructorRegister'));
+      base.searchParams.set('token', token);
+      const link = base.toString();
       setInviteLink(link);
       setShowInviteDialog(true);
     } catch (e) {
