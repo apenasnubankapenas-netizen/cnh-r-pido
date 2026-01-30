@@ -98,8 +98,6 @@ export default function AdminSellers() {
     );
   }
 
-  const navigate = useNavigate();
-
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
