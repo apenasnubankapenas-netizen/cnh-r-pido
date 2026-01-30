@@ -38,6 +38,9 @@ export default function AdminInstructors() {
   const [showDialog, setShowDialog] = useState(false);
   const [showInviteDialog, setShowInviteDialog] = useState(false);
   const [inviteLink, setInviteLink] = useState('');
+  const [showPasswordDialog, setShowPasswordDialog] = useState(false);
+  const [passwordInstructor, setPasswordInstructor] = useState(null);
+  const [newPassword, setNewPassword] = useState('');
   const [editingInstructor, setEditingInstructor] = useState(null);
   const [formData, setFormData] = useState({
     full_name: '',
@@ -127,6 +130,29 @@ export default function AdminInstructors() {
     setEditingInstructor(instructor);
     setFormData(instructor);
     setShowDialog(true);
+  };
+
+  const openPasswordDialog = (instructor) => {
+    setPasswordInstructor(instructor);
+    setNewPassword('');
+    setShowPasswordDialog(true);
+  };
+
+  const savePassword = async () => {
+    if (!passwordInstructor || !newPassword) return;
+    try {
+      await base44.entities.Instructor.update(passwordInstructor.id, {
+        password: newPassword,
+        session_version: (passwordInstructor.session_version || 1) + 1
+      });
+      alert('Senha atualizada. O instrutor será desconectado.');
+      setShowPasswordDialog(false);
+      setPasswordInstructor(null);
+      setNewPassword('');
+      loadData();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const handleDelete = async (instructorId) => {
@@ -306,6 +332,14 @@ export default function AdminInstructors() {
                       <Button 
                         variant="outline" 
                         size="sm" 
+                        className="border-[#374151]"
+                        onClick={() => openPasswordDialog(instructor)}
+                      >
+                        <Lock size={14} className="mr-1" /> Senha
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
                         className="border-red-500/50 text-red-400"
                         onClick={() => handleDelete(instructor.id)}
                       >
@@ -459,7 +493,38 @@ export default function AdminInstructors() {
         </DialogContent>
       </Dialog>
 
-      {/* Dialog de Link de Convite */}
+      {/* Dialog de Senha do Instrutor */}
+      <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
+        <DialogContent className="bg-[#1a2332] border-[#374151] text-white">
+          <DialogHeader>
+            <DialogTitle>Definir/Alterar Senha do Instrutor</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="text-sm text-[#9ca3af]">
+              Ao alterar a senha, o instrutor será desconectado na próxima tentativa de acesso.
+            </div>
+            <div>
+              <Label>Nova Senha</Label>
+              <Input 
+                type="password"
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" className="border-[#374151]" onClick={() => setShowPasswordDialog(false)}>
+              Cancelar
+            </Button>
+            <Button className="bg-[#1e40af] hover:bg-[#3b82f6]" onClick={savePassword} disabled={!newPassword}>
+              <Save className="mr-2" size={18} /> Salvar Senha
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+       {/* Dialog de Link de Convite */}
       <Dialog open={showInviteDialog} onOpenChange={setShowInviteDialog}>
         <DialogContent className="bg-[#1a2332] border-[#374151] text-white">
           <DialogHeader>

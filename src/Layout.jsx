@@ -211,8 +211,32 @@ export default function Layout({ children, currentPageName }) {
     enforceSellerSession();
   }, [userType, user]);
 
+  // Enforce instructor password session; logout if version mismatch
+  useEffect(() => {
+    const enforceInstructorSession = async () => {
+      try {
+        if (userType !== 'instructor' || !user) return;
+        const instructors = await base44.entities.Instructor.filter({ user_email: user.email });
+        if (instructors.length === 0) return;
+        const instr = instructors[0];
+        const key = `instructor_session_version:${user.email}`;
+        const stored = localStorage.getItem(key);
+        const current = String(instr.session_version || 1);
+        if (stored !== current) {
+          base44.auth.logout();
+          setTimeout(() => {
+            navigate(createPageUrl('InstructorLogin'));
+          }, 200);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    enforceInstructorSession();
+  }, [userType, user]);
+
   // Páginas públicas sem menu lateral (Landing, Login pages, Chat público)
-  const publicPages = ['Landing', 'AdminLogin', 'SuperAdminLogin', 'StudentRegister', 'InstructorRegister'];
+  const publicPages = ['Landing', 'AdminLogin', 'SuperAdminLogin', 'SellerLogin', 'InstructorLogin', 'StudentRegister', 'InstructorRegister'];
   const isPublicPage = publicPages.includes(currentPageName);
   
   // Se não está logado
@@ -310,6 +334,18 @@ export default function Layout({ children, currentPageName }) {
               <Link to={createPageUrl('AdminLogin')}>
                 <button className="text-[10px] sm:text-xs text-[#cbd5e1] hover:text-[#0969da] px-2.5 py-1.5 rounded transition-colors font-semibold">
                   ADMIN
+                </button>
+              </Link>
+              <span className="text-[#cbd5e1] text-xs">|</span>
+              <Link to={createPageUrl('SellerLogin')}>
+                <button className="text-[10px] sm:text-xs text-[#cbd5e1] hover:text-[#34d399] px-2.5 py-1.5 rounded transition-colors font-semibold">
+                  VENDEDORES
+                </button>
+              </Link>
+              <span className="text-[#cbd5e1] text-xs">|</span>
+              <Link to={createPageUrl('InstructorLogin')}>
+                <button className="text-[10px] sm:text-xs text-[#cbd5e1] hover:text-[#a78bfa] px-2.5 py-1.5 rounded transition-colors font-semibold">
+                  INSTRUTORES
                 </button>
               </Link>
               <span className="text-[#cbd5e1] text-xs">|</span>
@@ -512,6 +548,18 @@ export default function Layout({ children, currentPageName }) {
             <Link to={createPageUrl('AdminLogin')}>
               <button className="text-[10px] sm:text-xs text-[#cbd5e1] hover:text-[#0969da] px-2.5 py-1.5 rounded transition-colors font-semibold">
                 ADMIN
+              </button>
+            </Link>
+            <span className="text-[#cbd5e1] text-xs">|</span>
+            <Link to={createPageUrl('SellerLogin')}>
+              <button className="text-[10px] sm:text-xs text-[#cbd5e1] hover:text-[#34d399] px-2.5 py-1.5 rounded transition-colors font-semibold">
+                VENDEDORES
+              </button>
+            </Link>
+            <span className="text-[#cbd5e1] text-xs">|</span>
+            <Link to={createPageUrl('InstructorLogin')}>
+              <button className="text-[10px] sm:text-xs text-[#cbd5e1] hover:text-[#a78bfa] px-2.5 py-1.5 rounded transition-colors font-semibold">
+                INSTRUTORES
               </button>
             </Link>
             <span className="text-[#cbd5e1] text-xs">|</span>
