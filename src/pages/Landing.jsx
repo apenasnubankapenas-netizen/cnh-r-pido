@@ -247,46 +247,6 @@ export default function Landing() {
           </div>
         </div>
 
-        {/* O que está incluso */}
-        <Card className="bg-[#1a2332] border-[#374151] mb-16">
-          <CardHeader>
-            <CardTitle className="text-2xl text-center">
-              O que está <span className="text-[#f0c41b]">incluso</span>?
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="flex items-start gap-3">
-                <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
-                <div>
-                  <p className="font-bold">Mínimo 2 Aulas Práticas</p>
-                  <p className="text-sm text-[#9ca3af]">Incluídas em todos os planos</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
-                <div>
-                  <p className="font-bold">Aulas Extras</p>
-                  <p className="text-sm text-[#9ca3af]">Adicione quantas quiser</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
-                <div>
-                  <p className="font-bold">Curso Teórico EAD</p>
-                  <p className="text-sm text-[#9ca3af]">Opcional - Material completo online</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
-                <div>
-                  <p className="font-bold">Simulados Online</p>
-                  <p className="text-sm text-[#9ca3af]">Prepare-se para a prova teórica</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
 
         {/* CTA Final */}
         <div className="text-center max-w-4xl mx-auto">
