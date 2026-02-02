@@ -19,6 +19,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import SuggestiveCalendar from "../components/schedule/SuggestiveCalendar";
+import TimeGrid from "../components/schedule/TimeGrid";
 import { Badge } from "@/components/ui/badge";
 
 export default function MyLessons() {
@@ -37,6 +39,7 @@ export default function MyLessons() {
   const [purchaseType, setPurchaseType] = useState('carro');
   const [purchaseQty, setPurchaseQty] = useState('1');
   const [showPaymentRequired, setShowPaymentRequired] = useState(false);
+  const [instructorLessons, setInstructorLessons] = useState([]);
 
   const navigate = useNavigate();
 
@@ -66,6 +69,17 @@ export default function MyLessons() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const fetchInstructorLessons = async () => {
+      try {
+        if (!selectedInstructor) { setInstructorLessons([]); return; }
+        const data = await base44.entities.Lesson.filter({ instructor_id: selectedInstructor });
+        setInstructorLessons(data);
+      } catch (e) { console.log(e); }
+    };
+    fetchInstructorLessons();
+  }, [selectedInstructor]);
 
   const timeSlots = [];
   for (let hour = 6; hour < 20; hour++) {
@@ -510,29 +524,41 @@ export default function MyLessons() {
               </Select>
             </div>
 
-            <div>
-              <label className="text-sm text-[#9ca3af] block mb-2">Data</label>
-              <input 
-                type="date" 
-                className="w-full bg-[#111827] border border-[#374151] rounded-md p-2 text-white"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-                min={new Date().toISOString().split('T')[0]}
-              />
+            <div className="space-y-3">
+              <label className="text-sm text-[#9ca3af] block">Escolha o dia</label>
+              {!selectedInstructor ? (
+                <div className="p-3 text-sm text-[#9ca3af] bg-[#111827] border border-[#374151] rounded-lg">
+                  Selecione um instrutor para visualizar o calendário de agendamentos.
+                </div>
+              ) : (
+                <SuggestiveCalendar
+                  monthDate={currentMonth}
+                  onPrev={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))}
+                  onNext={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))}
+                  selectedDate={selectedDate}
+                  onSelectDate={setSelectedDate}
+                  isFullyBooked={(dateStr) => {
+                    const count = instructorLessons.filter(l => l.status === 'agendada' && l.date === dateStr).length;
+                    return count >= availableTimeSlots.length;
+                  }}
+                />
+              )}
             </div>
 
-            <div>
-              <label className="text-sm text-[#9ca3af] block mb-2">Horário</label>
-              <Select value={selectedTime} onValueChange={setSelectedTime}>
-                <SelectTrigger className="bg-[#111827] border-[#374151]">
-                  <SelectValue placeholder="Selecione um horário" />
-                </SelectTrigger>
-                <SelectContent className="bg-[#1a2332] border-[#374151] max-h-48">
-                  {availableTimeSlots.map(time => (
-                    <SelectItem key={time} value={time}>{time}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="space-y-3">
+              <label className="text-sm text-[#9ca3af] block">Escolha o horário</label>
+              {!selectedInstructor || !selectedDate ? (
+                <div className="p-3 text-sm text-[#9ca3af] bg-[#111827] border border-[#374151] rounded-lg">
+                  Escolha o instrutor e o dia para ver os horários disponíveis.
+                </div>
+              ) : (
+                <TimeGrid
+                  timeSlots={availableTimeSlots}
+                  bookedTimes={new Set(instructorLessons.filter(l => l.status === 'agendada' && l.date === selectedDate).map(l => l.time))}
+                  selectedTime={selectedTime}
+                  onSelect={setSelectedTime}
+                />
+              )}
             </div>
           </div>
 
