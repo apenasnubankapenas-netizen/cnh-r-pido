@@ -45,6 +45,11 @@ export default function AdminSettings() {
       caminhao: { lat: -16.6869, lng: -49.2648, address: '' },
       carreta: { lat: -16.6869, lng: -49.2648, address: '' }
     },
+    lesson_time_config: {
+      day_start: '06:40',
+      day_end: '20:00',
+      slot_minutes: 60
+    },
     simulado_url: 'https://simulado.detran.gov.br',
     detran_url: 'https://goias.gov.br/detran/agendamento-detran/'
   });
@@ -76,7 +81,8 @@ export default function AdminSettings() {
          ...formData,
          ...settingsData[0],
          practical_test_location: settingsData[0].practical_test_location || formData.practical_test_location,
-         lesson_locations: settingsData[0].lesson_locations || formData.lesson_locations
+         lesson_locations: settingsData[0].lesson_locations || formData.lesson_locations,
+         lesson_time_config: settingsData[0].lesson_time_config || formData.lesson_time_config
         });
       }
     } catch (e) {
@@ -133,7 +139,7 @@ export default function AdminSettings() {
         <Button 
           className="bg-[#fbbf24] text-white hover:bg-[#fbbf24]/80"
           onClick={handleSave}
-          disabled={saving}
+          disabled={!isSuperadmin || saving}
         >
           {saving ? <RefreshCw className="mr-2 animate-spin" size={18} /> : <Save className="mr-2" size={18} />}
           Salvar Alterações
@@ -414,6 +420,63 @@ export default function AdminSettings() {
         </CardContent>
       </Card>
 
+      {/* Horários das Aulas (Somente SUPERADMIN) */}
+      <Card className="bg-[#1a2332] border-[#374151]">
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Clock className="text-blue-400" />
+            Horários das Aulas (Somente Super Admin)
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid md:grid-cols-3 gap-4">
+            <div>
+              <Label>Início do dia</Label>
+              <Input
+                type="time"
+                className="bg-[#111827] border-[#374151] mt-1"
+                disabled={!isSuperadmin}
+                value={formData.lesson_time_config?.day_start || ''}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  lesson_time_config: { ...(formData.lesson_time_config||{}), day_start: e.target.value }
+                })}
+              />
+            </div>
+            <div>
+              <Label>Término do dia</Label>
+              <Input
+                type="time"
+                className="bg-[#111827] border-[#374151] mt-1"
+                disabled={!isSuperadmin}
+                value={formData.lesson_time_config?.day_end || ''}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  lesson_time_config: { ...(formData.lesson_time_config||{}), day_end: e.target.value }
+                })}
+              />
+            </div>
+            <div>
+              <Label>Duração de cada aula (min)</Label>
+              <Input
+                type="number"
+                min={30}
+                max={120}
+                step={5}
+                className="bg-[#111827] border-[#374151] mt-1"
+                disabled={!isSuperadmin}
+                value={formData.lesson_time_config?.slot_minutes ?? 60}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  lesson_time_config: { ...(formData.lesson_time_config||{}), slot_minutes: parseInt(e.target.value||'60', 10) }
+                })}
+              />
+              <p className="text-xs text-[#9ca3af] mt-1">Sugestões: 50 ou 60 minutos</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Links Externos */}
       <Card className="bg-[#1a2332] border-[#374151]">
         <CardHeader>
@@ -445,7 +508,7 @@ export default function AdminSettings() {
       <Button 
         className="w-full bg-[#fbbf24] text-white hover:bg-[#fbbf24]/80 py-6"
         onClick={handleSave}
-        disabled={saving}
+        disabled={!isSuperadmin || saving}
       >
         {saving ? <RefreshCw className="mr-2 animate-spin" size={18} /> : <Save className="mr-2" size={18} />}
         Salvar Todas as Alterações

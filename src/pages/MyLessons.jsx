@@ -83,15 +83,20 @@ export default function MyLessons() {
   }
   
   const generateTimeSlots = () => {
+    const cfg = settings?.lesson_time_config || {};
+    const startStr = cfg.day_start || '06:40';
+    const endStr = cfg.day_end || '20:00';
+    const slot = parseInt(cfg.slot_minutes || 60, 10);
+    const [sh, sm] = startStr.split(':').map(Number);
+    const [eh, em] = endStr.split(':').map(Number);
+    let current = sh * 60 + sm;
+    const end = eh * 60 + em;
     const slots = [];
-    let currentTime = 6 * 60 + 40; // 06:40 em minutos
-    const endTime = 20 * 60; // 20:00 em minutos
-    
-    while (currentTime < endTime) {
-      const hours = Math.floor(currentTime / 60);
-      const mins = currentTime % 60;
-      slots.push(`${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}`);
-      currentTime += 60; // 50 min aula + 10 min intervalo
+    while (current < end) {
+      const h = String(Math.floor(current / 60)).padStart(2, '0');
+      const m = String(current % 60).padStart(2, '0');
+      slots.push(`${h}:${m}`);
+      current += slot;
     }
     return slots;
   };
