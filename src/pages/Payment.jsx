@@ -22,7 +22,7 @@ export default function Payment() {
   const [settings, setSettings] = useState(null);
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [paymentMethod, setPaymentMethod] = useState('card');
+  const [paymentMethod, setPaymentMethod] = useState('pix');
   const [installments, setInstallments] = useState('1');
   const [copied, setCopied] = useState(false);
   const [processing, setProcessing] = useState(false);
@@ -58,7 +58,7 @@ export default function Payment() {
   };
 
   const handleCopyPix = () => {
-    navigator.clipboard.writeText(settings?.pix_key || 'cnhparatodos@pix.com');
+    navigator.clipboard.writeText(settings?.pix_key || '6198875627');
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -66,6 +66,23 @@ export default function Payment() {
   const handlePayment = async () => {
     setProcessing(true);
     try {
+      if (paymentMethod === 'pix') {
+        const user = await base44.auth.me();
+        const students = await base44.entities.Student.filter({ user_email: user.email });
+        const s = students[0];
+        await base44.entities.Payment.create({
+          student_id: s.id,
+          student_name: s.full_name,
+          amount: amount,
+          method: 'pix',
+          installments: 1,
+          description: purchaseType ? `PIX - ${purchaseType} x${purchaseQty || 1}` : 'PIX - Pagamento',
+          status: 'pendente'
+        });
+        alert('Pedido PIX gerado. Copie a chave e faça o pagamento.');
+        return;
+      }
+
       const { data } = await base44.functions.invoke('createStripeCheckout', {
         amount,
         purchaseType,
@@ -79,7 +96,7 @@ export default function Payment() {
       alert('Não foi possível iniciar o checkout.');
     } catch (e) {
       console.log(e);
-      alert('Erro ao iniciar o pagamento.');
+      alert('Erro ao processar o pagamento.');
     } finally {
       setProcessing(false);
     }
@@ -129,22 +146,51 @@ export default function Payment() {
         </CardContent>
       </Card>
 
-      {/* Método de Pagamento (simplificado para Stripe) */}
+      {/* Forma de Pagamento */}
       <Card className="bg-[#1a2332] border-[#374151]">
         <CardHeader>
           <CardTitle className="text-lg">Forma de Pagamento</CardTitle>
         </CardHeader>
-        <CardContent>
-          <p className="text-sm text-[#9ca3af]">Você será redirecionado ao Stripe para finalizar com cartão.</p>
+        <CardContent className="space-y-4">
+          <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod} className="grid grid-cols-2 gap-3">
+            <label className="flex items-center gap-2 p-3 rounded border border-[#374151] cursor-pointer">
+              <RadioGroupItem value="card" id="pm-card" />
+              <CreditCard size={16} /> Cartão (Stripe)
+            </label>
+            <label className="flex items-center gap-2 p-3 rounded border border-[#374151] cursor-pointer">
+              <RadioGroupItem value="pix" id="pm-pix" />
+              <QrCode size={16} /> PIX
+            </label>
+          </RadioGroup>
+
+          {paymentMethod === 'card' && (
+            <p className="text-sm text-[#9ca3af]">Você será redirecionado ao Stripe para finalizar com cartão.</p>
+          )}
+
+          {paymentMethod === 'pix' && (
+            <div className="mt-2 p-3 bg-[#111827] rounded border border-[#374151]">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <div className="text-sm text-[#9ca3af]">Chave PIX</div>
+                  <div className="font-mono text-lg">{settings?.pix_key || '6198875627'}</div>
+                </div>
+                <Button variant="outline" onClick={handleCopyPix} className="border-[#374151]">
+                  {copied ? <Check className="mr-2" size={16} /> : <Copy className="mr-2" size={16} />}
+                  {copied ? 'Copiada' : 'Copiar'}
+                </Button>
+              </div>
+              <p className="text-xs text-[#9ca3af] mt-2">Após pagar via PIX, clique em "Gerar pedido PIX" para registrarmos seu pedido.</p>
+            </div>
+          )}
         </CardContent>
       </Card>
 
       <Button 
-       className="w-full bg-[#635bff] text-white hover:bg-[#4f46e5] py-6 text-lg"
+       className="w-full py-6 text-lg bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
        onClick={handlePayment}
        disabled={processing}
       >
-       {processing ? 'Redirecionando…' : 'Pagar com Stripe'}
+       {processing ? 'Processando…' : (paymentMethod === 'card' ? 'Pagar com cartão (Stripe)' : 'Gerar pedido PIX')}
       </Button>
     </div>
   );
