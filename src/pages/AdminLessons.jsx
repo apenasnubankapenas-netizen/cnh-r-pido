@@ -74,6 +74,7 @@ export default function AdminLessons() {
       try {
         const u = await base44.auth.me();
         setUser(u);
+        setIsSuperadmin(u?.role === 'admin' && u?.email === 'tcnhpara@gmail.com');
         const ins = u ? await base44.entities.Instructor.filter({ user_email: u.email }) : [];
         if (ins.length > 0) { setIsInstructor(true); setInstructorId(ins[0].id); }
       } catch (e) {}
@@ -439,17 +440,34 @@ export default function AdminLessons() {
                     variant="outline" 
                     size="sm" 
                     className="border-[#374151]"
-                    onClick={() => handleOpenEdit(lesson)}
+                    disabled={isNextDay(lesson.date)}
+                    onClick={() => { if (isNextDay(lesson.date)) return; handleOpenEdit(lesson); }}
                   >
                     <Edit size={14} className="mr-1" />
                     Editar
                   </Button>
 
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="border-[#374151]"
-                    onClick={() => {
+                  {isSuperadmin && isNextDay(lesson.date) && (
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      className=""
+                      onClick={async () => {
+                        if (!confirm('Confirmar exclusão desta aula do dia seguinte?')) return;
+                        await base44.entities.Lesson.delete(lesson.id);
+                        loadData();
+                      }}
+                    >
+                      <Trash size={14} className="mr-1" />
+                      Excluir
+                    </Button>
+                  )}
+
+                   <Button 
+                     variant="outline" 
+                     size="sm" 
+                     className="border-[#374151]"
+                     onClick={() => {
                       setSelectedLesson(lesson);
                       setEditData({
                         instructor_comment: lesson.instructor_comment || '',
@@ -503,6 +521,7 @@ export default function AdminLessons() {
                   <Input
                     type="date"
                     className="bg-[#111827] border-[#374151] mt-1"
+                    disabled={isNextDay(editingLesson?.date)}
                     value={editForm.date}
                     onChange={(e) => setEditForm({ ...editForm, date: e.target.value })}
                   />
@@ -512,6 +531,7 @@ export default function AdminLessons() {
                   <Input
                     type="time"
                     className="bg-[#111827] border-[#374151] mt-1"
+                    disabled={isNextDay(editingLesson?.date)}
                     value={editForm.time}
                     onChange={(e) => setEditForm({ ...editForm, time: e.target.value })}
                   />
@@ -521,6 +541,7 @@ export default function AdminLessons() {
                   <Select
                     value={editForm.instructor_id}
                     onValueChange={(value) => setEditForm({ ...editForm, instructor_id: value })}
+                    disabled={isNextDay(editingLesson?.date)}
                   >
                     <SelectTrigger className="bg-[#111827] border-[#374151] mt-1">
                       <SelectValue placeholder="Selecione..." />
@@ -543,7 +564,7 @@ export default function AdminLessons() {
           )}
 
           <DialogFooter className="flex w-full justify-between">
-            <Button variant="destructive" onClick={handleDeleteLesson}>
+            <Button variant="destructive" onClick={handleDeleteLesson} disabled={!isSuperadmin}>
               <Trash className="mr-2" size={18} />
               Excluir Aula
             </Button>
@@ -551,7 +572,7 @@ export default function AdminLessons() {
               <Button variant="outline" className="border-[#374151]" onClick={() => setEditingLesson(null)}>
                 Cancelar
               </Button>
-              <Button className="bg-[#1e40af] hover:bg-[#3b82f6]" onClick={handleUpdateLesson}>
+              <Button className="bg-[#1e40af] hover:bg-[#3b82f6]" onClick={handleUpdateLesson} disabled={isNextDay(editingLesson?.date)}>
                 <Save className="mr-2" size={18} />
                 Salvar Alterações
               </Button>
