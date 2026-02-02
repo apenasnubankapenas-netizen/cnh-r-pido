@@ -15,6 +15,7 @@ import {
   ArrowLeft
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import InstructorSchedule from "../components/instructor/InstructorSchedule";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -26,6 +27,9 @@ export default function AdminDashboard() {
   const [instructors, setInstructors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [user, setUser] = useState(null);
+  const [isInstructor, setIsInstructor] = useState(false);
+  const [currentInstructor, setCurrentInstructor] = useState(null);
 
   const navigate = useNavigate();
 
@@ -35,7 +39,8 @@ export default function AdminDashboard() {
 
   const loadData = async () => {
     try {
-      const [studentsData, lessonsData, paymentsData, instructorsData] = await Promise.all([
+      const [currentUser, studentsData, lessonsData, paymentsData, instructorsData] = await Promise.all([
+        base44.auth.me(),
         base44.entities.Student.list(),
         base44.entities.Lesson.list(),
         base44.entities.Payment.list(),
@@ -46,6 +51,14 @@ export default function AdminDashboard() {
       setLessons(lessonsData);
       setPayments(paymentsData);
       setInstructors(instructorsData);
+      setUser(currentUser);
+      if (currentUser?.role === 'admin') {
+        const instr = instructorsData.find(i => i.user_email === currentUser.email && i.active);
+        if (instr) {
+          setIsInstructor(true);
+          setCurrentInstructor(instr);
+        }
+      }
     } catch (e) {
       console.log(e);
     } finally {
@@ -118,29 +131,51 @@ export default function AdminDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="bg-[#1a2332] border-[#374151]">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-[#9ca3af] text-xs">Pagamentos Pendentes</p>
-                <p className="text-2xl font-bold text-orange-400">{pendingPayments.length}</p>
-              </div>
-              <AlertCircle className="text-orange-400" size={32} />
-            </div>
-          </CardContent>
-        </Card>
+        {!isInstructor && (
+          <>
+            <Card className="bg-[#1a2332] border-[#374151]">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[#9ca3af] text-xs">Pagamentos Pendentes</p>
+                    <p className="text-2xl font-bold text-orange-400">{pendingPayments.length}</p>
+                  </div>
+                  <AlertCircle className="text-orange-400" size={32} />
+                </div>
+              </CardContent>
+            </Card>
 
-        <Card className="bg-[#1a2332] border-[#374151]">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-[#9ca3af] text-xs">Receita Total</p>
-                <p className="text-2xl font-bold text-green-400">R$ {totalRevenue.toFixed(0)}</p>
+            <Card className="bg-[#1a2332] border-[#374151]">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[#9ca3af] text-xs">Receita Total</p>
+                    <p className="text-2xl font-bold text-green-400">R$ {totalRevenue.toFixed(0)}</p>
+                  </div>
+                  <TrendingUp className="text-green-400" size={32} />
+                </div>
+              </CardContent>
+            </Card>
+          </>
+        )}
+
+        {isInstructor && (
+          <Card className="bg-[#1a2332] border-[#374151]">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-[#9ca3af] text-xs">Seus Ganhos</p>
+                  <p className="text-2xl font-bold text-green-400">R$ {instructorEarnings.toFixed(0)}</p>
+                </div>
+                <Car className="text-green-400" size={32} />
               </div>
-              <TrendingUp className="text-green-400" size={32} />
-            </div>
-          </CardContent>
-        </Card>
+              <div className="mt-2 text-xs text-[#9ca3af]">
+                <span className="mr-3">Carro: R$ 12/aula</span>
+                <span>Moto: R$ 7/aula</span>
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       {/* Alunos Aguardando Confirmação */}
@@ -262,6 +297,20 @@ export default function AdminDashboard() {
         </CardContent>
       </Card>
 
+      {isInstructor && (
+        <Card className="bg-[#1a2332] border-[#374151]">
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Calendar className="text-[#3b82f6]" />
+              Mapa de Aulas (Próximos 14 dias)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <InstructorSchedule lessons={instructorLessons} />
+          </CardContent>
+        </Card>
+      )}
+
       {/* Quick Links */}
       <div className="grid md:grid-cols-3 gap-4">
         <Link to={createPageUrl('AdminStudents')}>
@@ -288,17 +337,19 @@ export default function AdminDashboard() {
           </Card>
         </Link>
 
-        <Link to={createPageUrl('AdminPayments')}>
-          <Card className="bg-[#1a2332] border-[#374151] hover:border-green-500 transition-all cursor-pointer">
-            <CardContent className="p-6 flex items-center gap-4">
-              <DollarSign className="text-green-500" size={32} />
-              <div>
-                <h3 className="font-bold">Pagamentos</h3>
-                <p className="text-sm text-[#9ca3af]">{pendingPayments.length} pendentes</p>
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
+        {!isInstructor && (
+          <Link to={createPageUrl('AdminPayments')}>
+            <Card className="bg-[#1a2332] border-[#374151] hover:border-green-500 transition-all cursor-pointer">
+              <CardContent className="p-6 flex items-center gap-4">
+                <DollarSign className="text-green-500" size={32} />
+                <div>
+                  <h3 className="font-bold">Pagamentos</h3>
+                  <p className="text-sm text-[#9ca3af]">{pendingPayments.length} pendentes</p>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+        )}
       </div>
     </div>
   );
