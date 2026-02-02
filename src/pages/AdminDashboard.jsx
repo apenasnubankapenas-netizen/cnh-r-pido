@@ -48,7 +48,7 @@ export default function AdminDashboard() {
       ]);
       
       setStudents(studentsData);
-      setLessons(lessonsData);
+      setLessons((lessonsData || []).filter(l => !l.trial));
       setPayments(paymentsData);
       setInstructors(instructorsData);
       setUser(currentUser);

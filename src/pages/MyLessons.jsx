@@ -75,7 +75,7 @@ export default function MyLessons() {
       try {
         if (!selectedInstructor) { setInstructorLessons([]); return; }
         const data = await base44.entities.Lesson.filter({ instructor_id: selectedInstructor });
-        setInstructorLessons(data);
+        setInstructorLessons((data || []).filter(l => !l.trial));
       } catch (e) { console.log(e); }
     };
     fetchInstructorLessons();
@@ -143,74 +143,70 @@ export default function MyLessons() {
 
   const handleSchedule = async () => {
     if (!selectedDate || !selectedTime || !selectedInstructor) return;
-    if (student.payment_status !== 'pago') { setShowPaymentRequired(true); return; }
-    
-    try {
-      // Contar aulas agendadas + realizadas por tipo
-      const carLessonsCount = lessons.filter(l => 
-        l.type === 'carro' && (l.status === 'agendada' || l.status === 'realizada' || l.status === 'falta')
-      ).length;
-      
-      const motoLessonsCount = lessons.filter(l => 
-        l.type === 'moto' && (l.status === 'agendada' || l.status === 'realizada' || l.status === 'falta')
-      ).length;
-      
-      // Verificar limite
-      if (selectedType === 'carro' && carLessonsCount >= (student.total_car_lessons || 0)) {
-        setPurchaseType('carro');
-        setShowBuyDialog(true);
-        return;
-      }
-      
-      if (selectedType === 'moto' && motoLessonsCount >= (student.total_moto_lessons || 0)) {
-        setPurchaseType('moto');
-        setShowBuyDialog(true);
-        return;
-      }
-      
-      // REGRA: Nas 2 primeiras aulas da categoria, manter o mesmo instrutor; depois, livre
-      const typeLessons = lessons
-        .filter(l => l.type === selectedType && (l.status === 'agendada' || l.status === 'realizada'))
-        .sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`));
+    const isTrial = student?.payment_status !== 'pago';
 
-      if (typeLessons.length === 1) {
-        const fixedInstructor = typeLessons[0];
-        if (fixedInstructor && fixedInstructor.instructor_id !== selectedInstructor) {
-          alert(`As duas primeiras aulas de ${selectedType === 'carro' ? 'carro' : 'moto'} devem ser com o mesmo instrutor: ${fixedInstructor.instructor_name}.`);
+    try {
+      if (!isTrial) {
+        // Contar aulas agendadas + realizadas por tipo (somente para aulas reais)
+        const carLessonsCount = lessons.filter(l => 
+          l.type === 'carro' && (l.status === 'agendada' || l.status === 'realizada' || l.status === 'falta')
+        ).length;
+        const motoLessonsCount = lessons.filter(l => 
+          l.type === 'moto' && (l.status === 'agendada' || l.status === 'realizada' || l.status === 'falta')
+        ).length;
+        // Verificar limite comprado
+        if (selectedType === 'carro' && carLessonsCount >= (student.total_car_lessons || 0)) {
+          setPurchaseType('carro');
+          setShowBuyDialog(true);
+          return;
+        }
+        if (selectedType === 'moto' && motoLessonsCount >= (student.total_moto_lessons || 0)) {
+          setPurchaseType('moto');
+          setShowBuyDialog(true);
+          return;
+        }
+        // Duas primeiras com o mesmo instrutor
+        const typeLessons = lessons
+          .filter(l => l.type === selectedType && (l.status === 'agendada' || l.status === 'realizada'))
+          .sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`));
+        if (typeLessons.length === 1) {
+          const fixedInstructor = typeLessons[0];
+          if (fixedInstructor && fixedInstructor.instructor_id !== selectedInstructor) {
+            alert(`As duas primeiras aulas de ${selectedType === 'carro' ? 'carro' : 'moto'} devem ser com o mesmo instrutor: ${fixedInstructor.instructor_name}.`);
+            return;
+          }
+        }
+        // Conflito real (ignora aulas trial)
+        const allLessons = await base44.entities.Lesson.filter({ 
+          instructor_id: selectedInstructor,
+          date: selectedDate,
+          time: selectedTime,
+          status: 'agendada'
+        });
+        if ((allLessons || []).some(l => !l.trial)) {
+          alert('Este horário já está ocupado com outro aluno. Por favor, escolha outro horário ou outro instrutor.');
           return;
         }
       }
-      
-      // REGRA: Verificar conflito de horário - buscar todas as aulas desse instrutor
-      const allLessons = await base44.entities.Lesson.filter({ 
-        instructor_id: selectedInstructor,
-        date: selectedDate,
-        time: selectedTime,
-        status: 'agendada'
-      });
-      
-      if (allLessons.length > 0) {
-        alert('Este horário já está ocupado com outro aluno. Por favor, escolha outro horário ou outro instrutor.');
-        return;
-      }
-      
+
       const instructor = instructors.find(i => i.id === selectedInstructor);
       await base44.entities.Lesson.create({
         student_id: student.id,
         student_name: student.full_name,
         student_renach: student.renach,
         instructor_id: selectedInstructor,
-        instructor_name: instructor.full_name,
+        instructor_name: instructor?.full_name || '',
         date: selectedDate,
         time: selectedTime,
         type: selectedType,
         status: 'agendada',
+        trial: isTrial,
         notified: false
       });
-      
+
       setShowScheduleDialog(false);
       loadData();
-      alert('Aula agendada com sucesso!');
+      alert(isTrial ? 'Aula de teste adicionada! Pague para validar.' : 'Aula agendada com sucesso!');
     } catch (e) {
       console.log(e);
       alert('Erro ao agendar aula. Tente novamente.');
@@ -288,28 +284,6 @@ export default function MyLessons() {
         <Button 
           className="bg-[#1e40af] hover:bg-[#3b82f6]"
           onClick={() => {
-            if (student.payment_status !== 'pago') {
-              setShowPaymentRequired(true);
-              return;
-            }
-
-            const carLessonsCount = lessons.filter(l => 
-              l.type === 'carro' && (l.status === 'agendada' || l.status === 'realizada' || l.status === 'falta')
-            ).length;
-
-            const motoLessonsCount = lessons.filter(l => 
-              l.type === 'moto' && (l.status === 'agendada' || l.status === 'realizada' || l.status === 'falta')
-            ).length;
-
-            const totalPurchased = (student.total_car_lessons || 0) + (student.total_moto_lessons || 0);
-            const totalUsed = carLessonsCount + motoLessonsCount;
-
-            if (totalUsed >= totalPurchased) {
-              setPurchaseType('carro');
-              setShowBuyDialog(true);
-              return;
-            }
-
             setShowScheduleDialog(true);
           }}
         >
@@ -317,6 +291,18 @@ export default function MyLessons() {
           Agendar Nova Aula
         </Button>
       </div>
+
+      {student.payment_status !== 'pago' && (
+        <Card className="bg-[#1a2332] border-[#fbbf24]/40">
+          <CardContent className="p-4 flex items-center justify-between gap-3">
+            <div>
+              <p className="font-semibold text-[#fbbf24]">Modo teste</p>
+              <p className="text-sm text-[#e5e7eb]">Você pode agendar e explorar tudo, mas essas aulas não valem e não aparecem para os instrutores até realizar o pagamento.</p>
+            </div>
+            <Button className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]" onClick={() => navigate(createPageUrl('Payment') + `?amount=${(settings?.registration_fee || settings?.lesson_price || 0)}&type=inscricao&qty=1`)}>Pagar agora</Button>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Status das Aulas */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -381,7 +367,12 @@ export default function MyLessons() {
                     <p className="font-bold">{new Date(lesson.date).toLocaleDateString('pt-BR')}</p>
                     <p className="text-[#fbbf24]">{lesson.time}</p>
                   </div>
-                  {getStatusBadge(lesson.status)}
+                  <div className="flex items-center gap-2">
+                    {getStatusBadge(lesson.status)}
+                    {lesson.trial && (
+                      <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/50">Teste - pague para validar</Badge>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>

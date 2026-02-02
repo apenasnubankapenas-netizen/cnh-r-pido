@@ -89,7 +89,7 @@ export default function AdminLessons() {
         base44.entities.Student.list(),
         base44.entities.Instructor.list()
       ]);
-      setLessons(lessonsData);
+      setLessons((lessonsData || []).filter(l => !l.trial));
       setStudents(studentsData);
       setInstructors(instructorsData);
     } catch (e) {
