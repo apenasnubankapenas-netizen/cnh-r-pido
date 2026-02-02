@@ -43,6 +43,7 @@ export default function AdminLessons() {
   const [user, setUser] = useState(null);
   const [instructorId, setInstructorId] = useState(null);
   const [isInstructor, setIsInstructor] = useState(false);
+  const [isSuperadmin, setIsSuperadmin] = useState(false);
   const [rescheduleOpen, setRescheduleOpen] = useState(false);
   const [rescheduleLesson, setRescheduleLesson] = useState(null);
   const [rescheduleAccident, setRescheduleAccident] = useState(false);
@@ -183,6 +184,15 @@ export default function AdminLessons() {
     } catch (e) {
       console.log(e);
     }
+  };
+
+  const isNextDay = (dateStr) => {
+    if (!dateStr) return false;
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    const tStr = tomorrow.toISOString().split('T')[0];
+    return dateStr === tStr;
   };
 
   const handleSaveComment = async () => {
