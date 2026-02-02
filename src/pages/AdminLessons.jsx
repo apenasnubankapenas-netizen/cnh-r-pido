@@ -14,7 +14,9 @@ import {
   Save,
   MessageSquare,
   ArrowLeft,
-  Trash
+  Trash,
+  Camera,
+  MapPin
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -46,6 +48,21 @@ export default function AdminLessons() {
   const [rescheduleAccident, setRescheduleAccident] = useState(false);
   const [rescheduleDate, setRescheduleDate] = useState('');
   const [rescheduleTime, setRescheduleTime] = useState('');
+  // Provas de presença/falta
+  const [proofOpen, setProofOpen] = useState(false);
+  const [proofMode, setProofMode] = useState(''); // 'realizada' | 'falta'
+  const [proofLesson, setProofLesson] = useState(null);
+  const [proofLoading, setProofLoading] = useState(false);
+  const [startInstructorFile, setStartInstructorFile] = useState(null);
+  const [startStudentFile, setStartStudentFile] = useState(null);
+  const [endInstructorFile, setEndInstructorFile] = useState(null);
+  const [endStudentFile, setEndStudentFile] = useState(null);
+  const [absenceInstructorFile, setAbsenceInstructorFile] = useState(null);
+  const [absenceLocationFile, setAbsenceLocationFile] = useState(null);
+  const [startLoc, setStartLoc] = useState(null);
+  const [endLoc, setEndLoc] = useState(null);
+  const [absenceLoc, setAbsenceLoc] = useState(null);
+  const [openRescheduleAfter, setOpenRescheduleAfter] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -178,6 +195,95 @@ export default function AdminLessons() {
     } catch (e) {
       console.log(e);
     }
+  };
+
+  // Helpers para localização e upload
+  const getLocation = () => new Promise((resolve, reject) => {
+    if (!navigator.geolocation) return reject(new Error('Sem geolocalização'));
+    navigator.geolocation.getCurrentPosition(
+      (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      (err) => reject(err),
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  });
+
+  const submitProofRealizada = async () => {
+    if (!proofLesson) return;
+    if (!startInstructorFile || !startStudentFile || !endInstructorFile || !endStudentFile || !startLoc || !endLoc) return;
+    setProofLoading(true);
+    try {
+      const [startInstr, startStud, endInstr, endStud] = await Promise.all([
+        base44.integrations.Core.UploadFile({ file: startInstructorFile }),
+        base44.integrations.Core.UploadFile({ file: startStudentFile }),
+        base44.integrations.Core.UploadFile({ file: endInstructorFile }),
+        base44.integrations.Core.UploadFile({ file: endStudentFile })
+      ]);
+      const payload = {
+        start_instructor_photo_url: startInstr.file_url,
+        start_student_photo_url: startStud.file_url,
+        start_photos_timestamp: new Date().toISOString(),
+        start_lat: startLoc.lat,
+        start_lng: startLoc.lng,
+        end_instructor_photo_url: endInstr.file_url,
+        end_student_photo_url: endStud.file_url,
+        end_photos_timestamp: new Date().toISOString(),
+        end_lat: endLoc.lat,
+        end_lng: endLoc.lng,
+        status: 'realizada'
+      };
+      await base44.entities.Lesson.update(proofLesson.id, payload);
+      const student = students.find(s => s.id === proofLesson.student_id);
+      if (student) {
+        const updateField = proofLesson.type === 'carro' ? 'completed_car_lessons' : 'completed_moto_lessons';
+        const currentValue = student[updateField] || 0;
+        await base44.entities.Student.update(student.id, { [updateField]: currentValue + 1 });
+      }
+      const subject = `Registro de aula REALIZADA - ${proofLesson.student_name} - ${proofLesson.date} ${proofLesson.time}`;
+      const body = `Aula REALIZADA\nAluno: ${proofLesson.student_name} (RENACH ${proofLesson.student_renach})\nInstrutor: ${proofLesson.instructor_name}\nData/Hora: ${proofLesson.date} ${proofLesson.time}\n\nCheck-in (início)\nSelfie instrutor: ${payload.start_instructor_photo_url}\nFoto aluno: ${payload.start_student_photo_url}\nLocal: ${payload.start_lat}, ${payload.start_lng}\nHora registro: ${payload.start_photos_timestamp}\n\nCheck-out (término)\nSelfie instrutor: ${payload.end_instructor_photo_url}\nFoto aluno: ${payload.end_student_photo_url}\nLocal: ${payload.end_lat}, ${payload.end_lng}\nHora registro: ${payload.end_photos_timestamp}`;
+      await base44.integrations.Core.SendEmail({ to: 'tcnhpara@gmail.com', subject, body });
+      setProofOpen(false);
+      setProofLesson(null);
+      setStartInstructorFile(null); setStartStudentFile(null); setEndInstructorFile(null); setEndStudentFile(null);
+      setStartLoc(null); setEndLoc(null);
+      loadData();
+    } catch (e) { console.log(e); }
+    finally { setProofLoading(false); }
+  };
+
+  const submitProofFalta = async () => {
+    if (!proofLesson) return;
+    if (!absenceInstructorFile || !absenceLocationFile || !absenceLoc) return;
+    setProofLoading(true);
+    try {
+      const [instr, spot] = await Promise.all([
+        base44.integrations.Core.UploadFile({ file: absenceInstructorFile }),
+        base44.integrations.Core.UploadFile({ file: absenceLocationFile })
+      ]);
+      const payload = {
+        absence_instructor_photo_url: instr.file_url,
+        absence_location_photo_url: spot.file_url,
+        absence_photos_timestamp: new Date().toISOString(),
+        absence_lat: absenceLoc.lat,
+        absence_lng: absenceLoc.lng,
+        status: 'falta'
+      };
+      await base44.entities.Lesson.update(proofLesson.id, payload);
+      const subject = `Registro de aula FALTA - ${proofLesson.student_name} - ${proofLesson.date} ${proofLesson.time}`;
+      const body = `Aula marcada como FALTA\nAluno: ${proofLesson.student_name} (RENACH ${proofLesson.student_renach})\nInstrutor: ${proofLesson.instructor_name}\nData/Hora: ${proofLesson.date} ${proofLesson.time}\n\nEvidências:\nSelfie instrutor: ${payload.absence_instructor_photo_url}\nFoto do local: ${payload.absence_location_photo_url}\nLocal: ${payload.absence_lat}, ${payload.absence_lng}\nHora registro: ${payload.absence_photos_timestamp}`;
+      await base44.integrations.Core.SendEmail({ to: 'tcnhpara@gmail.com', subject, body });
+      setProofOpen(false);
+      setProofLesson(null);
+      setAbsenceInstructorFile(null); setAbsenceLocationFile(null); setAbsenceLoc(null);
+      loadData();
+      if (openRescheduleAfter) {
+        setRescheduleLesson(proofLesson);
+        setRescheduleAccident(false);
+        setRescheduleDate('');
+        setRescheduleTime('');
+        setRescheduleOpen(true);
+      }
+    } catch (e) { console.log(e); }
+    finally { setProofLoading(false); }
   };
 
   const getStatusBadge = (status) => {
