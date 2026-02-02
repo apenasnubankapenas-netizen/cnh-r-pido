@@ -54,8 +54,8 @@ export default function InstructorRegister() {
 
   const verifyToken = async (tokenValue) => {
     try {
-      const instructors = await base44.entities.Instructor.filter({ registration_token: tokenValue });
-      if (instructors.length === 0) {
+      const invites = await base44.entities.InstructorInvite.filter({ token: tokenValue, used: false });
+      if (invites.length === 0) {
         alert('Link inválido ou expirado');
         navigate(createPageUrl('Landing'));
       }
@@ -105,19 +105,21 @@ export default function InstructorRegister() {
 
     try {
       const user = await base44.auth.me();
-      
-      const instructors = await base44.entities.Instructor.filter({ registration_token: token });
-      if (instructors.length > 0) {
-        await base44.entities.Instructor.update(instructors[0].id, {
-          ...formData,
-          user_email: user.email,
-          active: true,
-          registration_token: null
-        });
-        
-        alert('Cadastro concluído com sucesso!');
-        navigate(createPageUrl('InstructorProfile'));
+      const invites = await base44.entities.InstructorInvite.filter({ token, used: false });
+      if (invites.length === 0) {
+        alert('Link inválido ou expirado');
+        return;
       }
+
+      await base44.entities.Instructor.create({
+        ...formData,
+        user_email: user.email,
+        active: true
+      });
+      await base44.entities.InstructorInvite.update(invites[0].id, { used: true });
+
+      alert('Cadastro concluído com sucesso!');
+      navigate(createPageUrl('InstructorProfile'));
     } catch (error) {
       alert('Erro ao finalizar cadastro');
     } finally {
@@ -130,7 +132,7 @@ export default function InstructorRegister() {
       <div className="min-h-screen bg-[#0a0e1a] flex items-center justify-center p-4">
         <Card className="bg-[#1a2332] border-[#374151] max-w-md">
           <CardContent className="p-6 text-center">
-            <p className="text-white">Link de cadastro inválido</p>
+            <p className="text-white">Link de cadastro inválido ou expirado</p>
             <Button 
               className="mt-4"
               onClick={() => navigate(createPageUrl('Landing'))}

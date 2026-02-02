@@ -170,11 +170,9 @@ export default function AdminInstructors() {
   const generateInviteLink = async () => {
     try {
       const token = Math.random().toString(36).substring(2, 15);
-      await base44.entities.Instructor.create({
-        full_name: 'Pendente',
-        cpf: 'pendente',
-        registration_token: token,
-        active: false
+      await base44.entities.InstructorInvite.create({
+        token,
+        used: false
       });
       
       const base = new URL(window.location.origin + createPageUrl('InstructorRegister'));
@@ -259,7 +257,7 @@ export default function AdminInstructors() {
 
       {/* Lista de Instrutores */}
       <div className="grid md:grid-cols-2 gap-4">
-        {instructors.map((instructor) => {
+        {instructors.filter((i) => !i.registration_token && i.cpf !== 'pendente' && i.full_name !== 'Pendente').map((instructor) => {
           const earnings = getInstructorEarnings(instructor.id);
           
           return (
