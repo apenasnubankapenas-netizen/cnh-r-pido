@@ -30,6 +30,10 @@ export default function InstructorRegister() {
   const [loading, setLoading] = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [uploadingCover, setUploadingCover] = useState(false);
+  const [authed, setAuthed] = useState(false);
+  const [inviteMode, setInviteMode] = useState('invite'); // 'invite' | 'legacy'
+  const [legacyInstructorId, setLegacyInstructorId] = useState(null);
+  const [tokenValid, setTokenValid] = useState(true);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -40,14 +44,15 @@ export default function InstructorRegister() {
     }
   }, []);
 
-  // Garante login antes de concluir cadastro via link de convite
+  // Verifica sessão (sem redirecionar automaticamente para evitar loop)
   useEffect(() => {
     (async () => {
       if (!token) return;
-      const authed = await base44.auth.isAuthenticated();
-      if (!authed) {
-        // redireciona para login e retorna para este link com token
-        base44.auth.redirectToLogin(window.location.href);
+      try {
+        const a = await base44.auth.isAuthenticated();
+        setAuthed(!!a);
+      } catch {
+        setAuthed(false);
       }
     })();
   }, [token]);
@@ -138,6 +143,27 @@ export default function InstructorRegister() {
               onClick={() => navigate(createPageUrl('Landing'))}
             >
               Voltar
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!authed) {
+    return (
+      <div className="min-h-screen bg-[#0a0e1a] flex items-center justify-center p-4">
+        <Card className="bg-[#1a2332] border-[#374151] max-w-md">
+          <CardHeader>
+            <CardTitle className="text-white">Faça login para continuar</CardTitle>
+          </CardHeader>
+          <CardContent className="p-6 text-center space-y-3">
+            <p className="text-[#9ca3af]">Você precisa entrar para completar seu cadastro de instrutor.</p>
+            <Button 
+              className="w-full bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
+              onClick={() => base44.auth.redirectToLogin(window.location.href)}
+            >
+              Entrar
             </Button>
           </CardContent>
         </Card>
