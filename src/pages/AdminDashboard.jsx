@@ -53,7 +53,7 @@ export default function AdminDashboard() {
       setInstructors(instructorsData);
       setUser(currentUser);
       if (currentUser?.role === 'admin') {
-        const instr = instructorsData.find(i => i.user_email === currentUser.email && i.active);
+        const instr = instructorsData.find(i => i.user_email === currentUser.email);
         if (instr) {
           setIsInstructor(true);
           setCurrentInstructor(instr);
