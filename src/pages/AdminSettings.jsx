@@ -38,6 +38,13 @@ export default function AdminSettings() {
       lng: -49.2648,
       address: ''
     },
+    lesson_locations: {
+      carro: { lat: -16.6869, lng: -49.2648, address: '' },
+      moto: { lat: -16.6869, lng: -49.2648, address: '' },
+      onibus: { lat: -16.6869, lng: -49.2648, address: '' },
+      caminhao: { lat: -16.6869, lng: -49.2648, address: '' },
+      carreta: { lat: -16.6869, lng: -49.2648, address: '' }
+    },
     simulado_url: 'https://simulado.detran.gov.br',
     detran_url: 'https://goias.gov.br/detran/agendamento-detran/'
   });
@@ -48,15 +55,28 @@ export default function AdminSettings() {
     loadData();
   }, []);
 
+  const [user, setUser] = useState(null);
+  const [isSuperadmin, setIsSuperadmin] = useState(false);
+  useEffect(() => {
+    (async () => {
+      try {
+        const u = await base44.auth.me();
+        setUser(u);
+        setIsSuperadmin(u?.role === 'admin' && u?.email === 'tcnhpara@gmail.com');
+      } catch (e) {}
+    })();
+  }, []);
+
   const loadData = async () => {
     try {
       const settingsData = await base44.entities.AppSettings.list();
       if (settingsData.length > 0) {
         setSettings(settingsData[0]);
         setFormData({
-          ...formData,
-          ...settingsData[0],
-          practical_test_location: settingsData[0].practical_test_location || formData.practical_test_location
+         ...formData,
+         ...settingsData[0],
+         practical_test_location: settingsData[0].practical_test_location || formData.practical_test_location,
+         lesson_locations: settingsData[0].lesson_locations || formData.lesson_locations
         });
       }
     } catch (e) {
@@ -320,6 +340,77 @@ export default function AdminSettings() {
               />
             </div>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Locais de Aulas por Categoria (somente SUPERADMIN pode editar) */}
+      <Card className="bg-[#1a2332] border-[#374151]">
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <MapPin className="text-[#fbbf24]" />
+            Locais de Aulas por Categoria
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <p className="text-xs text-[#9ca3af]">Somente o SUPERADMIN pode alterar estes locais. Outros usuários veem em modo leitura.</p>
+
+          {['carro','moto','onibus','caminhao','carreta'].map((tipo) => (
+            <div key={tipo} className="p-3 bg-[#111827] rounded border border-[#374151]">
+              <div className="font-semibold mb-2 uppercase">{tipo}</div>
+              <div className="grid md:grid-cols-3 gap-4">
+                <div className="md:col-span-2">
+                  <Label>Endereço</Label>
+                  <Input
+                    disabled={!isSuperadmin}
+                    className="bg-[#111827] border-[#374151] mt-1"
+                    value={formData.lesson_locations?.[tipo]?.address || ''}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      lesson_locations: {
+                        ...formData.lesson_locations,
+                        [tipo]: { ...(formData.lesson_locations?.[tipo]||{}), address: e.target.value }
+                      }
+                    })}
+                    placeholder={`Endereço do local da aula de ${tipo}`}
+                  />
+                </div>
+                <div>
+                  <Label>Latitude</Label>
+                  <Input
+                    disabled={!isSuperadmin}
+                    type="number"
+                    step="0.0001"
+                    className="bg-[#111827] border-[#374151] mt-1"
+                    value={formData.lesson_locations?.[tipo]?.lat ?? ''}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      lesson_locations: {
+                        ...formData.lesson_locations,
+                        [tipo]: { ...(formData.lesson_locations?.[tipo]||{}), lat: parseFloat(e.target.value) }
+                      }
+                    })}
+                  />
+                </div>
+                <div>
+                  <Label>Longitude</Label>
+                  <Input
+                    disabled={!isSuperadmin}
+                    type="number"
+                    step="0.0001"
+                    className="bg-[#111827] border-[#374151] mt-1"
+                    value={formData.lesson_locations?.[tipo]?.lng ?? ''}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      lesson_locations: {
+                        ...formData.lesson_locations,
+                        [tipo]: { ...(formData.lesson_locations?.[tipo]||{}), lng: parseFloat(e.target.value) }
+                      }
+                    })}
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
         </CardContent>
       </Card>
 

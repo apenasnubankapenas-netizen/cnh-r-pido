@@ -468,6 +468,28 @@ export default function MyLessons() {
               </Select>
             </div>
 
+            {settings?.lesson_locations?.[selectedType] && (
+              <div className="p-3 bg-[#111827] rounded border border-[#374151]">
+                <div className="flex items-center gap-2 text-sm">
+                  <MapPin className="text-[#fbbf24]" size={16} />
+                  <span>Local da aula de {selectedType}:</span>
+                </div>
+                <div className="mt-1 text-sm">
+                  <p>{settings.lesson_locations[selectedType]?.address || 'Endereço não definido'}</p>
+                  {typeof settings.lesson_locations[selectedType]?.lat === 'number' && typeof settings.lesson_locations[selectedType]?.lng === 'number' && (
+                    <a
+                      className="text-[#3b82f6] underline"
+                      href={`https://www.google.com/maps?q=${settings.lesson_locations[selectedType].lat},${settings.lesson_locations[selectedType].lng}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Abrir no Maps
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
+
             <div>
               <label className="text-sm text-[#9ca3af] block mb-2">Instrutor</label>
               <Select value={selectedInstructor} onValueChange={setSelectedInstructor}>
