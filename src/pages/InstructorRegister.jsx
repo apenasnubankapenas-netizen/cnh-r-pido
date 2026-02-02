@@ -40,6 +40,18 @@ export default function InstructorRegister() {
     }
   }, []);
 
+  // Garante login antes de concluir cadastro via link de convite
+  useEffect(() => {
+    (async () => {
+      if (!token) return;
+      const authed = await base44.auth.isAuthenticated();
+      if (!authed) {
+        // redireciona para login e retorna para este link com token
+        base44.auth.redirectToLogin(window.location.href);
+      }
+    })();
+  }, [token]);
+
   const verifyToken = async (tokenValue) => {
     try {
       const instructors = await base44.entities.Instructor.filter({ registration_token: tokenValue });
