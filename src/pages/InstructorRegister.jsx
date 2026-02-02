@@ -59,13 +59,26 @@ export default function InstructorRegister() {
 
   const verifyToken = async (tokenValue) => {
     try {
+      // 1) Novo fluxo: convites via entidade InstructorInvite
       const invites = await base44.entities.InstructorInvite.filter({ token: tokenValue, used: false });
-      if (invites.length === 0) {
-        alert('Link inválido ou expirado');
-        navigate(createPageUrl('Landing'));
+      if (invites.length > 0) {
+        setInviteMode('invite');
+        setTokenValid(true);
+        return;
       }
+      // 2) Compatibilidade: token antigo salvo no próprio Instrutor
+      const legacy = await base44.entities.Instructor.filter({ registration_token: tokenValue });
+      if (legacy.length > 0) {
+        setInviteMode('legacy');
+        setLegacyInstructorId(legacy[0].id);
+        setTokenValid(true);
+        return;
+      }
+      // 3) Inválido/expirado
+      setTokenValid(false);
     } catch (e) {
       console.log(e);
+      setTokenValid(false);
     }
   };
 
@@ -110,18 +123,32 @@ export default function InstructorRegister() {
 
     try {
       const user = await base44.auth.me();
-      const invites = await base44.entities.InstructorInvite.filter({ token, used: false });
-      if (invites.length === 0) {
-        alert('Link inválido ou expirado');
+
+      if (inviteMode === 'invite') {
+        const invites = await base44.entities.InstructorInvite.filter({ token, used: false });
+        if (invites.length === 0) {
+          alert('Link inválido ou expirado');
+          setLoading(false);
+          return;
+        }
+        await base44.entities.Instructor.create({
+          ...formData,
+          user_email: user.email,
+          active: true
+        });
+        await base44.entities.InstructorInvite.update(invites[0].id, { used: true });
+      } else if (inviteMode === 'legacy' && legacyInstructorId) {
+        await base44.entities.Instructor.update(legacyInstructorId, {
+          ...formData,
+          user_email: user.email,
+          active: true,
+          registration_token: null
+        });
+      } else {
+        alert('Token inválido');
+        setLoading(false);
         return;
       }
-
-      await base44.entities.Instructor.create({
-        ...formData,
-        user_email: user.email,
-        active: true
-      });
-      await base44.entities.InstructorInvite.update(invites[0].id, { used: true });
 
       alert('Cadastro concluído com sucesso!');
       navigate(createPageUrl('InstructorProfile'));
@@ -165,6 +192,21 @@ export default function InstructorRegister() {
             >
               Entrar
             </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!tokenValid) {
+    return (
+      <div className="min-h-screen bg-[#0a0e1a] flex items-center justify-center p-4">
+        <Card className="bg-[#1a2332] border-[#374151] max-w-md">
+          <CardHeader>
+            <CardTitle className="text-white">Link inválido ou expirado</CardTitle>
+          </CardHeader>
+          <CardContent className="p-6 text-center">
+            <Button className="mt-2" onClick={() => navigate(createPageUrl('Landing'))}>Voltar</Button>
           </CardContent>
         </Card>
       </div>
