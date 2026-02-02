@@ -125,7 +125,7 @@ export default function Home() {
                 <Bike className="text-[#fbbf24]" />
               </div>
               <h3 className="font-bold mb-1">Categoria A</h3>
-              <p className="text-[#9ca3af] text-sm">A partir de R$ {settings?.category_a_price || 548},00</p>
+
             </CardContent>
           </Card>
           
@@ -135,7 +135,7 @@ export default function Home() {
                 <Car className="text-[#fbbf24]" />
               </div>
               <h3 className="font-bold mb-1">Categoria B</h3>
-              <p className="text-[#9ca3af] text-sm">A partir de R$ {settings?.category_b_price || 548},00</p>
+
             </CardContent>
           </Card>
           
@@ -148,7 +148,7 @@ export default function Home() {
                 </div>
               </div>
               <h3 className="font-bold mb-1">Categoria AB</h3>
-              <p className="text-[#9ca3af] text-sm">A partir de R$ {settings?.category_ab_price || 992},00</p>
+
             </CardContent>
           </Card>
         </div>

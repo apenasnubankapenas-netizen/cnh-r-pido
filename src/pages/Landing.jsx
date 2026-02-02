@@ -156,9 +156,7 @@ export default function Landing() {
                 </div>
                 <h3 className="font-bold mb-2">Categoria A</h3>
                 <p className="text-[#9ca3af] text-sm mb-2">Moto</p>
-                <p className="text-[#f0c41b] font-bold">
-                  A partir de R$ {settings?.category_a_price || 548},00
-                </p>
+
               </CardContent>
             </Card>
 
@@ -169,9 +167,7 @@ export default function Landing() {
                 </div>
                 <h3 className="font-bold mb-2">Categoria B</h3>
                 <p className="text-[#9ca3af] text-sm mb-2">Carro</p>
-                <p className="text-[#f0c41b] font-bold">
-                  A partir de R$ {settings?.category_b_price || 548},00
-                </p>
+
               </CardContent>
             </Card>
 
@@ -185,9 +181,7 @@ export default function Landing() {
                 </div>
                 <h3 className="font-bold mb-2">Categoria AB</h3>
                 <p className="text-[#9ca3af] text-sm mb-2">Carro + Moto</p>
-                <p className="text-[#f0c41b] font-bold">
-                  A partir de R$ {settings?.category_ab_price || 992},00
-                </p>
+
               </CardContent>
             </Card>
 
@@ -198,7 +192,7 @@ export default function Landing() {
                 </div>
                 <h3 className="font-bold mb-2">Ônibus</h3>
                 <p className="text-[#9ca3af] text-sm mb-2">Categoria D</p>
-                <p className="text-[#f0c41b] font-bold">Consulte</p>
+
               </CardContent>
             </Card>
 
@@ -209,7 +203,7 @@ export default function Landing() {
                 </div>
                 <h3 className="font-bold mb-2">Carreta</h3>
                 <p className="text-[#9ca3af] text-sm mb-2">Categoria E</p>
-                <p className="text-[#f0c41b] font-bold">Consulte</p>
+
               </CardContent>
             </Card>
           </div>
@@ -273,7 +267,7 @@ export default function Landing() {
                 <CheckCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
                 <div>
                   <p className="font-bold">Aulas Extras</p>
-                  <p className="text-sm text-[#9ca3af]">Adicione quantas quiser por R$ 98,00</p>
+                  <p className="text-sm text-[#9ca3af]">Adicione quantas quiser</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
