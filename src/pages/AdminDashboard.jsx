@@ -142,7 +142,7 @@ export default function AdminDashboard() {
         </Card>
 
         {!isInstructor && (
-          <>
+         <div className="contents">
             <Card className="bg-[#1a2332] border-[#374151]">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
@@ -166,8 +166,8 @@ export default function AdminDashboard() {
                 </div>
               </CardContent>
             </Card>
-          </>
-        )}
+          </div>
+          )}
 
         {isInstructor && (
           <Card className="bg-[#1a2332] border-[#374151]">

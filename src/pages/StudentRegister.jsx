@@ -215,7 +215,7 @@ export default function StudentRegister() {
       {/* Progress */}
       <div className="flex items-center justify-center mb-8">
         {[1, 2, 3, 4].map((s) => (
-          <React.Fragment key={s}>
+          <div key={s} className="flex items-center">
             <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
               step >= s ? 'bg-[#1e40af] text-white' : 'bg-[#374151] text-[#9ca3af]'
             }`}>
@@ -224,7 +224,7 @@ export default function StudentRegister() {
             {s < 4 && (
               <div className={`w-16 h-1 ${step > s ? 'bg-[#1e40af]' : 'bg-[#374151]'}`} />
             )}
-          </React.Fragment>
+          </div>
         ))}
       </div>
 
