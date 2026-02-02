@@ -181,6 +181,8 @@ export default function AdminInstructors() {
       base.searchParams.set('token', token);
       const link = base.toString();
       setInviteLink(link);
+      // também copia automaticamente para facilitar
+      navigator.clipboard.writeText(link).catch(()=>{});
       setShowInviteDialog(true);
     } catch (e) {
       alert('Erro ao gerar link de convite');
