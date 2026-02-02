@@ -144,18 +144,15 @@ export default function AdminLessons() {
 
   const handleStatusChange = async (lesson, newStatus) => {
     try {
-      if (newStatus === 'falta' && isInstructor) {
-        setRescheduleLesson(lesson);
-        setRescheduleAccident(false);
-        setRescheduleDate('');
-        setRescheduleTime('');
-        setRescheduleOpen(true);
+      if (['realizada','falta'].includes(newStatus) && isInstructor) {
+        setProofLesson(lesson);
+        setProofMode(newStatus);
+        setProofOpen(true);
+        setOpenRescheduleAfter(newStatus === 'falta');
         return;
       }
 
       await base44.entities.Lesson.update(lesson.id, { status: newStatus });
-      
-      // Atualizar contadores do aluno
       if (newStatus === 'realizada') {
         const student = students.find(s => s.id === lesson.student_id);
         if (student) {
@@ -164,7 +161,6 @@ export default function AdminLessons() {
           await base44.entities.Student.update(student.id, { [updateField]: currentValue + 1 });
         }
       }
-      
       loadData();
     } catch (e) {
       console.log(e);
@@ -514,6 +510,88 @@ export default function AdminLessons() {
               Salvar Avaliação
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog de Comprovação de Aula */}
+      <Dialog open={proofOpen} onOpenChange={setProofOpen}>
+        <DialogContent className="bg-[#1a2332] border-[#374151] text-white max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Comprovação de aula ({proofMode})</DialogTitle>
+          </DialogHeader>
+
+          {proofMode === 'realizada' && (
+            <div className="space-y-6">
+              <div className="p-3 bg-[#111827] rounded border border-[#374151]">
+                <p className="font-bold mb-2">Check-in (início)</p>
+                <div className="grid md:grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-sm text-[#9ca3af]">Selfie do instrutor</label>
+                    <input type="file" accept="image/*" capture="user" className="mt-1" onChange={async (e)=>{const f=e.target.files?.[0]; if(f){ setStartInstructorFile(f); try{ const loc=await getLocation(); setStartLoc(loc);}catch{}}}} />
+                  </div>
+                  <div>
+                    <label className="text-sm text-[#9ca3af]">Foto do aluno</label>
+                    <input type="file" accept="image/*" capture="user" className="mt-1" onChange={async (e)=>{const f=e.target.files?.[0]; if(f){ setStartStudentFile(f); if(!startLoc){ try{ const loc=await getLocation(); setStartLoc(loc);}catch{}}}}} />
+                  </div>
+                </div>
+                {startLoc && (
+                  <div className="text-xs text-[#9ca3af] mt-2 flex items-center gap-1"><MapPin size={14}/> {startLoc.lat.toFixed(5)}, {startLoc.lng.toFixed(5)}</div>
+                )}
+              </div>
+
+              <div className="p-3 bg-[#111827] rounded border border-[#374151]">
+                <p className="font-bold mb-2">Check-out (término)</p>
+                <div className="grid md:grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-sm text-[#9ca3af]">Selfie do instrutor</label>
+                    <input type="file" accept="image/*" capture="user" className="mt-1" onChange={async (e)=>{const f=e.target.files?.[0]; if(f){ setEndInstructorFile(f); try{ const loc=await getLocation(); setEndLoc(loc);}catch{}}}} />
+                  </div>
+                  <div>
+                    <label className="text-sm text-[#9ca3af]">Foto do aluno</label>
+                    <input type="file" accept="image/*" capture="user" className="mt-1" onChange={async (e)=>{const f=e.target.files?.[0]; if(f){ setEndStudentFile(f); if(!endLoc){ try{ const loc=await getLocation(); setEndLoc(loc);}catch{}}}}} />
+                  </div>
+                </div>
+                {endLoc && (
+                  <div className="text-xs text-[#9ca3af] mt-2 flex items-center gap-1"><MapPin size={14}/> {endLoc.lat.toFixed(5)}, {endLoc.lng.toFixed(5)}</div>
+                )}
+              </div>
+
+              <DialogFooter>
+                <Button variant="outline" className="border-[#374151]" onClick={()=>setProofOpen(false)}>Cancelar</Button>
+                <Button className="bg-green-600 hover:bg-green-700" onClick={submitProofRealizada} disabled={proofLoading || !startInstructorFile || !startStudentFile || !endInstructorFile || !endStudentFile || !startLoc || !endLoc}>
+                  <Camera className="mr-2" size={18}/> Registrar Aula
+                </Button>
+              </DialogFooter>
+            </div>
+          )}
+
+          {proofMode === 'falta' && (
+            <div className="space-y-6">
+              <div className="p-3 bg-[#111827] rounded border border-[#374151]">
+                <p className="font-bold mb-2">Evidências de falta</p>
+                <div className="grid md:grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-sm text-[#9ca3af]">Selfie do instrutor</label>
+                    <input type="file" accept="image/*" capture="user" className="mt-1" onChange={async (e)=>{const f=e.target.files?.[0]; if(f){ setAbsenceInstructorFile(f); try{ const loc=await getLocation(); setAbsenceLoc(loc);}catch{}}}} />
+                  </div>
+                  <div>
+                    <label className="text-sm text-[#9ca3af]">Foto do local (carro/moto/ponto)</label>
+                    <input type="file" accept="image/*" capture="environment" className="mt-1" onChange={async (e)=>{const f=e.target.files?.[0]; if(f){ setAbsenceLocationFile(f); if(!absenceLoc){ try{ const loc=await getLocation(); setAbsenceLoc(loc);}catch{}}}}} />
+                  </div>
+                </div>
+                {absenceLoc && (
+                  <div className="text-xs text-[#9ca3af] mt-2 flex items-center gap-1"><MapPin size={14}/> {absenceLoc.lat.toFixed(5)}, {absenceLoc.lng.toFixed(5)}</div>
+                )}
+              </div>
+
+              <DialogFooter>
+                <Button variant="outline" className="border-[#374151]" onClick={()=>setProofOpen(false)}>Cancelar</Button>
+                <Button className="bg-red-600 hover:bg-red-700" onClick={submitProofFalta} disabled={proofLoading || !absenceInstructorFile || !absenceLocationFile || !absenceLoc}>
+                  <Camera className="mr-2" size={18}/> Registrar Falta
+                </Button>
+              </DialogFooter>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
 
