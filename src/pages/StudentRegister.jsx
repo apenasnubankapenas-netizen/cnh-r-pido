@@ -35,6 +35,10 @@ export default function StudentRegister() {
     cpf: '',
     full_name: '',
     cep: '',
+    address_street: '',
+    address_neighborhood: '',
+    address_city: '',
+    address_state: '',
     whatsapp: '',
     phone: '',
     category: '',
@@ -91,6 +95,37 @@ export default function StudentRegister() {
       .replace(/\D/g, '')
       .replace(/(\d{5})(\d)/, '$1-$2')
       .replace(/(-\d{3})\d+?$/, '$1');
+  };
+
+  const [cepError, setCepError] = useState('');
+
+  const handleCepChange = async (value) => {
+    const masked = formatCEP(value);
+    setFormData(prev => ({ ...prev, cep: masked }));
+    const digits = value.replace(/\D/g, '');
+    if (digits.length === 8) {
+      setCepError('');
+      try {
+        const res = await fetch(`https://viacep.com.br/ws/${digits}/json/`);
+        const data = await res.json();
+        if (data?.erro) {
+          setCepError('CEP não encontrado');
+          setFormData(prev => ({ ...prev, address_street: '', address_neighborhood: '', address_city: '', address_state: '' }));
+        } else {
+          setFormData(prev => ({
+            ...prev,
+            address_street: data.logradouro || '',
+            address_neighborhood: data.bairro || '',
+            address_city: data.localidade || '',
+            address_state: data.uf || ''
+          }));
+        }
+      } catch (e) {
+        setCepError('Falha ao buscar CEP');
+      }
+    } else {
+      setCepError('');
+    }
   };
 
   const handleFileUpload = async (e, field) => {
@@ -268,14 +303,36 @@ export default function StudentRegister() {
             </div>
 
             <div>
-              <Label>CEP</Label>
+              <Label>CEP *</Label>
               <Input 
                 className="bg-[#111827] border-[#374151] mt-1"
                 value={formData.cep}
-                onChange={(e) => setFormData({...formData, cep: formatCEP(e.target.value)})}
+                onChange={(e) => handleCepChange(e.target.value)}
                 placeholder="00000-000"
                 maxLength={9}
               />
+              {cepError && <p className="text-red-400 text-sm mt-1">{cepError}</p>}
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 mt-2">
+              <div>
+                <Label>Rua</Label>
+                <Input 
+                  className="bg-[#111827] border-[#374151] mt-1"
+                  value={formData.address_street}
+                  readOnly
+                  placeholder="Preenchido automaticamente"
+                />
+              </div>
+              <div>
+                <Label>Cidade</Label>
+                <Input 
+                  className="bg-[#111827] border-[#374151] mt-1"
+                  value={formData.address_city}
+                  readOnly
+                  placeholder="Preenchido automaticamente"
+                />
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -290,7 +347,7 @@ export default function StudentRegister() {
                 />
               </div>
               <div>
-                <Label>Telefone</Label>
+                <Label>Telefone *</Label>
                 <Input 
                   className="bg-[#111827] border-[#374151] mt-1"
                   value={formData.phone}
@@ -304,7 +361,15 @@ export default function StudentRegister() {
             <Button 
               className="w-full bg-[#1e40af] hover:bg-[#3b82f6] mt-4"
               onClick={() => setStep(2)}
-              disabled={!formData.full_name || !formData.cpf || !formData.renach || !formData.whatsapp}
+              disabled={
+                !formData.full_name ||
+                !formData.cpf ||
+                !formData.renach ||
+                !formData.whatsapp ||
+                !formData.phone ||
+                ((formData.cep || '').replace(/\D/g,'').length !== 8) ||
+                !!cepError
+              }
             >
               Continuar <ArrowRight className="ml-2" size={18} />
             </Button>
