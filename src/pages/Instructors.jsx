@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
+import { createPageUrl } from '@/utils';
 import { 
   Car, 
   Bike, 
@@ -34,6 +35,11 @@ export default function Instructors() {
   const [newComment, setNewComment] = useState({ rating: 0, comment: '' });
   const [student, setStudent] = useState(null);
   const [mediaIndex, setMediaIndex] = useState(0);
+
+  // pós-cadastro: permite ver instrutores antes do pagamento
+  const urlParams = new URLSearchParams(window.location.search);
+  const postSignup = urlParams.get('postSignup') === 'true';
+  const amountParam = urlParams.get('amount');
 
   const navigate = useNavigate();
 
@@ -135,6 +141,13 @@ export default function Instructors() {
         </Button>
         <h1 className="text-2xl font-bold">Nossos Instrutores</h1>
       </div>
+
+      {postSignup && (
+        <div className="p-3 rounded-lg border border-[#fbbf24]/50 bg-[#fbbf24]/10 flex items-center justify-between">
+          <span className="text-sm">Cadastro concluído! Explore os instrutores e depois finalize o pagamento.</span>
+          <Button className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]" onClick={() => navigate(createPageUrl('Payment') + '?amount=' + (amountParam || 0))}>Ir para pagamento</Button>
+        </div>
+      )}
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         {instructors.map((instructor) => {

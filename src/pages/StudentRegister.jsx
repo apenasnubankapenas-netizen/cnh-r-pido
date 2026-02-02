@@ -177,7 +177,7 @@ export default function StudentRegister() {
         practical_test_done: false
       });
 
-      navigate(createPageUrl('Payment') + '?amount=' + calculateTotal());
+      navigate(createPageUrl('Instructors') + '?postSignup=true&amount=' + calculateTotal());
     } catch (error) {
       console.error(error);
     } finally {
