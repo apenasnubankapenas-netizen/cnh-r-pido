@@ -76,6 +76,16 @@ export default function AdminDashboard() {
 
   const studentsAwaitingConfirmation = students.filter(s => s.all_lessons_completed && !s.admin_confirmed);
 
+  // Dados do instrutor logado
+  const instructorLessons = (isInstructor && currentInstructor)
+    ? lessons.filter(l => l.instructor_id === currentInstructor.id)
+    : [];
+  const instructorEarnings = isInstructor
+    ? instructorLessons
+        .filter(l => l.status === 'realizada')
+        .reduce((acc, l) => acc + (l.type === 'carro' ? 12 : (l.type === 'moto' ? 7 : 0)), 0)
+    : 0;
+
   const filteredStudents = students.filter(s => 
     s.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     s.renach?.includes(searchTerm) ||
