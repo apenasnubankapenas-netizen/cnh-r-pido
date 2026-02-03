@@ -281,6 +281,8 @@ export default function MyLessons() {
   }
 
   const upcomingLessons = lessons.filter(l => l.status === 'agendada').sort((a, b) => new Date(a.date) - new Date(b.date));
+  const realScheduledCount = lessons.filter(l => l.status === 'agendada' && !l.trial).length;
+  const trialCount = lessons.filter(l => l.trial).length;
   const pastLessons = lessons.filter(l => l.status !== 'agendada').sort((a, b) => new Date(b.date) - new Date(a.date));
 
   return (
@@ -305,7 +307,11 @@ export default function MyLessons() {
               <p className="font-semibold text-[#fbbf24]">Modo teste</p>
               <p className="text-sm text-[#e5e7eb]">Você pode agendar e explorar tudo, mas essas aulas não valem e não aparecem para os instrutores até realizar o pagamento.</p>
             </div>
-            <Button className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]" onClick={() => navigate(createPageUrl('Payment') + `?amount=${(settings?.registration_fee || settings?.lesson_price || 0)}&type=inscricao&qty=1`)}>Pagar agora</Button>
+            {trialCount > 0 ? (
+              <Button className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]" onClick={() => navigate(createPageUrl('Payment') + `?amount=${(settings?.registration_fee || settings?.lesson_price || 0)}&type=inscricao&qty=1`)}>Pagar agora</Button>
+            ) : (
+              <Button className="bg-[#374151] cursor-not-allowed" disabled>Agende uma aula de teste para liberar o pagamento</Button>
+            )}
           </CardContent>
         </Card>
       )}
@@ -329,7 +335,7 @@ export default function MyLessons() {
         <Card className="bg-[#1a2332] border-[#374151]">
           <CardContent className="p-4 text-center">
             <Clock className="mx-auto text-blue-400 mb-2" />
-            <p className="text-2xl font-bold">{upcomingLessons.length}</p>
+            <p className="text-2xl font-bold">{realScheduledCount}</p>
             <p className="text-xs text-[#9ca3af]">Agendadas</p>
           </CardContent>
         </Card>

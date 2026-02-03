@@ -26,6 +26,7 @@ export default function Payment() {
   const [installments, setInstallments] = useState('1');
   const [copied, setCopied] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const [trialCount, setTrialCount] = useState(0);
 
   const urlParams = new URLSearchParams(window.location.search);
   const amount = parseFloat(urlParams.get('amount')) || 0;
@@ -40,7 +41,11 @@ export default function Payment() {
     try {
       const user = await base44.auth.me();
       const students = await base44.entities.Student.filter({ user_email: user.email });
-      if (students.length > 0) setStudent(students[0]);
+      if (students.length > 0) {
+        setStudent(students[0]);
+        const lessons = await base44.entities.Lesson.filter({ student_id: students[0].id });
+        setTrialCount((lessons || []).filter(l => l.trial).length);
+      }
 
       const settingsData = await base44.entities.AppSettings.list();
       if (settingsData.length > 0) setSettings(settingsData[0]);
@@ -123,6 +128,17 @@ export default function Payment() {
 
       <h1 className="text-2xl font-bold">Pagamento</h1>
 
+      {student && student.payment_status !== 'pago' && trialCount === 0 && (
+        <Card className="bg-[#1a2332] border-[#fbbf24]/40">
+          <CardContent className="p-4 text-sm">
+            Agende ao menos 1 aula de teste em "Minhas Aulas" antes de realizar o pagamento.
+            <div className="mt-3">
+              <Button variant="outline" className="border-[#fbbf24] text-[#fbbf24]" onClick={() => navigate(createPageUrl('MyLessons'))}>Ir para Minhas Aulas</Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Resumo */}
       <Card className="bg-[#1a2332] border-[#374151]">
         <CardHeader>
@@ -188,7 +204,7 @@ export default function Payment() {
       <Button 
        className="w-full py-6 text-lg bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
        onClick={handlePayment}
-       disabled={processing}
+       disabled={processing || (student && student.payment_status !== 'pago' && trialCount === 0)}
       >
        {processing ? 'Processando…' : (paymentMethod === 'card' ? 'Pagar com cartão (Stripe)' : 'Gerar pedido PIX')}
       </Button>

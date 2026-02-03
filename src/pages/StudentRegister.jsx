@@ -713,7 +713,7 @@ export default function StudentRegister() {
               >
                 {loading ? 'PROCESSANDO...' : (
                   <>
-                    <CreditCard className="mr-2" size={20} /> IR PARA PAGAMENTO
+                    <CreditCard className="mr-2" size={20} /> FINALIZAR CADASTRO
                   </>
                 )}
               </Button>

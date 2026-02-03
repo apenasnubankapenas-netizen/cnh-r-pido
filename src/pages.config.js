@@ -53,6 +53,7 @@ import AdminInstructors from './pages/AdminInstructors';
 import AdminLessons from './pages/AdminLessons';
 import AdminLogin from './pages/AdminLogin';
 import AdminPayments from './pages/AdminPayments';
+import AdminPayouts from './pages/AdminPayouts';
 import AdminSellers from './pages/AdminSellers';
 import AdminSettings from './pages/AdminSettings';
 import AdminStudents from './pages/AdminStudents';
@@ -70,7 +71,6 @@ import Simulados from './pages/Simulados';
 import StudentProfile from './pages/StudentProfile';
 import StudentRegister from './pages/StudentRegister';
 import SuperAdminLogin from './pages/SuperAdminLogin';
-import AdminPayouts from './pages/AdminPayouts';
 import __Layout from './Layout.jsx';
 
 
@@ -81,6 +81,7 @@ export const PAGES = {
     "AdminLessons": AdminLessons,
     "AdminLogin": AdminLogin,
     "AdminPayments": AdminPayments,
+    "AdminPayouts": AdminPayouts,
     "AdminSellers": AdminSellers,
     "AdminSettings": AdminSettings,
     "AdminStudents": AdminStudents,
@@ -98,7 +99,6 @@ export const PAGES = {
     "StudentProfile": StudentProfile,
     "StudentRegister": StudentRegister,
     "SuperAdminLogin": SuperAdminLogin,
-    "AdminPayouts": AdminPayouts,
 }
 
 export const pagesConfig = {
