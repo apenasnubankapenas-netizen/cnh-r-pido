@@ -323,6 +323,14 @@ export default function Layout({ children, currentPageName }) {
           color: #e6edf3 !important; caret-color: #f0c41b !important;
         }
         .disabled, [disabled] { color: #e6edf3 !important; opacity: 0.7; }
+
+        /* Translucent surfaces */
+        .bg-\[\#1a2332\], .bg-\[\#111827\], .bg-\[\#161b22\], .bg-\[\#0d1117\] {
+          background-color: rgba(0, 0, 0, 0.38) !important;
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          border-color: rgba(255, 255, 255, 0.08) !important;
+        }
         `}</style>
 
         {/* Top Bar */}
@@ -529,10 +537,18 @@ export default function Layout({ children, currentPageName }) {
           color: #e6edf3 !important; caret-color: #f0c41b !important;
         }
         .disabled, [disabled] { color: #e6edf3 !important; opacity: 0.7; }
-        
-      `}</style>
 
-      {/* Scan Line Effect */}
+        /* Translucent surfaces */
+        .bg-\[\#1a2332\], .bg-\[\#111827\], .bg-\[\#161b22\], .bg-\[\#0d1117\] {
+          background-color: rgba(0, 0, 0, 0.38) !important;
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          border-color: rgba(255, 255, 255, 0.08) !important;
+        }
+
+        `}</style>
+
+        {/* Scan Line Effect */}
       <div className="scan-line fixed top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#0969da] to-transparent opacity-10 pointer-events-none z-50" />
       
       {/* Top Bar */}
