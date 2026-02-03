@@ -52,7 +52,8 @@ export default function AdminSettings() {
       slot_minutes: 60
     },
     simulado_url: 'https://simulado.detran.gov.br',
-    detran_url: 'https://goias.gov.br/detran/agendamento-detran/'
+    detran_url: 'https://goias.gov.br/detran/agendamento-detran/',
+    seller_cashback_amount: 10
   });
 
   const navigate = useNavigate();
@@ -96,11 +97,25 @@ export default function AdminSettings() {
   const handleSave = async () => {
     setSaving(true);
     try {
+      const oldAmount = settings?.seller_cashback_amount;
       if (settings) {
         await base44.entities.AppSettings.update(settings.id, formData);
       } else {
         await base44.entities.AppSettings.create(formData);
       }
+
+      // Notificar vendedores se o SUPERADMIN alterou o valor do cashback
+      if (isSuperadmin && oldAmount !== formData.seller_cashback_amount) {
+        const sellers = await base44.entities.Seller.filter({ active: true });
+        await Promise.all((sellers || []).filter(s => s.email).map((s) => 
+          base44.integrations.Core.SendEmail({
+            to: s.email,
+            subject: 'Cashback atualizado',
+            body: `Olá ${s.full_name || ''}, o valor do cashback por novo cadastro foi atualizado para R$ ${Number(formData.seller_cashback_amount || 10).toFixed(2)}.\n\nEste valor passa a valer imediatamente.`
+          })
+        ));
+      }
+
       alert('Configurações salvas com sucesso!');
       loadData();
     } catch (e) {
@@ -213,6 +228,17 @@ export default function AdminSettings() {
                 value={formData.instructor_moto_commission}
                 onChange={(e) => setFormData({...formData, instructor_moto_commission: parseFloat(e.target.value)})}
               />
+            </div>
+            <div>
+              <Label>Cashback por registro (R$)</Label>
+              <Input 
+                type="number"
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={formData.seller_cashback_amount ?? 10}
+                onChange={(e) => setFormData({...formData, seller_cashback_amount: parseFloat(e.target.value)})}
+                disabled={!isSuperadmin}
+              />
+              <p className="text-xs text-[#9ca3af] mt-1">Vendedores serão alertados quando este valor mudar.</p>
             </div>
           </div>
         </CardContent>

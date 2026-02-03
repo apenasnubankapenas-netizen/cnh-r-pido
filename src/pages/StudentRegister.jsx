@@ -47,7 +47,8 @@ export default function StudentRegister() {
     cnh_back_photo: '',
     extra_car_lessons: 0,
     extra_moto_lessons: 0,
-    theoretical_course: false
+    theoretical_course: false,
+    seller_code: ''
   });
 
   useEffect(() => {
@@ -195,7 +196,21 @@ export default function StudentRegister() {
         totalCarLessons = 2 + formData.extra_car_lessons;
       }
 
-      await base44.entities.Student.create({
+      // Código do consultor (opcional) - válido apenas no dia atual e único por vendedor
+      const rawCode = (formData.seller_code || '').trim().toUpperCase();
+      const todayStr = new Date().toISOString().split('T')[0];
+      let referralSeller = null;
+      if (rawCode) {
+        const sellers = await base44.entities.Seller.filter({ active: true });
+        const getDailyCode = (s) => {
+          const seed = (s.id || '') + (s.email || '') + todayStr;
+          let h = 0; for (let i = 0; i < seed.length; i++) { h = ((h << 5) - h + seed.charCodeAt(i)) | 0; }
+          return Math.abs(h).toString(36).toUpperCase().slice(0, 6).padStart(6, '0');
+        };
+        referralSeller = (sellers || []).find((s) => getDailyCode(s) === rawCode) || null;
+      }
+
+      const created = await base44.entities.Student.create({
         ...formData,
         total_car_lessons: totalCarLessons,
         total_moto_lessons: totalMotoLessons,
@@ -209,8 +224,17 @@ export default function StudentRegister() {
         admin_confirmed: false,
         exam_done: false,
         theoretical_test_done: false,
-        practical_test_done: false
+        practical_test_done: false,
+        ...(referralSeller ? { ref_seller_id: referralSeller.id, ref_seller_name: referralSeller.full_name, ref_code_date: todayStr } : {})
       });
+
+      if (referralSeller) {
+        const cashback = (settings?.seller_cashback_amount ?? 10);
+        await base44.entities.Seller.update(referralSeller.id, {
+          cashback_balance: (referralSeller.cashback_balance || 0) + cashback,
+          total_referrals: (referralSeller.total_referrals || 0) + 1
+        });
+      }
 
       navigate(createPageUrl('Instructors') + '?postSignup=true&amount=' + calculateTotal());
     } catch (error) {
@@ -356,6 +380,17 @@ export default function StudentRegister() {
                   maxLength={15}
                 />
               </div>
+            </div>
+
+            <div>
+              <Label>Código do Consultor (opcional)</Label>
+              <Input 
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={formData.seller_code}
+                onChange={(e) => setFormData({...formData, seller_code: e.target.value})}
+                placeholder="Ex: ABC123"
+              />
+              <p className="text-xs text-[#9ca3af] mt-1">Se você recebeu um código de um consultor, informe aqui para ajudar o vendedor.</p>
             </div>
 
             <Button 
