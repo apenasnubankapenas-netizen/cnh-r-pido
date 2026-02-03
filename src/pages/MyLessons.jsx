@@ -52,8 +52,12 @@ export default function MyLessons() {
       
       if (students.length > 0) {
         setStudent(students[0]);
-        const studentLessons = await base44.entities.Lesson.filter({ student_id: students[0].id });
-        setLessons(studentLessons);
+        
+        // Só carregar aulas se pagamento foi confirmado
+        if (students[0].payment_status === 'pago') {
+          const studentLessons = await base44.entities.Lesson.filter({ student_id: students[0].id });
+          setLessons((studentLessons || []).filter(l => !l.trial)); // Excluir aulas trial
+        }
       }
 
       const allInstructors = await base44.entities.Instructor.filter({ active: true });
@@ -257,6 +261,26 @@ export default function MyLessons() {
       <div className="text-center py-12">
         <p className="text-[#9ca3af]">Complete seu cadastro primeiro</p>
       </div>
+    );
+  }
+
+  if (student.payment_status !== 'pago') {
+    return (
+      <Card className="bg-[#1a2332] border-[#fbbf24]/40 max-w-2xl mx-auto mt-12">
+        <CardContent className="p-6 text-center">
+          <div className="text-4xl mb-4">⚠️</div>
+          <h2 className="text-xl font-bold text-[#fbbf24] mb-2">Pagamento Pendente</h2>
+          <p className="text-[#9ca3af] mb-4">
+            Você precisa confirmar o pagamento para acessar suas aulas.
+          </p>
+          <Button 
+            className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
+            onClick={() => navigate(createPageUrl('Home'))}
+          >
+            Voltar ao Início
+          </Button>
+        </CardContent>
+      </Card>
     );
   }
 
