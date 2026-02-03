@@ -228,19 +228,33 @@ export default function LessonScheduler({
         <CardContent className="space-y-4">
           {/* Tipo de Aula */}
           <div>
-            <label className="text-xs sm:text-sm text-[#9ca3af] block mb-2">Tipo de Aula</label>
+            <label className="text-xs sm:text-sm text-[#9ca3af] block mb-2">
+              Tipo de Aula
+              {getAvailableTypes().length > 1 && (
+                <span className="text-[#fbbf24] ml-2">(Você pode trocar o tipo a qualquer momento)</span>
+              )}
+            </label>
             <Select value={currentType} onValueChange={(val) => {
               setCurrentType(val);
               setSelectedDate('');
               setSelectedTime('');
+              // Resetar instrutor se já tiver agendado 2 aulas
+              if (schedules.length >= 2) {
+                setSelectedInstructor('');
+              }
             }}>
               <SelectTrigger className="bg-[#111827] border-[#374151] h-10">
                 <SelectValue placeholder="Selecione o tipo de aula" />
               </SelectTrigger>
               <SelectContent className="bg-[#1a2332] border-[#374151]">
-                {getAvailableTypes().map(([type]) => (
-                  <SelectItem key={type} value={type}>{getTypeName(type)}</SelectItem>
-                ))}
+                {getAvailableTypes().map(([type, count]) => {
+                  const scheduled = schedules.filter(s => s.type === type).length;
+                  return (
+                    <SelectItem key={type} value={type}>
+                      {getTypeName(type)} ({scheduled}/{count} agendadas)
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
           </div>
