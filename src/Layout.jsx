@@ -310,20 +310,14 @@ export default function Layout({ children, currentPageName }) {
         h2 { font-weight: 700; letter-spacing: -0.015em; }
         h3 { font-weight: 600; letter-spacing: -0.01em; }
 
-        /* Force light text everywhere */
-        body, p, span, a, label, input, textarea, select, button, small, li, dt, dd, div, h1, h2, h3, h4, h5, h6 {
-          color: var(--text-primary, #e6edf3) !important;
-        }
-        .text-muted, .text-muted-foreground, .muted, .text-secondary {
-          color: #eef2f7 !important;
-        }
+        /* Force light text adjustments: keep placeholders/caret, allow component colors */
         ::placeholder, input::placeholder, textarea::placeholder {
           color: #dbeafe !important; opacity: 1 !important;
         }
         input, textarea, select, [contenteditable="true"] {
-          color: #e6edf3 !important; caret-color: #f0c41b !important;
+          color: var(--text-primary, #e6edf3) !important; caret-color: #f0c41b !important;
         }
-        .disabled, [disabled] { color: #e6edf3 !important; opacity: 0.7; }
+        .disabled, [disabled] { color: var(--text-primary, #e6edf3) !important; opacity: 0.7; }
 
         /* Translucent surfaces */
         .bg-\[\#1a2332\], .bg-\[\#111827\], .bg-\[\#161b22\], .bg-\[\#0d1117\] {
@@ -524,20 +518,14 @@ export default function Layout({ children, currentPageName }) {
         .text-muted { color: var(--text-secondary); }
         .badge-outline { border-color: #4b5563; }
 
-        /* Force light text everywhere */
-        body, p, span, a, label, input, textarea, select, button, small, li, dt, dd, div, h1, h2, h3, h4, h5, h6 {
-          color: var(--text-primary, #e6edf3) !important;
-        }
-        .text-muted, .text-muted-foreground, .muted, .text-secondary {
-          color: #eef2f7 !important;
-        }
+        /* Force light text adjustments: keep placeholders/caret, allow component colors */
         ::placeholder, input::placeholder, textarea::placeholder {
           color: #dbeafe !important; opacity: 1 !important;
         }
         input, textarea, select, [contenteditable="true"] {
-          color: #e6edf3 !important; caret-color: #f0c41b !important;
+          color: var(--text-primary, #e6edf3) !important; caret-color: #f0c41b !important;
         }
-        .disabled, [disabled] { color: #e6edf3 !important; opacity: 0.7; }
+        .disabled, [disabled] { color: var(--text-primary, #e6edf3) !important; opacity: 0.7; }
 
         /* Translucent surfaces */
         .bg-\[\#1a2332\], .bg-\[\#111827\], .bg-\[\#161b22\], .bg-\[\#0d1117\] {

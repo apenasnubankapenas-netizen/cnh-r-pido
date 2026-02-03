@@ -1,3 +1,4 @@
+css
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
@@ -39,7 +40,7 @@
             font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            font-weight: 500;
+            font-weight: 400;
           }
 
   h1, h2, h3, h4, h5, h6 {
@@ -48,12 +49,7 @@
           }
 
   p, span, div, label, button, input, textarea, select {
-            font-weight: 500;
-          }
-
-  /* Exceção para botões amarelos que precisam de texto preto */
-  .text-black, [class*="text-black"] {
-            color: inherit;
+            font-weight: 400;
           }
 }
 
