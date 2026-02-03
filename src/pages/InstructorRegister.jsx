@@ -434,7 +434,7 @@ export default function InstructorRegister() {
             </Dialog>
             </CardContent>
         </Card>
-      </div>
-    </div>
-  );
-}
+        </div>
+        </div>
+        );
+        }
