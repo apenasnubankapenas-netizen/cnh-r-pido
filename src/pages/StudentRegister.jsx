@@ -293,34 +293,76 @@ export default function StudentRegister() {
         navigate(createPageUrl('Home'));
         
       } else {
-        // Cartão: Salvar temporariamente e redirecionar para Stripe
+        // Cartão: Criar aluno e aulas, depois redirecionar para Stripe
         const { seller_code, ...studentPayload } = formData;
-        const pendingRegistration = {
-          studentData: {
-            ...studentPayload,
-            total_car_lessons: totalCarLessons,
-            total_moto_lessons: totalMotoLessons,
-            completed_car_lessons: 0,
-            completed_moto_lessons: 0,
-            total_paid: 0,
-            payment_status: 'pendente',
-            user_email: user?.email,
-            cnh_approved: formData.has_cnh !== false,
-            all_lessons_completed: false,
-            admin_confirmed: false,
-            exam_done: false,
-            theoretical_test_done: false,
-            practical_test_done: false,
-            ...(referralSeller ? { ref_seller_id: referralSeller.id, ref_seller_name: referralSeller.full_name, ref_code_date: todayStr } : {})
-          },
-          lessonSchedules,
-          referralSeller,
-          amount: total,
-          timestamp: Date.now()
+        const studentData = {
+          ...studentPayload,
+          user_email: user?.email,
+          ref_seller_id: referralSeller?.id,
+          ref_seller_name: referralSeller?.full_name,
+          ref_code_date: referralSeller ? todayStr : undefined,
+          total_paid: 0,
+          payment_status: 'pendente',
+          total_car_lessons: totalCarLessons,
+          total_moto_lessons: totalMotoLessons,
+          completed_car_lessons: 0,
+          completed_moto_lessons: 0,
+          cnh_approved: formData.has_cnh !== false,
+          all_lessons_completed: false,
+          admin_confirmed: false,
+          exam_done: false,
+          theoretical_test_done: false,
+          practical_test_done: false
         };
+
+        const newStudent = await base44.entities.Student.create(studentData);
+
+        // Criar aulas agendadas
+        for (const schedule of lessonSchedules) {
+          await base44.entities.Lesson.create({
+            student_id: newStudent.id,
+            student_name: formData.full_name,
+            student_renach: formData.renach,
+            instructor_id: schedule.instructor_id,
+            instructor_name: schedule.instructor_name,
+            date: schedule.date,
+            time: schedule.time,
+            type: schedule.type,
+            status: 'agendada',
+            trial: false
+          });
+        }
+
+        // Criar pagamento pendente
+        const payment = await base44.entities.Payment.create({
+          student_id: newStudent.id,
+          student_name: formData.full_name,
+          amount: total,
+          method: 'cartao',
+          description: 'Pagamento inicial - Cadastro',
+          status: 'pendente'
+        });
+
+        // Salvar dados do vendedor para o webhook
+        localStorage.setItem('pending_seller_data', JSON.stringify({
+          seller_id: referralSeller?.id,
+          student_id: newStudent.id
+        }));
+
+        // Redirecionar direto para Stripe checkout
+        const { data } = await base44.functions.invoke('createStripeCheckout', {
+          amount: total,
+          studentId: newStudent.id,
+          paymentId: payment.id,
+          purchaseType: 'inscricao',
+          purchaseQty: 1,
+        });
         
-        localStorage.setItem('pendingStudentRegistration', JSON.stringify(pendingRegistration));
-        navigate(createPageUrl('Payment') + '?amount=' + total + '&pending=true');
+        if (data?.url) {
+          window.location.href = data.url;
+        } else {
+          alert('Erro ao criar checkout do Stripe. Tente novamente.');
+        }
       }
     } catch (error) {
       console.error(error);
