@@ -55,16 +55,20 @@ Deno.serve(async (req) => {
               await base44.asServiceRole.entities.Student.update(st.id, updates);
               
               // Adicionar cashback ao vendedor se for primeira compra
-              if (st.payment_status !== 'pago' && st.ref_seller_id) {
+              const isFirstPayment = st.payment_status !== 'pago';
+              if (isFirstPayment && st.ref_seller_id) {
                 try {
                   const settingsData = await base44.asServiceRole.entities.AppSettings.list();
                   const appSettings = settingsData[0];
                   if (appSettings?.seller_cashback_amount) {
-                    const seller = await base44.asServiceRole.entities.Seller.get(st.ref_seller_id);
-                    await base44.asServiceRole.entities.Seller.update(st.ref_seller_id, {
-                      cashback_balance: (seller.cashback_balance || 0) + appSettings.seller_cashback_amount,
-                      total_referrals: (seller.total_referrals || 0) + 1
-                    });
+                    const sellers = await base44.asServiceRole.entities.Seller.filter({ id: st.ref_seller_id });
+                    if (sellers.length > 0) {
+                      const seller = sellers[0];
+                      await base44.asServiceRole.entities.Seller.update(st.ref_seller_id, {
+                        cashback_balance: (seller.cashback_balance || 0) + appSettings.seller_cashback_amount,
+                        total_referrals: (seller.total_referrals || 0) + 1
+                      });
+                    }
                   }
                 } catch (_) {}
               }

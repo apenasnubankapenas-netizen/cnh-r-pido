@@ -9,27 +9,46 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { amount, purchaseType, purchaseQty } = await req.json();
+    const { amount, purchaseType, purchaseQty, studentId, paymentId } = await req.json();
     if (!amount || amount <= 0) {
       return Response.json({ error: 'Invalid amount' }, { status: 400 });
     }
 
-    const students = await base44.entities.Student.filter({ user_email: user.email });
-    if (students.length === 0) {
-      return Response.json({ error: 'Student not found' }, { status: 404 });
-    }
-    const student = students[0];
+    let student;
+    let payment;
 
-    // Create a pending payment record
-    const payment = await base44.entities.Payment.create({
-      student_id: student.id,
-      student_name: student.full_name,
-      amount: amount,
-      method: 'cartao',
-      installments: 1,
-      description: purchaseType ? `Stripe - ${purchaseType} x${purchaseQty || 1}` : `Stripe - Categoria ${student.category}`,
-      status: 'pendente'
-    });
+    // Se studentId e paymentId foram fornecidos (novo cadastro), usar eles
+    if (studentId && paymentId) {
+      const students = await base44.asServiceRole.entities.Student.filter({ id: studentId });
+      if (students.length === 0) {
+        return Response.json({ error: 'Student not found' }, { status: 404 });
+      }
+      student = students[0];
+      
+      const payments = await base44.asServiceRole.entities.Payment.filter({ id: paymentId });
+      if (payments.length === 0) {
+        return Response.json({ error: 'Payment not found' }, { status: 404 });
+      }
+      payment = payments[0];
+    } else {
+      // Pagamento adicional de aluno existente
+      const students = await base44.entities.Student.filter({ user_email: user.email });
+      if (students.length === 0) {
+        return Response.json({ error: 'Student not found' }, { status: 404 });
+      }
+      student = students[0];
+
+      // Create a pending payment record
+      payment = await base44.entities.Payment.create({
+        student_id: student.id,
+        student_name: student.full_name,
+        amount: amount,
+        method: 'cartao',
+        installments: 1,
+        description: purchaseType ? `Stripe - ${purchaseType} x${purchaseQty || 1}` : `Stripe - Categoria ${student.category}`,
+        status: 'pendente'
+      });
+    }
 
     const stripeSecret = Deno.env.get('STRIPE_API_KEY');
     if (!stripeSecret) {
