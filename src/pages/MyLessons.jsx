@@ -128,7 +128,10 @@ export default function MyLessons() {
 
     if (!matchesType) return false;
 
-    // Regra: nas 2 primeiras aulas da categoria, manter o mesmo instrutor; depois, livre
+    // Aplica a regra somente para quem NÃO tem CNH e apenas em CARRO/MOTO
+    const applyLock = !student?.has_cnh && (selectedType === 'carro' || selectedType === 'moto');
+    if (!applyLock) return true;
+
     const typeLessons = lessons
       .filter(l => l.type === selectedType && (l.status === 'agendada' || l.status === 'realizada'))
       .sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`));
@@ -146,6 +149,20 @@ export default function MyLessons() {
     const isTrial = student?.payment_status !== 'pago';
 
     try {
+      // Regra das 2 primeiras aulas com o mesmo instrutor (apenas para quem não tem CNH e só carro/moto)
+      if (!student?.has_cnh && (selectedType === 'carro' || selectedType === 'moto')) {
+        const typeLessons = lessons
+          .filter(l => l.type === selectedType && (l.status === 'agendada' || l.status === 'realizada'))
+          .sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`));
+        if (typeLessons.length === 1) {
+          const fixedInstructor = typeLessons[0];
+          if (fixedInstructor && fixedInstructor.instructor_id !== selectedInstructor) {
+            alert(`As duas primeiras aulas de ${selectedType === 'carro' ? 'carro' : 'moto'} devem ser com o mesmo instrutor: ${fixedInstructor.instructor_name}.`);
+            return;
+          }
+        }
+      }
+
       if (!isTrial) {
         // Contar aulas agendadas + realizadas por tipo (somente para aulas reais)
         const carLessonsCount = lessons.filter(l => 
@@ -164,17 +181,6 @@ export default function MyLessons() {
           setPurchaseType('moto');
           setShowBuyDialog(true);
           return;
-        }
-        // Duas primeiras com o mesmo instrutor
-        const typeLessons = lessons
-          .filter(l => l.type === selectedType && (l.status === 'agendada' || l.status === 'realizada'))
-          .sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`));
-        if (typeLessons.length === 1) {
-          const fixedInstructor = typeLessons[0];
-          if (fixedInstructor && fixedInstructor.instructor_id !== selectedInstructor) {
-            alert(`As duas primeiras aulas de ${selectedType === 'carro' ? 'carro' : 'moto'} devem ser com o mesmo instrutor: ${fixedInstructor.instructor_name}.`);
-            return;
-          }
         }
         // Conflito real (ignora aulas trial)
         const allLessons = await base44.entities.Lesson.filter({ 
