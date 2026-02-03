@@ -143,11 +143,18 @@ export default function LessonScheduler({
     setSelectedDate('');
     setSelectedTime('');
     
-    // Resetar tipo para próxima aula disponível
-    const availTypes = getAvailableTypes();
-    if (availTypes.length > 0) {
-      setCurrentType(availTypes[0][0]);
+    // Verificar se ainda há aulas do tipo atual para agendar
+    const currentTypeScheduled = updatedSchedules.filter(s => s.type === currentType).length;
+    const currentTypeTotal = lessonsConfig[currentType] || 0;
+    
+    if (currentTypeScheduled >= currentTypeTotal) {
+      // Trocar para próximo tipo disponível
+      const availTypes = getAvailableTypes();
+      if (availTypes.length > 0) {
+        setCurrentType(availTypes[0][0]);
+      }
     }
+    // Se ainda há aulas do tipo atual, manter o tipo selecionado
     
     if (updatedSchedules.length >= 2) {
       // Após 2 aulas, liberar seleção de instrutor
@@ -192,7 +199,8 @@ export default function LessonScheduler({
             />
           </div>
           <p className="text-[10px] sm:text-xs text-[#9ca3af] mt-2">
-            Agendando aula {currentLessonIndex + 1} de {lessonsConfig[currentType]} - {getTypeName(currentType)}
+            Aula {scheduledLessons + 1} de {totalLessons} total
+            {currentType && ` • ${schedules.filter(s => s.type === currentType).length}/${lessonsConfig[currentType]} ${getTypeName(currentType)}`}
           </p>
         </CardContent>
       </Card>
