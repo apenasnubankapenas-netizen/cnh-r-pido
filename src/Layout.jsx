@@ -326,7 +326,7 @@ export default function Layout({ children, currentPageName }) {
         `}</style>
 
         {/* Top Bar */}
-        <div className="fixed top-0 left-0 right-0 h-14 bg-[#0d1117] border-b border-[#30363d] z-40 flex items-center justify-between px-3 backdrop-blur-sm bg-opacity-95">
+        <div className="fixed top-0 left-0 right-0 h-14 bg-black/40 border-b border-[#30363d] z-40 flex items-center justify-between px-3 backdrop-blur-md">
           <div className="flex items-center gap-2">
             <Link 
               to={createPageUrl('Landing')} 
