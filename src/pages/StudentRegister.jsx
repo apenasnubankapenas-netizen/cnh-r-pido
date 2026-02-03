@@ -864,15 +864,26 @@ export default function StudentRegister() {
                         )?.toFixed(2) || '0.00'}
                       </span>
                     </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#9ca3af]">Aulas incluídas no pacote:</span>
+                      <span className="font-semibold">2 aulas</span>
+                    </div>
                     {lessonSchedules.length > 2 && (
                       <div className="flex justify-between">
-                        <span className="text-[#9ca3af]">Aulas extras ({lessonSchedules.length - 2} x R$ {settings.lesson_price}):</span>
-                        <span className="font-semibold">R$ {((lessonSchedules.length - 2) * settings.lesson_price).toFixed(2)}</span>
+                        <span className="text-[#9ca3af]">Aulas extras ({lessonSchedules.length - 2} x R$ {(settings.lesson_price || 98).toFixed(2)}):</span>
+                        <span className="font-semibold">R$ {((lessonSchedules.length - 2) * (settings.lesson_price || 98)).toFixed(2)}</span>
                       </div>
                     )}
                     <div className="border-t border-[#374151] pt-2 mt-2 flex justify-between text-base sm:text-lg">
                       <span className="text-[#fbbf24] font-bold">TOTAL:</span>
-                      <span className="text-[#fbbf24] font-bold">R$ {calculateTotal().toFixed(2)}</span>
+                      <span className="text-[#fbbf24] font-bold">R$ {(() => {
+                        const categoryPrice = formData.category === 'A' ? settings.category_a_price :
+                          formData.category === 'B' ? settings.category_b_price :
+                          formData.category === 'AB' ? settings.category_ab_price :
+                          settings.category_b_price || 0;
+                        const extraLessons = Math.max(0, lessonSchedules.length - 2);
+                        return (categoryPrice + (extraLessons * (settings.lesson_price || 98))).toFixed(2);
+                      })()}</span>
                     </div>
                   </div>
                 </div>
