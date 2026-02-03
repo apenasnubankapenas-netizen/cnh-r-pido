@@ -26,12 +26,25 @@ export default function AdminSettings() {
     moto_rental: 250,
     registration_fee: 100,
     lesson_price: 98,
+    lesson_price_car: 98,
+    lesson_price_moto: 98,
+    lesson_price_bus: 150,
+    lesson_price_truck: 180,
+    lesson_price_trailer: 200,
     theoretical_course_price: 200,
     instructor_car_commission: 12,
     instructor_moto_commission: 7,
+    instructor_bus_commission: 20,
+    instructor_truck_commission: 25,
+    instructor_trailer_commission: 30,
     category_a_price: 548,
     category_b_price: 548,
     category_ab_price: 992,
+    category_inclusao_a_price: 400,
+    category_inclusao_b_price: 400,
+    category_bus_price: 1500,
+    category_truck_price: 1800,
+    category_trailer_price: 2200,
     pix_key: '',
     bank_info: 'Sicoob - Agência 5024 - Conta 77.487-1',
     practical_test_location: {
@@ -203,12 +216,48 @@ export default function AdminSettings() {
               />
             </div>
             <div>
-              <Label>Preço da Aula Prática (R$)</Label>
+              <Label>Preço Aula Carro (R$)</Label>
               <Input 
                 type="number"
                 className="bg-[#111827] border-[#374151] mt-1"
-                value={formData.lesson_price}
-                onChange={(e) => setFormData({...formData, lesson_price: parseFloat(e.target.value)})}
+                value={formData.lesson_price_car || formData.lesson_price}
+                onChange={(e) => setFormData({...formData, lesson_price_car: parseFloat(e.target.value)})}
+              />
+            </div>
+            <div>
+              <Label>Preço Aula Moto (R$)</Label>
+              <Input 
+                type="number"
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={formData.lesson_price_moto || formData.lesson_price}
+                onChange={(e) => setFormData({...formData, lesson_price_moto: parseFloat(e.target.value)})}
+              />
+            </div>
+            <div>
+              <Label>Preço Aula Ônibus (R$)</Label>
+              <Input 
+                type="number"
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={formData.lesson_price_bus || 150}
+                onChange={(e) => setFormData({...formData, lesson_price_bus: parseFloat(e.target.value)})}
+              />
+            </div>
+            <div>
+              <Label>Preço Aula Caminhão (R$)</Label>
+              <Input 
+                type="number"
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={formData.lesson_price_truck || 180}
+                onChange={(e) => setFormData({...formData, lesson_price_truck: parseFloat(e.target.value)})}
+              />
+            </div>
+            <div>
+              <Label>Preço Aula Carreta (R$)</Label>
+              <Input 
+                type="number"
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={formData.lesson_price_trailer || 200}
+                onChange={(e) => setFormData({...formData, lesson_price_trailer: parseFloat(e.target.value)})}
               />
             </div>
             <div>
@@ -227,6 +276,33 @@ export default function AdminSettings() {
                 className="bg-[#111827] border-[#374151] mt-1"
                 value={formData.instructor_moto_commission}
                 onChange={(e) => setFormData({...formData, instructor_moto_commission: parseFloat(e.target.value)})}
+              />
+            </div>
+            <div>
+              <Label>Comissão Instrutor Ônibus (R$)</Label>
+              <Input 
+                type="number"
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={formData.instructor_bus_commission || 20}
+                onChange={(e) => setFormData({...formData, instructor_bus_commission: parseFloat(e.target.value)})}
+              />
+            </div>
+            <div>
+              <Label>Comissão Instrutor Caminhão (R$)</Label>
+              <Input 
+                type="number"
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={formData.instructor_truck_commission || 25}
+                onChange={(e) => setFormData({...formData, instructor_truck_commission: parseFloat(e.target.value)})}
+              />
+            </div>
+            <div>
+              <Label>Comissão Instrutor Carreta (R$)</Label>
+              <Input 
+                type="number"
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={formData.instructor_trailer_commission || 30}
+                onChange={(e) => setFormData({...formData, instructor_trailer_commission: parseFloat(e.target.value)})}
               />
             </div>
             <div>
@@ -255,7 +331,7 @@ export default function AdminSettings() {
         <CardContent className="space-y-4">
           <div className="grid md:grid-cols-3 gap-4">
             <div>
-              <Label>Categoria A - A partir de (R$)</Label>
+              <Label>Categoria A (R$)</Label>
               <Input 
                 type="number"
                 className="bg-[#111827] border-[#374151] mt-1"
@@ -264,7 +340,7 @@ export default function AdminSettings() {
               />
             </div>
             <div>
-              <Label>Categoria B - A partir de (R$)</Label>
+              <Label>Categoria B (R$)</Label>
               <Input 
                 type="number"
                 className="bg-[#111827] border-[#374151] mt-1"
@@ -273,12 +349,57 @@ export default function AdminSettings() {
               />
             </div>
             <div>
-              <Label>Categoria AB - A partir de (R$)</Label>
+              <Label>Categoria AB (R$)</Label>
               <Input 
                 type="number"
                 className="bg-[#111827] border-[#374151] mt-1"
                 value={formData.category_ab_price}
                 onChange={(e) => setFormData({...formData, category_ab_price: parseFloat(e.target.value)})}
+              />
+            </div>
+            <div>
+              <Label>Inclusão A (R$)</Label>
+              <Input 
+                type="number"
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={formData.category_inclusao_a_price || 400}
+                onChange={(e) => setFormData({...formData, category_inclusao_a_price: parseFloat(e.target.value)})}
+              />
+            </div>
+            <div>
+              <Label>Inclusão B (R$)</Label>
+              <Input 
+                type="number"
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={formData.category_inclusao_b_price || 400}
+                onChange={(e) => setFormData({...formData, category_inclusao_b_price: parseFloat(e.target.value)})}
+              />
+            </div>
+            <div>
+              <Label>Ônibus (R$)</Label>
+              <Input 
+                type="number"
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={formData.category_bus_price || 1500}
+                onChange={(e) => setFormData({...formData, category_bus_price: parseFloat(e.target.value)})}
+              />
+            </div>
+            <div>
+              <Label>Caminhão (R$)</Label>
+              <Input 
+                type="number"
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={formData.category_truck_price || 1800}
+                onChange={(e) => setFormData({...formData, category_truck_price: parseFloat(e.target.value)})}
+              />
+            </div>
+            <div>
+              <Label>Carreta (R$)</Label>
+              <Input 
+                type="number"
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={formData.category_trailer_price || 2200}
+                onChange={(e) => setFormData({...formData, category_trailer_price: parseFloat(e.target.value)})}
               />
             </div>
           </div>
