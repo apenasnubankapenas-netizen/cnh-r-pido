@@ -129,27 +129,27 @@ export default function Instructors() {
 
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
-      <div className="flex items-center gap-3">
+    <div className="max-w-6xl mx-auto space-y-4 sm:space-y-6 px-3 sm:px-0">
+      <div className="flex items-center gap-2 sm:gap-3">
         <Button 
           variant="outline" 
           size="sm" 
-          className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-white"
+          className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black h-9"
           onClick={() => navigate(-1)}
         >
-          <ArrowLeft size={18} />
+          <ArrowLeft size={16} />
         </Button>
-        <h1 className="text-2xl font-bold">Nossos Instrutores</h1>
+        <h1 className="text-xl sm:text-2xl font-bold">Nossos Instrutores</h1>
       </div>
 
       {postSignup && (
-        <div className="p-3 rounded-lg border border-[#fbbf24]/50 bg-[#fbbf24]/10 flex items-center justify-between">
-          <span className="text-sm">Cadastro concluído! Explore os instrutores e depois finalize o pagamento.</span>
-          <Button className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]" onClick={() => navigate(createPageUrl('Payment') + '?amount=' + (amountParam || 0))}>Ir para pagamento</Button>
+        <div className="p-3 rounded-lg border border-[#fbbf24]/50 bg-[#fbbf24]/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <span className="text-xs sm:text-sm">Cadastro concluído! Explore os instrutores e depois finalize o pagamento.</span>
+          <Button className="bg-[#f0c41b] text-black hover:bg-[#d4aa00] w-full sm:w-auto h-9 text-sm whitespace-nowrap" onClick={() => navigate(createPageUrl('Payment') + '?amount=' + (amountParam || 0))}>Ir para pagamento</Button>
         </div>
       )}
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         {instructors.map((instructor) => {
           const rating = getAverageRating(instructor.id);
           const reviewCount = getInstructorReviews(instructor.id).length;
@@ -161,30 +161,30 @@ export default function Instructors() {
               className="bg-[#1a2332] border-[#374151] hover:border-[#3b82f6] transition-all cursor-pointer"
               onClick={() => setSelectedInstructor(instructor)}
             >
-              <CardContent className="p-4">
-                <div className="flex items-start gap-4">
-                  <div className="w-16 h-16 rounded-full bg-[#1e40af]/20 flex items-center justify-center overflow-hidden">
+              <CardContent className="p-3 sm:p-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-[#1e40af]/20 flex items-center justify-center overflow-hidden flex-shrink-0">
                     {instructor.photo ? (
                       <img src={instructor.photo} alt={instructor.full_name} className="w-full h-full object-cover" />
                     ) : (
-                      <span className="text-2xl font-bold text-[#fbbf24]">
+                      <span className="text-lg sm:text-2xl font-bold text-[#fbbf24]">
                         {instructor.full_name?.charAt(0)}
                       </span>
                     )}
                   </div>
-                  <div className="flex-1">
-                    <h3 className="font-bold">{instructor.full_name}</h3>
-                    <div className="flex items-center gap-1 text-sm">
-                      <Star className="text-[#fbbf24] fill-[#fbbf24]" size={14} />
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-sm sm:text-base truncate">{instructor.full_name}</h3>
+                    <div className="flex items-center gap-1 text-xs sm:text-sm">
+                      <Star className="text-[#fbbf24] fill-[#fbbf24]" size={12} />
                       <span>{rating}</span>
                       <span className="text-[#9ca3af]">({reviewCount})</span>
                     </div>
-                    <div className="flex gap-2 mt-2 flex-wrap">
+                    <div className="flex gap-1 sm:gap-2 mt-1 sm:mt-2 flex-wrap">
                       {badges.map((badge, idx) => {
                         const Icon = badge.icon;
                         return (
-                          <Badge key={idx} variant="outline" className="border-[#374151] text-xs">
-                            <Icon size={12} className={badge.color + " mr-1"} />
+                          <Badge key={idx} variant="outline" className="border-[#374151] text-[10px] sm:text-xs py-0 px-1.5">
+                            <Icon size={10} className={badge.color + " mr-0.5"} />
                             {badge.label}
                           </Badge>
                         );
@@ -345,7 +345,7 @@ export default function Instructors() {
                         onChange={(e) => setNewComment({...newComment, comment: e.target.value})}
                       />
                       <Button 
-                        className="bg-[#1e40af] hover:bg-[#3b82f6]"
+                        className="bg-[#f0c41b] text-black hover:bg-[#d4aa00] w-full sm:w-auto h-10"
                         onClick={handleSubmitComment}
                         disabled={!newComment.comment}
                       >

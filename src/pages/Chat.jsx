@@ -138,24 +138,24 @@ export default function Chat() {
 
 
   return (
-    <div className="max-w-3xl mx-auto">
-      <Card className="bg-[#1a2332] border-[#374151] h-[calc(100vh-180px)] flex flex-col">
-        <CardHeader className="border-b border-[#374151] py-3">
-          <CardTitle className="text-lg flex items-center gap-2">
+    <div className="max-w-3xl mx-auto px-3 sm:px-0">
+      <Card className="bg-[#1a2332] border-[#374151] h-[calc(100vh-140px)] sm:h-[calc(100vh-180px)] flex flex-col">
+        <CardHeader className="border-b border-[#374151] py-2 sm:py-3 px-3 sm:px-6">
+          <CardTitle className="text-base sm:text-lg flex items-center gap-2">
             <Button 
               variant="ghost" 
               size="sm" 
-              className="mr-2"
+              className="mr-1 sm:mr-2 h-8 w-8 p-0"
               onClick={() => navigate(-1)}
             >
-              <ArrowLeft size={18} />
+              <ArrowLeft size={16} />
             </Button>
-            <MessageCircle className="text-[#fbbf24]" />
-            Chat com a Autoescola
+            <MessageCircle className="text-[#fbbf24]" size={18} />
+            <span className="text-sm sm:text-base">Chat com a Autoescola</span>
           </CardTitle>
         </CardHeader>
         
-        <CardContent className="flex-1 overflow-y-auto p-4 space-y-4">
+        <CardContent className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4">
           {messages.length === 0 ? (
             <div className="text-center py-12 text-[#9ca3af]">
               <MessageCircle className="mx-auto mb-4" size={48} />
@@ -169,17 +169,17 @@ export default function Chat() {
                 className={`flex ${msg.sender_role === 'student' ? 'justify-end' : 'justify-start'}`}
               >
                 <div 
-                  className={`max-w-[80%] p-3 rounded-lg ${
+                  className={`max-w-[85%] sm:max-w-[80%] p-2.5 sm:p-3 rounded-lg text-sm ${
                     msg.sender_role === 'student' 
-                      ? 'bg-[#1e40af] text-white rounded-br-none' 
+                      ? 'bg-[#f0c41b] text-black rounded-br-none' 
                       : 'bg-[#111827] border border-[#374151] rounded-bl-none'
                   }`}
                 >
                   {msg.sender_role !== 'student' && (
-                    <p className="text-xs text-[#fbbf24] mb-1">{msg.sender_name || 'Autoescola'}</p>
+                    <p className="text-[10px] sm:text-xs text-[#fbbf24] mb-1 font-semibold">{msg.sender_name || 'Autoescola'}</p>
                   )}
-                  <p className="text-sm">{msg.message}</p>
-                  <p className="text-xs text-white/50 mt-1 text-right">
+                  <p className="text-xs sm:text-sm break-words">{msg.message}</p>
+                  <p className={`text-[10px] sm:text-xs mt-1 text-right ${msg.sender_role === 'student' ? 'text-black/60' : 'text-white/50'}`}>
                     {new Date(msg.created_date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                   </p>
                 </div>
@@ -189,10 +189,10 @@ export default function Chat() {
           <div ref={messagesEndRef} />
         </CardContent>
 
-        <div className="p-4 border-t border-[#374151]">
+        <div className="p-3 sm:p-4 border-t border-[#374151]">
           <div className="flex gap-2">
             <Input
-              className="bg-[#111827] border-[#374151] flex-1"
+              className="bg-[#111827] border-[#374151] flex-1 h-10 text-sm"
               placeholder="Digite sua mensagem..."
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
@@ -200,11 +200,11 @@ export default function Chat() {
               disabled={sending}
             />
             <Button 
-              className="bg-[#1e40af] hover:bg-[#3b82f6]"
+              className="bg-[#f0c41b] text-black hover:bg-[#d4aa00] h-10 w-10 sm:w-auto sm:px-4"
               onClick={handleSend}
               disabled={sending || !newMessage.trim()}
             >
-              <Send size={18} />
+              <Send size={16} />
             </Button>
           </div>
         </div>

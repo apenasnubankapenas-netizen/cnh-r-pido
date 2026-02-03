@@ -266,64 +266,73 @@ export default function MyLessons() {
   const pastLessons = lessons.filter(l => l.status !== 'agendada').sort((a, b) => new Date(b.date) - new Date(a.date));
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <h1 className="text-2xl font-bold">Minhas Aulas</h1>
+    <div className="max-w-6xl mx-auto space-y-4 sm:space-y-6 px-3 sm:px-0">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <h1 className="text-xl sm:text-2xl font-bold">Minhas Aulas</h1>
         <Button 
-          className="bg-[#1e40af] hover:bg-[#3b82f6]"
+          className="bg-[#f0c41b] text-black hover:bg-[#d4aa00] w-full sm:w-auto h-10"
           onClick={() => {
             setShowScheduleDialog(true);
           }}
         >
-          <Calendar className="mr-2" size={18} />
+          <Calendar className="mr-2" size={16} />
           Agendar Nova Aula
         </Button>
       </div>
 
       {student.payment_status !== 'pago' && (
         <Card className="bg-[#1a2332] border-[#fbbf24]/40">
-          <CardContent className="p-4 flex items-center justify-between gap-3">
+          <CardContent className="p-3 sm:p-4 space-y-3">
             <div>
-              <p className="font-semibold text-[#fbbf24]">Modo teste</p>
-              <p className="text-sm text-[#e5e7eb]">Você pode agendar e explorar tudo, mas essas aulas não valem e não aparecem para os instrutores até realizar o pagamento.</p>
+              <p className="font-semibold text-[#fbbf24] text-sm sm:text-base">🧪 Modo Teste</p>
+              <p className="text-xs sm:text-sm text-[#e5e7eb] mt-1">
+                Você pode agendar e explorar tudo, mas essas aulas não valem e não aparecem para os instrutores até realizar o pagamento.
+              </p>
             </div>
             {trialCount > 0 ? (
-              <Button className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]" onClick={() => navigate(createPageUrl('Payment') + `?amount=${(settings?.registration_fee || settings?.lesson_price || 0)}&type=inscricao&qty=1`)}>Pagar agora</Button>
+              <Button 
+                className="bg-[#f0c41b] text-black hover:bg-[#d4aa00] w-full h-9 sm:h-10 text-sm font-semibold" 
+                onClick={() => navigate(createPageUrl('Payment') + `?amount=${(settings?.registration_fee || settings?.lesson_price || 0)}&type=inscricao&qty=1`)}
+              >
+                Pagar agora
+              </Button>
             ) : (
-              <Button className="bg-[#374151] cursor-not-allowed" disabled>Agende uma aula de teste para liberar o pagamento</Button>
+              <Button className="bg-[#374151] cursor-not-allowed w-full h-9 sm:h-10 text-xs sm:text-sm" disabled>
+                Agende uma aula de teste para liberar o pagamento
+              </Button>
             )}
           </CardContent>
         </Card>
       )}
 
       {/* Status das Aulas */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
         <Card className="bg-[#1a2332] border-[#374151]">
-          <CardContent className="p-4 text-center">
-            <Car className="mx-auto text-[#3b82f6] mb-2" />
-            <p className="text-2xl font-bold">{student.completed_car_lessons || 0}/{student.total_car_lessons || 0}</p>
-            <p className="text-xs text-[#9ca3af]">Aulas Carro</p>
+          <CardContent className="p-3 sm:p-4 text-center">
+            <Car className="mx-auto text-[#3b82f6] mb-1 sm:mb-2" size={20} />
+            <p className="text-lg sm:text-2xl font-bold">{student.completed_car_lessons || 0}/{student.total_car_lessons || 0}</p>
+            <p className="text-[10px] sm:text-xs text-[#9ca3af]">Aulas Carro</p>
           </CardContent>
         </Card>
         <Card className="bg-[#1a2332] border-[#374151]">
-          <CardContent className="p-4 text-center">
-            <Bike className="mx-auto text-[#fbbf24] mb-2" />
-            <p className="text-2xl font-bold">{student.completed_moto_lessons || 0}/{student.total_moto_lessons || 0}</p>
-            <p className="text-xs text-[#9ca3af]">Aulas Moto</p>
+          <CardContent className="p-3 sm:p-4 text-center">
+            <Bike className="mx-auto text-[#fbbf24] mb-1 sm:mb-2" size={20} />
+            <p className="text-lg sm:text-2xl font-bold">{student.completed_moto_lessons || 0}/{student.total_moto_lessons || 0}</p>
+            <p className="text-[10px] sm:text-xs text-[#9ca3af]">Aulas Moto</p>
           </CardContent>
         </Card>
         <Card className="bg-[#1a2332] border-[#374151]">
-          <CardContent className="p-4 text-center">
-            <Clock className="mx-auto text-blue-400 mb-2" />
-            <p className="text-2xl font-bold">{realScheduledCount}</p>
-            <p className="text-xs text-[#9ca3af]">Agendadas</p>
+          <CardContent className="p-3 sm:p-4 text-center">
+            <Clock className="mx-auto text-blue-400 mb-1 sm:mb-2" size={20} />
+            <p className="text-lg sm:text-2xl font-bold">{realScheduledCount}</p>
+            <p className="text-[10px] sm:text-xs text-[#9ca3af]">Agendadas</p>
           </CardContent>
         </Card>
         <Card className="bg-[#1a2332] border-[#374151]">
-          <CardContent className="p-4 text-center">
-            <CheckCircle className="mx-auto text-green-400 mb-2" />
-            <p className="text-2xl font-bold">{lessons.filter(l => l.status === 'realizada').length}</p>
-            <p className="text-xs text-[#9ca3af]">Realizadas</p>
+          <CardContent className="p-3 sm:p-4 text-center">
+            <CheckCircle className="mx-auto text-green-400 mb-1 sm:mb-2" size={20} />
+            <p className="text-lg sm:text-2xl font-bold">{lessons.filter(l => l.status === 'realizada').length}</p>
+            <p className="text-[10px] sm:text-xs text-[#9ca3af]">Realizadas</p>
           </CardContent>
         </Card>
       </div>
@@ -340,30 +349,34 @@ export default function MyLessons() {
           {upcomingLessons.length > 0 ? (
             <div className="space-y-3">
               {upcomingLessons.map((lesson) => (
-                <div key={lesson.id} className="flex items-center justify-between p-4 bg-[#111827] rounded-lg border border-[#374151]">
-                  <div className="flex items-center gap-4">
+                <div key={lesson.id} className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 sm:p-4 bg-[#111827] rounded-lg border border-[#374151]">
+                  <div className="flex items-center gap-3 flex-1">
                     {lesson.type === 'carro' ? (
-                      <Car className="text-[#3b82f6]" size={32} />
+                      <Car className="text-[#3b82f6] flex-shrink-0" size={24} />
                     ) : (
-                      <Bike className="text-[#fbbf24]" size={32} />
+                      <Bike className="text-[#fbbf24] flex-shrink-0" size={24} />
                     )}
-                    <div>
-                      <p className="font-bold">Aula de {lesson.type === 'carro' ? 'Carro' : 'Moto'}</p>
-                      <p className="text-sm text-[#9ca3af]">
-                        <User className="inline mr-1" size={14} />
-                        {lesson.instructor_name}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-sm sm:text-base truncate">Aula de {lesson.type === 'carro' ? 'Carro' : 'Moto'}</p>
+                      <p className="text-xs sm:text-sm text-[#9ca3af] flex items-center gap-1">
+                        <User className="inline flex-shrink-0" size={12} />
+                        <span className="truncate">{lesson.instructor_name}</span>
                       </p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="font-bold">{new Date(lesson.date).toLocaleDateString('pt-BR')}</p>
-                    <p className="text-[#fbbf24]">{lesson.time}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {getStatusBadge(lesson.status)}
-                    {lesson.trial && (
-                      <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/50">Teste - pague para validar</Badge>
-                    )}
+                  <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4">
+                    <div className="text-left sm:text-right">
+                      <p className="font-bold text-xs sm:text-sm">{new Date(lesson.date).toLocaleDateString('pt-BR')}</p>
+                      <p className="text-[#fbbf24] text-xs sm:text-sm">{lesson.time}</p>
+                    </div>
+                    <div className="flex flex-col sm:flex-row items-end sm:items-center gap-1 sm:gap-2">
+                      {getStatusBadge(lesson.status)}
+                      {lesson.trial && (
+                        <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/50 text-[10px] sm:text-xs whitespace-nowrap">
+                          🧪 Teste
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -432,17 +445,17 @@ export default function MyLessons() {
             </p>
           </div>
           <DialogFooter>
-            <Button variant="outline" className="border-[#374151]" onClick={() => setShowPaymentRequired(false)}>
+            <Button variant="outline" className="border-[#374151] flex-1 sm:flex-none h-10" onClick={() => setShowPaymentRequired(false)}>
               Fechar
             </Button>
             <Button
-              className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
+              className="bg-[#f0c41b] text-black hover:bg-[#d4aa00] flex-1 sm:flex-none h-10"
               onClick={() => {
                 const amount = (settings?.registration_fee || settings?.lesson_price || 0);
                 navigate(createPageUrl('Payment') + `?amount=${amount}&type=inscricao&qty=1`);
               }}
             >
-              Ir para Pagamento
+              Pagar
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -544,15 +557,15 @@ export default function MyLessons() {
           </div>
 
           <DialogFooter>
-            <Button variant="outline" className="border-[#374151]" onClick={() => setShowScheduleDialog(false)}>
+            <Button variant="outline" className="border-[#374151] flex-1 sm:flex-none h-10" onClick={() => setShowScheduleDialog(false)}>
               Cancelar
             </Button>
             <Button 
-              className="bg-[#1e40af] hover:bg-[#3b82f6]"
+              className="bg-[#f0c41b] text-black hover:bg-[#d4aa00] flex-1 sm:flex-none h-10"
               onClick={handleSchedule}
               disabled={!selectedDate || !selectedTime || !selectedInstructor}
             >
-              Confirmar Agendamento
+              Confirmar
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -601,17 +614,17 @@ export default function MyLessons() {
           </div>
 
           <DialogFooter>
-            <Button variant="outline" className="border-[#374151]" onClick={() => setShowBuyDialog(false)}>
+            <Button variant="outline" className="border-[#374151] flex-1 sm:flex-none h-10" onClick={() => setShowBuyDialog(false)}>
               Cancelar
             </Button>
             <Button 
-              className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
+              className="bg-[#f0c41b] text-black hover:bg-[#d4aa00] flex-1 sm:flex-none h-10"
               onClick={() => {
                 const total = (settings?.lesson_price || 98) * parseInt(purchaseQty || '1');
                 navigate(createPageUrl('Payment') + `?amount=${total}&type=${purchaseType}&qty=${purchaseQty}`);
               }}
             >
-              Ir para Pagamento
+              Pagar
             </Button>
           </DialogFooter>
         </DialogContent>

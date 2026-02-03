@@ -113,32 +113,32 @@ export default function StudentProfile() {
 
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-3">
+    <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 px-3 sm:px-0">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <Button 
             variant="outline" 
             size="sm" 
-            className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-white"
+            className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black h-9"
             onClick={() => navigate(-1)}
           >
-            <ArrowLeft size={18} />
+            <ArrowLeft size={16} />
           </Button>
-          <h1 className="text-2xl font-bold">Meu Perfil</h1>
+          <h1 className="text-xl sm:text-2xl font-bold">Meu Perfil</h1>
         </div>
         <Button 
           variant={editing ? "default" : "outline"}
-          className={editing ? "bg-green-600 hover:bg-green-700" : "border-[#374151]"}
+          className={editing ? "bg-[#f0c41b] text-black hover:bg-[#d4aa00] w-full sm:w-auto h-10" : "border-[#374151] w-full sm:w-auto h-10"}
           onClick={editing ? handleSave : () => setEditing(true)}
         >
           {editing ? (
             <>
-              <Save size={18} className="mr-2" />
+              <Save size={16} className="mr-2" />
               Salvar
             </>
           ) : (
             <>
-              <Edit size={18} className="mr-2" />
+              <Edit size={16} className="mr-2" />
               Editar
             </>
           )}
@@ -326,7 +326,7 @@ export default function StudentProfile() {
             {!student.all_lessons_completed && (
               <div className="space-y-2">
                 <Button 
-                  className="w-full bg-[#1e40af] hover:bg-[#3b82f6]"
+                  className="w-full bg-[#f0c41b] text-black hover:bg-[#d4aa00] h-10"
                   onClick={() => handleStatusUpdate('all_lessons_completed', true)}
                   disabled={progressPercentage() < 100 || (student.completed_car_lessons || 0) < 2 || (student.completed_moto_lessons || 0) < 2}
                 >
