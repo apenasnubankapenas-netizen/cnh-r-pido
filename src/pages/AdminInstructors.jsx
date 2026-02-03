@@ -45,10 +45,13 @@ export default function AdminInstructors() {
   const [editingInstructor, setEditingInstructor] = useState(null);
   const [formData, setFormData] = useState({
     full_name: '',
+    cpf: '',
+    birth_date: '',
     phone: '',
     whatsapp_link: '',
     photo: '',
     bio: '',
+    pix_key: '',
     teaches_car: false,
     teaches_moto: false,
     teaches_bus: false,
@@ -196,10 +199,13 @@ export default function AdminInstructors() {
     setEditingInstructor(null);
     setFormData({
       full_name: '',
+      cpf: '',
+      birth_date: '',
       phone: '',
       whatsapp_link: '',
       photo: '',
       bio: '',
+      pix_key: '',
       teaches_car: false,
       teaches_moto: false,
       teaches_bus: false,
@@ -238,7 +244,7 @@ export default function AdminInstructors() {
         <div className="flex gap-2">
           {user?.email === 'tcnhpara@gmail.com' && (
             <Button 
-              className="bg-[#f0c41b] text-white hover:bg-[#d4aa00]"
+              className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
               onClick={generateInviteLink}
             >
               <LinkIcon className="mr-2" size={18} />
@@ -246,7 +252,7 @@ export default function AdminInstructors() {
             </Button>
           )}
           <Button 
-            className="bg-[#1e40af] hover:bg-[#3b82f6]"
+            className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
             onClick={() => { resetForm(); setShowDialog(true); }}
           >
             <Plus className="mr-2" size={18} />
@@ -363,7 +369,7 @@ export default function AdminInstructors() {
             <Users className="mx-auto text-[#9ca3af] mb-4" size={48} />
             <p className="text-[#9ca3af]">Nenhum instrutor cadastrado</p>
             <Button 
-              className="bg-[#1e40af] hover:bg-[#3b82f6] mt-4"
+              className="bg-[#f0c41b] text-black hover:bg-[#d4aa00] mt-4"
               onClick={() => { resetForm(); setShowDialog(true); }}
             >
               <Plus className="mr-2" size={18} />
@@ -403,6 +409,27 @@ export default function AdminInstructors() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
+                <Label>CPF *</Label>
+                <Input 
+                  className="bg-[#111827] border-[#374151] mt-1"
+                  value={formData.cpf}
+                  onChange={(e) => setFormData({...formData, cpf: e.target.value})}
+                  placeholder="000.000.000-00"
+                />
+              </div>
+              <div>
+                <Label>Data de Nascimento *</Label>
+                <Input 
+                  type="date"
+                  className="bg-[#111827] border-[#374151] mt-1"
+                  value={formData.birth_date}
+                  onChange={(e) => setFormData({...formData, birth_date: e.target.value})}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
                 <Label>Telefone *</Label>
                 <Input 
                   className="bg-[#111827] border-[#374151] mt-1"
@@ -419,6 +446,16 @@ export default function AdminInstructors() {
                   placeholder="https://wa.me/..."
                 />
               </div>
+            </div>
+
+            <div>
+              <Label>Chave PIX</Label>
+              <Input 
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={formData.pix_key}
+                onChange={(e) => setFormData({...formData, pix_key: e.target.value})}
+                placeholder="CPF, Email, Telefone ou Chave aleatória"
+              />
             </div>
 
             <div>
@@ -485,9 +522,9 @@ export default function AdminInstructors() {
               Cancelar
             </Button>
             <Button 
-              className="bg-[#1e40af] hover:bg-[#3b82f6]"
+              className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
               onClick={handleSave}
-              disabled={!formData.full_name || !formData.phone}
+              disabled={!formData.full_name || !formData.cpf || !formData.phone}
             >
               <Save className="mr-2" size={18} />
               Salvar
@@ -520,7 +557,7 @@ export default function AdminInstructors() {
             <Button variant="outline" className="border-[#374151]" onClick={() => setShowPasswordDialog(false)}>
               Cancelar
             </Button>
-            <Button className="bg-[#1e40af] hover:bg-[#3b82f6]" onClick={savePassword} disabled={!newPassword}>
+            <Button className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]" onClick={savePassword} disabled={!newPassword}>
               <Save className="mr-2" size={18} /> Salvar Senha
             </Button>
           </DialogFooter>
