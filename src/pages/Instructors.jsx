@@ -200,8 +200,9 @@ export default function Instructors() {
 
       {/* Modal do Instrutor */}
       <Dialog open={!!selectedInstructor} onOpenChange={() => setSelectedInstructor(null)}>
-        <DialogContent className="bg-[#1a2332] border-[#374151] text-white max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="bg-[#1a2332] border-[#374151] text-white max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
           {selectedInstructor && (
+            <div className="overflow-y-auto pr-2 flex-1">(
             <>
               <DialogHeader>
                 <div className="flex items-center gap-4">
@@ -382,7 +383,7 @@ export default function Instructors() {
                   </div>
                 </TabsContent>
               </Tabs>
-            </>
+            </div>
           )}
         </DialogContent>
       </Dialog>
