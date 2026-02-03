@@ -52,11 +52,13 @@ export default function Home() {
           setStudent(students[0]);
           
           const today = new Date().toISOString().split('T')[0];
-          const lessons = await base44.entities.Lesson.filter({ 
-            student_id: students[0].id,
-            status: 'agendada'
-          });
-          setUpcomingLessons(lessons.filter(l => l.date >= today).slice(0, 3));
+          if (students[0].payment_status === 'pago') {
+            const lessons = await base44.entities.Lesson.filter({ 
+              student_id: students[0].id,
+              status: 'agendada'
+            });
+            setUpcomingLessons((lessons || []).filter(l => !l.trial && l.date >= today).slice(0, 3));
+          }
         }
       }
     } catch (e) {
@@ -183,13 +185,22 @@ export default function Home() {
           <p className="text-[#9ca3af] text-sm">RENACH: {student.renach}</p>
         </div>
         <div className="flex gap-2">
-          <Link to={createPageUrl('MyLessons')}>
-            <Button className="bg-[#1e40af] hover:bg-[#3b82f6]">
+          {student.payment_status === 'pago' ? (
+            <Link to={createPageUrl('MyLessons')}>
+              <Button className="bg-[#1e40af] hover:bg-[#3b82f6]">
+                <Calendar className="mr-2" size={18} />
+                Agendar Aula
+              </Button>
+            </Link>
+          ) : (
+            <Button 
+              className="bg-[#374151] cursor-not-allowed"
+              disabled
+            >
               <Calendar className="mr-2" size={18} />
-              Agendar Aula
+              Pagamento Pendente
             </Button>
-          </Link>
-        </div>
+          )}
       </div>
 
       {/* Status Cards */}
@@ -282,9 +293,13 @@ export default function Home() {
             <div className="text-center py-6 text-[#9ca3af]">
               <Calendar className="mx-auto mb-2" size={32} />
               <p>Nenhuma aula agendada</p>
-              <Link to={createPageUrl('MyLessons')}>
-                <Button variant="link" className="text-[#fbbf24]">Agendar agora</Button>
-              </Link>
+              {student.payment_status === 'pago' ? (
+                <Link to={createPageUrl('MyLessons')}>
+                  <Button variant="link" className="text-[#fbbf24]">Agendar agora</Button>
+                </Link>
+              ) : (
+                <p className="text-sm text-orange-400 mt-2">Complete o pagamento para agendar aulas</p>
+              )}
             </div>
           )}
         </CardContent>
