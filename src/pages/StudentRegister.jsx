@@ -47,12 +47,6 @@ export default function StudentRegister() {
     has_cnh: null,
     cnh_front_photo: '',
     cnh_back_photo: '',
-    extra_car_lessons: 0,
-    extra_moto_lessons: 0,
-    extra_onibus_lessons: 0,
-    extra_caminhao_lessons: 0,
-    extra_carreta_lessons: 0,
-    theoretical_course: false,
     seller_code: ''
   });
   
@@ -190,17 +184,11 @@ export default function StudentRegister() {
       let totalCarLessons = 0;
       let totalMotoLessons = 0;
 
-      if (['B', 'AB', 'onibus', 'carreta'].includes(formData.category)) {
-        totalCarLessons = 2 + formData.extra_car_lessons;
+      if (['B', 'AB', 'onibus', 'carreta', 'inclusao_B'].includes(formData.category)) {
+        totalCarLessons = 2;
       }
-      if (['A', 'AB'].includes(formData.category)) {
-        totalMotoLessons = 2 + formData.extra_moto_lessons;
-      }
-      if (formData.category === 'inclusao_A') {
-        totalMotoLessons = 2 + formData.extra_moto_lessons;
-      }
-      if (formData.category === 'inclusao_B') {
-        totalCarLessons = 2 + formData.extra_car_lessons;
+      if (['A', 'AB', 'inclusao_A'].includes(formData.category)) {
+        totalMotoLessons = 2;
       }
 
       // Código do consultor (opcional) - válido apenas no dia atual e único por vendedor
@@ -299,14 +287,14 @@ export default function StudentRegister() {
     <div className="max-w-2xl mx-auto">
       {/* Progress */}
       <div className="flex items-center justify-center mb-6 sm:mb-8 overflow-x-auto px-2">
-        {[1, 2, 3, 4, 5].map((s) => (
+        {[1, 2, 3, 4].map((s) => (
           <div key={s} className="flex items-center flex-shrink-0">
             <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-base font-bold ${
               step >= s ? 'bg-[#f0c41b] text-black' : 'bg-[#374151] text-[#9ca3af]'
             }`}>
               {step > s ? <Check size={16} /> : s}
             </div>
-            {s < 5 && (
+            {s < 4 && (
               <div className={`w-8 sm:w-16 h-1 ${step > s ? 'bg-[#f0c41b]' : 'bg-[#374151]'}`} />
             )}
           </div>
@@ -545,28 +533,7 @@ export default function StudentRegister() {
               </Button>
               <Button 
                 className="flex-1 bg-[#f0c41b] text-black hover:bg-[#d4aa00] px-6 py-6 text-base font-bold"
-                onClick={() => {
-                  // Calcular quantas aulas por tipo baseado na categoria
-                  let carCount = 0, motoCount = 0, onibusCount = 0, caminhaoCount = 0, carretaCount = 0;
-                  if (['B', 'AB', 'onibus', 'carreta', 'inclusao_B'].includes(formData.category)) {
-                    carCount = 2 + formData.extra_car_lessons;
-                  }
-                  if (['A', 'AB', 'inclusao_A'].includes(formData.category)) {
-                    motoCount = 2 + formData.extra_moto_lessons;
-                  }
-                  if (formData.category === 'onibus') {
-                    onibusCount = 2 + formData.extra_onibus_lessons;
-                  }
-                  if (formData.category === 'caminhao') {
-                    caminhaoCount = 2 + formData.extra_caminhao_lessons;
-                  }
-                  if (formData.category === 'carreta') {
-                    carretaCount = 2 + formData.extra_carreta_lessons;
-                  }
-                  
-                  // Ir direto para agendamento (step 3)
-                  setStep(3);
-                }}
+                onClick={() => setStep(3)}
                 disabled={!formData.category || (formData.category === 'A' && formData.has_cnh === null)}
               >
                 CONTINUAR <ArrowRight className="ml-2" size={20} />
@@ -580,11 +547,11 @@ export default function StudentRegister() {
       {step === 3 && (
         <LessonScheduler
           lessonsConfig={{
-            carro: (['B', 'AB', 'onibus', 'carreta', 'inclusao_B'].includes(formData.category) ? 2 + formData.extra_car_lessons : 0),
-            moto: (['A', 'AB', 'inclusao_A'].includes(formData.category) ? 2 + formData.extra_moto_lessons : 0),
-            onibus: (formData.category === 'onibus' ? 2 + formData.extra_onibus_lessons : 0),
-            caminhao: (formData.category === 'caminhao' ? 2 + formData.extra_caminhao_lessons : 0),
-            carreta: (formData.category === 'carreta' ? 2 + formData.extra_carreta_lessons : 0)
+            carro: (['B', 'AB', 'onibus', 'carreta', 'inclusao_B'].includes(formData.category) ? 2 : 0),
+            moto: (['A', 'AB', 'inclusao_A'].includes(formData.category) ? 2 : 0),
+            onibus: (formData.category === 'onibus' ? 2 : 0),
+            caminhao: (formData.category === 'caminhao' ? 2 : 0),
+            carreta: (formData.category === 'carreta' ? 2 : 0)
           }}
           onSchedulesComplete={(schedules) => {
             setLessonSchedules(schedules);
@@ -594,139 +561,8 @@ export default function StudentRegister() {
         />
       )}
 
-      {/* Step 4: Pacotes */}
+      {/* Step 4: Confirmação + Resumo com Mapa */}
       {step === 4 && (
-        <Card className="bg-[#1a2332] border-[#374151]">
-          <CardHeader>
-            <CardTitle className="text-[#fbbf24]">Escolha seu Pacote</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
-              <div className="flex justify-between items-center mb-2">
-                <span className="font-bold">Pacote Base - Categoria {formData.category}</span>
-                <span className="text-[#fbbf24] font-bold">
-                  R$ {formData.category === 'AB' 
-                    ? (settings?.category_ab_price || 992)
-                    : (settings?.category_a_price || 548)},00
-                </span>
-              </div>
-              <p className="text-sm text-[#9ca3af]">
-                {['B', 'onibus', 'carreta'].includes(formData.category) && '2 aulas de carro inclusas'}
-                {formData.category === 'A' && '2 aulas de moto inclusas'}
-                {formData.category === 'AB' && '2 aulas de carro + 2 aulas de moto inclusas'}
-                {formData.category === 'inclusao_A' && '2 aulas de moto inclusas'}
-                {formData.category === 'inclusao_B' && '2 aulas de carro inclusas'}
-              </p>
-            </div>
-
-            {['B', 'AB', 'inclusao_B', 'onibus', 'carreta'].includes(formData.category) && (
-              <div className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <span className="font-bold flex items-center gap-2">
-                      <Car size={20} className="text-[#3b82f6]" />
-                      Aulas extras de Carro
-                    </span>
-                    <p className="text-sm text-[#9ca3af]">R$ {settings?.lesson_price || 98},00 cada</p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="border-[#374151] h-8 w-8"
-                      onClick={() => setFormData({...formData, extra_car_lessons: Math.max(0, formData.extra_car_lessons - 1)})}
-                    >
-                      <Minus size={16} />
-                    </Button>
-                    <span className="w-8 text-center font-bold">{formData.extra_car_lessons}</span>
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="border-[#374151] h-8 w-8"
-                      onClick={() => setFormData({...formData, extra_car_lessons: formData.extra_car_lessons + 1})}
-                    >
-                      <Plus size={16} />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {['A', 'AB', 'inclusao_A'].includes(formData.category) && (
-              <div className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <span className="font-bold flex items-center gap-2">
-                      <Bike size={20} className="text-[#fbbf24]" />
-                      Aulas extras de Moto
-                    </span>
-                    <p className="text-sm text-[#9ca3af]">R$ {settings?.lesson_price || 98},00 cada</p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="border-[#374151] h-8 w-8"
-                      onClick={() => setFormData({...formData, extra_moto_lessons: Math.max(0, formData.extra_moto_lessons - 1)})}
-                    >
-                      <Minus size={16} />
-                    </Button>
-                    <span className="w-8 text-center font-bold">{formData.extra_moto_lessons}</span>
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="border-[#374151] h-8 w-8"
-                      onClick={() => setFormData({...formData, extra_moto_lessons: formData.extra_moto_lessons + 1})}
-                    >
-                      <Plus size={16} />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className="flex items-center space-x-3 p-4 bg-[#111827] rounded-lg border border-[#374151]">
-              <Checkbox 
-                id="theoretical"
-                checked={formData.theoretical_course}
-                onCheckedChange={(checked) => setFormData({...formData, theoretical_course: checked})}
-              />
-              <div className="flex-1">
-                <Label htmlFor="theoretical" className="cursor-pointer font-bold">Curso Teórico EAD</Label>
-                <p className="text-sm text-[#9ca3af]">Material completo online</p>
-              </div>
-              <span className="text-[#fbbf24] font-bold">+ R$ {settings?.theoretical_course_price || 200},00</span>
-            </div>
-
-            <div className="p-4 bg-[#1e40af]/20 rounded-lg border border-[#1e40af]">
-              <div className="flex justify-between items-center">
-                <span className="text-lg font-bold">Total</span>
-                <span className="text-2xl font-bold text-[#fbbf24]">R$ {calculateTotal().toFixed(2)}</span>
-              </div>
-              <p className="text-sm text-[#9ca3af] mt-1">Parcelamento em até 10x com juros</p>
-            </div>
-
-            <div className="flex gap-3 mt-6">
-              <Button 
-                variant="outline" 
-                className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black px-6 py-6 text-base font-bold" 
-                onClick={() => setStep(3)}
-              >
-                <ArrowLeft className="mr-2" size={20} /> VOLTAR
-              </Button>
-              <Button 
-                className="flex-1 bg-[#f0c41b] text-black hover:bg-[#d4aa00] px-6 py-6 text-base font-bold"
-                onClick={() => setStep(5)}
-              >
-                CONTINUAR <ArrowRight className="ml-2" size={20} />
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Step 5: Confirmação + Resumo com Mapa */}
-      {step === 5 && (
         <Card className="bg-[#1a2332] border-[#374151]">
           <CardHeader>
             <CardTitle className="text-[#fbbf24]">Confirmar Cadastro e Agendamentos</CardTitle>
@@ -794,18 +630,13 @@ export default function StudentRegister() {
               </div>
             )}
 
-            <div className="p-4 bg-[#1e40af]/20 rounded-lg border border-[#1e40af]">
-              <div className="flex justify-between items-center">
-                <span className="text-lg font-bold">Total a Pagar</span>
-                <span className="text-2xl font-bold text-[#fbbf24]">R$ {calculateTotal().toFixed(2)}</span>
-              </div>
-            </div>
+
 
             <div className="flex gap-3 mt-6">
               <Button 
                 variant="outline" 
                 className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black px-4 sm:px-6 py-4 sm:py-6 text-sm sm:text-base font-bold flex-1 sm:flex-none" 
-                onClick={() => setStep(4)}
+                onClick={() => setStep(3)}
               >
                 <ArrowLeft className="mr-2" size={18} /> VOLTAR
               </Button>
