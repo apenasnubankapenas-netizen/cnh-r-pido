@@ -13,7 +13,8 @@ import {
   Plus,
   Minus,
   Bus,
-  Truck
+  Truck,
+  MapPin
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,6 +22,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
+import LessonScheduler from "../components/schedule/LessonScheduler";
 
 export default function StudentRegister() {
   const navigate = useNavigate();
@@ -47,9 +49,14 @@ export default function StudentRegister() {
     cnh_back_photo: '',
     extra_car_lessons: 0,
     extra_moto_lessons: 0,
+    extra_onibus_lessons: 0,
+    extra_caminhao_lessons: 0,
+    extra_carreta_lessons: 0,
     theoretical_course: false,
     seller_code: ''
   });
+  
+  const [lessonSchedules, setLessonSchedules] = useState([]);
 
   useEffect(() => {
     loadData();
@@ -229,6 +236,23 @@ export default function StudentRegister() {
         ...(referralSeller ? { ref_seller_id: referralSeller.id, ref_seller_name: referralSeller.full_name, ref_code_date: todayStr } : {})
       });
 
+      // Criar TODAS as aulas como TRIAL (pendentes de pagamento)
+      for (const schedule of lessonSchedules) {
+        await base44.entities.Lesson.create({
+          student_id: created.id,
+          student_name: created.full_name,
+          student_renach: created.renach,
+          instructor_id: schedule.instructor_id,
+          instructor_name: schedule.instructor_name,
+          date: schedule.date,
+          time: schedule.time,
+          type: schedule.type,
+          status: 'agendada',
+          trial: true,
+          notified: false
+        });
+      }
+
       if (referralSeller) {
         const cashback = (settings?.seller_cashback_amount ?? 10);
         await base44.entities.Seller.update(referralSeller.id, {
@@ -237,7 +261,8 @@ export default function StudentRegister() {
         });
       }
 
-      navigate(createPageUrl('Instructors') + '?postSignup=true&amount=' + calculateTotal());
+      // Ir direto para pagamento
+      navigate(createPageUrl('Payment') + '?amount=' + calculateTotal() + '&studentId=' + created.id);
     } catch (error) {
       console.error(error);
     } finally {
@@ -273,16 +298,16 @@ export default function StudentRegister() {
   return (
     <div className="max-w-2xl mx-auto">
       {/* Progress */}
-      <div className="flex items-center justify-center mb-8">
-        {[1, 2, 3, 4].map((s) => (
-          <div key={s} className="flex items-center">
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
-              step >= s ? 'bg-[#1e40af] text-white' : 'bg-[#374151] text-[#9ca3af]'
+      <div className="flex items-center justify-center mb-6 sm:mb-8 overflow-x-auto px-2">
+        {[1, 2, 3, 4, 5].map((s) => (
+          <div key={s} className="flex items-center flex-shrink-0">
+            <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-base font-bold ${
+              step >= s ? 'bg-[#f0c41b] text-black' : 'bg-[#374151] text-[#9ca3af]'
             }`}>
-              {step > s ? <Check size={20} /> : s}
+              {step > s ? <Check size={16} /> : s}
             </div>
-            {s < 4 && (
-              <div className={`w-16 h-1 ${step > s ? 'bg-[#1e40af]' : 'bg-[#374151]'}`} />
+            {s < 5 && (
+              <div className={`w-8 sm:w-16 h-1 ${step > s ? 'bg-[#f0c41b]' : 'bg-[#374151]'}`} />
             )}
           </div>
         ))}
@@ -519,8 +544,29 @@ export default function StudentRegister() {
                 <ArrowLeft className="mr-2" size={20} /> VOLTAR
               </Button>
               <Button 
-                className="flex-1 bg-[#1e40af] hover:bg-[#3b82f6] px-6 py-6 text-base font-bold"
-                onClick={() => setStep(3)}
+                className="flex-1 bg-[#f0c41b] text-black hover:bg-[#d4aa00] px-6 py-6 text-base font-bold"
+                onClick={() => {
+                  // Calcular quantas aulas por tipo baseado na categoria
+                  let carCount = 0, motoCount = 0, onibusCount = 0, caminhaoCount = 0, carretaCount = 0;
+                  if (['B', 'AB', 'onibus', 'carreta', 'inclusao_B'].includes(formData.category)) {
+                    carCount = 2 + formData.extra_car_lessons;
+                  }
+                  if (['A', 'AB', 'inclusao_A'].includes(formData.category)) {
+                    motoCount = 2 + formData.extra_moto_lessons;
+                  }
+                  if (formData.category === 'onibus') {
+                    onibusCount = 2 + formData.extra_onibus_lessons;
+                  }
+                  if (formData.category === 'caminhao') {
+                    caminhaoCount = 2 + formData.extra_caminhao_lessons;
+                  }
+                  if (formData.category === 'carreta') {
+                    carretaCount = 2 + formData.extra_carreta_lessons;
+                  }
+                  
+                  // Ir direto para agendamento (step 3)
+                  setStep(3);
+                }}
                 disabled={!formData.category || (formData.category === 'A' && formData.has_cnh === null)}
               >
                 CONTINUAR <ArrowRight className="ml-2" size={20} />
@@ -530,8 +576,26 @@ export default function StudentRegister() {
         </Card>
       )}
 
-      {/* Step 3: Pacotes */}
+      {/* Step 3: Agendar Aulas */}
       {step === 3 && (
+        <LessonScheduler
+          lessonsConfig={{
+            carro: (['B', 'AB', 'onibus', 'carreta', 'inclusao_B'].includes(formData.category) ? 2 + formData.extra_car_lessons : 0),
+            moto: (['A', 'AB', 'inclusao_A'].includes(formData.category) ? 2 + formData.extra_moto_lessons : 0),
+            onibus: (formData.category === 'onibus' ? 2 + formData.extra_onibus_lessons : 0),
+            caminhao: (formData.category === 'caminhao' ? 2 + formData.extra_caminhao_lessons : 0),
+            carreta: (formData.category === 'carreta' ? 2 + formData.extra_carreta_lessons : 0)
+          }}
+          onSchedulesComplete={(schedules) => {
+            setLessonSchedules(schedules);
+            setStep(4);
+          }}
+          settings={settings}
+        />
+      )}
+
+      {/* Step 4: Pacotes */}
+      {step === 4 && (
         <Card className="bg-[#1a2332] border-[#374151]">
           <CardHeader>
             <CardTitle className="text-[#fbbf24]">Escolha seu Pacote</CardTitle>
@@ -646,13 +710,13 @@ export default function StudentRegister() {
               <Button 
                 variant="outline" 
                 className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black px-6 py-6 text-base font-bold" 
-                onClick={() => setStep(2)}
+                onClick={() => setStep(3)}
               >
                 <ArrowLeft className="mr-2" size={20} /> VOLTAR
               </Button>
               <Button 
-                className="flex-1 bg-[#1e40af] hover:bg-[#3b82f6] px-6 py-6 text-base font-bold"
-                onClick={() => setStep(4)}
+                className="flex-1 bg-[#f0c41b] text-black hover:bg-[#d4aa00] px-6 py-6 text-base font-bold"
+                onClick={() => setStep(5)}
               >
                 CONTINUAR <ArrowRight className="ml-2" size={20} />
               </Button>
@@ -661,35 +725,74 @@ export default function StudentRegister() {
         </Card>
       )}
 
-      {/* Step 4: Confirmação */}
-      {step === 4 && (
+      {/* Step 5: Confirmação + Resumo com Mapa */}
+      {step === 5 && (
         <Card className="bg-[#1a2332] border-[#374151]">
           <CardHeader>
-            <CardTitle className="text-[#fbbf24]">Confirmar Cadastro</CardTitle>
+            <CardTitle className="text-[#fbbf24]">Confirmar Cadastro e Agendamentos</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="space-y-3">
-              <div className="flex justify-between p-3 bg-[#111827] rounded">
-                <span className="text-[#9ca3af]">Nome</span>
-                <span className="font-medium">{formData.full_name}</span>
-              </div>
-              <div className="flex justify-between p-3 bg-[#111827] rounded">
-                <span className="text-[#9ca3af]">CPF</span>
-                <span className="font-medium">{formData.cpf}</span>
-              </div>
-              <div className="flex justify-between p-3 bg-[#111827] rounded">
-                <span className="text-[#9ca3af]">RENACH</span>
-                <span className="font-medium">{formData.renach}</span>
-              </div>
-              <div className="flex justify-between p-3 bg-[#111827] rounded">
-                <span className="text-[#9ca3af]">Categoria</span>
-                <span className="font-medium text-[#fbbf24]">{formData.category}</span>
-              </div>
-              <div className="flex justify-between p-3 bg-[#111827] rounded">
-                <span className="text-[#9ca3af]">WhatsApp</span>
-                <span className="font-medium">{formData.whatsapp}</span>
+            {/* Resumo dos dados */}
+            <div className="space-y-2">
+              <h3 className="font-semibold text-sm text-[#fbbf24]">Seus Dados</h3>
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div className="p-2 bg-[#111827] rounded">
+                  <span className="text-[#9ca3af]">Nome:</span>
+                  <p className="font-medium truncate">{formData.full_name}</p>
+                </div>
+                <div className="p-2 bg-[#111827] rounded">
+                  <span className="text-[#9ca3af]">Categoria:</span>
+                  <p className="font-medium text-[#fbbf24]">{formData.category}</p>
+                </div>
               </div>
             </div>
+
+            {/* Resumo das aulas agendadas */}
+            <div className="space-y-2">
+              <h3 className="font-semibold text-sm text-[#fbbf24]">Aulas Agendadas ({lessonSchedules.length})</h3>
+              <div className="max-h-48 overflow-y-auto space-y-1">
+                {lessonSchedules.map((schedule, idx) => (
+                  <div key={idx} className="p-2 bg-[#111827] rounded text-xs flex items-center justify-between">
+                    <span className="truncate flex-1">{schedule.type.toUpperCase()} - {schedule.instructor_name}</span>
+                    <span className="text-[#fbbf24] font-semibold whitespace-nowrap ml-2">
+                      {new Date(schedule.date).toLocaleDateString('pt-BR')} {schedule.time}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Locais das aulas */}
+            {settings?.lesson_locations && (
+              <div className="space-y-2">
+                <h3 className="font-semibold text-sm text-[#fbbf24]">Locais das Aulas</h3>
+                <div className="space-y-2">
+                  {[...new Set(lessonSchedules.map(s => s.type))].map((type) => {
+                    const loc = settings.lesson_locations?.[type];
+                    if (!loc) return null;
+                    return (
+                      <div key={type} className="p-2 bg-[#111827] rounded text-xs">
+                        <div className="flex items-center gap-2 mb-1">
+                          <MapPin className="text-[#fbbf24]" size={12} />
+                          <span className="font-semibold uppercase">{type}</span>
+                        </div>
+                        <p className="text-[#9ca3af]">{loc.address || 'Endereço não definido'}</p>
+                        {typeof loc.lat === 'number' && typeof loc.lng === 'number' && (
+                          <a
+                            className="text-[#3b82f6] underline mt-1 inline-block"
+                            href={`https://www.google.com/maps?q=${loc.lat},${loc.lng}`}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            Ver no Google Maps
+                          </a>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             <div className="p-4 bg-[#1e40af]/20 rounded-lg border border-[#1e40af]">
               <div className="flex justify-between items-center">
@@ -701,19 +804,19 @@ export default function StudentRegister() {
             <div className="flex gap-3 mt-6">
               <Button 
                 variant="outline" 
-                className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black px-6 py-6 text-base font-bold" 
-                onClick={() => setStep(3)}
+                className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black px-4 sm:px-6 py-4 sm:py-6 text-sm sm:text-base font-bold flex-1 sm:flex-none" 
+                onClick={() => setStep(4)}
               >
-                <ArrowLeft className="mr-2" size={20} /> VOLTAR
+                <ArrowLeft className="mr-2" size={18} /> VOLTAR
               </Button>
               <Button 
-                className="flex-1 bg-[#fbbf24] text-black hover:bg-[#fbbf24]/80 px-6 py-6 text-base font-bold"
+                className="flex-1 bg-[#f0c41b] text-black hover:bg-[#d4aa00] px-4 sm:px-6 py-4 sm:py-6 text-sm sm:text-base font-bold"
                 onClick={handleSubmit}
                 disabled={loading}
               >
                 {loading ? 'PROCESSANDO...' : (
                   <>
-                    <CreditCard className="mr-2" size={20} /> FINALIZAR CADASTRO
+                    <CreditCard className="mr-2" size={18} /> FINALIZAR E IR PARA PAGAMENTO
                   </>
                 )}
               </Button>
