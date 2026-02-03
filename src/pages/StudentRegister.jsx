@@ -774,6 +774,7 @@ export default function StudentRegister() {
             setTimeRemaining(300);
             setStep(5);
           }}
+          onBack={() => setStep(3)}
           settings={settings}
         />
       )}
