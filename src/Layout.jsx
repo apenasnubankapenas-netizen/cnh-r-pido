@@ -120,6 +120,7 @@ export default function Layout({ children, currentPageName }) {
         { name: 'Aulas', icon: Calendar, page: 'AdminLessons' },
         { name: 'Conversas', icon: MessageSquare, page: 'AdminChats' },
         { name: 'Pagamentos', icon: DollarSign, page: 'AdminPayments' },
+        { name: 'Pagamentos Instrutores', icon: DollarSign, page: 'AdminPayouts' },
         { name: 'Vendedores', icon: UserCog, page: 'AdminSellers' },
         { name: 'Configurações', icon: Settings, page: 'AdminSettings' },
       ];
