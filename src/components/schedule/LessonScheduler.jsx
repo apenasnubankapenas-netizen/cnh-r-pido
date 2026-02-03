@@ -101,31 +101,37 @@ export default function LessonScheduler({
     }
     
     const instructor = instructors.find(i => i.id === selectedInstructor);
-    schedules.push({
+    const newSchedule = {
       type: currentType,
       date: selectedDate,
       time: selectedTime,
       instructor_id: selectedInstructor,
       instructor_name: instructor?.full_name || ''
-    });
+    };
     
-    setSchedules([...schedules]);
+    const updatedSchedules = [...schedules, newSchedule];
+    setSchedules(updatedSchedules);
+    
+    // Verificar se todas as aulas foram agendadas
+    const totalLessons = Object.values(lessonsConfig).reduce((a, b) => a + b, 0);
+    
+    if (updatedSchedules.length >= totalLessons) {
+      // Todas as aulas agendadas - finalizar
+      onSchedulesComplete(updatedSchedules);
+      return;
+    }
+    
+    // Resetar campos para próxima aula
     setSelectedDate('');
     setSelectedTime('');
     setCurrentType('');
-    if (schedules.length < 2) {
-      // Manter o instrutor selecionado nas 2 primeiras aulas
-    } else {
+    
+    if (updatedSchedules.length >= 2) {
+      // Após 2 aulas, liberar seleção de instrutor
       setSelectedInstructor('');
     }
     
     setCurrentLessonIndex(currentLessonIndex + 1);
-    
-    // Verificar se todas as aulas foram agendadas
-    const totalLessons = Object.values(lessonsConfig).reduce((a, b) => a + b, 0);
-    if (schedules.length + 1 >= totalLessons) {
-      onSchedulesComplete(schedules);
-    }
   };
 
   const totalLessons = Object.values(lessonsConfig).reduce((a, b) => a + b, 0);
