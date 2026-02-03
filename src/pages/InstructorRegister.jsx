@@ -432,8 +432,7 @@ export default function InstructorRegister() {
                 </div>
               </DialogContent>
             </Dialog>
-          </form>
-          </CardContent>
+            </CardContent>
         </Card>
       </div>
     </div>
