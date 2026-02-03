@@ -11,8 +11,6 @@ import {
   CheckCircle,
   XCircle,
   AlertCircle,
-  ChevronLeft,
-  ChevronRight,
   MapPin
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -81,21 +79,7 @@ export default function MyLessons() {
     fetchInstructorLessons();
   }, [selectedInstructor]);
 
-  const timeSlots = [];
-  for (let hour = 6; hour < 20; hour++) {
-    for (let min = 0; min < 60; min += 60) {
-      const startHour = hour;
-      const startMin = min === 0 ? '40' : '00';
-      if (hour === 6 && min === 0) {
-        timeSlots.push('06:40');
-      } else if (hour > 6) {
-        const prevEnd = hour;
-        const slot = `${String(prevEnd).padStart(2, '0')}:${min === 0 ? '00' : '00'}`;
-        if (hour < 20) timeSlots.push(slot);
-      }
-    }
-  }
-  
+
   const generateTimeSlots = () => {
     const cfg = settings?.lesson_time_config || {};
     const startStr = cfg.day_start || '06:40';
@@ -258,11 +242,7 @@ export default function MyLessons() {
     return days;
   };
 
-  const isDateBooked = (date) => {
-    if (!date) return false;
-    const dateStr = date.toISOString().split('T')[0];
-    return lessons.some(l => l.date === dateStr);
-  };
+
 
   if (loading) {
     return (
