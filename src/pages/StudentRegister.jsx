@@ -210,8 +210,9 @@ export default function StudentRegister() {
         referralSeller = (sellers || []).find((s) => getDailyCode(s) === rawCode) || null;
       }
 
+      const { seller_code, ...studentPayload } = formData;
       const created = await base44.entities.Student.create({
-        ...formData,
+        ...studentPayload,
         total_car_lessons: totalCarLessons,
         total_moto_lessons: totalMotoLessons,
         completed_car_lessons: 0,
