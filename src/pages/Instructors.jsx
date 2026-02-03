@@ -202,7 +202,6 @@ export default function Instructors() {
       <Dialog open={!!selectedInstructor} onOpenChange={() => setSelectedInstructor(null)}>
         <DialogContent className="bg-[#1a2332] border-[#374151] text-white max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
           {selectedInstructor && (
-            <div className="overflow-y-auto pr-2 flex-1">(
             <>
               <DialogHeader>
                 <div className="flex items-center gap-4">
@@ -225,8 +224,10 @@ export default function Instructors() {
                   </div>
                 </div>
               </DialogHeader>
+              
+              <div className="overflow-y-auto pr-2 flex-1">
 
-              <div className="flex gap-2 mt-4">
+                <div className="flex gap-2 mt-4">
                 {selectedInstructor.phone && (
                   <a href={`tel:${selectedInstructor.phone}`}>
                     <Button variant="outline" className="border-[#374151]">
@@ -383,10 +384,11 @@ export default function Instructors() {
                   </div>
                 </TabsContent>
               </Tabs>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+              </div>
+              </>
+              )}
+              </DialogContent>
+              </Dialog>
     </div>
   );
 }
