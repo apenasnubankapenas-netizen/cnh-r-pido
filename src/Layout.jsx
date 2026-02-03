@@ -391,7 +391,7 @@ export default function Layout({ children, currentPageName }) {
   // Se está logado mas ainda carregando o tipo de usuário
   if (!userType) {
     return (
-      <div className="min-h-screen bg-[#0a0e1a] text-white font-mono flex items-center justify-center">
+      <div className="min-h-screen bg-black/60 text-white font-mono backdrop-blur-sm flex items-center justify-center">
         <div className="animate-pulse text-[#fbbf24]">Carregando...</div>
       </div>
     );
