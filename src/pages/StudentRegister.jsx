@@ -918,12 +918,17 @@ export default function StudentRegister() {
                     <div className="flex justify-between">
                       <span className="text-[#9ca3af]">Taxa de Categoria ({formData.category}):</span>
                       <span className="font-semibold">
-                        R$ {(
-                          formData.category === 'A' ? settings.category_a_price :
-                          formData.category === 'B' ? settings.category_b_price :
-                          formData.category === 'AB' ? settings.category_ab_price :
-                          settings.category_b_price
-                        )?.toFixed(2) || '0.00'}
+                        R$ {(() => {
+                          if (formData.category === 'A') return (settings.category_a_price || 548).toFixed(2);
+                          if (formData.category === 'B') return (settings.category_b_price || 548).toFixed(2);
+                          if (formData.category === 'AB') return (settings.category_ab_price || 992).toFixed(2);
+                          if (formData.category === 'inclusao_A') return (settings.category_inclusao_a_price || 400).toFixed(2);
+                          if (formData.category === 'inclusao_B') return (settings.category_inclusao_b_price || 400).toFixed(2);
+                          if (formData.category === 'onibus') return (settings.category_bus_price || 1500).toFixed(2);
+                          if (formData.category === 'caminhao') return (settings.category_truck_price || 1800).toFixed(2);
+                          if (formData.category === 'carreta') return (settings.category_trailer_price || 2200).toFixed(2);
+                          return '0.00';
+                        })()}
                       </span>
                     </div>
                     <div className="flex justify-between">
