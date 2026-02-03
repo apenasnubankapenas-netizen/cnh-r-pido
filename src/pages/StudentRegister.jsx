@@ -60,6 +60,7 @@ export default function StudentRegister() {
   
   const [lessonSchedules, setLessonSchedules] = useState([]);
   const [timeRemaining, setTimeRemaining] = useState(300);
+  const [paymentMethod, setPaymentMethod] = useState('');
 
   useEffect(() => {
     loadData();
@@ -779,11 +780,11 @@ export default function StudentRegister() {
         />
       )}
 
-      {/* Step 5: Confirmação + Resumo com Mapa */}
+      {/* Step 5: Confirmação + Resumo com Mapa + Pagamento */}
       {step === 5 && (
         <Card className="bg-[#1a2332] border-[#374151]">
           <CardHeader>
-            <CardTitle className="text-[#fbbf24]">Confirmar Cadastro e Agendamentos</CardTitle>
+            <CardTitle className="text-[#fbbf24]">Confirmar Cadastro e Pagamento</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {/* Cronômetro de 5 minutos */}
@@ -861,6 +862,71 @@ export default function StudentRegister() {
               </div>
             )}
 
+            {/* Resumo Financeiro */}
+            {settings && (
+              <div className="space-y-2">
+                <h3 className="font-semibold text-sm text-[#fbbf24]">Resumo do Pagamento</h3>
+                <div className="p-3 bg-[#111827] rounded border border-[#374151]">
+                  <div className="space-y-2 text-xs sm:text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-[#9ca3af]">Taxa de Categoria ({formData.category}):</span>
+                      <span className="font-semibold">
+                        R$ {(
+                          formData.category === 'A' ? settings.category_a_price :
+                          formData.category === 'B' ? settings.category_b_price :
+                          formData.category === 'AB' ? settings.category_ab_price :
+                          settings.category_b_price
+                        )?.toFixed(2) || '0.00'}
+                      </span>
+                    </div>
+                    {lessonSchedules.length > 2 && (
+                      <div className="flex justify-between">
+                        <span className="text-[#9ca3af]">Aulas extras ({lessonSchedules.length - 2} x R$ {settings.lesson_price}):</span>
+                        <span className="font-semibold">R$ {((lessonSchedules.length - 2) * settings.lesson_price).toFixed(2)}</span>
+                      </div>
+                    )}
+                    <div className="border-t border-[#374151] pt-2 mt-2 flex justify-between text-base sm:text-lg">
+                      <span className="text-[#fbbf24] font-bold">TOTAL:</span>
+                      <span className="text-[#fbbf24] font-bold">R$ {calculateTotal().toFixed(2)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Método de Pagamento */}
+            <div className="space-y-2">
+              <h3 className="font-semibold text-sm text-[#fbbf24]">Método de Pagamento</h3>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={() => setPaymentMethod('pix')}
+                  className={`p-3 rounded-lg border-2 transition-all ${
+                    paymentMethod === 'pix' 
+                      ? 'border-[#fbbf24] bg-[#fbbf24]/10' 
+                      : 'border-[#374151] hover:border-[#3b82f6]'
+                  }`}
+                >
+                  <div className="text-center">
+                    <div className="text-2xl mb-1">💳</div>
+                    <span className="text-sm font-semibold">PIX</span>
+                  </div>
+                </button>
+                <button
+                  onClick={() => setPaymentMethod('cartao')}
+                  className={`p-3 rounded-lg border-2 transition-all ${
+                    paymentMethod === 'cartao' 
+                      ? 'border-[#fbbf24] bg-[#fbbf24]/10' 
+                      : 'border-[#374151] hover:border-[#3b82f6]'
+                  }`}
+                >
+                  <div className="text-center">
+                    <div className="text-2xl mb-1">💳</div>
+                    <span className="text-sm font-semibold">Cartão</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+
 
 
             <div className="flex gap-3 mt-6">
@@ -874,11 +940,11 @@ export default function StudentRegister() {
               <Button 
                 className="flex-1 bg-[#f0c41b] text-black hover:bg-[#d4aa00] px-4 sm:px-6 py-4 sm:py-6 text-sm sm:text-base font-bold"
                 onClick={handleSubmit}
-                disabled={loading || timeRemaining === 0}
+                disabled={loading || timeRemaining === 0 || !paymentMethod}
               >
-                {loading ? 'PROCESSANDO...' : timeRemaining === 0 ? 'TEMPO EXPIRADO' : (
+                {loading ? 'PROCESSANDO...' : timeRemaining === 0 ? 'TEMPO EXPIRADO' : !paymentMethod ? 'ESCOLHA O MÉTODO DE PAGAMENTO' : (
                   <>
-                    <CreditCard className="mr-2" size={18} /> FINALIZAR E IR PARA PAGAMENTO
+                    <CreditCard className="mr-2" size={18} /> CONFIRMAR E PAGAR
                   </>
                 )}
               </Button>

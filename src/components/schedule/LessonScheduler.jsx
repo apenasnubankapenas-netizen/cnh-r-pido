@@ -15,21 +15,21 @@ export default function LessonScheduler({
 }) {
   const [instructors, setInstructors] = useState([]);
   const [schedules, setSchedules] = useState([]);
-  const [currentType, setCurrentType] = useState(null);
+  const [currentType, setCurrentType] = useState('');
   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [selectedInstructor, setSelectedInstructor] = useState('');
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [instructorLessons, setInstructorLessons] = useState([]);
+  const [lockedInstructor, setLockedInstructor] = useState(null);
+  const [allLessons, setAllLessons] = useState([]);
 
   const typesAvailable = Object.entries(lessonsConfig).filter(([_, count]) => count > 0);
 
   useEffect(() => {
     loadInstructors();
-    if (typesAvailable.length > 0) {
-      setCurrentType(typesAvailable[0][0]);
-    }
+    loadAllLessons();
   }, []);
 
   useEffect(() => {
@@ -47,6 +47,11 @@ export default function LessonScheduler({
     if (!selectedInstructor) return;
     const data = await base44.entities.Lesson.filter({ instructor_id: selectedInstructor });
     setInstructorLessons((data || []).filter(l => !l.trial));
+  };
+
+  const loadAllLessons = async () => {
+    const data = await base44.entities.Lesson.list();
+    setAllLessons((data || []).filter(l => !l.trial));
   };
 
   const generateTimeSlots = () => {
@@ -71,6 +76,7 @@ export default function LessonScheduler({
   const availableTimeSlots = generateTimeSlots();
 
   const filteredInstructors = instructors.filter(i => {
+    if (!currentType) return false;
     if (currentType === 'carro') return i.teaches_car;
     if (currentType === 'moto') return i.teaches_moto;
     if (currentType === 'onibus') return i.teaches_bus;
@@ -79,8 +85,20 @@ export default function LessonScheduler({
     return false;
   });
 
+  const getAvailableTypes = () => {
+    return typesAvailable.filter(([type, count]) => {
+      const scheduled = schedules.filter(s => s.type === type).length;
+      return scheduled < count;
+    });
+  };
+
   const handleAddSchedule = () => {
-    if (!selectedDate || !selectedTime || !selectedInstructor) return;
+    if (!selectedDate || !selectedTime || !selectedInstructor || !currentType) return;
+    
+    // Bloquear instrutor nas 2 primeiras aulas
+    if (schedules.length < 2 && !lockedInstructor) {
+      setLockedInstructor(selectedInstructor);
+    }
     
     const instructor = instructors.find(i => i.id === selectedInstructor);
     schedules.push({
@@ -94,24 +112,19 @@ export default function LessonScheduler({
     setSchedules([...schedules]);
     setSelectedDate('');
     setSelectedTime('');
-    setSelectedInstructor('');
-    
-    // Avançar para próxima aula
-    const totalForType = lessonsConfig[currentType];
-    const scheduledForType = schedules.filter(s => s.type === currentType).length + 1;
-    
-    if (scheduledForType >= totalForType) {
-      // Passou para próximo tipo
-      const currentIdx = typesAvailable.findIndex(([t]) => t === currentType);
-      if (currentIdx < typesAvailable.length - 1) {
-        setCurrentType(typesAvailable[currentIdx + 1][0]);
-        setCurrentLessonIndex(0);
-      } else {
-        // Todas as aulas agendadas
-        onSchedulesComplete(schedules);
-      }
+    setCurrentType('');
+    if (schedules.length < 2) {
+      // Manter o instrutor selecionado nas 2 primeiras aulas
     } else {
-      setCurrentLessonIndex(currentLessonIndex + 1);
+      setSelectedInstructor('');
+    }
+    
+    setCurrentLessonIndex(currentLessonIndex + 1);
+    
+    // Verificar se todas as aulas foram agendadas
+    const totalLessons = Object.values(lessonsConfig).reduce((a, b) => a + b, 0);
+    if (schedules.length + 1 >= totalLessons) {
+      onSchedulesComplete(schedules);
     }
   };
 
@@ -163,12 +176,31 @@ export default function LessonScheduler({
       <Card className="bg-[#1a2332] border-[#374151]">
         <CardHeader>
           <CardTitle className="text-base sm:text-lg">
-            Agendar Aula {currentLessonIndex + 1} de {getTypeName(currentType)}
+            Agendar Aula {currentLessonIndex + 1}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          {/* Tipo de Aula */}
+          <div>
+            <label className="text-xs sm:text-sm text-[#9ca3af] block mb-2">Tipo de Aula</label>
+            <Select value={currentType} onValueChange={(val) => {
+              setCurrentType(val);
+              setSelectedDate('');
+              setSelectedTime('');
+            }}>
+              <SelectTrigger className="bg-[#111827] border-[#374151] h-10">
+                <SelectValue placeholder="Selecione o tipo de aula" />
+              </SelectTrigger>
+              <SelectContent className="bg-[#1a2332] border-[#374151]">
+                {getAvailableTypes().map(([type]) => (
+                  <SelectItem key={type} value={type}>{getTypeName(type)}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
           {/* Local da aula */}
-          {settings?.lesson_locations?.[currentType] && (
+          {currentType && settings?.lesson_locations?.[currentType] && (
             <div className="p-3 bg-[#111827] rounded border border-[#374151]">
               <div className="flex items-center gap-2 text-xs sm:text-sm mb-1">
                 <MapPin className="text-[#fbbf24] flex-shrink-0" size={14} />
@@ -190,21 +222,38 @@ export default function LessonScheduler({
             </div>
           )}
 
-          <div>
-            <label className="text-xs sm:text-sm text-[#9ca3af] block mb-2">Instrutor</label>
-            <Select value={selectedInstructor} onValueChange={setSelectedInstructor}>
-              <SelectTrigger className="bg-[#111827] border-[#374151] h-10">
-                <SelectValue placeholder="Selecione um instrutor" />
-              </SelectTrigger>
-              <SelectContent className="bg-[#1a2332] border-[#374151]">
-                {filteredInstructors.map(i => (
-                  <SelectItem key={i.id} value={i.id}>{i.full_name}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {currentType && (
+            <div>
+              <label className="text-xs sm:text-sm text-[#9ca3af] block mb-2">
+                Instrutor {lockedInstructor && schedules.length < 2 && '(Bloqueado para as 2 primeiras aulas)'}
+              </label>
+              <Select 
+                value={selectedInstructor} 
+                onValueChange={setSelectedInstructor}
+                disabled={lockedInstructor && schedules.length < 2}
+              >
+                <SelectTrigger className="bg-[#111827] border-[#374151] h-10">
+                  <SelectValue placeholder="Selecione um instrutor" />
+                </SelectTrigger>
+                <SelectContent className="bg-[#1a2332] border-[#374151]">
+                  {filteredInstructors.map(i => (
+                    <SelectItem key={i.id} value={i.id}>{i.full_name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {lockedInstructor && schedules.length < 2 && (
+                <p className="text-xs text-[#fbbf24] mt-1">
+                  Você deve fazer as 2 primeiras aulas com o mesmo instrutor
+                </p>
+              )}
+            </div>
+          )}
 
-          {!selectedInstructor ? (
+          {!currentType ? (
+            <div className="p-3 text-xs sm:text-sm text-[#9ca3af] bg-[#111827] border border-[#374151] rounded-lg">
+              Selecione o tipo de aula primeiro.
+            </div>
+          ) : !selectedInstructor ? (
             <div className="p-3 text-xs sm:text-sm text-[#9ca3af] bg-[#111827] border border-[#374151] rounded-lg">
               Selecione um instrutor para visualizar o calendário.
             </div>
@@ -230,7 +279,10 @@ export default function LessonScheduler({
                   <label className="text-xs sm:text-sm text-[#9ca3af] block mb-2">Escolha o horário</label>
                   <TimeGrid
                     timeSlots={availableTimeSlots}
-                    bookedTimes={new Set(instructorLessons.filter(l => l.status === 'agendada' && l.date === selectedDate).map(l => l.time))}
+                    bookedTimes={new Set([
+                      ...instructorLessons.filter(l => l.status === 'agendada' && l.date === selectedDate).map(l => l.time),
+                      ...schedules.filter(s => s.date === selectedDate && s.instructor_id === selectedInstructor).map(s => s.time)
+                    ])}
                     selectedTime={selectedTime}
                     onSelect={setSelectedTime}
                   />
@@ -252,9 +304,9 @@ export default function LessonScheduler({
             <Button
               className="flex-1 bg-[#f0c41b] text-black hover:bg-[#d4aa00] h-10 text-sm font-semibold"
               onClick={handleAddSchedule}
-              disabled={!selectedDate || !selectedTime || !selectedInstructor}
+              disabled={!selectedDate || !selectedTime || !selectedInstructor || !currentType}
             >
-              Confirmar e Agendar Próxima Aula
+              {schedules.length + 1 >= Object.values(lessonsConfig).reduce((a, b) => a + b, 0) ? 'Finalizar Agendamentos' : 'Confirmar e Agendar Próxima Aula'}
             </Button>
           </div>
         </CardContent>
