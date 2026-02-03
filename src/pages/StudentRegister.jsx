@@ -869,21 +869,28 @@ export default function StudentRegister() {
                       <span className="font-semibold">2 aulas</span>
                     </div>
                     {lessonSchedules.length > 2 && (
-                      <div className="flex justify-between">
-                        <span className="text-[#9ca3af]">Aulas extras ({lessonSchedules.length - 2} x R$ {(settings.lesson_price || 98).toFixed(2)}):</span>
-                        <span className="font-semibold">R$ {((lessonSchedules.length - 2) * (settings.lesson_price || 98)).toFixed(2)}</span>
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-[#9ca3af] text-xs">
+                          <span>Aulas extras:</span>
+                        </div>
+                        {lessonSchedules.slice(2).map((lesson, idx) => {
+                          const price = lesson.type === 'carro' ? (settings.lesson_price_car || settings.lesson_price || 98) :
+                            lesson.type === 'moto' ? (settings.lesson_price_moto || settings.lesson_price || 98) :
+                            lesson.type === 'onibus' ? (settings.lesson_price_bus || 150) :
+                            lesson.type === 'caminhao' ? (settings.lesson_price_truck || 180) :
+                            lesson.type === 'carreta' ? (settings.lesson_price_trailer || 200) : 98;
+                          return (
+                            <div key={idx} className="flex justify-between text-xs">
+                              <span className="text-[#9ca3af]">• {lesson.type === 'carro' ? 'Carro' : lesson.type === 'moto' ? 'Moto' : lesson.type === 'onibus' ? 'Ônibus' : lesson.type === 'caminhao' ? 'Caminhão' : 'Carreta'}</span>
+                              <span className="font-semibold">R$ {price.toFixed(2)}</span>
+                            </div>
+                          );
+                        })}
                       </div>
                     )}
                     <div className="border-t border-[#374151] pt-2 mt-2 flex justify-between text-base sm:text-lg">
                       <span className="text-[#fbbf24] font-bold">TOTAL:</span>
-                      <span className="text-[#fbbf24] font-bold">R$ {(() => {
-                        const categoryPrice = formData.category === 'A' ? settings.category_a_price :
-                          formData.category === 'B' ? settings.category_b_price :
-                          formData.category === 'AB' ? settings.category_ab_price :
-                          settings.category_b_price || 0;
-                        const extraLessons = Math.max(0, lessonSchedules.length - 2);
-                        return (categoryPrice + (extraLessons * (settings.lesson_price || 98))).toFixed(2);
-                      })()}</span>
+                      <span className="text-[#fbbf24] font-bold">R$ {calculateTotal().toFixed(2)}</span>
                     </div>
                   </div>
                 </div>
