@@ -255,7 +255,7 @@ export default function Layout({ children, currentPageName }) {
   // Se não está logado
   if (!user) {
     return (
-      <div className="min-h-screen bg-[#0a0e1a] text-white font-mono">
+      <div className="min-h-screen bg-black/60 text-white font-mono backdrop-blur-sm">
         {children}
       </div>
     );
@@ -264,7 +264,7 @@ export default function Layout({ children, currentPageName }) {
   // Se está em página pública ou não tem cadastro, mostrar top bar mas sem sidebar
   if (isPublicPage || (userType === null && user.role === 'user')) {
     return (
-      <div className="min-h-screen bg-[#0a0e1a] text-white font-mono">
+      <div className="min-h-screen bg-black/60 text-white font-mono backdrop-blur-sm">
         <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         
@@ -398,7 +398,7 @@ export default function Layout({ children, currentPageName }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0e1a] text-white font-mono">
+    <div className="min-h-screen bg-black/60 text-white font-mono backdrop-blur-sm">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         
@@ -598,7 +598,7 @@ export default function Layout({ children, currentPageName }) {
       </div>
 
       {/* Sidebar */}
-      <aside className={`fixed top-14 left-0 h-[calc(100vh-56px)] w-64 bg-[#0d1117] border-r border-[#30363d] z-30 transform transition-transform duration-200 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 backdrop-blur-sm bg-opacity-95 overflow-y-auto`}>
+      <aside className={`fixed top-14 left-0 h-[calc(100vh-56px)] w-64 bg-black/30 backdrop-blur-md border-r border-[#30363d] z-30 transform transition-transform duration-200 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 backdrop-blur-sm bg-opacity-95 overflow-y-auto`}>
         <nav className="p-3 space-y-1">
           {menuItems.map((item) => {
             const Icon = item.icon;
