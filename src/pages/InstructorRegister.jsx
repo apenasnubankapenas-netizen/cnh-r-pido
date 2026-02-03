@@ -22,6 +22,7 @@ export default function InstructorRegister() {
     bio: '',
     photo: '',
     cover_photo: '',
+    pix_key: '',
     teaches_car: false,
     teaches_moto: false,
     teaches_bus: false,
@@ -356,6 +357,18 @@ export default function InstructorRegister() {
                 />
               </div>
 
+              {/* Chave PIX */}
+              <div>
+                <label className="text-white font-medium mb-2 block">Chave PIX *</label>
+                <Input
+                  value={formData.pix_key}
+                  onChange={(e) => setFormData({...formData, pix_key: e.target.value})}
+                  className="bg-[#0d1117] border-[#374151] text-white"
+                  placeholder="CPF, CNPJ, email, telefone ou aleatória"
+                  required
+                />
+              </div>
+
               {/* Bio */}
               <div>
                 <label className="text-white font-medium mb-2 block">Biografia</label>
@@ -413,7 +426,7 @@ export default function InstructorRegister() {
               <Button
                 type="submit"
                 className="w-full bg-[#f0c41b] text-black hover:bg-[#d4aa00] font-bold"
-                disabled={loading || !formData.photo || !formData.cover_photo}
+                disabled={loading || !formData.photo || !formData.cover_photo || !formData.pix_key}
               >
                 {loading ? 'Cadastrando...' : 'Concluir Cadastro'}
               </Button>
