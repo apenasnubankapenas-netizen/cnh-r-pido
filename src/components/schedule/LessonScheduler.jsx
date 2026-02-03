@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Calendar, Clock, User, MapPin, AlertTriangle } from 'lucide-react';
+import { Calendar, Clock, User, MapPin, AlertTriangle, ArrowLeft } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import TimeGrid from "./TimeGrid";
 export default function LessonScheduler({ 
   lessonsConfig, // { carro: 2, moto: 2, etc }
   onSchedulesComplete,
+  onBack,
   settings
 }) {
   const [instructors, setInstructors] = useState([]);
@@ -238,13 +239,24 @@ export default function LessonScheduler({
             </>
           )}
 
-          <Button
-            className="w-full bg-[#f0c41b] text-black hover:bg-[#d4aa00] h-10 text-sm font-semibold"
-            onClick={handleAddSchedule}
-            disabled={!selectedDate || !selectedTime || !selectedInstructor}
-          >
-            Confirmar e Agendar Próxima Aula
-          </Button>
+          <div className="flex gap-3">
+            {onBack && schedules.length === 0 && (
+              <Button
+                variant="outline"
+                className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black h-10 text-sm font-semibold"
+                onClick={onBack}
+              >
+                <ArrowLeft className="mr-2" size={16} /> VOLTAR
+              </Button>
+            )}
+            <Button
+              className="flex-1 bg-[#f0c41b] text-black hover:bg-[#d4aa00] h-10 text-sm font-semibold"
+              onClick={handleAddSchedule}
+              disabled={!selectedDate || !selectedTime || !selectedInstructor}
+            >
+              Confirmar e Agendar Próxima Aula
+            </Button>
+          </div>
         </CardContent>
       </Card>
 
