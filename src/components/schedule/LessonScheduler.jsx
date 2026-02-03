@@ -30,6 +30,10 @@ export default function LessonScheduler({
   useEffect(() => {
     loadInstructors();
     loadAllLessons();
+    // Inicializar com o primeiro tipo disponível
+    if (typesAvailable.length > 0 && !currentType) {
+      setCurrentType(typesAvailable[0][0]);
+    }
   }, []);
 
   useEffect(() => {
@@ -95,8 +99,22 @@ export default function LessonScheduler({
   const handleAddSchedule = () => {
     if (!selectedDate || !selectedTime || !selectedInstructor || !currentType) return;
     
+    // Verificar se horário está disponível (não ocupado por alunos que já pagaram)
+    const occupied = allLessons.some(l => 
+      l.instructor_id === selectedInstructor && 
+      l.date === selectedDate && 
+      l.time === selectedTime && 
+      l.status === 'agendada' &&
+      !l.trial
+    );
+    
+    if (occupied) {
+      alert('Este horário já está ocupado por outro aluno. Escolha outro horário.');
+      return;
+    }
+    
     // Bloquear instrutor nas 2 primeiras aulas
-    if (schedules.length < 2 && !lockedInstructor) {
+    if (schedules.length === 0) {
       setLockedInstructor(selectedInstructor);
     }
     
@@ -124,11 +142,17 @@ export default function LessonScheduler({
     // Resetar campos para próxima aula
     setSelectedDate('');
     setSelectedTime('');
-    setCurrentType('');
+    
+    // Resetar tipo para próxima aula disponível
+    const availTypes = getAvailableTypes();
+    if (availTypes.length > 0) {
+      setCurrentType(availTypes[0][0]);
+    }
     
     if (updatedSchedules.length >= 2) {
       // Após 2 aulas, liberar seleção de instrutor
       setSelectedInstructor('');
+      setLockedInstructor(null);
     }
     
     setCurrentLessonIndex(currentLessonIndex + 1);
@@ -137,12 +161,20 @@ export default function LessonScheduler({
   const totalLessons = Object.values(lessonsConfig).reduce((a, b) => a + b, 0);
   const scheduledLessons = schedules.length;
 
-  if (!currentType) return <div className="text-center p-6">Carregando...</div>;
-
   const getTypeName = (type) => {
     const names = { carro: 'Carro', moto: 'Moto', onibus: 'Ônibus', caminhao: 'Caminhão', carreta: 'Carreta' };
     return names[type] || type;
   };
+
+  if (!currentType || instructors.length === 0) {
+    return (
+      <Card className="bg-[#1a2332] border-[#374151]">
+        <CardContent className="p-6 text-center">
+          <div className="animate-pulse text-[#fbbf24]">Carregando agendamento...</div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -287,6 +319,12 @@ export default function LessonScheduler({
                     timeSlots={availableTimeSlots}
                     bookedTimes={new Set([
                       ...instructorLessons.filter(l => l.status === 'agendada' && l.date === selectedDate).map(l => l.time),
+                      ...allLessons.filter(l => 
+                        !l.trial && 
+                        l.instructor_id === selectedInstructor && 
+                        l.date === selectedDate && 
+                        l.status === 'agendada'
+                      ).map(l => l.time),
                       ...schedules.filter(s => s.date === selectedDate && s.instructor_id === selectedInstructor).map(s => s.time)
                     ])}
                     selectedTime={selectedTime}
@@ -297,11 +335,11 @@ export default function LessonScheduler({
             </>
           )}
 
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             {onBack && schedules.length === 0 && (
               <Button
                 variant="outline"
-                className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black h-10 text-sm font-semibold"
+                className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black h-10 text-sm font-semibold w-full sm:w-auto"
                 onClick={onBack}
               >
                 <ArrowLeft className="mr-2" size={16} /> VOLTAR
@@ -312,7 +350,7 @@ export default function LessonScheduler({
               onClick={handleAddSchedule}
               disabled={!selectedDate || !selectedTime || !selectedInstructor || !currentType}
             >
-              {schedules.length + 1 >= Object.values(lessonsConfig).reduce((a, b) => a + b, 0) ? 'Finalizar Agendamentos' : 'Confirmar e Agendar Próxima Aula'}
+              {schedules.length + 1 >= Object.values(lessonsConfig).reduce((a, b) => a + b, 0) ? '✓ Finalizar e Ver Pagamento' : `Adicionar Aula ${schedules.length + 1}/${totalLessons}`}
             </Button>
           </div>
         </CardContent>
