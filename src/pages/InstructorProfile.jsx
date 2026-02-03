@@ -16,6 +16,7 @@ export default function InstructorProfile() {
   const [showPostDialog, setShowPostDialog] = useState(false);
   const [newPost, setNewPost] = useState({ image_url: '', caption: '' });
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [showContractDialog, setShowContractDialog] = useState(false);
 
   const navigate = useNavigate();
 
@@ -167,6 +168,21 @@ export default function InstructorProfile() {
           </CardContent>
         </Card>
 
+        {/* Contrato Assinado */}
+        {instructor.contract_accepted && (
+          <Card className="bg-[#1a2332] border-[#374151] mt-6">
+            <CardContent className="p-6 flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-bold text-white">Contrato de Parceria</h2>
+                <p className="text-sm text-[#9ca3af]">Assinado em {instructor.contract_accepted_at ? new Date(instructor.contract_accepted_at).toLocaleString('pt-BR') : '-'}</p>
+              </div>
+              <Button className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]" onClick={() => setShowContractDialog(true)}>
+                Ver contrato assinado
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Posts Section */}
         <div className="mt-6">
           <div className="flex justify-between items-center mb-4">
@@ -242,6 +258,18 @@ export default function InstructorProfile() {
           </div>
         </div>
       </div>
+
+      {/* Dialog: Contrato Assinado */}
+      <Dialog open={showContractDialog} onOpenChange={setShowContractDialog}>
+        <DialogContent className="bg-[#1a2332] border-[#374151] max-w-3xl text-white">
+          <DialogHeader>
+            <DialogTitle>Contrato assinado</DialogTitle>
+          </DialogHeader>
+          <div className="max-h-[70vh] overflow-auto whitespace-pre-wrap text-sm leading-relaxed">
+            {instructor?.contract_text || 'Contrato não disponível.'}
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* New Post Dialog */}
       <Dialog open={showPostDialog} onOpenChange={setShowPostDialog}>

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export default function InstructorRegister() {
   const navigate = useNavigate();
@@ -34,6 +35,7 @@ export default function InstructorRegister() {
   const [inviteMode, setInviteMode] = useState('invite'); // 'invite' | 'legacy'
   const [legacyInstructorId, setLegacyInstructorId] = useState(null);
   const [tokenValid, setTokenValid] = useState(true);
+  const [showContractDialog, setShowContractDialog] = useState(false);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -99,6 +101,11 @@ export default function InstructorRegister() {
       .replace(/(-\d{4})\d+?$/, '$1');
   };
 
+  const buildContractText = () => {
+    const name = formData.full_name || '________________';
+    const cpf = formData.cpf || '________________';
+    return `CONTRATO DE PARCERIA DE INSTRUÇÃO DE AULAS PRÁTICAS DE PROCESSOS DE OBTENÇÃO DE PERMISSÃO PARA DIRIGIR/CARTEIRA NACIONAL DE HABILITAÇÃO\n\nCONTRATANTE: CENTRO DE FORMAÇÃO DE CONDUTORES AB FAMILIAR, pessoa jurídica de direito privado devidamente inscrita no CNPJ/MF sob nº 02.866.751/0001-10, com sede a AVENIDA PEDRO MONTEIRO GUIMARÃES, N 686, Bairro: CENTRO, Formosa – Goiás. CEP: 73.801-690, neste ato representado pelo sócio proprietário e administrador o Sr. WILSON AMADO DOROTEIO FILHO, brasileiro, casado, empresário, portador da Cédula de Identidade Civil de nº 1453282 – SSP/DF e inscrito no CPF/MF sob nº 646.199.661-34.\nCONTRATADO: ${name}, brasileiro, instrutor de trânsito credenciado junto ao DETRAN/GO, inscrito no CPF/MF sob nº ${cpf}.\n\nAs partes acima identificadas têm, entre si, justos e acertados o presente CONTRATO DE PARCERIA DE INSTRUÇÃO DE AULAS PRÁTICAS, PARA PROCESSOS DE OBTENÇÃO À PERMISSÃO PARA DIRIGIR/CARTEIRA NACIONAL DE HABILITAÇÃO na Circunscrição de Formosa, pelas cláusulas e condições descritas no presente instrumento.\n\nCLÁUSULA PRIMEIRA – DO OBJETO - O presente contrato tem como objeto a parceria na instrução de aulas práticas para processos de obtenção à permissão para dirigir/CNH; as aulas serão ministradas pelo CONTRATADO: ${name} aos alunos do CONTRATANTE: CENTRO DE FORMAÇÃO DE CONDUTORES AB FAMILIAR, de modo não exclusivo.\n\nDAS OBRIGAÇÕES DAS PARTES\n\nCLÁUSULA SEGUNDA – DAS OBRIGAÇÕES DO CONTRATANTE - O CONTRATANTE fica obrigado:\nI- Fornecer a listagem dos alunos agendados, conforme a grade de horários e disponibilidade do Instrutor (a) CONTRATADO;\nII- Não praticar nenhum ato que possa prejudicar a imagem e o nome do CONTRATADO e/ou seus sócios e funcionários\nIII- Cumprir fielmente todas as cláusulas do presente instrumento.\nCLÁUSULA TERCEIRA – DAS OBRIGAÇÕES DO CONTRATADO - O CONTRATADO fica obrigado:\nI- Não praticar nenhum ato que possa prejudicar a imagem e o nome do CONTRANTE e/ou seus sócios e funcionários;\nII- Fornecer o ensino de aulas práticas aos alunos do CONTRATANTE com toda presteza e zelo necessários ao bom relacionamento com o cliente;\nIII- Enquadrar-se nos padrões e normas de conduta impostas pelas Portarias do DETRAN, CONTRAN, DENATRAN e ordenamento pátrio;\nIV- Zelar pela boa conservação dos equipamentos que estejam sob sua supervisão, uma vez caracterizado o uso indevido dos EQUIPAMENTOS, responderá pelas perdas e danos.\nV- Fornecer sua grade e disposição de horários aos funcionários do CONTRATANTE para que possa proceder ao agendamento de aulas práticas caso tenha disponibilidade de horários;\nVI- Caso, por quaisquer motivos não possa ministrar aulas já agendadas, deverá notificar e/ou avisar o CONTRATANTE antecipadamente para que não haja prejuízos aos alunos.\nVII- Entregar aos Funcionários do CONTRANTE o relatório das aulas ministradas, para que possa ser viabilizado seu pagamento.\nVIII- Podendo repassar aulas a outros contratados parceiros da contratante, afastando o caráter personalíssimo da aula, podendo também recusa-la por motivos pessoais;\nIX- Cumprir fielmente todas as cláusulas do presente instrumento.\n\nCLÁUSULA QUARTA – DAS CONDIÇÕES DE PREÇO, PAGAMENTO E RECEBIMENTO (REPASSE).\nI- Caso CONTRATANTE repasse ao CONTRATADO aulas práticas, essas serão divididas nas seguintes proporções: 85% (oitenta e cinco por cento) ao CONTRATANTE e 15% (quinze por cento) ao CONTRATADO; \nII- Combustível por conta do CONTRATANTE;\nIII- O pagamento pelo serviço prestado pelo CONTRATADO será feito ao final de cada mês concluído, de acordo com os relatórios de aulas instruídas;\nIV- O pagamento a que se referem os incisos anteriores poderá ser feito via Depósito em conta, DOC, PIX ou pessoalmente mediante preenchimento de recibo;\nCLÁUSULA QUINTA – DA RESCISÃO.\nI- O descumprimento de quaisquer cláusulas do presente contrato ensejará sua rescisão, mediante notificação extrajudicial;\nII- Fica devidamente pactuado entre as partes, que o presente contrato poderá ser dissolvido a qualquer momento mediante comunicação expressa com antecedência mínima de 30 (trinta) dias.\nCLÁUSULA SÉTIMA – DA VIGÊNCIA: O presente contrato passa a viger a partir de sua assinatura e perdura pelo prazo de 12 meses, com renovação automática atendendo requisitos subjetivos do contratante;\nCLÁUSULA OITAVA – DA LIBERALIDADE E DA RENÚNCIA: A tolerância por quaisquer das partes, no descumprimento de qualquer cláusula deste instrumento, significará mera liberalidade, não implicando em novação, renúncia ou em desistência de exigir o cumprimento fiel das disposições aqui contidas e dispostas.\nCLÁUSULA NONA – DAS FORMAS DE COMUNICAÇÃO: Todas as notificações, relatórios e outros comunicados relacionados a este contrato, quando não disposto forma diversa deveram ser procedidos e efetuados por escrito e encaminhados pessoalmente, devidamente protocolados, sendo considerados recebidos na data de sua entrega ao destinatário.\nCLÁSULA DÉCIMA – DA AUTONOMIA DAS PARTES: As partes são totalmente independentes entre si, de forma que nenhuma disposição deste contrato poderá ser interpretada no sentido de criar qualquer vínculo societário ou empregatício, bem como entre os empregados, prepostos e sócios de uma e outra parte.\nCLÁUSULA DÉCIMA PRIMEIRA – DO FORO: Fica eleito o foro da Comarca de Formosa para dirimir os litígios e quaisquer dúvidas decorrentes do presente contrato.\nE por estarem justos e contratados, firmam o presente instrumento em duas vias de igual teor na presença de duas testemunhas que juntamente o assinam.\n\nFormosa _______ de ________________________de 20____.\n\n_________________________________________________________\nCENTRO DE FORMAÇÃO DE CONDUTORES AB FAMILIAR\nCONTRATANTE\n\n\n\n________________________________________\n${name}\nCONTRATADO`; }
+
   const handleFileUpload = async (e, field) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -117,8 +124,12 @@ export default function InstructorRegister() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleOpenContract = (e) => {
     e.preventDefault();
+    setShowContractDialog(true);
+  };
+
+  const handleSubmit = async () => {
     setLoading(true);
 
     try {
@@ -134,7 +145,10 @@ export default function InstructorRegister() {
         await base44.entities.Instructor.create({
           ...formData,
           user_email: user.email,
-          active: true
+          active: true,
+          contract_accepted: true,
+          contract_accepted_at: new Date().toISOString(),
+          contract_text: buildContractText()
         });
         await base44.entities.InstructorInvite.update(invites[0].id, { used: true });
       } else if (inviteMode === 'legacy' && legacyInstructorId) {
@@ -142,7 +156,10 @@ export default function InstructorRegister() {
           ...formData,
           user_email: user.email,
           active: true,
-          registration_token: null
+          registration_token: null,
+          contract_accepted: true,
+          contract_accepted_at: new Date().toISOString(),
+          contract_text: buildContractText()
         });
       } else {
         alert('Token inválido');
@@ -151,6 +168,7 @@ export default function InstructorRegister() {
       }
 
       alert('Cadastro concluído com sucesso!');
+      setShowContractDialog(false);
       navigate(createPageUrl('InstructorProfile'));
     } catch (error) {
       alert('Erro ao finalizar cadastro');
@@ -222,7 +240,7 @@ export default function InstructorRegister() {
             <p className="text-[#9ca3af]">Complete seu cadastro para começar</p>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleOpenContract} className="space-y-6">
               {/* Foto de Perfil */}
               <div>
                 <label className="text-white font-medium mb-2 block">Foto de Perfil *</label>
@@ -396,6 +414,25 @@ export default function InstructorRegister() {
                 {loading ? 'Cadastrando...' : 'Concluir Cadastro'}
               </Button>
             </form>
+
+            {/* Dialog do Contrato */}
+            <Dialog open={showContractDialog} onOpenChange={setShowContractDialog}>
+              <DialogContent className="bg-[#1a2332] border-[#374151] max-w-3xl text-white">
+                <DialogHeader>
+                  <DialogTitle>Contrato de Parceria</DialogTitle>
+                </DialogHeader>
+                <div className="max-h-[60vh] overflow-auto whitespace-pre-wrap text-sm leading-relaxed">
+                  {buildContractText()}
+                </div>
+                <div className="flex justify-end gap-2 mt-4">
+                  <Button variant="outline" className="border-[#374151]" onClick={() => setShowContractDialog(false)}>Não aceito</Button>
+                  <Button className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]" onClick={handleSubmit} disabled={loading}>
+                    Aceitar e assinar
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </form>
           </CardContent>
         </Card>
       </div>
