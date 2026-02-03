@@ -50,6 +50,14 @@ Deno.serve(async (req) => {
                 updates[field] = (st[field] || 0) + qty;
               }
               await base44.asServiceRole.entities.Student.update(st.id, updates);
+
+              // Converter aulas trial para reais
+              if (st.payment_status !== 'pago') {
+                const lessons = await base44.asServiceRole.entities.Lesson.filter({ student_id: st.id, trial: true });
+                for (const lesson of lessons) {
+                  await base44.asServiceRole.entities.Lesson.update(lesson.id, { trial: false });
+                }
+              }
             }
           }
         } catch (_) {}

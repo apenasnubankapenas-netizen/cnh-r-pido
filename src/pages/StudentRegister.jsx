@@ -216,7 +216,7 @@ export default function StudentRegister() {
         totalMotoLessons = 2;
       }
 
-      // Código do consultor (opcional) - válido apenas no dia atual e único por vendedor
+      // Código do consultor (opcional)
       const rawCode = (formData.seller_code || '').trim().toUpperCase();
       const todayStr = new Date().toISOString().split('T')[0];
       let referralSeller = null;
@@ -230,54 +230,39 @@ export default function StudentRegister() {
         referralSeller = (sellers || []).find((s) => getDailyCode(s) === rawCode) || null;
       }
 
+      // SALVAR DADOS TEMPORARIAMENTE NO LOCALSTORAGE
       const { seller_code, ...studentPayload } = formData;
-      const created = await base44.entities.Student.create({
-        ...studentPayload,
-        total_car_lessons: totalCarLessons,
-        total_moto_lessons: totalMotoLessons,
-        completed_car_lessons: 0,
-        completed_moto_lessons: 0,
-        total_paid: 0,
-        payment_status: 'pendente',
-        user_email: user?.email,
-        cnh_approved: formData.has_cnh !== false,
-        all_lessons_completed: false,
-        admin_confirmed: false,
-        exam_done: false,
-        theoretical_test_done: false,
-        practical_test_done: false,
-        ...(referralSeller ? { ref_seller_id: referralSeller.id, ref_seller_name: referralSeller.full_name, ref_code_date: todayStr } : {})
-      });
-
-      // Criar TODAS as aulas como TRIAL (pendentes de pagamento)
-      for (const schedule of lessonSchedules) {
-        await base44.entities.Lesson.create({
-          student_id: created.id,
-          student_name: created.full_name,
-          student_renach: created.renach,
-          instructor_id: schedule.instructor_id,
-          instructor_name: schedule.instructor_name,
-          date: schedule.date,
-          time: schedule.time,
-          type: schedule.type,
-          status: 'agendada',
-          trial: true,
-          notified: false
-        });
-      }
-
-      if (referralSeller) {
-        const cashback = (settings?.seller_cashback_amount ?? 10);
-        await base44.entities.Seller.update(referralSeller.id, {
-          cashback_balance: (referralSeller.cashback_balance || 0) + cashback,
-          total_referrals: (referralSeller.total_referrals || 0) + 1
-        });
-      }
+      const pendingRegistration = {
+        studentData: {
+          ...studentPayload,
+          total_car_lessons: totalCarLessons,
+          total_moto_lessons: totalMotoLessons,
+          completed_car_lessons: 0,
+          completed_moto_lessons: 0,
+          total_paid: 0,
+          payment_status: 'pendente',
+          user_email: user?.email,
+          cnh_approved: formData.has_cnh !== false,
+          all_lessons_completed: false,
+          admin_confirmed: false,
+          exam_done: false,
+          theoretical_test_done: false,
+          practical_test_done: false,
+          ...(referralSeller ? { ref_seller_id: referralSeller.id, ref_seller_name: referralSeller.full_name, ref_code_date: todayStr } : {})
+        },
+        lessonSchedules,
+        referralSeller,
+        amount: calculateTotal(),
+        timestamp: Date.now()
+      };
+      
+      localStorage.setItem('pendingStudentRegistration', JSON.stringify(pendingRegistration));
 
       // Ir direto para pagamento
-      navigate(createPageUrl('Payment') + '?amount=' + calculateTotal() + '&studentId=' + created.id);
+      navigate(createPageUrl('Payment') + '?amount=' + calculateTotal() + '&pending=true');
     } catch (error) {
       console.error(error);
+      alert('Erro ao processar cadastro.');
     } finally {
       setLoading(false);
     }

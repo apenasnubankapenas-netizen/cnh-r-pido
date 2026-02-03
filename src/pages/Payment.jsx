@@ -70,6 +70,73 @@ export default function Payment() {
   const handlePayment = async () => {
     setProcessing(true);
     try {
+      const isPending = urlParams.get('pending') === 'true';
+      
+      if (isPending) {
+        // Novo registro: criar aluno primeiro
+        const pendingData = localStorage.getItem('pendingStudentRegistration');
+        if (!pendingData) {
+          alert('Dados de registro não encontrados. Por favor, refaça o cadastro.');
+          navigate(createPageUrl('StudentRegister'));
+          return;
+        }
+        
+        const { studentData, lessonSchedules, referralSeller } = JSON.parse(pendingData);
+        
+        // Criar student
+        const createdStudent = await base44.entities.Student.create(studentData);
+        
+        // Criar aulas como trial
+        for (const schedule of lessonSchedules) {
+          await base44.entities.Lesson.create({
+            student_id: createdStudent.id,
+            student_name: createdStudent.full_name,
+            student_renach: createdStudent.renach,
+            instructor_id: schedule.instructor_id,
+            instructor_name: schedule.instructor_name,
+            date: schedule.date,
+            time: schedule.time,
+            type: schedule.type,
+            status: 'agendada',
+            trial: true,
+            notified: false
+          });
+        }
+
+        if (paymentMethod === 'pix') {
+          await base44.entities.Payment.create({
+            student_id: createdStudent.id,
+            student_name: createdStudent.full_name,
+            amount: amount,
+            method: 'pix',
+            installments: 1,
+            description: 'PIX - Cadastro Inicial',
+            status: 'pendente'
+          });
+          alert('Cadastro criado! Pedido PIX gerado. Copie a chave e faça o pagamento. Após pagamento, aguarde confirmação do admin.');
+          localStorage.removeItem('pendingStudentRegistration');
+          navigate(createPageUrl('Home'));
+          return;
+        }
+
+        // Stripe checkout
+        const { data } = await base44.functions.invoke('createStripeCheckout', {
+          amount,
+          studentId: createdStudent.id,
+          purchaseType: 'inscricao',
+          purchaseQty: 1,
+        });
+        const url = data?.url;
+        if (url) {
+          localStorage.removeItem('pendingStudentRegistration');
+          window.location.href = url;
+          return;
+        }
+        alert('Não foi possível iniciar o checkout.');
+        return;
+      }
+
+      // Pagamento adicional (já tem student)
       if (paymentMethod === 'pix') {
         const user = await base44.auth.me();
         const students = await base44.entities.Student.filter({ user_email: user.email });
@@ -100,7 +167,7 @@ export default function Payment() {
       alert('Não foi possível iniciar o checkout.');
     } catch (e) {
       console.log(e);
-      alert('Erro ao processar o pagamento.');
+      alert('Erro ao processar o pagamento: ' + e.message);
     } finally {
       setProcessing(false);
     }
