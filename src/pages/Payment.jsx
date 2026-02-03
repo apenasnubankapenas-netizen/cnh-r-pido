@@ -44,6 +44,13 @@ export default function Payment() {
         setStudent(students[0]);
         const lessons = await base44.entities.Lesson.filter({ student_id: students[0].id });
         setTrialCount((lessons || []).filter(l => l.trial).length);
+      } else {
+        // Novo cadastro: pegar dados do localStorage
+        const pendingData = localStorage.getItem('pendingStudentRegistration');
+        if (pendingData) {
+          const { studentData } = JSON.parse(pendingData);
+          setStudent(studentData);
+        }
       }
 
       const settingsData = await base44.entities.AppSettings.list();
@@ -86,7 +93,7 @@ export default function Payment() {
         // Criar student
         const createdStudent = await base44.entities.Student.create(studentData);
         
-        // Criar aulas como trial
+        // Criar aulas (sem trial para pagamento via cartão - webhook aprovará depois)
         for (const schedule of lessonSchedules) {
           await base44.entities.Lesson.create({
             student_id: createdStudent.id,
@@ -98,12 +105,18 @@ export default function Payment() {
             time: schedule.time,
             type: schedule.type,
             status: 'agendada',
-            trial: true,
+            trial: false,
             notified: false
           });
         }
 
         if (paymentMethod === 'pix') {
+          // Atualizar student para status pago e total_paid
+          await base44.entities.Student.update(createdStudent.id, {
+            payment_status: 'pago',
+            total_paid: amount
+          });
+          
           await base44.entities.Payment.create({
             student_id: createdStudent.id,
             student_name: createdStudent.full_name,
@@ -111,9 +124,20 @@ export default function Payment() {
             method: 'pix',
             installments: 1,
             description: 'PIX - Cadastro Inicial',
-            status: 'pendente'
+            status: 'aprovado'
           });
-          alert('Cadastro criado! Pedido PIX gerado. Copie a chave e faça o pagamento. Após pagamento, aguarde confirmação do admin.');
+          
+          // Adicionar cashback ao vendedor se houver
+          const settingsData = await base44.entities.AppSettings.list();
+          const appSettings = settingsData[0];
+          if (referralSeller && appSettings?.seller_cashback_amount) {
+            await base44.entities.Seller.update(referralSeller.id, {
+              cashback_balance: (referralSeller.cashback_balance || 0) + appSettings.seller_cashback_amount,
+              total_referrals: (referralSeller.total_referrals || 0) + 1
+            });
+          }
+          
+          alert('✅ Cadastro concluído com sucesso! Pagamento PIX aprovado automaticamente.');
           localStorage.removeItem('pendingStudentRegistration');
           navigate(createPageUrl('Home'));
           return;

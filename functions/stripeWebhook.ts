@@ -42,7 +42,10 @@ Deno.serve(async (req) => {
             const arr = await base44.asServiceRole.entities.Student.filter({ id: studentId });
             if (arr.length > 0) {
               const st = arr[0];
-              const updates = { payment_status: 'pago' };
+              const updates = { 
+                payment_status: 'pago',
+                total_paid: (st.total_paid || 0) + (session.amount_total / 100)
+              };
               const qty = parseInt(session.metadata?.purchase_qty || '0');
               const ptype = session.metadata?.purchase_type || '';
               if (qty > 0 && (ptype === 'carro' || ptype === 'moto')) {
@@ -50,13 +53,20 @@ Deno.serve(async (req) => {
                 updates[field] = (st[field] || 0) + qty;
               }
               await base44.asServiceRole.entities.Student.update(st.id, updates);
-
-              // Converter aulas trial para reais
-              if (st.payment_status !== 'pago') {
-                const lessons = await base44.asServiceRole.entities.Lesson.filter({ student_id: st.id, trial: true });
-                for (const lesson of lessons) {
-                  await base44.asServiceRole.entities.Lesson.update(lesson.id, { trial: false });
-                }
+              
+              // Adicionar cashback ao vendedor se for primeira compra
+              if (st.payment_status !== 'pago' && st.ref_seller_id) {
+                try {
+                  const settingsData = await base44.asServiceRole.entities.AppSettings.list();
+                  const appSettings = settingsData[0];
+                  if (appSettings?.seller_cashback_amount) {
+                    const seller = await base44.asServiceRole.entities.Seller.get(st.ref_seller_id);
+                    await base44.asServiceRole.entities.Seller.update(st.ref_seller_id, {
+                      cashback_balance: (seller.cashback_balance || 0) + appSettings.seller_cashback_amount,
+                      total_referrals: (seller.total_referrals || 0) + 1
+                    });
+                  }
+                } catch (_) {}
               }
             }
           }
