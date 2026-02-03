@@ -170,33 +170,37 @@ export default function StudentRegister() {
   const calculateTotal = () => {
     if (!settings) return 0;
     
-    let total = 0;
-    const lessonPrice = settings.lesson_price || 98;
+    // Preço base da categoria
+    let categoryPrice = 0;
+    if (formData.category === 'A') categoryPrice = settings.category_a_price || 548;
+    else if (formData.category === 'B') categoryPrice = settings.category_b_price || 548;
+    else if (formData.category === 'AB') categoryPrice = settings.category_ab_price || 992;
+    else if (formData.category === 'inclusao_A') categoryPrice = settings.category_inclusao_a_price || 400;
+    else if (formData.category === 'inclusao_B') categoryPrice = settings.category_inclusao_b_price || 400;
+    else if (formData.category === 'onibus') categoryPrice = settings.category_bus_price || 1500;
+    else if (formData.category === 'caminhao') categoryPrice = settings.category_truck_price || 1800;
+    else if (formData.category === 'carreta') categoryPrice = settings.category_trailer_price || 2200;
     
-    if (formData.category === 'A') {
-      total = settings.category_a_price || 548;
-      total += formData.extra_moto_lessons * lessonPrice;
-    } else if (formData.category === 'B') {
-      total = settings.category_b_price || 548;
-      total += formData.extra_car_lessons * lessonPrice;
-    } else if (formData.category === 'AB') {
-      total = settings.category_ab_price || 992;
-      total += formData.extra_car_lessons * lessonPrice;
-      total += formData.extra_moto_lessons * lessonPrice;
-    } else if (['inclusao_A', 'inclusao_B'].includes(formData.category)) {
-      total = settings.category_a_price || 548;
-      total += formData.extra_car_lessons * lessonPrice;
-      total += formData.extra_moto_lessons * lessonPrice;
-    } else if (['onibus', 'carreta'].includes(formData.category)) {
-      total = settings.category_b_price || 548;
-      total += formData.extra_car_lessons * lessonPrice;
+    // Calcular custo das aulas extras (após as 2 primeiras incluídas)
+    let extraCost = 0;
+    if (lessonSchedules.length > 2) {
+      const extraLessons = lessonSchedules.slice(2);
+      extraLessons.forEach(lesson => {
+        if (lesson.type === 'carro') {
+          extraCost += settings.lesson_price_car || settings.lesson_price || 98;
+        } else if (lesson.type === 'moto') {
+          extraCost += settings.lesson_price_moto || settings.lesson_price || 98;
+        } else if (lesson.type === 'onibus') {
+          extraCost += settings.lesson_price_bus || 150;
+        } else if (lesson.type === 'caminhao') {
+          extraCost += settings.lesson_price_truck || 180;
+        } else if (lesson.type === 'carreta') {
+          extraCost += settings.lesson_price_trailer || 200;
+        }
+      });
     }
-
-    if (formData.theoretical_course) {
-      total += settings.theoretical_course_price || 200;
-    }
-
-    return total;
+    
+    return categoryPrice + extraCost;
   };
 
   const handleSubmit = async () => {
@@ -206,15 +210,8 @@ export default function StudentRegister() {
     }
     setLoading(true);
     try {
-      let totalCarLessons = 0;
-      let totalMotoLessons = 0;
-
-      if (['B', 'AB', 'onibus', 'carreta', 'inclusao_B'].includes(formData.category)) {
-        totalCarLessons = 2;
-      }
-      if (['A', 'AB', 'inclusao_A'].includes(formData.category)) {
-        totalMotoLessons = 2;
-      }
+      let totalCarLessons = lessonSchedules.filter(l => l.type === 'carro').length;
+      let totalMotoLessons = lessonSchedules.filter(l => l.type === 'moto').length;
 
       // Código do consultor (opcional)
       const rawCode = (formData.seller_code || '').trim().toUpperCase();
@@ -230,39 +227,104 @@ export default function StudentRegister() {
         referralSeller = (sellers || []).find((s) => getDailyCode(s) === rawCode) || null;
       }
 
-      // SALVAR DADOS TEMPORARIAMENTE NO LOCALSTORAGE
-      const { seller_code, ...studentPayload } = formData;
-      const pendingRegistration = {
-        studentData: {
+      const total = calculateTotal();
+
+      if (paymentMethod === 'pix') {
+        // PIX: Criar aluno diretamente e aprovar pagamento automaticamente
+        const { seller_code, ...studentPayload } = formData;
+        const studentData = {
           ...studentPayload,
+          user_email: user?.email,
+          ref_seller_id: referralSeller?.id,
+          ref_seller_name: referralSeller?.full_name,
+          ref_code_date: referralSeller ? todayStr : undefined,
+          total_paid: total,
+          payment_status: 'pago',
           total_car_lessons: totalCarLessons,
           total_moto_lessons: totalMotoLessons,
           completed_car_lessons: 0,
           completed_moto_lessons: 0,
-          total_paid: 0,
-          payment_status: 'pendente',
-          user_email: user?.email,
           cnh_approved: formData.has_cnh !== false,
           all_lessons_completed: false,
           admin_confirmed: false,
           exam_done: false,
           theoretical_test_done: false,
-          practical_test_done: false,
-          ...(referralSeller ? { ref_seller_id: referralSeller.id, ref_seller_name: referralSeller.full_name, ref_code_date: todayStr } : {})
-        },
-        lessonSchedules,
-        referralSeller,
-        amount: calculateTotal(),
-        timestamp: Date.now()
-      };
-      
-      localStorage.setItem('pendingStudentRegistration', JSON.stringify(pendingRegistration));
+          practical_test_done: false
+        };
 
-      // Ir direto para pagamento
-      navigate(createPageUrl('Payment') + '?amount=' + calculateTotal() + '&pending=true');
+        const newStudent = await base44.entities.Student.create(studentData);
+
+        // Criar aulas agendadas
+        for (const schedule of lessonSchedules) {
+          await base44.entities.Lesson.create({
+            student_id: newStudent.id,
+            student_name: formData.full_name,
+            student_renach: formData.renach,
+            instructor_id: schedule.instructor_id,
+            instructor_name: schedule.instructor_name,
+            date: schedule.date,
+            time: schedule.time,
+            type: schedule.type,
+            status: 'agendada',
+            trial: false
+          });
+        }
+
+        // Criar registro de pagamento
+        await base44.entities.Payment.create({
+          student_id: newStudent.id,
+          student_name: formData.full_name,
+          amount: total,
+          method: 'pix',
+          description: 'Pagamento inicial - Cadastro',
+          status: 'aprovado',
+          transaction_id: 'PIX_AUTO_' + Date.now()
+        });
+
+        // Adicionar cashback ao vendedor se houver
+        if (referralSeller && settings?.seller_cashback_amount) {
+          await base44.entities.Seller.update(referralSeller.id, {
+            cashback_balance: (referralSeller.cashback_balance || 0) + settings.seller_cashback_amount,
+            total_referrals: (referralSeller.total_referrals || 0) + 1
+          });
+        }
+
+        alert('✅ Cadastro concluído com sucesso! Pagamento PIX aprovado automaticamente.');
+        navigate(createPageUrl('Home'));
+        
+      } else {
+        // Cartão: Salvar temporariamente e redirecionar para Stripe
+        const { seller_code, ...studentPayload } = formData;
+        const pendingRegistration = {
+          studentData: {
+            ...studentPayload,
+            total_car_lessons: totalCarLessons,
+            total_moto_lessons: totalMotoLessons,
+            completed_car_lessons: 0,
+            completed_moto_lessons: 0,
+            total_paid: 0,
+            payment_status: 'pendente',
+            user_email: user?.email,
+            cnh_approved: formData.has_cnh !== false,
+            all_lessons_completed: false,
+            admin_confirmed: false,
+            exam_done: false,
+            theoretical_test_done: false,
+            practical_test_done: false,
+            ...(referralSeller ? { ref_seller_id: referralSeller.id, ref_seller_name: referralSeller.full_name, ref_code_date: todayStr } : {})
+          },
+          lessonSchedules,
+          referralSeller,
+          amount: total,
+          timestamp: Date.now()
+        };
+        
+        localStorage.setItem('pendingStudentRegistration', JSON.stringify(pendingRegistration));
+        navigate(createPageUrl('Payment') + '?amount=' + total + '&pending=true');
+      }
     } catch (error) {
       console.error(error);
-      alert('Erro ao processar cadastro.');
+      alert('Erro ao processar cadastro: ' + error.message);
     } finally {
       setLoading(false);
     }
