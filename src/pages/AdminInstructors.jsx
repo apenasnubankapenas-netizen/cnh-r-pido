@@ -381,12 +381,12 @@ export default function AdminInstructors() {
 
       {/* Dialog de Cadastro/Edição */}
       <Dialog open={showDialog} onOpenChange={() => { setShowDialog(false); resetForm(); }}>
-        <DialogContent className="bg-[#1a2332] border-[#374151] text-white max-w-lg">
+        <DialogContent className="bg-[#1a2332] border-[#374151] text-white max-w-lg max-h-[90vh] overflow-hidden flex flex-col">
           <DialogHeader>
             <DialogTitle>{editingInstructor ? 'Editar Instrutor' : 'Novo Instrutor'}</DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-4">
+          <div className="space-y-4 overflow-y-auto pr-2 flex-1">
             <div className="flex justify-center">
               <label className="w-24 h-24 rounded-full bg-[#111827] border-2 border-dashed border-[#374151] flex items-center justify-center cursor-pointer overflow-hidden">
                 {formData.photo ? (
@@ -517,7 +517,7 @@ export default function AdminInstructors() {
             </div>
           </div>
 
-          <DialogFooter>
+          <DialogFooter className="flex-shrink-0">
             <Button variant="outline" className="border-[#374151]" onClick={() => { setShowDialog(false); resetForm(); }}>
               Cancelar
             </Button>
