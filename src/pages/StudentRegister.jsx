@@ -68,7 +68,6 @@ export default function StudentRegister() {
   const [paymentMethod, setPaymentMethod] = useState('');
   const [showContract, setShowContract] = useState(false);
   const [contractAccepted, setContractAccepted] = useState(false);
-  const [showPostPaymentContract, setShowPostPaymentContract] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -297,8 +296,8 @@ export default function StudentRegister() {
           });
         }
 
-        // Mostrar contrato pós-pagamento
-        setShowPostPaymentContract(true);
+        alert('✅ Cadastro concluído com sucesso! Pagamento PIX aprovado automaticamente.');
+        navigate(createPageUrl('Home'));
         
       } else {
         // Cartão: Criar aluno e aulas, depois redirecionar para Stripe
@@ -1183,24 +1182,6 @@ export default function StudentRegister() {
           }}
           onReject={() => {
             setShowContract(false);
-          }}
-          isLoading={loading}
-        />
-      )}
-
-      {/* Post-Payment Contract Modal */}
-      {showPostPaymentContract && (
-        <StudentContractModal
-          student={formData}
-          settings={settings}
-          onAccept={() => {
-            setShowPostPaymentContract(false);
-            alert('✅ Cadastro concluído com sucesso! Pagamento PIX aprovado automaticamente.');
-            navigate(createPageUrl('Home'));
-          }}
-          onReject={() => {
-            setShowPostPaymentContract(false);
-            navigate(createPageUrl('Home'));
           }}
           isLoading={loading}
         />

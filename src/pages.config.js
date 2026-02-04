@@ -63,6 +63,7 @@ import InstructorLogin from './pages/InstructorLogin';
 import InstructorProfile from './pages/InstructorProfile';
 import InstructorRegister from './pages/InstructorRegister';
 import InstructorRegisterInvite from './pages/InstructorRegisterInvite';
+import InstructorRegisterNew from './pages/InstructorRegisterNew';
 import Instructors from './pages/Instructors';
 import Landing from './pages/Landing';
 import MyLessons from './pages/MyLessons';
@@ -72,7 +73,6 @@ import Simulados from './pages/Simulados';
 import StudentProfile from './pages/StudentProfile';
 import StudentRegister from './pages/StudentRegister';
 import SuperAdminLogin from './pages/SuperAdminLogin';
-import InstructorRegisterNew from './pages/InstructorRegisterNew';
 import __Layout from './Layout.jsx';
 
 
@@ -93,6 +93,7 @@ export const PAGES = {
     "InstructorProfile": InstructorProfile,
     "InstructorRegister": InstructorRegister,
     "InstructorRegisterInvite": InstructorRegisterInvite,
+    "InstructorRegisterNew": InstructorRegisterNew,
     "Instructors": Instructors,
     "Landing": Landing,
     "MyLessons": MyLessons,
@@ -102,7 +103,6 @@ export const PAGES = {
     "StudentProfile": StudentProfile,
     "StudentRegister": StudentRegister,
     "SuperAdminLogin": SuperAdminLogin,
-    "InstructorRegisterNew": InstructorRegisterNew,
 }
 
 export const pagesConfig = {
