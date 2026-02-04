@@ -37,8 +37,6 @@ export default function AdminInstructors() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showDialog, setShowDialog] = useState(false);
-  const [showInviteDialog, setShowInviteDialog] = useState(false);
-  const [inviteLink, setInviteLink] = useState('');
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [passwordInstructor, setPasswordInstructor] = useState(null);
   const [newPassword, setNewPassword] = useState('');
@@ -170,31 +168,6 @@ export default function AdminInstructors() {
     }
   };
 
-  const generateInviteLink = async () => {
-    try {
-      const token = Math.random().toString(36).substring(2, 15);
-      await base44.entities.InstructorInvite.create({
-        token,
-        used: false
-      });
-      
-      const base = new URL(window.location.origin + createPageUrl('InstructorRegister'));
-      base.searchParams.set('token', token);
-      const link = base.toString();
-      setInviteLink(link);
-      // também copia automaticamente para facilitar
-      navigator.clipboard.writeText(link).catch(()=>{});
-      setShowInviteDialog(true);
-    } catch (e) {
-      alert('Erro ao gerar link de convite');
-    }
-  };
-
-  const copyInviteLink = () => {
-    navigator.clipboard.writeText(inviteLink);
-    alert('Link copiado para a área de transferência!');
-  };
-
   const resetForm = () => {
     setEditingInstructor(null);
     setFormData({
@@ -241,15 +214,7 @@ export default function AdminInstructors() {
             Gerenciar Instrutores
           </h1>
         </div>
-        {user?.email === 'tcnhpara@gmail.com' && (
-          <Button 
-            className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
-            onClick={generateInviteLink}
-          >
-            <LinkIcon className="mr-2" size={18} />
-            Gerar Link de Convite
-          </Button>
-        )}
+
       </div>
 
       {/* Lista de Instrutores */}
@@ -406,29 +371,7 @@ export default function AdminInstructors() {
         </DialogContent>
       </Dialog>
 
-       {/* Dialog de Link de Convite */}
-      <Dialog open={showInviteDialog} onOpenChange={setShowInviteDialog}>
-        <DialogContent className="bg-[#1a2332] border-[#374151] text-white">
-          <DialogHeader>
-            <DialogTitle>Link de Convite Gerado</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <p className="text-[#9ca3af]">
-              Compartilhe este link com o instrutor para que ele complete o cadastro:
-            </p>
-            <div className="p-3 bg-[#111827] rounded border border-[#374151] break-all text-sm">
-              {inviteLink}
-            </div>
-            <Button 
-              className="w-full bg-[#f0c41b] text-white hover:bg-[#d4aa00]"
-              onClick={copyInviteLink}
-            >
-              <Copy className="mr-2" size={18} />
-              Copiar Link
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+
     </div>
   );
 }
