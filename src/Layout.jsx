@@ -30,6 +30,9 @@ export default function Layout({ children, currentPageName }) {
   const [showAdminMenu, setShowAdminMenu] = useState(false);
   const [userType, setUserType] = useState(null);
   const [instructor, setInstructor] = useState(null);
+  const [showGenerateCodeModal, setShowGenerateCodeModal] = useState(false);
+  const [generatedCode, setGeneratedCode] = useState('');
+  const [codeLoading, setCodeLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -109,6 +112,29 @@ export default function Layout({ children, currentPageName }) {
 
   const handleLogout = () => {
     base44.auth.logout();
+  };
+
+  const generateInstructorCode = async () => {
+    setCodeLoading(true);
+    try {
+      const code = Math.random().toString(36).substring(2, 11).toUpperCase();
+      const expiresAt = new Date();
+      expiresAt.setDate(expiresAt.getDate() + 30); // Válido por 30 dias
+      
+      await base44.entities.InstructorAccessCode.create({
+        code,
+        used: false,
+        expires_at: expiresAt.toISOString(),
+        notes: `Gerado para ${user?.full_name}`
+      });
+      
+      setGeneratedCode(code);
+      navigator.clipboard.writeText(code).catch(() => {});
+    } catch (e) {
+      alert('Erro ao gerar código: ' + e.message);
+    } finally {
+      setCodeLoading(false);
+    }
   };
 
   const getMenuItems = () => {
@@ -363,11 +389,11 @@ export default function Layout({ children, currentPageName }) {
                   </button>
                 </Link>
                 <span className="text-[#cbd5e1] text-xs">|</span>
-                <Link to={createPageUrl('InstructorLogin')}>
-                  <button className="text-[10px] sm:text-xs text-[#cbd5e1] hover:text-[#a78bfa] px-2.5 py-1.5 rounded transition-colors font-semibold">
-                    INSTRUTORES
-                  </button>
-                </Link>
+                <Link to={createPageUrl('InstructorRegisterNew')}>
+                    <button className="text-[10px] sm:text-xs text-[#cbd5e1] hover:text-[#a78bfa] px-2.5 py-1.5 rounded transition-colors font-semibold">
+                      INSTRUTORES
+                    </button>
+                  </Link>
                 <span className="text-[#cbd5e1] text-xs">|</span>
                 <Link to={createPageUrl('SuperAdminLogin')}>
                   <button className="text-[10px] sm:text-xs text-[#cbd5e1] hover:text-[#f0c41b] px-2.5 py-1.5 rounded transition-colors font-semibold">
@@ -581,7 +607,7 @@ export default function Layout({ children, currentPageName }) {
                 </button>
               </Link>
               <span className="text-[#cbd5e1] text-xs">|</span>
-              <Link to={createPageUrl('InstructorLogin')}>
+              <Link to={createPageUrl('InstructorRegisterNew')}>
                 <button className="text-[10px] sm:text-xs text-[#cbd5e1] hover:text-[#a78bfa] px-2.5 py-1.5 rounded transition-colors font-semibold">
                   INSTRUTORES
                 </button>
@@ -639,6 +665,18 @@ export default function Layout({ children, currentPageName }) {
           })}
         </nav>
 
+        {/* Generate Instructor Code Button (SuperAdmin) */}
+        {userType === 'superadmin' && (
+          <div className="absolute bottom-4 left-4 right-4 p-3 bg-[#161b22] rounded-lg border border-[#30363d] terminal-glow space-y-2">
+            <button
+              onClick={() => setShowGenerateCodeModal(true)}
+              className="w-full px-3 py-2 bg-[#0969da] hover:bg-[#0550ae] rounded text-xs font-semibold text-white transition-colors"
+            >
+              Gerar Código Instrutor
+            </button>
+          </div>
+        )}
+
         {/* User Status */}
         {student && (
           <div className="absolute bottom-4 left-4 right-4 p-3 bg-[#161b22] rounded-lg border border-[#30363d] terminal-glow">
@@ -676,6 +714,59 @@ export default function Layout({ children, currentPageName }) {
           {children}
         </div>
       </main>
+
+      {/* Generate Code Modal */}
+      {showGenerateCodeModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#1a2332] border-2 border-[#fbbf24] rounded-xl w-full max-w-md">
+            <div className="border-b border-[#374151] p-4 bg-gradient-to-r from-[#0969da] to-[#0550ae]">
+              <h2 className="text-lg font-bold text-white">Gerar Código de Instrutor</h2>
+            </div>
+            <div className="p-6 space-y-4">
+              {generatedCode ? (
+                <>
+                  <div className="text-center">
+                    <p className="text-[#9ca3af] text-sm mb-3">Código gerado com sucesso!</p>
+                    <div className="p-4 bg-[#111827] border border-[#374151] rounded-lg">
+                      <p className="text-3xl font-bold text-[#fbbf24] tracking-widest">{generatedCode}</p>
+                    </div>
+                    <p className="text-xs text-[#9ca3af] mt-3">Válido por 30 dias. Já foi copiado!</p>
+                  </div>
+                  <button
+                    onClick={() => navigator.clipboard.writeText(generatedCode)}
+                    className="w-full px-4 py-2 bg-[#0969da] hover:bg-[#0550ae] rounded text-white font-semibold text-sm transition-colors"
+                  >
+                    Copiar Novamente
+                  </button>
+                  <button
+                    onClick={() => { setGeneratedCode(''); setShowGenerateCodeModal(false); }}
+                    className="w-full px-4 py-2 border border-[#374151] rounded text-white font-semibold text-sm hover:bg-[#161b22] transition-colors"
+                  >
+                    Fechar
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p className="text-[#9ca3af] text-sm">Gere um código único para que um novo instrutor se registre no sistema.</p>
+                  <button
+                    onClick={generateInstructorCode}
+                    disabled={codeLoading}
+                    className="w-full px-4 py-3 bg-[#f0c41b] hover:bg-[#d4aa00] rounded text-black font-bold transition-colors disabled:opacity-50"
+                  >
+                    {codeLoading ? 'Gerando...' : 'Gerar Código'}
+                  </button>
+                  <button
+                    onClick={() => setShowGenerateCodeModal(false)}
+                    className="w-full px-4 py-2 border border-[#374151] rounded text-white font-semibold text-sm hover:bg-[#161b22] transition-colors"
+                  >
+                    Cancelar
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Overlay for mobile */}
       {isSidebarOpen && (
