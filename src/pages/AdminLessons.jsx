@@ -302,6 +302,13 @@ export default function AdminLessons() {
     finally { setProofLoading(false); }
   };
 
+  const getPeriodOfDay = (time) => {
+    const [hours] = time.split(':').map(Number);
+    if (hours >= 6 && hours < 12) return 'Manhã';
+    if (hours >= 12 && hours < 18) return 'Tarde';
+    return 'Noite';
+  };
+
   const getStatusBadge = (status) => {
     const configs = {
       agendada: { color: 'bg-blue-500/20 text-blue-400 border-blue-500/50', icon: Clock },
@@ -435,6 +442,7 @@ export default function AdminLessons() {
                 <div className="flex items-center gap-4">
                   <div className="text-center min-w-[60px]">
                     <p className="text-2xl font-bold text-[#fbbf24]">{lesson.time}</p>
+                    <p className="text-xs text-[#9ca3af]">{getPeriodOfDay(lesson.time)}</p>
                     <p className="text-xs text-white">{new Date(lesson.date).toLocaleDateString('pt-BR')}</p>
                   </div>
                   <div className="w-10 h-10 rounded-full bg-[#111827] flex items-center justify-center">
