@@ -47,7 +47,10 @@ export default function StudentRegister() {
     has_cnh: null,
     cnh_front_photo: '',
     cnh_back_photo: '',
-    seller_code: ''
+    seller_code: '',
+    exam_done: false,
+    theoretical_test_done: false,
+    practical_test_done: false
   });
   
   const [lessonQuantities, setLessonQuantities] = useState({
@@ -635,6 +638,68 @@ export default function StudentRegister() {
                 </div>
               </div>
             )}
+
+            <div className="p-4 bg-[#111827] rounded-lg border border-[#374151] mt-4 space-y-4">
+              <div>
+                <Label className="mb-3 block text-white font-semibold">Você já fez os exames médicos?</Label>
+                <div className="flex gap-3">
+                  <Button
+                    variant={formData.exam_done ? 'default' : 'outline'}
+                    className={formData.exam_done ? 'bg-[#1e40af]' : 'border-[#374151]'}
+                    onClick={() => setFormData({...formData, exam_done: true})}
+                  >
+                    Sim
+                  </Button>
+                  <Button
+                    variant={!formData.exam_done ? 'default' : 'outline'}
+                    className={!formData.exam_done ? 'bg-[#1e40af]' : 'border-[#374151]'}
+                    onClick={() => setFormData({...formData, exam_done: false})}
+                  >
+                    Não
+                  </Button>
+                </div>
+              </div>
+
+              <div>
+                <Label className="mb-3 block text-white font-semibold">Você já fez a prova teórica?</Label>
+                <div className="flex gap-3">
+                  <Button
+                    variant={formData.theoretical_test_done ? 'default' : 'outline'}
+                    className={formData.theoretical_test_done ? 'bg-[#1e40af]' : 'border-[#374151]'}
+                    onClick={() => setFormData({...formData, theoretical_test_done: true})}
+                  >
+                    Sim
+                  </Button>
+                  <Button
+                    variant={!formData.theoretical_test_done ? 'default' : 'outline'}
+                    className={!formData.theoretical_test_done ? 'bg-[#1e40af]' : 'border-[#374151]'}
+                    onClick={() => setFormData({...formData, theoretical_test_done: false})}
+                  >
+                    Não
+                  </Button>
+                </div>
+              </div>
+
+              <div>
+                <Label className="mb-3 block text-white font-semibold">Você já fez a prova prática?</Label>
+                <div className="flex gap-3">
+                  <Button
+                    variant={formData.practical_test_done ? 'default' : 'outline'}
+                    className={formData.practical_test_done ? 'bg-[#1e40af]' : 'border-[#374151]'}
+                    onClick={() => setFormData({...formData, practical_test_done: true})}
+                  >
+                    Sim
+                  </Button>
+                  <Button
+                    variant={!formData.practical_test_done ? 'default' : 'outline'}
+                    className={!formData.practical_test_done ? 'bg-[#1e40af]' : 'border-[#374151]'}
+                    onClick={() => setFormData({...formData, practical_test_done: false})}
+                  >
+                    Não
+                  </Button>
+                </div>
+              </div>
+            </div>
 
             <div className="flex gap-3 mt-6">
               <Button 
