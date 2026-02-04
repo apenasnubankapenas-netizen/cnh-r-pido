@@ -371,16 +371,16 @@ export default function LessonScheduler({
       {schedules.length > 0 && (
         <Card className="bg-[#1a2332] border-[#374151]">
           <CardHeader>
-            <CardTitle className="text-sm sm:text-base">Aulas Agendadas ({schedules.length})</CardTitle>
+            <CardTitle className="text-sm sm:text-base uppercase text-white">Aulas Agendadas ({schedules.length})</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             {schedules.map((s, idx) => (
               <div key={idx} className="flex items-center justify-between p-2 sm:p-3 bg-[#111827] rounded border border-[#374151]">
                 <div className="flex items-center gap-2 flex-1 min-w-0">
                   <Clock className="text-[#fbbf24] flex-shrink-0" size={14} />
-                  <span className="text-xs sm:text-sm truncate">{getTypeName(s.type)} - {new Date(s.date).toLocaleDateString('pt-BR')}</span>
+                  <span className="text-xs sm:text-sm truncate uppercase text-white">{getTypeName(s.type)} - {new Date(s.date).toLocaleDateString('pt-BR')}</span>
                 </div>
-                <span className="text-xs sm:text-sm text-[#fbbf24] font-semibold whitespace-nowrap ml-2">{s.time}</span>
+                <span className="text-xs sm:text-sm text-[#fbbf24] font-semibold whitespace-nowrap ml-2 uppercase">{s.time}</span>
               </div>
             ))}
           </CardContent>
