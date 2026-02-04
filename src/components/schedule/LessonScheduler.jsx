@@ -135,7 +135,7 @@ export default function LessonScheduler({
       type: currentType,
       date: selectedDate,
       time: selectedTime,
-      instructor_id: selectedInstrutor,
+      instructor_id: selectedInstructor,
       instructor_name: instructor?.full_name || ''
     };
     
