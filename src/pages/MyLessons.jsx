@@ -105,6 +105,13 @@ export default function MyLessons() {
 
   const availableTimeSlots = generateTimeSlots();
 
+  const getPeriodOfDay = (time) => {
+    const [hour] = time.split(':').map(Number);
+    if (hour >= 6 && hour < 12) return 'Manhã';
+    if (hour >= 12 && hour < 18) return 'Tarde';
+    return 'Noite';
+  };
+
   const filteredInstructors = instructors.filter(i => {
     // Filtrar por especialidade
     let matchesType = false;
@@ -391,7 +398,7 @@ export default function MyLessons() {
                   <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4">
                     <div className="text-left sm:text-right">
                       <p className="font-bold text-base sm:text-lg text-white">{new Date(lesson.date).toLocaleDateString('pt-BR')}</p>
-                      <p className="text-[#fbbf24] text-sm sm:text-base font-semibold">{lesson.time}</p>
+                      <p className="text-[#fbbf24] text-sm sm:text-base font-semibold">{lesson.time} - {getPeriodOfDay(lesson.time)}</p>
                     </div>
                     <div className="flex flex-col sm:flex-row items-end sm:items-center gap-1 sm:gap-2">
                       {getStatusBadge(lesson.status)}
