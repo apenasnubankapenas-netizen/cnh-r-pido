@@ -203,13 +203,16 @@ export default function AdminPayments() {
                     )}
                   </div>
                   <div>
-                    <p className="font-bold">{payment.student_name}</p>
+                    <p className="font-bold text-red-500">{payment.student_name}</p>
                     <p className="text-sm text-[#9ca3af]">
                       {payment.method === 'pix' ? 'PIX' : `Cartão ${payment.installments}x`} • {payment.description}
                     </p>
-                    <p className="text-xs text-[#9ca3af]">
+                    <p className="text-xs text-white">
                       {new Date(payment.created_date).toLocaleString('pt-BR')}
                     </p>
+                    {payment.transaction_id && (
+                      <p className="text-xs text-[#9ca3af] mt-1">ID: {payment.transaction_id}</p>
+                    )}
                   </div>
                 </div>
 
