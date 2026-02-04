@@ -45,6 +45,7 @@ export default function AdminLessons() {
   const [isInstructor, setIsInstructor] = useState(false);
   const [isSuperadmin, setIsSuperadmin] = useState(false);
   const [rescheduleOpen, setRescheduleOpen] = useState(false);
+  const [viewMode, setViewMode] = useState('calendar'); // 'calendar' or 'list'
   const [rescheduleLesson, setRescheduleLesson] = useState(null);
   const [rescheduleAccident, setRescheduleAccident] = useState(false);
   const [rescheduleDate, setRescheduleDate] = useState('');
@@ -154,12 +155,16 @@ export default function AdminLessons() {
   };
 
   const filteredLessons = lessons.filter(l => {
-    const dateMatch = !filterDate || l.date === filterDate;
+    const dateMatch = viewMode === 'list' || !filterDate || l.date === filterDate;
     const instructorFilterMatch = filterInstructor === 'all' || l.instructor_id === filterInstructor;
     const instructorScopeMatch = !isInstructor || l.instructor_id === instructorId;
     const statusMatch = filterStatus === 'all' || l.status === filterStatus;
     return dateMatch && instructorFilterMatch && statusMatch && instructorScopeMatch;
-  }).sort((a, b) => a.time.localeCompare(b.time));
+  }).sort((a, b) => {
+    // Ordenar por data e depois por horário
+    if (a.date !== b.date) return a.date.localeCompare(b.date);
+    return a.time.localeCompare(b.time);
+  });
 
   const handleStatusChange = async (lesson, newStatus) => {
     try {
@@ -337,36 +342,58 @@ export default function AdminLessons() {
           >
             <ArrowLeft size={18} />
           </Button>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+          <h1 className="text-2xl font-bold flex items-center gap-2 text-white">
             <Calendar className="text-[#fbbf24]" />
             Gerenciar Aulas
           </h1>
         </div>
-        <Badge className="bg-[#1e40af]">{filteredLessons.length} aulas</Badge>
+        <div className="flex items-center gap-3">
+          <div className="flex gap-2">
+            <Button
+              variant={viewMode === 'calendar' ? 'default' : 'outline'}
+              size="sm"
+              className={viewMode === 'calendar' ? 'bg-[#fbbf24] text-black' : 'border-[#374151] text-white'}
+              onClick={() => setViewMode('calendar')}
+            >
+              Dia
+            </Button>
+            <Button
+              variant={viewMode === 'list' ? 'default' : 'outline'}
+              size="sm"
+              className={viewMode === 'list' ? 'bg-[#fbbf24] text-black' : 'border-[#374151] text-white'}
+              onClick={() => setViewMode('list')}
+            >
+              Todas
+            </Button>
+          </div>
+          <Badge className="bg-[#1e40af] text-white">{filteredLessons.length} aulas</Badge>
+        </div>
       </div>
 
       {/* Filtros */}
       <Card className="bg-[#1a2332] border-[#374151]">
         <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2">
-            <Filter size={18} />
+          <CardTitle className="text-lg flex items-center gap-2 text-white">
+            <Filter size={18} className="text-[#fbbf24]" />
             Filtros
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid md:grid-cols-3 gap-4">
-            <div>
-              <Label>Data</Label>
-              <Input 
-                type="date"
-                className="bg-[#111827] border-[#374151] mt-1"
-                value={filterDate}
-                onChange={(e) => setFilterDate(e.target.value)}
-              />
-            </div>
+            {viewMode === 'calendar' && (
+              <div>
+                <Label className="text-white">Data</Label>
+                <Input 
+                  type="date"
+                  className="bg-[#111827] border-[#374151] mt-1"
+                  value={filterDate}
+                  onChange={(e) => setFilterDate(e.target.value)}
+                />
+              </div>
+            )}
             {!isInstructor && (
               <div>
-                <Label>Instrutor</Label>
+                <Label className="text-white">Instrutor</Label>
                 <Select value={filterInstructor} onValueChange={setFilterInstructor}>
                   <SelectTrigger className="bg-[#111827] border-[#374151] mt-1">
                     <SelectValue />
@@ -381,7 +408,7 @@ export default function AdminLessons() {
               </div>
             )}
             <div>
-              <Label>Status</Label>
+              <Label className="text-white">Status</Label>
               <Select value={filterStatus} onValueChange={setFilterStatus}>
                 <SelectTrigger className="bg-[#111827] border-[#374151] mt-1">
                   <SelectValue />
@@ -408,7 +435,7 @@ export default function AdminLessons() {
                 <div className="flex items-center gap-4">
                   <div className="text-center min-w-[60px]">
                     <p className="text-2xl font-bold text-[#fbbf24]">{lesson.time}</p>
-                    <p className="text-xs text-[#9ca3af]">{new Date(lesson.date).toLocaleDateString('pt-BR')}</p>
+                    <p className="text-xs text-white">{new Date(lesson.date).toLocaleDateString('pt-BR')}</p>
                   </div>
                   <div className="w-10 h-10 rounded-full bg-[#111827] flex items-center justify-center">
                     {lesson.type === 'carro' ? (
@@ -418,8 +445,8 @@ export default function AdminLessons() {
                     )}
                   </div>
                   <div>
-                    <p className="font-bold">{lesson.student_name}</p>
-                    <p className="text-sm text-[#9ca3af]">
+                    <p className="font-bold text-white">{lesson.student_name}</p>
+                    <p className="text-sm text-white">
                       RENACH: {lesson.student_renach} | Instrutor: {lesson.instructor_name}
                     </p>
                   </div>
@@ -493,8 +520,8 @@ export default function AdminLessons() {
 
               {lesson.instructor_comment && (
                 <div className="mt-3 p-2 bg-[#111827] rounded border border-[#374151]">
-                  <p className="text-xs text-[#9ca3af]">Comentário do instrutor:</p>
-                  <p className="text-sm">{lesson.instructor_comment}</p>
+                  <p className="text-xs text-[#fbbf24]">Comentário do instrutor:</p>
+                  <p className="text-sm text-white">{lesson.instructor_comment}</p>
                   {lesson.instructor_rating && (
                     <Badge className="mt-1 bg-[#1e40af]/20 text-[#3b82f6]">
                       Avaliação: {lesson.instructor_rating}
@@ -510,8 +537,8 @@ export default function AdminLessons() {
       {filteredLessons.length === 0 && (
         <Card className="bg-[#1a2332] border-[#374151]">
           <CardContent className="p-8 text-center">
-            <Calendar className="mx-auto text-[#9ca3af] mb-4" size={48} />
-            <p className="text-[#9ca3af]">Nenhuma aula encontrada com os filtros selecionados</p>
+            <Calendar className="mx-auto text-[#fbbf24] mb-4" size={48} />
+            <p className="text-white">Nenhuma aula encontrada com os filtros selecionados</p>
           </CardContent>
         </Card>
       )}
@@ -520,14 +547,14 @@ export default function AdminLessons() {
       <Dialog open={!!editingLesson} onOpenChange={() => setEditingLesson(null)}>
         <DialogContent className="bg-[#1a2332] border-[#374151] text-white">
           <DialogHeader>
-            <DialogTitle>Editar Aula</DialogTitle>
+            <DialogTitle className="text-white">Editar Aula</DialogTitle>
           </DialogHeader>
 
           {editingLesson && (
             <div className="space-y-4">
               <div className="grid md:grid-cols-3 gap-4">
                 <div>
-                  <Label>Data</Label>
+                  <Label className="text-white">Data</Label>
                   <Input
                     type="date"
                     className="bg-[#111827] border-[#374151] mt-1"
@@ -537,7 +564,7 @@ export default function AdminLessons() {
                   />
                 </div>
                 <div>
-                  <Label>Horário</Label>
+                  <Label className="text-white">Horário</Label>
                   <Input
                     type="time"
                     className="bg-[#111827] border-[#374151] mt-1"
@@ -547,7 +574,7 @@ export default function AdminLessons() {
                   />
                 </div>
                 <div>
-                  <Label>Instrutor</Label>
+                  <Label className="text-white">Instrutor</Label>
                   <Select
                     value={editForm.instructor_id}
                     onValueChange={(value) => setEditForm({ ...editForm, instructor_id: value })}
@@ -595,20 +622,20 @@ export default function AdminLessons() {
       <Dialog open={!!selectedLesson} onOpenChange={() => setSelectedLesson(null)}>
         <DialogContent className="bg-[#1a2332] border-[#374151] text-white">
           <DialogHeader>
-            <DialogTitle>Avaliar Aula</DialogTitle>
+            <DialogTitle className="text-white">Avaliar Aula</DialogTitle>
           </DialogHeader>
 
           {selectedLesson && (
             <div className="space-y-4">
               <div className="p-3 bg-[#111827] rounded border border-[#374151]">
-                <p className="font-medium">{selectedLesson.student_name}</p>
-                <p className="text-sm text-[#9ca3af]">
+                <p className="font-medium text-white">{selectedLesson.student_name}</p>
+                <p className="text-sm text-white">
                   {new Date(selectedLesson.date).toLocaleDateString('pt-BR')} - {selectedLesson.time}
                 </p>
               </div>
 
               <div>
-                <Label>Avaliação da Aula</Label>
+                <Label className="text-white">Avaliação da Aula</Label>
                 <Select 
                   value={editData.instructor_rating} 
                   onValueChange={(value) => setEditData({...editData, instructor_rating: value})}
@@ -626,7 +653,7 @@ export default function AdminLessons() {
               </div>
 
               <div>
-                <Label>Comentário sobre a Aula</Label>
+                <Label className="text-white">Comentário sobre a Aula</Label>
                 <Textarea 
                   className="bg-[#111827] border-[#374151] mt-1"
                   placeholder="Observações sobre o desempenho do aluno..."
@@ -654,16 +681,16 @@ export default function AdminLessons() {
       <Dialog open={proofOpen} onOpenChange={setProofOpen}>
         <DialogContent className="bg-[#1a2332] border-[#374151] text-white max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Comprovação de aula ({proofMode})</DialogTitle>
+            <DialogTitle className="text-white">Comprovação de aula ({proofMode})</DialogTitle>
           </DialogHeader>
 
           {proofMode === 'realizada' && (
             <div className="space-y-6">
               <div className="p-3 bg-[#111827] rounded border border-[#374151]">
-                <p className="font-bold mb-2">Check-in (início)</p>
+                <p className="font-bold mb-2 text-white">Check-in (início)</p>
                 <div className="grid md:grid-cols-2 gap-3">
                   <div>
-                    <label className="text-sm text-[#9ca3af]">Selfie do instrutor</label>
+                    <label className="text-sm text-white">Selfie do instrutor</label>
                     <input type="file" accept="image/*" capture="user" className="mt-1" onChange={async (e)=>{const f=e.target.files?.[0]; if(f){ setStartInstructorFile(f); try{ const loc=await getLocation(); setStartLoc(loc);}catch{}}}} />
                   </div>
                   <div>
@@ -677,10 +704,10 @@ export default function AdminLessons() {
               </div>
 
               <div className="p-3 bg-[#111827] rounded border border-[#374151]">
-                <p className="font-bold mb-2">Check-out (término)</p>
+                <p className="font-bold mb-2 text-white">Check-out (término)</p>
                 <div className="grid md:grid-cols-2 gap-3">
                   <div>
-                    <label className="text-sm text-[#9ca3af]">Selfie do instrutor</label>
+                    <label className="text-sm text-white">Selfie do instrutor</label>
                     <input type="file" accept="image/*" capture="user" className="mt-1" onChange={async (e)=>{const f=e.target.files?.[0]; if(f){ setEndInstructorFile(f); try{ const loc=await getLocation(); setEndLoc(loc);}catch{}}}} />
                   </div>
                   <div>
@@ -705,14 +732,14 @@ export default function AdminLessons() {
           {proofMode === 'falta' && (
             <div className="space-y-6">
               <div className="p-3 bg-[#111827] rounded border border-[#374151]">
-                <p className="font-bold mb-2">Evidências de falta</p>
+                <p className="font-bold mb-2 text-white">Evidências de falta</p>
                 <div className="grid md:grid-cols-2 gap-3">
                   <div>
-                    <label className="text-sm text-[#9ca3af]">Selfie do instrutor</label>
+                    <label className="text-sm text-white">Selfie do instrutor</label>
                     <input type="file" accept="image/*" capture="user" className="mt-1" onChange={async (e)=>{const f=e.target.files?.[0]; if(f){ setAbsenceInstructorFile(f); try{ const loc=await getLocation(); setAbsenceLoc(loc);}catch{}}}} />
                   </div>
                   <div>
-                    <label className="text-sm text-[#9ca3af]">Foto do local (carro/moto/ponto)</label>
+                    <label className="text-sm text-white">Foto do local (carro/moto/ponto)</label>
                     <input type="file" accept="image/*" capture="environment" className="mt-1" onChange={async (e)=>{const f=e.target.files?.[0]; if(f){ setAbsenceLocationFile(f); if(!absenceLoc){ try{ const loc=await getLocation(); setAbsenceLoc(loc);}catch{}}}}} />
                   </div>
                 </div>
@@ -736,10 +763,10 @@ export default function AdminLessons() {
       <Dialog open={rescheduleOpen} onOpenChange={setRescheduleOpen}>
         <DialogContent className="bg-[#1a2332] border-[#374151] text-white">
           <DialogHeader>
-            <DialogTitle>Confirmar presença da aula</DialogTitle>
+            <DialogTitle className="text-white">Confirmar presença da aula</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <p className="text-sm text-[#9ca3af]">Marque se houve acidente/imprevisto para remarcação gratuita.</p>
+            <p className="text-sm text-white">Marque se houve acidente/imprevisto para remarcação gratuita.</p>
             <div className="flex items-center gap-2">
               <input
                 id="accident"
@@ -748,16 +775,16 @@ export default function AdminLessons() {
                 checked={rescheduleAccident}
                 onChange={(e) => setRescheduleAccident(e.target.checked)}
               />
-              <label htmlFor="accident" className="text-sm">Foi acidente/imprevisto?</label>
+              <label htmlFor="accident" className="text-sm text-white">Foi acidente/imprevisto?</label>
             </div>
             {rescheduleAccident && (
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <Label>Nova data</Label>
+                  <Label className="text-white">Nova data</Label>
                   <Input type="date" className="bg-[#111827] border-[#374151] mt-1" value={rescheduleDate} onChange={(e)=>setRescheduleDate(e.target.value)} />
                 </div>
                 <div>
-                  <Label>Novo horário</Label>
+                  <Label className="text-white">Novo horário</Label>
                   <Input type="time" className="bg-[#111827] border-[#374151] mt-1" value={rescheduleTime} onChange={(e)=>setRescheduleTime(e.target.value)} />
                 </div>
               </div>
