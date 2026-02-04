@@ -189,7 +189,7 @@ export default function LessonScheduler({
       <Card className="bg-[#1a2332] border-[#fbbf24]/40">
         <CardContent className="p-3 sm:p-4">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs sm:text-sm font-semibold">Progresso do Agendamento</span>
+            <span className="text-sm sm:text-base font-semibold uppercase text-white">Progresso do Agendamento</span>
             <span className="text-xs sm:text-sm text-[#fbbf24] font-bold">{scheduledLessons}/{totalLessons}</span>
           </div>
           <div className="w-full bg-[#374151] rounded-full h-2">
