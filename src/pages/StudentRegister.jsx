@@ -926,28 +926,38 @@ export default function StudentRegister() {
 
             {/* Locais das aulas */}
             {settings?.lesson_locations && (
-              <div className="space-y-2">
-                <h3 className="font-semibold text-sm text-[#fbbf24]">Locais das Aulas</h3>
-                <div className="space-y-2">
+              <div className="space-y-3">
+                <h3 className="font-semibold text-sm text-[#fbbf24]">LOCAIS DAS AULAS</h3>
+                <div className="space-y-3">
                   {[...new Set(lessonSchedules.map(s => s.type))].map((type) => {
                     const loc = settings.lesson_locations?.[type];
                     if (!loc) return null;
+                    const typeNames = {
+                      carro: 'CARRO',
+                      moto: 'MOTO',
+                      onibus: 'ÔNIBUS',
+                      caminhao: 'CAMINHÃO',
+                      carreta: 'CARRETA'
+                    };
                     return (
-                      <div key={type} className="p-2 bg-[#111827] rounded text-xs">
-                        <div className="flex items-center gap-2 mb-1">
-                          <MapPin className="text-[#fbbf24]" size={12} />
-                          <span className="font-semibold uppercase">{type}</span>
+                      <div key={type} className="p-3 bg-[#111827] rounded-lg border border-[#374151]">
+                        <div className="flex items-center gap-2 mb-2">
+                          <MapPin className="text-[#fbbf24]" size={16} />
+                          <span className="font-bold uppercase text-white">{typeNames[type] || type.toUpperCase()}</span>
                         </div>
-                        <p className="text-[#9ca3af]">{loc.address || 'Endereço não definido'}</p>
+                        <p className="text-[#e6edf3] text-sm mb-3">{loc.address || 'Endereço não definido'}</p>
                         {typeof loc.lat === 'number' && typeof loc.lng === 'number' && (
-                          <a
-                            className="text-[#3b82f6] underline mt-1 inline-block"
-                            href={`https://www.google.com/maps?q=${loc.lat},${loc.lng}`}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            Ver no Google Maps
-                          </a>
+                          <div className="rounded-lg overflow-hidden border border-[#374151]">
+                            <iframe
+                              width="100%"
+                              height="200"
+                              frameBorder="0"
+                              style={{ border: 0 }}
+                              src={`https://www.google.com/maps?q=${loc.lat},${loc.lng}&output=embed&z=15`}
+                              allowFullScreen
+                              title={`Mapa ${typeNames[type] || type}`}
+                            />
+                          </div>
                         )}
                       </div>
                     );
