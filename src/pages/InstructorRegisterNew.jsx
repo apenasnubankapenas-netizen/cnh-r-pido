@@ -181,6 +181,20 @@ export default function InstructorRegisterNew() {
   return (
     <div className="min-h-screen bg-[#0a0e1a] p-4">
       <div className="max-w-2xl mx-auto">
+        {/* Link para login de instrutores existentes */}
+        <div className="text-center mb-6">
+          <p className="text-[#9ca3af] text-sm">
+            Já é instrutor?{' '}
+            <button 
+              onClick={() => navigate(createPageUrl('InstructorLogin'))}
+              className="text-[#0969da] hover:text-[#3b82f6] font-semibold transition-colors"
+            >
+              Entrar aqui
+            </button>
+          </p>
+        </div>
+      </div>
+      <div className="max-w-2xl mx-auto">
         {/* Step 1: Código de Acesso */}
         {step === 1 && (
           <Card className="bg-[#1a2332] border-[#374151]">
