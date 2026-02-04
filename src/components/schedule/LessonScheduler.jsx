@@ -253,7 +253,7 @@ export default function LessonScheduler({
             <div className="p-3 bg-[#111827] rounded border border-[#374151]">
               <div className="flex items-center gap-2 text-xs sm:text-sm mb-1">
                 <MapPin className="text-[#fbbf24] flex-shrink-0" size={14} />
-                <span className="font-semibold">Local da aula:</span>
+                <span className="font-semibold text-white">Local da aula:</span>
               </div>
               <p className="text-[10px] sm:text-xs text-[#9ca3af]">
                 {settings.lesson_locations[currentType]?.address || 'Endereço não definido'}
