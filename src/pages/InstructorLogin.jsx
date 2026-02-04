@@ -12,6 +12,7 @@ export default function InstructorLogin() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [instructor, setInstructor] = useState(null);
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -23,7 +24,10 @@ export default function InstructorLogin() {
         setUser(me);
         if (me) {
           const instructors = await base44.entities.Instructor.filter({ user_email: me.email });
-          if (instructors.length > 0) setInstructor(instructors[0]);
+          if (instructors.length > 0) {
+            setInstructor(instructors[0]);
+            setEmail(me.email);
+          }
         }
       } catch (_) {}
       setLoading(false);
@@ -31,19 +35,38 @@ export default function InstructorLogin() {
     load();
   }, []);
 
-  const handleEnter = () => {
+  const handleEnter = async () => {
     setError('');
-    if (!instructor) {
-      setError('Sua conta não está como Instrutor.');
+    if (!email || !password) {
+      setError('Informe email e senha.');
       return;
     }
-    if (!password || password !== (instructor.password || '')) {
-      setError('Senha inválida.');
-      return;
+
+    try {
+      // Buscar instrutor pelo email
+      const instructors = await base44.entities.Instructor.filter({ user_email: email });
+      if (instructors.length === 0) {
+        setError('Email não encontrado como instrutor.');
+        return;
+      }
+
+      const instr = instructors[0];
+      if (!instr.active) {
+        setError('Instrutor inativo.');
+        return;
+      }
+
+      if (password !== (instr.password || '')) {
+        setError('Senha inválida.');
+        return;
+      }
+
+      const key = `instructor_session_version:${email}`;
+      localStorage.setItem(key, String(instr.session_version || 1));
+      navigate(createPageUrl('AdminDashboard'));
+    } catch (e) {
+      setError('Erro ao autenticar: ' + e.message);
     }
-    const key = `instructor_session_version:${user.email}`;
-    localStorage.setItem(key, String(instructor.session_version || 1));
-    navigate(createPageUrl('AdminDashboard'));
   };
 
   if (loading) {
