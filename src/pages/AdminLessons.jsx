@@ -694,7 +694,7 @@ export default function AdminLessons() {
                     <input type="file" accept="image/*" capture="user" className="mt-1" onChange={async (e)=>{const f=e.target.files?.[0]; if(f){ setStartInstructorFile(f); try{ const loc=await getLocation(); setStartLoc(loc);}catch{}}}} />
                   </div>
                   <div>
-                    <label className="text-sm text-[#9ca3af]">Foto do aluno</label>
+                    <label className="text-sm text-white">Foto do aluno</label>
                     <input type="file" accept="image/*" capture="user" className="mt-1" onChange={async (e)=>{const f=e.target.files?.[0]; if(f){ setStartStudentFile(f); if(!startLoc){ try{ const loc=await getLocation(); setStartLoc(loc);}catch{}}}}} />
                   </div>
                 </div>
@@ -711,7 +711,7 @@ export default function AdminLessons() {
                     <input type="file" accept="image/*" capture="user" className="mt-1" onChange={async (e)=>{const f=e.target.files?.[0]; if(f){ setEndInstructorFile(f); try{ const loc=await getLocation(); setEndLoc(loc);}catch{}}}} />
                   </div>
                   <div>
-                    <label className="text-sm text-[#9ca3af]">Foto do aluno</label>
+                    <label className="text-sm text-white">Foto do aluno</label>
                     <input type="file" accept="image/*" capture="user" className="mt-1" onChange={async (e)=>{const f=e.target.files?.[0]; if(f){ setEndStudentFile(f); if(!endLoc){ try{ const loc=await getLocation(); setEndLoc(loc);}catch{}}}}} />
                   </div>
                 </div>
