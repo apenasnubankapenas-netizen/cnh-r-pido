@@ -690,7 +690,7 @@ export default function StudentRegister() {
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
                     <Car size={24} className="text-[#3b82f6]" />
-                    <span className="font-bold">Aulas de Carro</span>
+                    <span className="font-bold text-white">Aulas de Carro</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <Button 
@@ -701,7 +701,7 @@ export default function StudentRegister() {
                     >
                       <Minus size={18} />
                     </Button>
-                    <span className="w-12 text-center font-bold text-xl">{lessonQuantities.carro}</span>
+                    <span className="w-12 text-center font-bold text-xl text-white">{lessonQuantities.carro}</span>
                     <Button 
                       variant="outline" 
                       size="icon" 
@@ -720,7 +720,7 @@ export default function StudentRegister() {
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
                     <Bike size={24} className="text-[#fbbf24]" />
-                    <span className="font-bold">Aulas de Moto</span>
+                    <span className="font-bold text-white">Aulas de Moto</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <Button 
@@ -731,7 +731,7 @@ export default function StudentRegister() {
                     >
                       <Minus size={18} />
                     </Button>
-                    <span className="w-12 text-center font-bold text-xl">{lessonQuantities.moto}</span>
+                    <span className="w-12 text-center font-bold text-xl text-white">{lessonQuantities.moto}</span>
                     <Button 
                       variant="outline" 
                       size="icon" 
@@ -750,7 +750,7 @@ export default function StudentRegister() {
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
                     <Bus size={24} className="text-green-400" />
-                    <span className="font-bold">Aulas de Ônibus</span>
+                    <span className="font-bold text-white">Aulas de Ônibus</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <Button 
@@ -761,7 +761,7 @@ export default function StudentRegister() {
                     >
                       <Minus size={18} />
                     </Button>
-                    <span className="w-12 text-center font-bold text-xl">{lessonQuantities.onibus}</span>
+                    <span className="w-12 text-center font-bold text-xl text-white">{lessonQuantities.onibus}</span>
                     <Button 
                       variant="outline" 
                       size="icon" 
@@ -780,7 +780,7 @@ export default function StudentRegister() {
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
                     <Truck size={24} className="text-orange-400" />
-                    <span className="font-bold">Aulas de Caminhão</span>
+                    <span className="font-bold text-white">Aulas de Caminhão</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <Button 
@@ -791,7 +791,7 @@ export default function StudentRegister() {
                     >
                       <Minus size={18} />
                     </Button>
-                    <span className="w-12 text-center font-bold text-xl">{lessonQuantities.caminhao}</span>
+                    <span className="w-12 text-center font-bold text-xl text-white">{lessonQuantities.caminhao}</span>
                     <Button 
                       variant="outline" 
                       size="icon" 
@@ -810,7 +810,7 @@ export default function StudentRegister() {
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
                     <Truck size={24} className="text-purple-400" />
-                    <span className="font-bold">Aulas de Carreta</span>
+                    <span className="font-bold text-white">Aulas de Carreta</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <Button 
@@ -821,7 +821,7 @@ export default function StudentRegister() {
                     >
                       <Minus size={18} />
                     </Button>
-                    <span className="w-12 text-center font-bold text-xl">{lessonQuantities.carreta}</span>
+                    <span className="w-12 text-center font-bold text-xl text-white">{lessonQuantities.carreta}</span>
                     <Button 
                       variant="outline" 
                       size="icon" 
