@@ -357,7 +357,7 @@ export default function LessonScheduler({
               </Button>
             )}
             <Button
-              className="flex-1 bg-[#f0c41b] text-black hover:bg-[#d4aa00] h-10 text-sm font-semibold"
+              className="flex-1 bg-[#f0c41b] text-white hover:bg-[#d4aa00] h-10 text-sm font-semibold uppercase"
               onClick={handleAddSchedule}
               disabled={!selectedDate || !selectedTime || !selectedInstructor || !currentType}
             >
