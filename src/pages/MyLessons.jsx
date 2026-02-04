@@ -633,7 +633,7 @@ export default function MyLessons() {
 
       {/* Comprar Mais Aulas */}
       <Dialog open={showBuyDialog} onOpenChange={setShowBuyDialog}>
-        <DialogContent className="bg-[#1a2332] border-[#374151] text-white max-w-lg">
+        <DialogContent className="bg-[#1a2332] border-[#374151] text-white max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-[#fbbf24]">Comprar Mais Aulas</DialogTitle>
           </DialogHeader>
