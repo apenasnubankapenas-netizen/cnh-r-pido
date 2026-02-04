@@ -216,11 +216,11 @@ export default function Payment() {
         Voltar
       </Button>
 
-      <h1 className="text-2xl font-bold">Pagamento</h1>
+      <h1 className="text-2xl font-bold text-white">Pagamento</h1>
 
       {student && student.payment_status !== 'pago' && trialCount === 0 && (
         <Card className="bg-[#1a2332] border-[#fbbf24]/40">
-          <CardContent className="p-4 text-sm">
+          <CardContent className="p-4 text-sm text-white">
             Agende ao menos 1 aula de teste em "Minhas Aulas" antes de realizar o pagamento.
             <div className="mt-3">
               <Button variant="outline" className="border-[#fbbf24] text-[#fbbf24]" onClick={() => navigate(createPageUrl('MyLessons'))}>Ir para Minhas Aulas</Button>
@@ -232,20 +232,20 @@ export default function Payment() {
       {/* Resumo */}
       <Card className="bg-[#1a2332] border-[#374151]">
         <CardHeader>
-          <CardTitle className="text-lg">Resumo do Pedido</CardTitle>
+          <CardTitle className="text-lg text-white">Resumo do Pedido</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
             <div className="flex justify-between">
               <span className="text-[#9ca3af]">Categoria</span>
-              <span className="font-medium">{student?.category}</span>
+              <span className="font-medium text-white">{student?.category}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-[#9ca3af]">Aluno</span>
-              <span className="font-medium">{student?.full_name}</span>
+              <span className="font-medium text-white">{student?.full_name}</span>
             </div>
             <div className="flex justify-between border-t border-[#374151] pt-2 mt-2">
-              <span className="font-bold">Total</span>
+              <span className="font-bold text-white">Total</span>
               <span className="font-bold text-[#fbbf24] text-xl">R$ {amount.toFixed(2)}</span>
             </div>
           </div>
@@ -255,17 +255,19 @@ export default function Payment() {
       {/* Forma de Pagamento */}
       <Card className="bg-[#1a2332] border-[#374151]">
         <CardHeader>
-          <CardTitle className="text-lg">Forma de Pagamento</CardTitle>
+          <CardTitle className="text-lg text-white">Forma de Pagamento</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod} className="grid grid-cols-2 gap-3">
-            <label className="flex items-center gap-2 p-3 rounded border border-[#374151] cursor-pointer">
+            <label className="flex items-center gap-2 p-3 rounded border border-[#374151] cursor-pointer text-white">
               <RadioGroupItem value="card" id="pm-card" />
-              <CreditCard size={16} /> Cartão (Stripe)
+              <CreditCard size={16} className="text-[#fbbf24]" /> 
+              <span className="text-white">Cartão (Stripe)</span>
             </label>
-            <label className="flex items-center gap-2 p-3 rounded border border-[#374151] cursor-pointer">
+            <label className="flex items-center gap-2 p-3 rounded border border-[#374151] cursor-pointer text-white">
               <RadioGroupItem value="pix" id="pm-pix" />
-              <QrCode size={16} /> PIX
+              <QrCode size={16} className="text-[#fbbf24]" /> 
+              <span className="text-white">PIX</span>
             </label>
           </RadioGroup>
 
@@ -277,15 +279,15 @@ export default function Payment() {
             <div className="mt-2 p-3 bg-[#111827] rounded border border-[#374151]">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <div className="text-sm text-[#9ca3af]">Chave PIX</div>
-                  <div className="font-mono text-lg">{settings?.pix_key || '6198875627'}</div>
+                  <div className="text-sm text-[#fbbf24]">Chave PIX</div>
+                  <div className="font-mono text-lg text-white">{settings?.pix_key || '6198875627'}</div>
                 </div>
-                <Button variant="outline" onClick={handleCopyPix} className="border-[#374151]">
-                  {copied ? <Check className="mr-2" size={16} /> : <Copy className="mr-2" size={16} />}
+                <Button variant="outline" onClick={handleCopyPix} className="border-[#374151] text-white">
+                  {copied ? <Check className="mr-2 text-[#fbbf24]" size={16} /> : <Copy className="mr-2 text-[#fbbf24]" size={16} />}
                   {copied ? 'Copiada' : 'Copiar'}
                 </Button>
               </div>
-              <p className="text-xs text-[#9ca3af] mt-2">Após pagar via PIX, clique em "Gerar pedido PIX" para registrarmos seu pedido.</p>
+              <p className="text-xs text-[#9ca3af] mt-2">Após pagar via PIX, confirme o pagamento clicando no botão abaixo.</p>
             </div>
           )}
         </CardContent>
@@ -296,7 +298,7 @@ export default function Payment() {
        onClick={handlePayment}
        disabled={processing || (student && student.payment_status !== 'pago' && trialCount === 0)}
       >
-       {processing ? 'Processando…' : (paymentMethod === 'card' ? 'Pagar com cartão (Stripe)' : 'Gerar pedido PIX')}
+       {processing ? 'Processando…' : (paymentMethod === 'card' ? 'Pagar com cartão (Stripe)' : 'Confirmar Pagamento PIX')}
       </Button>
     </div>
   );
