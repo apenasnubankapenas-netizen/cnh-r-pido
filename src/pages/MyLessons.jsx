@@ -522,7 +522,7 @@ export default function MyLessons() {
 
       {/* Dialog de Agendamento */}
       <Dialog open={showScheduleDialog} onOpenChange={setShowScheduleDialog}>
-        <DialogContent className="bg-[#1a2332] border-[#374151] text-white max-w-lg">
+        <DialogContent className="bg-[#1a2332] border-[#374151] text-white max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-[#fbbf24]">Agendar Nova Aula</DialogTitle>
           </DialogHeader>
