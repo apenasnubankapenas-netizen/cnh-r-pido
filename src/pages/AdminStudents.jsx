@@ -276,36 +276,33 @@ export default function AdminStudents() {
           {selectedStudent && (
             <>
               <DialogHeader>
-                <div className="flex flex-col gap-3">
-                  <div className="flex items-center justify-between">
-                    <DialogTitle className="text-xl text-[#fbbf24]">{selectedStudent.full_name}</DialogTitle>
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <Button 
-                        size="sm" 
-                        className="bg-[#fbbf24] hover:bg-[#fbbf24]/80 text-black"
-                        onClick={handleExportPDF}
-                        disabled={exportingPDF}
-                      >
-                        <FileText size={16} className="mr-1" />
-                        {exportingPDF ? 'Gerando...' : 'Exportar PDF'}
-                      </Button>
-                      {user?.email === 'tcnhpara@gmail.com' && (
-                        <Button variant="destructive" size="sm" className="text-white" onClick={() => setConfirmDeleteOpen(true)}>
-                          <Trash size={16} className="mr-1" /> Apagar
-                        </Button>
-                      )}
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="border-[#374151] text-white"
-                        onClick={editing ? handleSaveEdit : openEdit}
-                      >
-                        {editing ? <><Save size={16} className="mr-1" /> Salvar</> : <><Edit size={16} className="mr-1" /> Editar</>}
-                      </Button>
-                    </div>
-                  </div>
-                </div>
+                <DialogTitle className="text-xl text-[#fbbf24]">{selectedStudent.full_name}</DialogTitle>
               </DialogHeader>
+
+              <div className="flex items-center gap-2 flex-wrap mb-4">
+                <Button 
+                  size="sm" 
+                  className="bg-[#fbbf24] hover:bg-[#fbbf24]/80 text-black"
+                  onClick={handleExportPDF}
+                  disabled={exportingPDF}
+                >
+                  <FileText size={16} className="mr-1" />
+                  {exportingPDF ? 'Gerando...' : 'Exportar PDF'}
+                </Button>
+                {user?.email === 'tcnhpara@gmail.com' && (
+                  <Button variant="destructive" size="sm" className="text-white" onClick={() => setConfirmDeleteOpen(true)}>
+                    <Trash size={16} className="mr-1" /> Apagar
+                  </Button>
+                )}
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-[#374151] text-white"
+                  onClick={editing ? handleSaveEdit : openEdit}
+                >
+                  {editing ? <><Save size={16} className="mr-1" /> Salvar</> : <><Edit size={16} className="mr-1" /> Editar</>}
+                </Button>
+              </div>
 
               <Tabs defaultValue="dados" className="mt-4">
                 <TabsList className="bg-[#111827] border border-[#374151]">
