@@ -29,6 +29,12 @@ export default function InstructorLogin() {
             localStorage.setItem(key, String(instructors[0].session_version || 1));
             navigate(createPageUrl('AdminDashboard'));
             return;
+          } else if (instructors.length === 0) {
+            // Email não está registrado como instrutor
+            setError(`O email ${me.email} não está registrado como instrutor. Use o email correto do cadastro.`);
+          } else {
+            // Instrutor inativo
+            setError('Sua conta de instrutor está inativa. Contate o administrador.');
           }
         }
       } catch (_) {}
