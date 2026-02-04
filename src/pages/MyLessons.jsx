@@ -371,7 +371,7 @@ export default function MyLessons() {
       {/* Próximas Aulas */}
       <Card className="bg-[#1a2332] border-[#374151]">
         <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2">
+          <CardTitle className="text-2xl font-bold flex items-center gap-2 text-[#fbbf24] uppercase">
             <Clock className="text-[#fbbf24]" />
             Próximas Aulas
           </CardTitle>
