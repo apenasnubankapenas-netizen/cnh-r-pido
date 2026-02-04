@@ -390,8 +390,8 @@ export default function MyLessons() {
                   </div>
                   <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4">
                     <div className="text-left sm:text-right">
-                      <p className="font-bold text-xs sm:text-sm">{new Date(lesson.date).toLocaleDateString('pt-BR')}</p>
-                      <p className="text-[#fbbf24] text-xs sm:text-sm">{lesson.time}</p>
+                      <p className="font-bold text-base sm:text-lg text-white">{new Date(lesson.date).toLocaleDateString('pt-BR')}</p>
+                      <p className="text-[#fbbf24] text-sm sm:text-base font-semibold">{lesson.time}</p>
                     </div>
                     <div className="flex flex-col sm:flex-row items-end sm:items-center gap-1 sm:gap-2">
                       {getStatusBadge(lesson.status)}
