@@ -112,7 +112,7 @@ export default function AdminDashboard() {
         >
           <ArrowLeft size={18} />
         </Button>
-        <h1 className="text-2xl font-bold">Dashboard Administrativo</h1>
+        <h1 className="text-2xl font-bold text-white">Dashboard Administrativo</h1>
       </div>
 
       {/* Stats Cards */}
@@ -121,8 +121,8 @@ export default function AdminDashboard() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-[#9ca3af] text-xs">Total Alunos</p>
-                <p className="text-2xl font-bold">{students.length}</p>
+                <p className="text-white text-xs">Total Alunos</p>
+                <p className="text-2xl font-bold text-[#fbbf24]">{students.length}</p>
               </div>
               <Users className="text-[#3b82f6]" size={32} />
             </div>
@@ -133,8 +133,8 @@ export default function AdminDashboard() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-[#9ca3af] text-xs">Aulas Hoje</p>
-                <p className="text-2xl font-bold">{todayLessons.length}</p>
+                <p className="text-white text-xs">Aulas Hoje</p>
+                <p className="text-2xl font-bold text-[#fbbf24]">{todayLessons.length}</p>
               </div>
               <Calendar className="text-[#fbbf24]" size={32} />
             </div>
@@ -147,8 +147,8 @@ export default function AdminDashboard() {
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-[#9ca3af] text-xs">Pagamentos Pendentes</p>
-                    <p className="text-2xl font-bold text-orange-400">{pendingPayments.length}</p>
+                    <p className="text-white text-xs">Pagamentos Pendentes</p>
+                    <p className="text-2xl font-bold text-[#fbbf24]">{pendingPayments.length}</p>
                   </div>
                   <AlertCircle className="text-orange-400" size={32} />
                 </div>
@@ -159,8 +159,8 @@ export default function AdminDashboard() {
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-[#9ca3af] text-xs">Receita Total</p>
-                    <p className="text-2xl font-bold text-green-400">R$ {totalRevenue.toFixed(0)}</p>
+                    <p className="text-white text-xs">Receita Total</p>
+                    <p className="text-2xl font-bold text-[#fbbf24]">R$ {totalRevenue.toFixed(0)}</p>
                   </div>
                   <TrendingUp className="text-green-400" size={32} />
                 </div>
@@ -174,12 +174,12 @@ export default function AdminDashboard() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-[#9ca3af] text-xs">Seus Ganhos</p>
-                  <p className="text-2xl font-bold text-green-400">R$ {instructorEarnings.toFixed(0)}</p>
+                  <p className="text-white text-xs">Seus Ganhos</p>
+                  <p className="text-2xl font-bold text-[#fbbf24]">R$ {instructorEarnings.toFixed(0)}</p>
                 </div>
                 <Car className="text-green-400" size={32} />
               </div>
-              <div className="mt-2 text-xs text-[#9ca3af]">
+              <div className="mt-2 text-xs text-white">
                 <span className="mr-3">Carro: R$ 12/aula</span>
                 <span>Moto: R$ 7/aula</span>
               </div>
@@ -202,8 +202,8 @@ export default function AdminDashboard() {
               {studentsAwaitingConfirmation.map((student) => (
                 <div key={student.id} className="flex items-center justify-between p-3 bg-[#111827] rounded-lg border border-[#374151]">
                   <div>
-                    <p className="font-medium">{student.full_name}</p>
-                    <p className="text-xs text-[#9ca3af]">RENACH: {student.renach}</p>
+                    <p className="font-medium text-white">{student.full_name}</p>
+                    <p className="text-xs text-white">RENACH: {student.renach}</p>
                   </div>
                   <Link to={createPageUrl('AdminStudents') + `?id=${student.id}`}>
                     <Button size="sm" className="bg-[#1e40af] hover:bg-[#3b82f6]">
@@ -220,7 +220,7 @@ export default function AdminDashboard() {
       {/* Busca de Alunos */}
       <Card className="bg-[#1a2332] border-[#374151]">
         <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2">
+          <CardTitle className="text-lg flex items-center gap-2 text-white">
             <Search className="text-[#fbbf24]" />
             Buscar Aluno
           </CardTitle>
@@ -243,8 +243,8 @@ export default function AdminDashboard() {
                 >
                   <div className="flex items-center justify-between p-3 bg-[#111827] rounded-lg border border-[#374151] hover:border-[#3b82f6] transition-all">
                     <div>
-                      <p className="font-medium">{student.full_name}</p>
-                      <p className="text-xs text-[#9ca3af]">
+                      <p className="font-medium text-white">{student.full_name}</p>
+                      <p className="text-xs text-white">
                         RENACH: {student.renach} | Categoria: {student.category}
                       </p>
                     </div>
@@ -257,7 +257,7 @@ export default function AdminDashboard() {
                 </Link>
               ))}
               {filteredStudents.length === 0 && (
-                <p className="text-center text-[#9ca3af] py-4">Nenhum aluno encontrado</p>
+                <p className="text-center text-white py-4">Nenhum aluno encontrado</p>
               )}
             </div>
           )}
@@ -267,7 +267,7 @@ export default function AdminDashboard() {
       {/* Aulas de Hoje */}
       <Card className="bg-[#1a2332] border-[#374151]">
         <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2">
+          <CardTitle className="text-lg flex items-center gap-2 text-white">
             <Calendar className="text-[#fbbf24]" />
             Aulas de Hoje
           </CardTitle>
@@ -282,8 +282,8 @@ export default function AdminDashboard() {
                       <p className="font-bold text-[#fbbf24]">{lesson.time}</p>
                     </div>
                     <div>
-                      <p className="font-medium">{lesson.student_name}</p>
-                      <p className="text-xs text-[#9ca3af]">
+                      <p className="font-medium text-white">{lesson.student_name}</p>
+                      <p className="text-xs text-white">
                         {lesson.type === 'carro' ? '🚗' : '🏍️'} {lesson.instructor_name}
                       </p>
                     </div>
@@ -299,8 +299,8 @@ export default function AdminDashboard() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-8 text-[#9ca3af]">
-              <Calendar className="mx-auto mb-2" size={32} />
+            <div className="text-center py-8 text-white">
+              <Calendar className="mx-auto mb-2 text-[#fbbf24]" size={32} />
               <p>Nenhuma aula agendada para hoje</p>
             </div>
           )}
@@ -310,7 +310,7 @@ export default function AdminDashboard() {
       {isInstructor && (
         <Card className="bg-[#1a2332] border-[#374151]">
           <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
+            <CardTitle className="text-lg flex items-center gap-2 text-white">
               <Calendar className="text-[#3b82f6]" />
               Mapa de Aulas (Próximos 14 dias)
             </CardTitle>
@@ -328,8 +328,8 @@ export default function AdminDashboard() {
             <CardContent className="p-6 flex items-center gap-4">
               <Users className="text-[#3b82f6]" size={32} />
               <div>
-                <h3 className="font-bold">Gerenciar Alunos</h3>
-                <p className="text-sm text-[#9ca3af]">{students.length} alunos cadastrados</p>
+                <h3 className="font-bold text-white">Gerenciar Alunos</h3>
+                <p className="text-sm text-white">{students.length} alunos cadastrados</p>
               </div>
             </CardContent>
           </Card>
@@ -340,8 +340,8 @@ export default function AdminDashboard() {
             <CardContent className="p-6 flex items-center gap-4">
               <Calendar className="text-[#fbbf24]" size={32} />
               <div>
-                <h3 className="font-bold">Gerenciar Aulas</h3>
-                <p className="text-sm text-[#9ca3af]">{lessons.length} aulas registradas</p>
+                <h3 className="font-bold text-white">Gerenciar Aulas</h3>
+                <p className="text-sm text-white">{lessons.length} aulas registradas</p>
               </div>
             </CardContent>
           </Card>
@@ -353,8 +353,8 @@ export default function AdminDashboard() {
               <CardContent className="p-6 flex items-center gap-4">
                 <DollarSign className="text-green-500" size={32} />
                 <div>
-                  <h3 className="font-bold">Pagamentos</h3>
-                  <p className="text-sm text-[#9ca3af]">{pendingPayments.length} pendentes</p>
+                  <h3 className="font-bold text-white">Pagamentos</h3>
+                  <p className="text-sm text-white">{pendingPayments.length} pendentes</p>
                 </div>
               </CardContent>
             </Card>
