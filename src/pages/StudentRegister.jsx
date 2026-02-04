@@ -909,7 +909,7 @@ export default function StudentRegister() {
               <div className="max-h-48 overflow-y-auto space-y-1">
                 {lessonSchedules.map((schedule, idx) => (
                   <div key={idx} className="p-2 bg-[#111827] rounded text-xs flex items-center justify-between">
-                    <span className="truncate flex-1">{schedule.type.toUpperCase()} - {schedule.instructor_name}</span>
+                    <span className="truncate flex-1">{schedule.type.toUpperCase()} - <span className="text-[#fbbf24] font-bold">{schedule.instructor_name}</span></span>
                     <span className="text-[#fbbf24] font-semibold whitespace-nowrap ml-2">
                       {new Date(schedule.date).toLocaleDateString('pt-BR')} {schedule.time}
                     </span>
