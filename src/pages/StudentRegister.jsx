@@ -960,7 +960,7 @@ export default function StudentRegister() {
                   <div className="space-y-2 text-xs sm:text-sm">
                     <div className="flex justify-between">
                       <span className="text-[#9ca3af]">Taxa de Categoria ({formData.category}):</span>
-                      <span className="font-semibold">
+                      <span className="font-semibold text-white text-base">
                         R$ {(() => {
                           if (formData.category === 'A') return (settings.category_a_price || 548).toFixed(2);
                           if (formData.category === 'B') return (settings.category_b_price || 548).toFixed(2);
@@ -976,7 +976,7 @@ export default function StudentRegister() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-[#9ca3af]">Aulas incluídas no pacote:</span>
-                      <span className="font-semibold">2 aulas</span>
+                      <span className="font-semibold text-white text-base">2 aulas</span>
                     </div>
                     {lessonSchedules.length > 2 && (
                       <div className="space-y-1">
@@ -990,15 +990,15 @@ export default function StudentRegister() {
                             lesson.type === 'caminhao' ? (settings.lesson_price_truck || 180) :
                             lesson.type === 'carreta' ? (settings.lesson_price_trailer || 200) : 98;
                           return (
-                            <div key={idx} className="flex justify-between text-xs">
+                            <div key={idx} className="flex justify-between text-sm">
                               <span className="text-[#9ca3af]">• {lesson.type === 'carro' ? 'Carro' : lesson.type === 'moto' ? 'Moto' : lesson.type === 'onibus' ? 'Ônibus' : lesson.type === 'caminhao' ? 'Caminhão' : 'Carreta'}</span>
-                              <span className="font-semibold">R$ {price.toFixed(2)}</span>
+                              <span className="font-semibold text-white text-base">R$ {price.toFixed(2)}</span>
                             </div>
                           );
                         })}
                       </div>
                     )}
-                    <div className="border-t border-[#374151] pt-2 mt-2 flex justify-between text-base sm:text-lg">
+                    <div className="border-t border-[#374151] pt-2 mt-2 flex justify-between text-lg sm:text-xl">
                       <span className="text-[#fbbf24] font-bold">TOTAL:</span>
                       <span className="text-[#fbbf24] font-bold">R$ {calculateTotal().toFixed(2)}</span>
                     </div>
