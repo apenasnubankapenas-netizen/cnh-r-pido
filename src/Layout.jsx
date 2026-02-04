@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { 
@@ -17,7 +17,8 @@ import {
   DollarSign,
   UserCog,
   BookOpen,
-  ChevronDown
+  ChevronDown,
+  ArrowLeft
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
@@ -29,6 +30,7 @@ export default function Layout({ children, currentPageName }) {
   const [userType, setUserType] = useState(null);
   const [instructor, setInstructor] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     loadUser();
@@ -651,6 +653,15 @@ export default function Layout({ children, currentPageName }) {
       {/* Main Content */}
       <main className="lg:ml-64 pt-14 min-h-screen">
         <div className="p-4 md:p-6">
+          {location.pathname !== createPageUrl('Home') && location.pathname !== '/' && (
+            <button
+              onClick={() => navigate(-1)}
+              className="mb-4 flex items-center gap-2 px-4 py-2 bg-[#1a2332] border border-[#374151] rounded-lg hover:bg-[#161b22] transition-colors text-white"
+            >
+              <ArrowLeft size={18} />
+              <span className="text-sm font-medium">Voltar</span>
+            </button>
+          )}
           {children}
         </div>
       </main>
