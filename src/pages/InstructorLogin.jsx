@@ -88,17 +88,36 @@ export default function InstructorLogin() {
           <p className="text-[#9ca3af] text-sm mt-2">Informe a senha definida pelo Super Admin.</p>
         </CardHeader>
         <CardContent className="space-y-4">
-          {!user ? (
+          {!user && !instructor ? (
             <div className="space-y-3">
-              <p className="text-[#9ca3af] text-sm text-center">Entre com sua conta para continuar.</p>
-              <div className="flex gap-2">
-                <Button className="w-full bg-[#1e40af] hover:bg-[#3b82f6]" onClick={() => base44.auth.redirectToLogin(createPageUrl('InstructorLogin'))}>Entrar</Button>
-                <Button variant="outline" className="w-full border-[#374151]" onClick={() => navigate(createPageUrl('Home'))}>
-                  <ArrowLeft className="mr-2" size={18} /> Voltar
-                </Button>
+              <p className="text-[#9ca3af] text-sm text-center">Use seu email de instrutor para entrar.</p>
+              <div>
+                <Label>Email</Label>
+                <Input 
+                  type="email" 
+                  className="bg-[#111827] border-[#374151] mt-1" 
+                  value={email} 
+                  onChange={(e) => setEmail(e.target.value)} 
+                  placeholder="seu.email@gmail.com"
+                />
               </div>
+              <div>
+                <Label>Senha</Label>
+                <Input 
+                  type="password" 
+                  className="bg-[#111827] border-[#374151] mt-1" 
+                  value={password} 
+                  onChange={(e) => setPassword(e.target.value)} 
+                  placeholder="Senha recebida por email"
+                />
+              </div>
+              {error && <p className="text-red-400 text-sm">{error}</p>}
+              <Button className="w-full bg-[#1e40af] hover:bg-[#3b82f6]" onClick={handleEnter}>Entrar</Button>
+              <Button variant="outline" className="w-full border-[#374151]" onClick={() => navigate(createPageUrl('Landing'))}>
+                <ArrowLeft className="mr-2" size={18} /> Voltar
+              </Button>
             </div>
-          ) : (
+          ) : instructor ? (
             <div className="space-y-3">
               <div>
                 <Label>Senha do Instrutor</Label>
@@ -106,6 +125,19 @@ export default function InstructorLogin() {
               </div>
               {error && <p className="text-red-400 text-sm">{error}</p>}
               <Button className="w-full bg-[#1e40af] hover:bg-[#3b82f6]" onClick={handleEnter}>Entrar</Button>
+              <Button variant="outline" className="w-full border-[#374151]" onClick={() => base44.auth.logout()}>
+                Usar outro email
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              <p className="text-[#9ca3af] text-sm text-center">Entre com sua conta para continuar.</p>
+              <div className="flex gap-2">
+                <Button className="w-full bg-[#1e40af] hover:bg-[#3b82f6]" onClick={() => base44.auth.redirectToLogin(createPageUrl('InstructorLogin'))}>Entrar com Google</Button>
+                <Button variant="outline" className="w-full border-[#374151]" onClick={() => navigate(createPageUrl('Landing'))}>
+                  <ArrowLeft className="mr-2" size={18} /> Voltar
+                </Button>
+              </div>
             </div>
           )}
         </CardContent>
