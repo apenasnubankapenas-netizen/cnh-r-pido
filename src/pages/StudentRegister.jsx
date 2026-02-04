@@ -599,10 +599,9 @@ export default function StudentRegister() {
             )}
 
             {formData.has_cnh === false && (
-              <div className="p-4 bg-[#111827] rounded-lg border border-[#fbbf24]/50 mt-4">
-                <p className="text-sm text-[#fbbf24] mb-4">
+              <div className="p-4 bg-[#111827] rounded-lg border border-[#374151] mt-4">
+                <p className="text-sm text-[#9ca3af] mb-4">
                   Como é sua primeira habilitação, você precisa enviar fotos do documento de identidade para análise.
-                  Após aprovação, você poderá agendar aulas avulsas.
                 </p>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
