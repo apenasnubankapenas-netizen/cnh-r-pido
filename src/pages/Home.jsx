@@ -100,7 +100,7 @@ export default function Home() {
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
             Bem-vindo à <span className="text-[#fbbf24]">CNH PARA TODOS</span>
           </h1>
-          <p className="text-[#9ca3af]">Complete seu cadastro para começar</p>
+          <p className="text-[#9ca3af] italic">"Confie no Senhor de todo o seu coração e não se apoie em seu próprio entendimento" - Provérbios 3:5</p>
         </div>
 
         <Card className="bg-[#1a2332] border-[#374151] terminal-glow">
