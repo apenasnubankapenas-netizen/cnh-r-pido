@@ -113,6 +113,18 @@ export default function LessonScheduler({
       return;
     }
     
+    // Verificar se não está duplicando a mesma data/hora nos schedules temporários
+    const alreadyScheduled = schedules.some(s => 
+      s.date === selectedDate && 
+      s.time === selectedTime && 
+      s.instructor_id === selectedInstructor
+    );
+    
+    if (alreadyScheduled) {
+      alert('Você já agendou esta aula neste horário. Escolha outro horário.');
+      return;
+    }
+    
     // Bloquear instrutor nas 2 primeiras aulas
     if (schedules.length === 0) {
       setLockedInstructor(selectedInstructor);
@@ -123,7 +135,7 @@ export default function LessonScheduler({
       type: currentType,
       date: selectedDate,
       time: selectedTime,
-      instructor_id: selectedInstructor,
+      instructor_id: selectedInstrutor,
       instructor_name: instructor?.full_name || ''
     };
     

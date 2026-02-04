@@ -48,21 +48,21 @@ export default function SuggestiveCalendar({
 
       <div className="grid grid-cols-7 gap-1 text-[11px] text-[#9ca3af] mb-1">
         {week.map((d, i) => (
-          <div key={i} className="text-center py-1">{d}</div>
+          <div key={i} className="text-center py-1 w-10 mx-auto">{d}</div>
         ))}
       </div>
 
       <div className="grid grid-cols-7 gap-1">
         {days.map((d, idx) => {
           if (!d) {
-            return <div key={idx} className="h-10" />;
+            return <div key={idx} className="h-10 w-10 mx-auto" />;
           }
           const dateStr = d.toISOString().split('T')[0];
           const isPast = dateStr < todayStr;
           const full = isFullyBooked ? isFullyBooked(dateStr) : false;
           const isSelected = selectedDate === dateStr;
 
-          const base = 'h-10 w-10 rounded-lg flex items-center justify-center text-sm transition border';
+          const base = 'h-10 w-10 mx-auto rounded-lg flex items-center justify-center text-sm transition border';
           const state = isPast
             ? 'opacity-40 cursor-not-allowed border-transparent text-white'
             : full
