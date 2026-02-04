@@ -241,24 +241,15 @@ export default function AdminInstructors() {
             Gerenciar Instrutores
           </h1>
         </div>
-        <div className="flex gap-2">
-          {user?.email === 'tcnhpara@gmail.com' && (
-            <Button 
-              className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
-              onClick={generateInviteLink}
-            >
-              <LinkIcon className="mr-2" size={18} />
-              Gerar Link de Convite
-            </Button>
-          )}
+        {user?.email === 'tcnhpara@gmail.com' && (
           <Button 
             className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
-            onClick={() => { resetForm(); setShowDialog(true); }}
+            onClick={generateInviteLink}
           >
-            <Plus className="mr-2" size={18} />
-            Novo Instrutor
+            <LinkIcon className="mr-2" size={18} />
+            Gerar Link de Convite
           </Button>
-        </div>
+        )}
       </div>
 
       {/* Lista de Instrutores */}
@@ -377,170 +368,12 @@ export default function AdminInstructors() {
           <CardContent className="p-8 text-center">
             <Users className="mx-auto text-[#9ca3af] mb-4" size={48} />
             <p className="text-[#9ca3af]">Nenhum instrutor cadastrado</p>
-            <Button 
-              className="bg-[#f0c41b] text-black hover:bg-[#d4aa00] mt-4"
-              onClick={() => { resetForm(); setShowDialog(true); }}
-            >
-              <Plus className="mr-2" size={18} />
-              Adicionar Instrutor
-            </Button>
+
           </CardContent>
         </Card>
       )}
 
-      {/* Dialog de Cadastro/Edição */}
-      <Dialog open={showDialog} onOpenChange={() => { setShowDialog(false); resetForm(); }}>
-        <DialogContent className="bg-[#1a2332] border-[#374151] text-white max-w-lg max-h-[90vh] overflow-hidden flex flex-col">
-          <DialogHeader>
-            <DialogTitle>{editingInstructor ? 'Editar Instrutor' : 'Novo Instrutor'}</DialogTitle>
-          </DialogHeader>
 
-          <div className="space-y-4 overflow-y-auto pr-2 flex-1">
-            <div className="flex justify-center">
-              <label className="w-24 h-24 rounded-full bg-[#111827] border-2 border-dashed border-[#374151] flex items-center justify-center cursor-pointer overflow-hidden">
-                {formData.photo ? (
-                  <img src={formData.photo} alt="" className="w-full h-full object-cover" />
-                ) : (
-                  <Upload className="text-[#9ca3af]" />
-                )}
-                <input type="file" className="hidden" accept="image/*" onChange={handleFileUpload} />
-              </label>
-            </div>
-
-            <div>
-              <Label>Nome Completo *</Label>
-              <Input 
-                className="bg-[#111827] border-[#374151] mt-1"
-                value={formData.full_name}
-                onChange={(e) => setFormData({...formData, full_name: e.target.value})}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>CPF *</Label>
-                <Input 
-                  className="bg-[#111827] border-[#374151] mt-1"
-                  value={formData.cpf}
-                  onChange={(e) => setFormData({...formData, cpf: e.target.value})}
-                  placeholder="000.000.000-00"
-                />
-              </div>
-              <div>
-                <Label>Data de Nascimento *</Label>
-                <Input 
-                  type="date"
-                  className="bg-[#111827] border-[#374151] mt-1"
-                  value={formData.birth_date}
-                  onChange={(e) => setFormData({...formData, birth_date: e.target.value})}
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>Telefone *</Label>
-                <Input 
-                  className="bg-[#111827] border-[#374151] mt-1"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                />
-              </div>
-              <div>
-                <Label>Link WhatsApp</Label>
-                <Input 
-                  className="bg-[#111827] border-[#374151] mt-1"
-                  value={formData.whatsapp_link}
-                  onChange={(e) => setFormData({...formData, whatsapp_link: e.target.value})}
-                  placeholder="https://wa.me/..."
-                />
-              </div>
-            </div>
-
-            <div>
-              <Label>Chave PIX</Label>
-              <Input 
-                className="bg-[#111827] border-[#374151] mt-1"
-                value={formData.pix_key}
-                onChange={(e) => setFormData({...formData, pix_key: e.target.value})}
-                placeholder="CPF, Email, Telefone ou Chave aleatória"
-              />
-            </div>
-
-            <div>
-              <Label>Biografia</Label>
-              <Textarea 
-                className="bg-[#111827] border-[#374151] mt-1"
-                value={formData.bio}
-                onChange={(e) => setFormData({...formData, bio: e.target.value})}
-              />
-            </div>
-
-            <div>
-              <Label className="mb-2 block">Tipos de Aula</Label>
-              <div className="grid grid-cols-2 gap-2">
-                <div className="flex items-center justify-between p-2 bg-[#111827] rounded border border-[#374151]">
-                  <span className="flex items-center gap-2"><Car size={16} className="text-[#3b82f6]" /> Carro</span>
-                  <Switch 
-                    checked={formData.teaches_car}
-                    onCheckedChange={(checked) => setFormData({...formData, teaches_car: checked})}
-                  />
-                </div>
-                <div className="flex items-center justify-between p-2 bg-[#111827] rounded border border-[#374151]">
-                  <span className="flex items-center gap-2"><Bike size={16} className="text-[#fbbf24]" /> Moto</span>
-                  <Switch 
-                    checked={formData.teaches_moto}
-                    onCheckedChange={(checked) => setFormData({...formData, teaches_moto: checked})}
-                  />
-                </div>
-                <div className="flex items-center justify-between p-2 bg-[#111827] rounded border border-[#374151]">
-                  <span className="flex items-center gap-2"><Bus size={16} className="text-green-400" /> Ônibus</span>
-                  <Switch 
-                    checked={formData.teaches_bus}
-                    onCheckedChange={(checked) => setFormData({...formData, teaches_bus: checked})}
-                  />
-                </div>
-                <div className="flex items-center justify-between p-2 bg-[#111827] rounded border border-[#374151]">
-                  <span className="flex items-center gap-2"><Truck size={16} className="text-orange-400" /> Caminhão</span>
-                  <Switch 
-                    checked={formData.teaches_truck}
-                    onCheckedChange={(checked) => setFormData({...formData, teaches_truck: checked})}
-                  />
-                </div>
-                <div className="flex items-center justify-between p-2 bg-[#111827] rounded border border-[#374151] col-span-2">
-                  <span className="flex items-center gap-2"><Truck size={16} className="text-purple-400" /> Carreta</span>
-                  <Switch 
-                    checked={formData.teaches_trailer}
-                    onCheckedChange={(checked) => setFormData({...formData, teaches_trailer: checked})}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between p-2 bg-[#111827] rounded border border-[#374151]">
-              <span>Instrutor Ativo</span>
-              <Switch 
-                checked={formData.active}
-                onCheckedChange={(checked) => setFormData({...formData, active: checked})}
-              />
-            </div>
-          </div>
-
-          <DialogFooter className="flex-shrink-0">
-            <Button variant="outline" className="border-[#374151]" onClick={() => { setShowDialog(false); resetForm(); }}>
-              Cancelar
-            </Button>
-            <Button 
-              className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
-              onClick={handleSave}
-              disabled={!formData.full_name || !formData.cpf || !formData.phone}
-            >
-              <Save className="mr-2" size={18} />
-              Salvar
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
 
       {/* Dialog de Senha do Instrutor */}
       <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
