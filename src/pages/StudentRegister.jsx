@@ -427,7 +427,7 @@ export default function StudentRegister() {
               <Input 
                 className="bg-[#111827] border-[#374151] mt-1"
                 value={formData.full_name}
-                onChange={(e) => setFormData({...formData, full_name: e.target.value})}
+                onChange={(e) => setFormData({...formData, full_name: e.target.value.toUpperCase()})}
                 placeholder="Seu nome completo"
               />
             </div>
@@ -448,7 +448,7 @@ export default function StudentRegister() {
                 <Input 
                   className="bg-[#111827] border-[#374151] mt-1"
                   value={formData.renach}
-                  onChange={(e) => setFormData({...formData, renach: e.target.value})}
+                  onChange={(e) => setFormData({...formData, renach: e.target.value.toUpperCase()})}
                   placeholder="Número do RENACH"
                 />
               </div>
@@ -515,7 +515,7 @@ export default function StudentRegister() {
               <Input 
                 className="bg-[#111827] border-[#374151] mt-1"
                 value={formData.seller_code}
-                onChange={(e) => setFormData({...formData, seller_code: e.target.value})}
+                onChange={(e) => setFormData({...formData, seller_code: e.target.value.toUpperCase()})}
                 placeholder="Ex: ABC123"
               />
               <p className="text-xs text-[#9ca3af] mt-1">Se você recebeu um código de um consultor, informe aqui para ajudar o vendedor.</p>
