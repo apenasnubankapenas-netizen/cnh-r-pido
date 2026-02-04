@@ -425,11 +425,12 @@ export default function Home() {
                           <div className="rounded-lg overflow-hidden border border-[#374151]">
                             <iframe
                               width="100%"
-                              height="150"
+                              height="250"
                               frameBorder="0"
                               style={{ border: 0 }}
-                              src={`https://www.google.com/maps?q=${loc.lat},${loc.lng}&output=embed&z=15`}
+                              src={`https://www.google.com/maps?q=${loc.lat},${loc.lng}&output=embed&z=15&gestureHandling=greedy`}
                               allowFullScreen
+                              loading="lazy"
                               title={`Mapa ${typeNames[lesson.type]}`}
                             />
                           </div>
