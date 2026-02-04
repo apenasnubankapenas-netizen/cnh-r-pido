@@ -228,6 +228,13 @@ export default function Home() {
     }
   };
 
+  const getPeriodOfDay = (time) => {
+    const [hours] = time.split(':').map(Number);
+    if (hours >= 6 && hours < 12) return 'Manhã';
+    if (hours >= 12 && hours < 18) return 'Tarde';
+    return 'Noite';
+  };
+
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       {/* Header */}
@@ -377,7 +384,7 @@ export default function Home() {
                       </div>
                       <div className="text-right">
                         <p className="font-medium text-white">{new Date(lesson.date).toLocaleDateString('pt-BR')}</p>
-                        <p className="text-sm text-[#fbbf24] font-bold">{lesson.time}</p>
+                        <p className="text-sm text-[#fbbf24] font-bold">{lesson.time} - {getPeriodOfDay(lesson.time)}</p>
                       </div>
                     </div>
 
