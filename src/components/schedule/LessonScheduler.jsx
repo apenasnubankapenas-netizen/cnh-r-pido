@@ -151,6 +151,9 @@ export default function LessonScheduler({
       return;
     }
     
+    // Scroll para o topo para continuar agendando
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     // Resetar campos para próxima aula
     setSelectedDate('');
     setSelectedTime('');
@@ -214,6 +217,13 @@ export default function LessonScheduler({
             Aula {scheduledLessons + 1} de {totalLessons} total
             {currentType && ` • ${schedules.filter(s => s.type === currentType).length}/${lessonsConfig[currentType]} ${getTypeName(currentType)}`}
           </p>
+          {scheduledLessons > 0 && scheduledLessons < totalLessons && (
+            <div className="mt-3 p-2 bg-[#10b981]/20 border border-[#10b981] rounded-lg">
+              <p className="text-xs sm:text-sm text-[#10b981] font-semibold text-center">
+                ✓ Aula {scheduledLessons} agendada! Continue agendando a próxima aula abaixo:
+              </p>
+            </div>
+          )}
         </CardContent>
       </Card>
 
