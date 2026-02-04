@@ -16,7 +16,8 @@ import {
   Save,
   X,
   ArrowLeft,
-  Trash
+  Trash,
+  FileText
  } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -39,6 +40,7 @@ export default function AdminStudents() {
   const [instructorId, setInstructorId] = useState(null);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [exportingPDF, setExportingPDF] = useState(false);
 
   const urlParams = new URLSearchParams(window.location.search);
   const studentIdFromUrl = urlParams.get('id');
@@ -148,6 +150,31 @@ export default function AdminStudents() {
     }
   };
 
+  const handleExportPDF = async () => {
+    if (!selectedStudent) return;
+    setExportingPDF(true);
+    try {
+      const response = await base44.functions.invoke('generateStudentPDF', { 
+        studentId: selectedStudent.id 
+      });
+      
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `aluno_${selectedStudent.full_name.replace(/\s+/g, '_')}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      window.URL.revokeObjectURL(url);
+      link.remove();
+    } catch (e) {
+      console.log(e);
+      alert('Erro ao gerar PDF');
+    } finally {
+      setExportingPDF(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -249,22 +276,33 @@ export default function AdminStudents() {
           {selectedStudent && (
             <>
               <DialogHeader>
-                <div className="flex items-center justify-between">
-                  <DialogTitle className="text-xl text-[#fbbf24]">{selectedStudent.full_name}</DialogTitle>
-                  <div className="flex items-center gap-2">
-                    {user?.email === 'tcnhpara@gmail.com' && (
-                       <Button variant="destructive" size="sm" className="text-white" onClick={() => setConfirmDeleteOpen(true)}>
-                         <Trash size={16} className="mr-1" /> Apagar
-                       </Button>
-                     )}
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="border-[#374151] text-white"
-                      onClick={editing ? handleSaveEdit : openEdit}
-                    >
-                      {editing ? <><Save size={16} className="mr-1" /> Salvar</> : <><Edit size={16} className="mr-1" /> Editar</>}
-                    </Button>
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center justify-between">
+                    <DialogTitle className="text-xl text-[#fbbf24]">{selectedStudent.full_name}</DialogTitle>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <Button 
+                        size="sm" 
+                        className="bg-[#fbbf24] hover:bg-[#fbbf24]/80 text-black"
+                        onClick={handleExportPDF}
+                        disabled={exportingPDF}
+                      >
+                        <FileText size={16} className="mr-1" />
+                        {exportingPDF ? 'Gerando...' : 'Exportar PDF'}
+                      </Button>
+                      {user?.email === 'tcnhpara@gmail.com' && (
+                        <Button variant="destructive" size="sm" className="text-white" onClick={() => setConfirmDeleteOpen(true)}>
+                          <Trash size={16} className="mr-1" /> Apagar
+                        </Button>
+                      )}
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="border-[#374151] text-white"
+                        onClick={editing ? handleSaveEdit : openEdit}
+                      >
+                        {editing ? <><Save size={16} className="mr-1" /> Salvar</> : <><Edit size={16} className="mr-1" /> Editar</>}
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </DialogHeader>
