@@ -232,14 +232,14 @@ export default function LessonScheduler({
                 setSelectedInstructor('');
               }
             }}>
-              <SelectTrigger className="bg-[#111827] border-[#374151] h-10">
+              <SelectTrigger className="bg-[#111827] border-[#374151] h-10 text-[#fbbf24]">
                 <SelectValue placeholder="Selecione o tipo de aula" />
               </SelectTrigger>
               <SelectContent className="bg-[#1a2332] border-[#374151]">
                 {getAvailableTypes().map(([type, count]) => {
                   const scheduled = schedules.filter(s => s.type === type).length;
                   return (
-                    <SelectItem key={type} value={type}>
+                    <SelectItem key={type} value={type} className="text-[#fbbf24]">
                       {getTypeName(type)} ({scheduled}/{count} agendadas)
                     </SelectItem>
                   );
@@ -281,12 +281,12 @@ export default function LessonScheduler({
                 onValueChange={setSelectedInstructor}
                 disabled={lockedInstructor && schedules.length < 2}
               >
-                <SelectTrigger className="bg-[#111827] border-[#374151] h-10">
+                <SelectTrigger className="bg-[#111827] border-[#374151] h-10 text-[#fbbf24]">
                   <SelectValue placeholder="Selecione um instrutor" />
                 </SelectTrigger>
                 <SelectContent className="bg-[#1a2332] border-[#374151]">
                   {filteredInstructors.map(i => (
-                    <SelectItem key={i.id} value={i.id}>{i.full_name}</SelectItem>
+                    <SelectItem key={i.id} value={i.id} className="text-[#fbbf24]">{i.full_name}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
