@@ -26,6 +26,7 @@ export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [student, setStudent] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarMinimized, setIsSidebarMinimized] = useState(false);
   const [showAdminMenu, setShowAdminMenu] = useState(false);
   const [userType, setUserType] = useState(null);
   const [instructor, setInstructor] = useState(null);
@@ -605,7 +606,16 @@ export default function Layout({ children, currentPageName }) {
       </div>
 
       {/* Sidebar */}
-      <aside className={`fixed top-14 left-0 h-[calc(100vh-56px)] w-64 bg-black/30 backdrop-blur-md border-r border-[#30363d] z-30 transform transition-transform duration-200 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 backdrop-blur-sm bg-opacity-95 overflow-y-auto`}>
+      <aside className={`fixed top-14 left-0 h-[calc(100vh-56px)] bg-black/30 backdrop-blur-md border-r border-[#30363d] z-30 transform transition-all duration-200 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 backdrop-blur-sm bg-opacity-95 overflow-y-auto ${isSidebarMinimized ? 'w-20' : 'w-64'}`}>
+        <div className="flex justify-end p-2 lg:hidden">
+          <button
+            onClick={() => setIsSidebarMinimized(!isSidebarMinimized)}
+            className="p-1 hover:bg-[#1a2332] rounded text-[#fbbf24]"
+            title={isSidebarMinimized ? 'Expandir' : 'Minimizar'}
+          >
+            {isSidebarMinimized ? '→' : '←'}
+          </button>
+        </div>
         <nav className="p-3 space-y-1">
           {menuItems.map((item) => {
             const Icon = item.icon;
@@ -619,10 +629,11 @@ export default function Layout({ children, currentPageName }) {
                   isActive 
                     ? 'bg-gradient-to-r from-[#0969da] to-[#0550ae] text-white shadow-md' 
                     : 'hover:bg-[#161b22] text-[#cbd5e1] hover:text-white'
-                }`}
+                } ${isSidebarMinimized ? 'justify-center' : ''}`}
+                title={isSidebarMinimized ? item.name : ''}
               >
                 <Icon size={20} className={isActive ? 'text-[#f0c41b]' : ''} />
-                <span className="text-sm font-medium">{item.name}</span>
+                {!isSidebarMinimized && <span className="text-sm font-medium">{item.name}</span>}
               </Link>
             );
           })}
@@ -651,7 +662,7 @@ export default function Layout({ children, currentPageName }) {
       </aside>
 
       {/* Main Content */}
-      <main className="lg:ml-64 pt-14 min-h-screen">
+      <main className={`pt-14 min-h-screen transition-all duration-200 ${isSidebarMinimized ? 'lg:ml-20' : 'lg:ml-64'}`}
         <div className="p-4 md:p-6">
           {location.pathname !== createPageUrl('Home') && location.pathname !== '/' && (
             <button
