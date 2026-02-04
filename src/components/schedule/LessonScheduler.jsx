@@ -205,18 +205,7 @@ export default function LessonScheduler({
         </CardContent>
       </Card>
 
-      {/* Warning */}
-      <Card className="bg-red-500/10 border-red-500/50">
-        <CardContent className="p-3 sm:p-4 flex items-start gap-2 sm:gap-3">
-          <AlertTriangle className="text-red-500 flex-shrink-0 mt-0.5" size={18} />
-          <div className="flex-1 min-w-0">
-            <p className="text-xs sm:text-sm font-semibold text-red-400">⚠️ ATENÇÃO</p>
-            <p className="text-[10px] sm:text-xs text-red-300 mt-1">
-              SE VOCÊ NÃO PAGAR A TEMPO, TALVEZ OUTRA PESSOA PAGUE ANTES E FIQUE COM OS SEUS HORÁRIOS, ENTÃO VOCÊ TERÁ QUE ESCOLHER OUTRO HORÁRIO APÓS PAGAR!
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+
 
       {/* Scheduler */}
       <Card className="bg-[#1a2332] border-[#374151]">
