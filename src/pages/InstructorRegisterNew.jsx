@@ -122,14 +122,24 @@ export default function InstructorRegisterNew() {
 
       const code = codes[0];
 
+      // Gerar senha aleatória
+      const generatedPassword = Math.random().toString(36).substring(2, 12);
+
       // Criar instrutor
       const newInstructor = await base44.entities.Instructor.create({
         ...formData,
         user_email: formData.email,
         active: true,
-        password: Math.random().toString(36).substring(2, 12),
+        password: generatedPassword,
         session_version: 1,
         contract_accepted: false
+      });
+
+      // Enviar email com senha
+      await base44.integrations.Core.SendEmail({
+        to: formData.email,
+        subject: 'Bem-vindo! Sua senha de acesso como Instrutor',
+        body: `Olá ${formData.full_name},\n\nSeu cadastro como instrutor foi realizado com sucesso!\n\nPara acessar a plataforma como instrutor, use:\n\nEmail: ${formData.email}\nSenha: ${generatedPassword}\n\nAcesse em: https://seu-dominio.com.br/InstructorLogin\n\nNota: Sua senha foi enviada para este email. Guarde com segurança.\n\nAtenciosamente,\nCNH Para Todos`
       });
 
       // Marcar código como usado
@@ -139,7 +149,7 @@ export default function InstructorRegisterNew() {
         used_at: new Date().toISOString()
       });
 
-      setSuccess('✅ Cadastro realizado com sucesso!');
+      setSuccess('✅ Cadastro realizado! Verifique seu email para a senha.');
       
       setTimeout(() => {
         navigate(createPageUrl('InstructorLogin'));
