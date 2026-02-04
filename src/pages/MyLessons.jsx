@@ -391,7 +391,7 @@ export default function MyLessons() {
                       <p className="font-bold text-sm sm:text-base truncate text-white">Aula de {lesson.type === 'carro' ? 'Carro' : 'Moto'}</p>
                       <p className="text-xs sm:text-sm text-[#9ca3af] flex items-center gap-1">
                         <User className="inline flex-shrink-0" size={12} />
-                        <span className="truncate">{lesson.instructor_name}</span>
+                        <span className="truncate">INSTRUTOR: {lesson.instructor_name}</span>
                       </p>
                     </div>
                   </div>
