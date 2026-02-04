@@ -12,7 +12,9 @@ import {
   ArrowRight,
   CheckCircle,
   Clock,
-  MapPin
+  MapPin,
+  Share2,
+  Copy
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,6 +27,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   const [isInstructor, setIsInstructor] = useState(false);
+  const [copiedId, setCopiedId] = useState(null);
 
   useEffect(() => {
     loadData();
@@ -177,6 +180,54 @@ export default function Home() {
     return total > 0 ? Math.round((completed / total) * 100) : 0;
   };
 
+  const generateLessonText = (lesson) => {
+    const typeNames = {
+      carro: 'CARRO',
+      moto: 'MOTO',
+      onibus: 'ÔNIBUS',
+      caminhao: 'CAMINHÃO',
+      carreta: 'CARRETA'
+    };
+    const loc = settings?.lesson_locations?.[lesson.type];
+    const formattedDate = new Date(lesson.date).toLocaleDateString('pt-BR', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+    
+    let text = `🚗 *AULA DE ${typeNames[lesson.type] || lesson.type.toUpperCase()}*\n\n`;
+    text += `📅 *Data:* ${formattedDate}\n`;
+    text += `🕐 *Horário:* ${lesson.time}\n`;
+    text += `👨‍🏫 *Instrutor:* ${lesson.instructor_name}\n`;
+    
+    if (loc?.address) {
+      text += `\n📍 *Local da Aula:*\n${loc.address}\n`;
+      if (typeof loc.lat === 'number' && typeof loc.lng === 'number') {
+        text += `\n🗺️ *Ver no Mapa:*\nhttps://www.google.com/maps?q=${loc.lat},${loc.lng}`;
+      }
+    }
+    
+    return text;
+  };
+
+  const handleShareWhatsApp = (lesson) => {
+    const text = generateLessonText(lesson);
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  const handleCopyInfo = async (lesson) => {
+    const text = generateLessonText(lesson);
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedId(lesson.id);
+      setTimeout(() => setCopiedId(null), 2000);
+    } catch (err) {
+      console.error('Erro ao copiar:', err);
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       {/* Header */}
@@ -291,13 +342,13 @@ export default function Home() {
                   <div key={lesson.id} className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
                     {/* Cabeçalho da aula */}
                     <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-3 flex-1">
                         {lesson.type === 'carro' && <Car className="text-[#3b82f6]" size={24} />}
                         {lesson.type === 'moto' && <Bike className="text-[#fbbf24]" size={24} />}
                         {lesson.type === 'onibus' && <Bike className="text-green-400" size={24} />}
                         {lesson.type === 'caminhao' && <Bike className="text-orange-400" size={24} />}
                         {lesson.type === 'carreta' && <Bike className="text-purple-400" size={24} />}
-                        <div>
+                        <div className="flex-1">
                           <p className="font-bold text-white uppercase">{typeNames[lesson.type] || lesson.type}</p>
                           <p className="text-sm text-[#9ca3af]">{lesson.instructor_name}</p>
                         </div>
@@ -306,6 +357,37 @@ export default function Home() {
                         <p className="font-medium text-white">{new Date(lesson.date).toLocaleDateString('pt-BR')}</p>
                         <p className="text-sm text-[#fbbf24] font-bold">{lesson.time}</p>
                       </div>
+                    </div>
+
+                    {/* Botões de compartilhar e copiar */}
+                    <div className="flex gap-2 mb-3">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="flex-1 border-green-500 text-green-500 hover:bg-green-500 hover:text-white"
+                        onClick={() => handleShareWhatsApp(lesson)}
+                      >
+                        <Share2 size={14} className="mr-1" />
+                        WhatsApp
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="flex-1 border-[#3b82f6] text-[#3b82f6] hover:bg-[#3b82f6] hover:text-white"
+                        onClick={() => handleCopyInfo(lesson)}
+                      >
+                        {copiedId === lesson.id ? (
+                          <>
+                            <CheckCircle size={14} className="mr-1" />
+                            Copiado!
+                          </>
+                        ) : (
+                          <>
+                            <Copy size={14} className="mr-1" />
+                            Copiar
+                          </>
+                        )}
+                      </Button>
                     </div>
 
                     {/* Local da aula */}
