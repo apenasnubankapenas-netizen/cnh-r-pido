@@ -894,7 +894,7 @@ export default function StudentRegister() {
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <div className="p-2 bg-[#111827] rounded">
                   <span className="text-[#9ca3af]">Nome:</span>
-                  <p className="font-medium truncate">{formData.full_name}</p>
+                  <p className="font-medium truncate text-white">{formData.full_name}</p>
                 </div>
                 <div className="p-2 bg-[#111827] rounded">
                   <span className="text-[#9ca3af]">Categoria:</span>
