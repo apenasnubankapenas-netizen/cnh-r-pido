@@ -210,7 +210,7 @@ export default function LessonScheduler({
       {/* Scheduler */}
       <Card className="bg-[#1a2332] border-[#374151]">
         <CardHeader>
-          <CardTitle className="text-base sm:text-lg">
+          <CardTitle className="text-base sm:text-lg uppercase text-white">
             Agendar Aula {currentLessonIndex + 1}
           </CardTitle>
         </CardHeader>
