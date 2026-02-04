@@ -57,7 +57,10 @@ export default function Home() {
               student_id: students[0].id,
               status: 'agendada'
             });
-            setUpcomingLessons((lessons || []).filter(l => !l.trial && l.date >= today).slice(0, 3));
+            setUpcomingLessons((lessons || []).filter(l => !l.trial && l.date >= today).sort((a, b) => {
+              if (a.date !== b.date) return a.date.localeCompare(b.date);
+              return a.time.localeCompare(b.time);
+            }));
           }
         }
       }
@@ -273,7 +276,7 @@ export default function Home() {
         </CardHeader>
         <CardContent>
           {student.payment_status === 'pago' && upcomingLessons.length > 0 ? (
-            <div className="space-y-4">
+            <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
               {upcomingLessons.map((lesson) => {
                 const typeNames = {
                   carro: 'CARRO',
