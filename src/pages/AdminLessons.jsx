@@ -26,6 +26,8 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import SuggestiveCalendar from "@/components/schedule/SuggestiveCalendar";
+import TimeGrid from "@/components/schedule/TimeGrid";
 
 export default function AdminLessons() {
   const [lessons, setLessons] = useState([]);
@@ -66,6 +68,9 @@ export default function AdminLessons() {
   const [endLoc, setEndLoc] = useState(null);
   const [absenceLoc, setAbsenceLoc] = useState(null);
   const [openRescheduleAfter, setOpenRescheduleAfter] = useState(false);
+  const [calendarMode, setCalendarMode] = useState(false);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [instructorLessonsForCalendar, setInstructorLessonsForCalendar] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -130,10 +135,40 @@ export default function AdminLessons() {
     return null;
   };
 
+  const generateTimeSlots = () => {
+    const cfg = settings?.lesson_time_config || {};
+    const startStr = cfg.day_start || '06:40';
+    const endStr = cfg.day_end || '20:00';
+    const slot = parseInt(cfg.slot_minutes || 60, 10);
+    const [sh, sm] = startStr.split(':').map(Number);
+    const [eh, em] = endStr.split(':').map(Number);
+    let current = sh * 60 + sm;
+    const end = eh * 60 + em;
+    const slots = [];
+    while (current < end) {
+      const h = String(Math.floor(current / 60)).padStart(2, '0');
+      const m = String(current % 60).padStart(2, '0');
+      slots.push(`${h}:${m}`);
+      current += slot;
+    }
+    return slots;
+  };
+
   const handleOpenEdit = (lesson) => {
     setEditingLesson(lesson);
     setEditForm({ date: lesson.date, time: lesson.time, instructor_id: lesson.instructor_id });
     setEditError('');
+    setCalendarMode(true);
+    // Carregar aulas do instrutor selecionado
+    const instructor = instructors.find(i => i.id === lesson.instructor_id);
+    if (instructor) {
+      loadInstructorLessonsForCalendar(lesson.instructor_id);
+    }
+  };
+
+  const loadInstructorLessonsForCalendar = async (instructorId) => {
+    const data = await base44.entities.Lesson.filter({ instructor_id: instructorId });
+    setInstructorLessonsForCalendar((data || []).filter(l => !l.trial));
   };
 
   const handleUpdateLesson = async () => {
@@ -149,6 +184,7 @@ export default function AdminLessons() {
     };
     await base44.entities.Lesson.update(editingLesson.id, payload);
     setEditingLesson(null);
+    setCalendarMode(false);
     loadData();
   };
 
@@ -579,58 +615,106 @@ export default function AdminLessons() {
       )}
 
       {/* Dialog de Edição de Aula */}
-      <Dialog open={!!editingLesson} onOpenChange={() => setEditingLesson(null)}>
-        <DialogContent className="bg-[#1a2332] border-[#374151] text-white">
+      <Dialog open={!!editingLesson} onOpenChange={() => { setEditingLesson(null); setCalendarMode(false); }}>
+        <DialogContent className="bg-[#1a2332] border-[#374151] text-white max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-white">Editar Aula</DialogTitle>
           </DialogHeader>
 
           {editingLesson && (
             <div className="space-y-4">
-              <div className="grid md:grid-cols-3 gap-4">
-                <div>
-                  <Label className="text-white">Data</Label>
-                  <Input
-                    type="date"
-                    className="bg-[#111827] border-[#374151] mt-1"
-                    disabled={isNextDay(editingLesson?.date)}
-                    value={editForm.date}
-                    onChange={(e) => setEditForm({ ...editForm, date: e.target.value })}
-                  />
+              {!calendarMode ? (
+                <div className="grid md:grid-cols-3 gap-4">
+                  <div>
+                    <Label className="text-white">Data</Label>
+                    <Input
+                      type="date"
+                      className="bg-[#111827] border-[#374151] mt-1"
+                      disabled={isNextDay(editingLesson?.date)}
+                      value={editForm.date}
+                      onChange={(e) => setEditForm({ ...editForm, date: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-white">Horário</Label>
+                    <Input
+                      type="time"
+                      className="bg-[#111827] border-[#374151] mt-1"
+                      disabled={isNextDay(editingLesson?.date)}
+                      value={editForm.time}
+                      onChange={(e) => setEditForm({ ...editForm, time: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-white">Instrutor</Label>
+                    <Select
+                      value={editForm.instructor_id}
+                      onValueChange={(value) => {
+                        setEditForm({ ...editForm, instructor_id: value });
+                        loadInstructorLessonsForCalendar(value);
+                      }}
+                      disabled={isNextDay(editingLesson?.date)}
+                    >
+                      <SelectTrigger className="bg-[#111827] border-[#374151] mt-1 text-white">
+                        <SelectValue placeholder="Selecione..." />
+                      </SelectTrigger>
+                      <SelectContent className="bg-[#1a2332] border-[#374151]">
+                        {instructors.map((i) => (
+                          <SelectItem key={i.id} value={i.id}>{i.full_name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
-                <div>
-                  <Label className="text-white">Horário</Label>
-                  <Input
-                    type="time"
-                    className="bg-[#111827] border-[#374151] mt-1"
-                    disabled={isNextDay(editingLesson?.date)}
-                    value={editForm.time}
-                    onChange={(e) => setEditForm({ ...editForm, time: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <Label className="text-white">Instrutor</Label>
-                  <Select
-                    value={editForm.instructor_id}
-                    onValueChange={(value) => setEditForm({ ...editForm, instructor_id: value })}
-                    disabled={isNextDay(editingLesson?.date)}
-                  >
-                    <SelectTrigger className="bg-[#111827] border-[#374151] mt-1">
-                      <SelectValue placeholder="Selecione..." />
-                    </SelectTrigger>
-                    <SelectContent className="bg-[#1a2332] border-[#374151]">
-                      {instructors.map((i) => (
-                        <SelectItem key={i.id} value={i.id}>{i.full_name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
+              ) : (
+                <>
+                  <div>
+                    <label className="text-xs sm:text-sm text-[#9ca3af] block mb-2">Escolha o dia</label>
+                    <SuggestiveCalendar
+                      monthDate={currentMonth}
+                      onPrev={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))}
+                      onNext={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))}
+                      selectedDate={editForm.date}
+                      onSelectDate={(date) => setEditForm({ ...editForm, date })}
+                      isFullyBooked={(dateStr) => {
+                        const count = instructorLessonsForCalendar.filter(l => l.status === 'agendada' && l.date === dateStr && l.id !== editingLesson.id).length;
+                        return count >= generateTimeSlots().length;
+                      }}
+                    />
+                  </div>
+
+                  {editForm.date && (
+                    <div>
+                      <label className="text-xs sm:text-sm text-[#9ca3af] block mb-2">Escolha o horário</label>
+                      <TimeGrid
+                        timeSlots={generateTimeSlots()}
+                        bookedTimes={new Set(
+                          instructorLessonsForCalendar
+                            .filter(l => l.status === 'agendada' && l.date === editForm.date && l.id !== editingLesson.id)
+                            .map(l => l.time)
+                        )}
+                        selectedTime={editForm.time}
+                        onSelect={(time) => setEditForm({ ...editForm, time })}
+                      />
+                    </div>
+                  )}
+                </>
+              )}
 
               {editError && (
                 <div className="p-2 text-sm text-red-400 bg-red-500/10 border border-red-500/40 rounded">
                   {editError}
                 </div>
+              )}
+
+              {!isNextDay(editingLesson?.date) && (
+                <Button
+                  variant="ghost"
+                  className="text-[#3b82f6] hover:text-[#60a5fa] text-sm"
+                  onClick={() => setCalendarMode(!calendarMode)}
+                >
+                  {calendarMode ? '← Voltar para entrada manual' : 'Usar calendário →'}
+                </Button>
               )}
             </div>
           )}
