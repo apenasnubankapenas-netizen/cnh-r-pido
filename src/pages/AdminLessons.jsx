@@ -405,7 +405,7 @@ export default function AdminLessons() {
               <div>
                 <Label className="text-white">Instrutor</Label>
                 <Select value={filterInstructor} onValueChange={setFilterInstructor}>
-                  <SelectTrigger className="bg-[#111827] border-[#374151] mt-1">
+                  <SelectTrigger className="bg-[#111827] border-[#374151] mt-1 text-white">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-[#1a2332] border-[#374151]">
@@ -420,7 +420,7 @@ export default function AdminLessons() {
             <div>
               <Label className="text-white">Status</Label>
               <Select value={filterStatus} onValueChange={setFilterStatus}>
-                <SelectTrigger className="bg-[#111827] border-[#374151] mt-1">
+                <SelectTrigger className="bg-[#111827] border-[#374151] mt-1 text-white">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-[#1a2332] border-[#374151]">
