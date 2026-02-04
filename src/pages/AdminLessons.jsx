@@ -459,14 +459,14 @@ export default function AdminLessons() {
                     <div className="flex gap-1">
                       <Button 
                         size="sm" 
-                        className="bg-green-600 hover:bg-green-700"
+                        className="bg-green-600 hover:bg-green-700 text-white"
                         onClick={() => handleStatusChange(lesson, 'realizada')}
                       >
                         <CheckCircle size={14} />
                       </Button>
                       <Button 
                         size="sm" 
-                        className="bg-red-600 hover:bg-red-700"
+                        className="bg-red-600 hover:bg-red-700 text-white"
                         onClick={() => handleStatusChange(lesson, 'falta')}
                       >
                         <XCircle size={14} />
@@ -476,7 +476,7 @@ export default function AdminLessons() {
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="border-[#374151]"
+                    className="border-[#374151] text-white hover:text-white"
                     disabled={isNextDay(lesson.date)}
                     onClick={() => { if (isNextDay(lesson.date)) return; handleOpenEdit(lesson); }}
                   >
@@ -488,7 +488,7 @@ export default function AdminLessons() {
                     <Button
                       variant="destructive"
                       size="sm"
-                      className=""
+                      className="text-white"
                       onClick={async () => {
                         if (!confirm('Confirmar exclusão desta aula do dia seguinte?')) return;
                         await base44.entities.Lesson.delete(lesson.id);
@@ -503,7 +503,7 @@ export default function AdminLessons() {
                    <Button 
                      variant="outline" 
                      size="sm" 
-                     className="border-[#374151]"
+                     className="border-[#374151] text-white hover:text-white"
                      onClick={() => {
                       setSelectedLesson(lesson);
                       setEditData({
@@ -601,15 +601,15 @@ export default function AdminLessons() {
           )}
 
           <DialogFooter className="flex w-full justify-between">
-            <Button variant="destructive" onClick={handleDeleteLesson} disabled={!isSuperadmin}>
+            <Button variant="destructive" className="text-white" onClick={handleDeleteLesson} disabled={!isSuperadmin}>
               <Trash className="mr-2" size={18} />
               Excluir Aula
             </Button>
             <div className="flex gap-2">
-              <Button variant="outline" className="border-[#374151]" onClick={() => setEditingLesson(null)}>
+              <Button variant="outline" className="border-[#374151] text-white" onClick={() => setEditingLesson(null)}>
                 Cancelar
               </Button>
-              <Button className="bg-[#1e40af] hover:bg-[#3b82f6]" onClick={handleUpdateLesson} disabled={isNextDay(editingLesson?.date)}>
+              <Button className="bg-[#1e40af] hover:bg-[#3b82f6] text-white" onClick={handleUpdateLesson} disabled={isNextDay(editingLesson?.date)}>
                 <Save className="mr-2" size={18} />
                 Salvar Alterações
               </Button>
@@ -666,10 +666,10 @@ export default function AdminLessons() {
           )}
 
           <DialogFooter>
-            <Button variant="outline" className="border-[#374151]" onClick={() => setSelectedLesson(null)}>
+            <Button variant="outline" className="border-[#374151] text-white" onClick={() => setSelectedLesson(null)}>
               Cancelar
             </Button>
-            <Button className="bg-[#1e40af] hover:bg-[#3b82f6]" onClick={handleSaveComment}>
+            <Button className="bg-[#1e40af] hover:bg-[#3b82f6] text-white" onClick={handleSaveComment}>
               <Save className="mr-2" size={18} />
               Salvar Avaliação
             </Button>
@@ -721,8 +721,8 @@ export default function AdminLessons() {
               </div>
 
               <DialogFooter>
-                <Button variant="outline" className="border-[#374151]" onClick={()=>setProofOpen(false)}>Cancelar</Button>
-                <Button className="bg-green-600 hover:bg-green-700" onClick={submitProofRealizada} disabled={proofLoading || !startInstructorFile || !startStudentFile || !endInstructorFile || !endStudentFile || !startLoc || !endLoc}>
+                <Button variant="outline" className="border-[#374151] text-white" onClick={()=>setProofOpen(false)}>Cancelar</Button>
+                <Button className="bg-green-600 hover:bg-green-700 text-white" onClick={submitProofRealizada} disabled={proofLoading || !startInstructorFile || !startStudentFile || !endInstructorFile || !endStudentFile || !startLoc || !endLoc}>
                   <Camera className="mr-2" size={18}/> Registrar Aula
                 </Button>
               </DialogFooter>
@@ -749,8 +749,8 @@ export default function AdminLessons() {
               </div>
 
               <DialogFooter>
-                <Button variant="outline" className="border-[#374151]" onClick={()=>setProofOpen(false)}>Cancelar</Button>
-                <Button className="bg-red-600 hover:bg-red-700" onClick={submitProofFalta} disabled={proofLoading || !absenceInstructorFile || !absenceLocationFile || !absenceLoc}>
+                <Button variant="outline" className="border-[#374151] text-white" onClick={()=>setProofOpen(false)}>Cancelar</Button>
+                <Button className="bg-red-600 hover:bg-red-700 text-white" onClick={submitProofFalta} disabled={proofLoading || !absenceInstructorFile || !absenceLocationFile || !absenceLoc}>
                   <Camera className="mr-2" size={18}/> Registrar Falta
                 </Button>
               </DialogFooter>
@@ -791,8 +791,8 @@ export default function AdminLessons() {
             )}
           </div>
           <DialogFooter>
-            <Button variant="outline" className="border-[#374151]" onClick={() => setRescheduleOpen(false)}>Cancelar</Button>
-            <Button className="bg-[#1e40af] hover:bg-[#3b82f6]" onClick={async ()=>{
+            <Button variant="outline" className="border-[#374151] text-white" onClick={() => setRescheduleOpen(false)}>Cancelar</Button>
+            <Button className="bg-[#1e40af] hover:bg-[#3b82f6] text-white" onClick={async ()=>{
               if (!rescheduleLesson) { setRescheduleOpen(false); return; }
               try {
                 if (rescheduleAccident && rescheduleDate && rescheduleTime) {
