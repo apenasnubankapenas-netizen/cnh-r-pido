@@ -379,38 +379,66 @@ export default function MyLessons() {
         <CardContent>
           {upcomingLessons.length > 0 ? (
             <div className="space-y-3">
-              {upcomingLessons.map((lesson) => (
-                <div key={lesson.id} className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 sm:p-4 bg-[#111827] rounded-lg border border-[#374151]">
-                  <div className="flex items-center gap-3 flex-1">
-                    {lesson.type === 'carro' ? (
-                      <Car className="text-[#3b82f6] flex-shrink-0" size={24} />
-                    ) : (
-                      <Bike className="text-[#fbbf24] flex-shrink-0" size={24} />
+              {upcomingLessons.map((lesson) => {
+                const locationData = settings?.lesson_locations?.[lesson.type];
+                return (
+                  <div key={lesson.id} className="space-y-3 p-3 sm:p-4 bg-[#111827] rounded-lg border border-[#374151]">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                      <div className="flex items-center gap-3 flex-1">
+                        {lesson.type === 'carro' ? (
+                          <Car className="text-[#3b82f6] flex-shrink-0" size={24} />
+                        ) : (
+                          <Bike className="text-[#fbbf24] flex-shrink-0" size={24} />
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="font-bold text-sm sm:text-base truncate text-white">Aula de {lesson.type === 'carro' ? 'Carro' : 'Moto'}</p>
+                          <p className="text-xs sm:text-sm text-[#9ca3af] flex items-center gap-1">
+                            <User className="inline flex-shrink-0" size={12} />
+                            <span className="truncate">INSTRUTOR: {lesson.instructor_name}</span>
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4">
+                        <div className="text-left sm:text-right">
+                          <p className="font-bold text-base sm:text-lg text-white">{new Date(lesson.date).toLocaleDateString('pt-BR')}</p>
+                          <p className="text-[#fbbf24] text-sm sm:text-base font-semibold">{lesson.time} - {getPeriodOfDay(lesson.time)}</p>
+                        </div>
+                        <div className="flex flex-col sm:flex-row items-end sm:items-center gap-1 sm:gap-2">
+                          {getStatusBadge(lesson.status)}
+                          {lesson.trial && (
+                            <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/50 text-[10px] sm:text-xs whitespace-nowrap">
+                              🧪 Teste
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {locationData && (
+                      <div className="p-3 bg-[#0d1117] rounded-lg border border-[#374151]">
+                        <div className="flex items-center gap-2 mb-2">
+                          <MapPin className="text-[#fbbf24]" size={14} />
+                          <span className="font-semibold text-xs text-white">LOCAL DA AULA</span>
+                        </div>
+                        <p className="text-[#e6edf3] text-xs mb-2">{locationData.address || 'Endereço não definido'}</p>
+                        {typeof locationData.lat === 'number' && typeof locationData.lng === 'number' && (
+                          <div className="rounded-lg overflow-hidden border border-[#374151]">
+                            <iframe
+                              width="100%"
+                              height="150"
+                              frameBorder="0"
+                              style={{ border: 0 }}
+                              src={`https://www.google.com/maps?q=${locationData.lat},${locationData.lng}&output=embed&z=15`}
+                              allowFullScreen
+                              title={`Mapa ${lesson.type}`}
+                            />
+                          </div>
+                        )}
+                      </div>
                     )}
-                    <div className="flex-1 min-w-0">
-                      <p className="font-bold text-sm sm:text-base truncate text-white">Aula de {lesson.type === 'carro' ? 'Carro' : 'Moto'}</p>
-                      <p className="text-xs sm:text-sm text-[#9ca3af] flex items-center gap-1">
-                        <User className="inline flex-shrink-0" size={12} />
-                        <span className="truncate">INSTRUTOR: {lesson.instructor_name}</span>
-                      </p>
-                    </div>
                   </div>
-                  <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4">
-                    <div className="text-left sm:text-right">
-                      <p className="font-bold text-base sm:text-lg text-white">{new Date(lesson.date).toLocaleDateString('pt-BR')}</p>
-                      <p className="text-[#fbbf24] text-sm sm:text-base font-semibold">{lesson.time} - {getPeriodOfDay(lesson.time)}</p>
-                    </div>
-                    <div className="flex flex-col sm:flex-row items-end sm:items-center gap-1 sm:gap-2">
-                      {getStatusBadge(lesson.status)}
-                      {lesson.trial && (
-                        <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/50 text-[10px] sm:text-xs whitespace-nowrap">
-                          🧪 Teste
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <div className="text-center py-8 text-[#9ca3af]">
