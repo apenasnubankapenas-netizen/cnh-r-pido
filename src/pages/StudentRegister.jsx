@@ -23,7 +23,6 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import LessonScheduler from "../components/schedule/LessonScheduler";
-import ContractModal from "../components/contract/ContractModal";
 import StudentContractModal from "../components/contract/StudentContractModal";
 
 export default function StudentRegister() {
@@ -66,8 +65,7 @@ export default function StudentRegister() {
   const [lessonSchedules, setLessonSchedules] = useState([]);
   const [timeRemaining, setTimeRemaining] = useState(300);
   const [paymentMethod, setPaymentMethod] = useState('');
-  const [showContract, setShowContract] = useState(false);
-  const [contractAccepted, setContractAccepted] = useState(false);
+
 
   useEffect(() => {
     loadData();
@@ -532,7 +530,7 @@ export default function StudentRegister() {
              className="w-full bg-[#1e40af] hover:bg-[#3b82f6] mt-4"
              onClick={() => {
                setFormData({...formData, category: ''});
-               setShowContract(true);
+               setStep(2);
              }}
              disabled={
                !formData.full_name ||
@@ -1170,22 +1168,7 @@ export default function StudentRegister() {
         </Card>
       )}
 
-      {/* Contract Modal */}
-      {showContract && (
-        <ContractModal
-          student={formData}
-          settings={settings}
-          onAccept={() => {
-            setContractAccepted(true);
-            setShowContract(false);
-            setStep(2);
-          }}
-          onReject={() => {
-            setShowContract(false);
-          }}
-          isLoading={loading}
-        />
-      )}
+
     </div>
   );
 }
