@@ -36,7 +36,7 @@ export default function SuggestiveCalendar({
         >
           <ChevronLeft size={18} />
         </button>
-        <div className="text-sm font-semibold capitalize">{monthLabel}</div>
+        <div className="text-xl font-bold uppercase text-[#f0c41b]">{monthLabel}</div>
         <button
           className="p-2 rounded hover:bg-[#1f2937]"
           onClick={onNext}
