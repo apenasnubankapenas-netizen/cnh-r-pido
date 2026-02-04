@@ -34,16 +34,17 @@ Deno.serve(async (req) => {
     const settings = await base44.entities.AppSettings.list();
     const appSettings = settings.length > 0 ? settings[0] : {};
 
-    // Create PDF
-    const doc = new jsPDF();
-    doc.setLanguage('pt-BR');
+    // Create PDF with UTF-8 support
+    const doc = new jsPDF({
+      compress: false
+    });
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     let yPosition = 15;
 
     const setFont = (size, weight = 'normal') => {
       doc.setFontSize(size);
-      doc.setFont('Helvetica', weight);
+      doc.setFont('courier', weight);
     };
 
     const addText = (text, x = 15, size = 10, weight = 'normal') => {
