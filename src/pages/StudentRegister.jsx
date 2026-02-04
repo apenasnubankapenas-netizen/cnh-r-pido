@@ -511,7 +511,7 @@ export default function StudentRegister() {
             </div>
 
             <div>
-              <Label>Código do Consultor (opcional)</Label>
+              <Label>CÓDIGO ALUNO / INDICAÇÃO!</Label>
               <Input 
                 className="bg-[#111827] border-[#374151] mt-1"
                 value={formData.seller_code}
