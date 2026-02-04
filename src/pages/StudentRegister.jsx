@@ -24,6 +24,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import LessonScheduler from "../components/schedule/LessonScheduler";
 import ContractModal from "../components/contract/ContractModal";
+import StudentContractModal from "../components/contract/StudentContractModal";
 
 export default function StudentRegister() {
   const navigate = useNavigate();
@@ -67,6 +68,7 @@ export default function StudentRegister() {
   const [paymentMethod, setPaymentMethod] = useState('');
   const [showContract, setShowContract] = useState(false);
   const [contractAccepted, setContractAccepted] = useState(false);
+  const [showPostPaymentContract, setShowPostPaymentContract] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -295,8 +297,8 @@ export default function StudentRegister() {
           });
         }
 
-        alert('✅ Cadastro concluído com sucesso! Pagamento PIX aprovado automaticamente.');
-        navigate(createPageUrl('Home'));
+        // Mostrar contrato pós-pagamento
+        setShowPostPaymentContract(true);
         
       } else {
         // Cartão: Criar aluno e aulas, depois redirecionar para Stripe
@@ -1181,6 +1183,24 @@ export default function StudentRegister() {
           }}
           onReject={() => {
             setShowContract(false);
+          }}
+          isLoading={loading}
+        />
+      )}
+
+      {/* Post-Payment Contract Modal */}
+      {showPostPaymentContract && (
+        <StudentContractModal
+          student={formData}
+          settings={settings}
+          onAccept={() => {
+            setShowPostPaymentContract(false);
+            alert('✅ Cadastro concluído com sucesso! Pagamento PIX aprovado automaticamente.');
+            navigate(createPageUrl('Home'));
+          }}
+          onReject={() => {
+            setShowPostPaymentContract(false);
+            navigate(createPageUrl('Home'));
           }}
           isLoading={loading}
         />
