@@ -281,36 +281,36 @@ export default function AdminInstructors() {
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <h3 className="font-bold">{instructor.full_name}</h3>
+                      <h3 className="font-bold text-white">{instructor.full_name}</h3>
                       <Badge className={instructor.active ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}>
                         {instructor.active ? 'Ativo' : 'Inativo'}
                       </Badge>
                     </div>
-                    <p className="text-sm text-[#9ca3af]">{instructor.phone}</p>
-                    
+                    <p className="text-sm text-white">{instructor.phone}</p>
+
                     <div className="flex gap-2 mt-2 flex-wrap">
                       {instructor.teaches_car && (
-                        <Badge variant="outline" className="border-[#374151] text-xs">
+                        <Badge variant="outline" className="border-[#374151] text-xs text-white">
                           <Car size={12} className="text-[#3b82f6] mr-1" /> Carro
                         </Badge>
                       )}
                       {instructor.teaches_moto && (
-                        <Badge variant="outline" className="border-[#374151] text-xs">
+                        <Badge variant="outline" className="border-[#374151] text-xs text-white">
                           <Bike size={12} className="text-[#fbbf24] mr-1" /> Moto
                         </Badge>
                       )}
                       {instructor.teaches_bus && (
-                        <Badge variant="outline" className="border-[#374151] text-xs">
+                        <Badge variant="outline" className="border-[#374151] text-xs text-white">
                           <Bus size={12} className="text-green-400 mr-1" /> Ônibus
                         </Badge>
                       )}
                       {instructor.teaches_truck && (
-                        <Badge variant="outline" className="border-[#374151] text-xs">
+                        <Badge variant="outline" className="border-[#374151] text-xs text-white">
                           <Truck size={12} className="text-orange-400 mr-1" /> Caminhão
                         </Badge>
                       )}
                       {instructor.teaches_trailer && (
-                        <Badge variant="outline" className="border-[#374151] text-xs">
+                        <Badge variant="outline" className="border-[#374151] text-xs text-white">
                           <Truck size={12} className="text-purple-400 mr-1" /> Carreta
                         </Badge>
                       )}
@@ -318,11 +318,11 @@ export default function AdminInstructors() {
 
                     {/* Ganhos - visível apenas para admin */}
                     <div className="mt-3 p-2 bg-[#111827] rounded border border-[#374151]">
-                      <div className="flex items-center gap-1 text-xs text-[#9ca3af] mb-1">
+                      <div className="flex items-center gap-1 text-xs text-[#fbbf24] mb-1">
                         <DollarSign size={12} />
                         <span>Ganhos do Instrutor</span>
                       </div>
-                      <div className="flex gap-4 text-sm">
+                      <div className="flex gap-4 text-sm text-white">
                         <span>🚗 {earnings.carLessons} aulas = R$ {earnings.carEarnings.toFixed(2)}</span>
                         <span>🏍️ {earnings.motoLessons} aulas = R$ {earnings.motoEarnings.toFixed(2)}</span>
                       </div>
