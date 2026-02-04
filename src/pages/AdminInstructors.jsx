@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { 
   Users, 
@@ -329,11 +329,20 @@ export default function AdminInstructors() {
                       <p className="font-bold text-[#fbbf24] mt-1">Total: R$ {earnings.total.toFixed(2)}</p>
                     </div>
 
-                    <div className="flex gap-2 mt-3">
+                    <div className="flex gap-2 mt-3 flex-wrap">
+                      <Link to={`${createPageUrl('InstructorProfile')}/${instructor.id}`}>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="border-[#fbbf24] text-[#fbbf24]"
+                        >
+                          Perfil
+                        </Button>
+                      </Link>
                       <Button 
                         variant="outline" 
                         size="sm" 
-                        className="border-[#374151]"
+                        className="border-[#374151] text-white"
                         onClick={() => handleEdit(instructor)}
                       >
                         <Edit size={14} className="mr-1" /> Editar
@@ -341,7 +350,7 @@ export default function AdminInstructors() {
                       <Button 
                         variant="outline" 
                         size="sm" 
-                        className="border-[#374151]"
+                        className="border-[#374151] text-white"
                         onClick={() => openPasswordDialog(instructor)}
                       >
                         <Lock size={14} className="mr-1" /> Senha

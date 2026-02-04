@@ -1,43 +1,73 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
-import { Upload, Trash2, Edit, Image as ImageIcon, ArrowLeft } from 'lucide-react';
+import { 
+  ArrowLeft, 
+  Heart, 
+  MessageCircle,
+  Upload,
+  Send,
+  X,
+  Edit
+} from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export default function InstructorProfile() {
+  const { instructorId } = useParams();
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
   const [instructor, setInstructor] = useState(null);
   const [posts, setPosts] = useState([]);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [userType, setUserType] = useState(null);
   const [showPostDialog, setShowPostDialog] = useState(false);
-  const [newPost, setNewPost] = useState({ image_url: '', caption: '' });
-  const [uploadingImage, setUploadingImage] = useState(false);
-  const [showContractDialog, setShowContractDialog] = useState(false);
-
-  const navigate = useNavigate();
+  const [postData, setPostData] = useState({ image_url: '', caption: '' });
+  const [postFile, setPostFile] = useState(null);
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [commentText, setCommentText] = useState('');
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [instructorId]);
 
   const loadData = async () => {
     try {
-      const user = await base44.auth.me();
-      const instructors = await base44.entities.Instructor.filter({ user_email: user.email });
-      
-      if (instructors.length > 0) {
-        setInstructor(instructors[0]);
-        
-        const postsData = await base44.entities.InstructorPost.filter({ instructor_id: instructors[0].id });
-        setPosts(postsData);
-        
-        const commentsData = await base44.entities.InstructorComment.filter({ instructor_id: instructors[0].id });
-        setComments(commentsData);
+      const currentUser = await base44.auth.me();
+      setUser(currentUser);
+
+      // Determinar tipo de usuário
+      if (currentUser?.role === 'user') {
+        const students = await base44.entities.Student.filter({ user_email: currentUser.email });
+        if (students.length > 0) setUserType('student');
+      } else if (currentUser?.role === 'admin') {
+        if (currentUser.email === 'tcnhpara@gmail.com') {
+          setUserType('superadmin');
+        } else {
+          const sellers = await base44.entities.Seller.filter({ email: currentUser.email });
+          if (sellers.length > 0 && sellers[0].active) {
+            setUserType('seller');
+          } else {
+            setUserType('admin');
+          }
+        }
       }
+
+      const [instructorData, postsData, commentsData] = await Promise.all([
+        base44.entities.Instructor.filter({ id: instructorId }),
+        base44.entities.InstructorPost.filter({ instructor_id: instructorId }),
+        base44.entities.InstructorComment.filter({ instructor_id: instructorId })
+      ]);
+
+      if (instructorData.length > 0) {
+        setInstructor(instructorData[0]);
+      }
+      setPosts(postsData || []);
+      setComments(commentsData || []);
     } catch (e) {
       console.log(e);
     } finally {
@@ -45,275 +75,290 @@ export default function InstructorProfile() {
     }
   };
 
-  const handleImageUpload = async (e) => {
+  const handleFileUpload = async (e) => {
     const file = e.target.files[0];
-    if (!file) return;
-
-    setUploadingImage(true);
-    try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      setNewPost(prev => ({ ...prev, image_url: file_url }));
-    } catch (error) {
-      alert('Erro ao fazer upload da imagem');
-    } finally {
-      setUploadingImage(false);
+    if (file) {
+      try {
+        const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        setPostData({ ...postData, image_url: file_url });
+        setPostFile(file);
+      } catch (error) {
+        console.error('Upload error:', error);
+      }
     }
   };
 
   const handleCreatePost = async () => {
-    if (!newPost.image_url) return;
-
+    if (!postData.image_url && !postData.caption) return;
     try {
       await base44.entities.InstructorPost.create({
         instructor_id: instructor.id,
         instructor_name: instructor.full_name,
-        ...newPost
+        image_url: postData.image_url || null,
+        caption: postData.caption || ''
       });
-      
-      setNewPost({ image_url: '', caption: '' });
+      setPostData({ image_url: '', caption: '' });
+      setPostFile(null);
       setShowPostDialog(false);
       loadData();
-    } catch (error) {
-      alert('Erro ao criar post');
+    } catch (e) {
+      console.log(e);
     }
   };
 
-  const handleDeletePost = async (postId) => {
-    if (!confirm('Deseja excluir esta foto?')) return;
-    
+  const handleAddComment = async (postId) => {
+    if (!commentText.trim()) return;
     try {
-      await base44.entities.InstructorPost.delete(postId);
+      await base44.entities.InstructorComment.create({
+        instructor_id: instructor.id,
+        student_id: user?.id || 'anonimo',
+        student_name: user?.full_name || 'Anônimo',
+        comment: commentText
+      });
+      setCommentText('');
+      setSelectedPost(null);
       loadData();
-    } catch (error) {
-      alert('Erro ao excluir post');
+    } catch (e) {
+      console.log(e);
     }
   };
 
-  const handleDeleteComment = async (commentId) => {
-    if (!confirm('Deseja excluir este comentário?')) return;
-    
-    try {
-      await base44.entities.InstructorComment.delete(commentId);
-      loadData();
-    } catch (error) {
-      alert('Erro ao excluir comentário');
-    }
-  };
+  const canCreatePost = userType === 'superadmin' && instructor?.user_email === user?.email;
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0a0e1a] flex items-center justify-center">
-        <p className="text-white">Carregando...</p>
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-pulse text-[#fbbf24]">Carregando...</div>
       </div>
     );
   }
 
   if (!instructor) {
     return (
-      <div className="min-h-screen bg-[#0a0e1a] flex items-center justify-center">
-        <Card className="bg-[#1a2332] border-[#374151]">
-          <CardContent className="p-6">
-            <p className="text-white">Você não está cadastrado como instrutor</p>
-          </CardContent>
-        </Card>
+      <div className="flex items-center justify-center h-64">
+        <p className="text-white">Instrutor não encontrado</p>
       </div>
     );
   }
 
+  const postsByInstructor = posts.filter(p => p.instructor_id === instructor.id);
+  const commentsByInstructor = comments.filter(c => c.instructor_id === instructor.id);
 
   return (
-    <div className="min-h-screen bg-[#0a0e1a] p-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Back Button */}
+    <div className="max-w-2xl mx-auto">
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-6">
         <Button 
           variant="outline" 
           size="sm" 
-          className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-white mb-4"
+          className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black"
           onClick={() => navigate(-1)}
         >
-          <ArrowLeft size={18} className="mr-2" />
-          Voltar
+          <ArrowLeft size={18} />
         </Button>
+        <h1 className="text-2xl font-bold text-white">{instructor.full_name}</h1>
+      </div>
 
-        {/* Cover Photo */}
-        {instructor.cover_photo && (
-          <div className="h-64 rounded-t-lg overflow-hidden">
-            <img src={instructor.cover_photo} alt="Capa" className="w-full h-full object-cover" />
+      {/* Capa */}
+      <div className="h-48 bg-gradient-to-r from-[#0969da] to-[#f0c41b] rounded-lg mb-4 relative overflow-hidden">
+        {instructor.cover_photo ? (
+          <img src={instructor.cover_photo} alt="capa" className="w-full h-full object-cover" />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-white text-opacity-30">
+            Foto de capa
           </div>
         )}
+      </div>
 
-        {/* Profile Info */}
-        <Card className="bg-[#1a2332] border-[#374151] -mt-16 relative z-10">
-          <CardContent className="p-6">
-            <div className="flex items-start gap-4">
-              {instructor.photo && (
-                <img 
-                  src={instructor.photo} 
-                  alt={instructor.full_name}
-                  className="w-32 h-32 rounded-full border-4 border-[#1a2332] object-cover"
-                />
+      {/* Perfil e Info */}
+      <Card className="bg-[#1a2332] border-[#374151] mb-6">
+        <CardContent className="p-6">
+          <div className="flex gap-6">
+            {/* Foto de Perfil */}
+            <div className="w-32 h-32 rounded-full bg-[#111827] flex items-center justify-center overflow-hidden -mt-20 border-4 border-[#1a2332]">
+              {instructor.photo ? (
+                <img src={instructor.photo} alt={instructor.full_name} className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-4xl font-bold text-[#fbbf24]">
+                  {instructor.full_name?.charAt(0)}
+                </span>
               )}
-              <div className="flex-1">
-                <h1 className="text-2xl font-bold text-white">{instructor.full_name}</h1>
-                <p className="text-[#9ca3af] mt-1">{instructor.bio}</p>
-                <div className="flex gap-2 mt-3">
-                  {instructor.teaches_car && <span className="px-3 py-1 bg-[#0969da] rounded-full text-xs">Carro</span>}
-                  {instructor.teaches_moto && <span className="px-3 py-1 bg-[#f0c41b] text-white rounded-full text-xs">Moto</span>}
-                  {instructor.teaches_bus && <span className="px-3 py-1 bg-[#0969da] rounded-full text-xs">Ônibus</span>}
-                  {instructor.teaches_truck && <span className="px-3 py-1 bg-[#0969da] rounded-full text-xs">Caminhão</span>}
-                  {instructor.teaches_trailer && <span className="px-3 py-1 bg-[#0969da] rounded-full text-xs">Carreta</span>}
-                </div>
-              </div>
             </div>
-          </CardContent>
-        </Card>
 
-        {/* Contrato Assinado */}
-        {instructor.contract_accepted && (
-          <Card className="bg-[#1a2332] border-[#374151] mt-6">
-            <CardContent className="p-6 flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-bold text-white">Contrato de Parceria</h2>
-                <p className="text-sm text-[#9ca3af]">Assinado em {instructor.contract_accepted_at ? new Date(instructor.contract_accepted_at).toLocaleString('pt-BR') : '-'}</p>
+            {/* Informações */}
+            <div className="flex-1">
+              <h2 className="text-2xl font-bold text-white mb-2">{instructor.full_name}</h2>
+              
+              <div className="space-y-2 text-sm text-white mb-4">
+                {instructor.phone && (
+                  <p>📱 {instructor.phone}</p>
+                )}
+                {instructor.teaches_car && <p>🚗 Aulas de Carro</p>}
+                {instructor.teaches_moto && <p>🏍️ Aulas de Moto</p>}
+                {instructor.teaches_bus && <p>🚌 Aulas de Ônibus</p>}
               </div>
-              <Button className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]" onClick={() => setShowContractDialog(true)}>
-                Ver contrato assinado
-              </Button>
+
+              {instructor.bio && (
+                <p className="text-[#e6edf3] text-sm mb-4">{instructor.bio}</p>
+              )}
+
+              {canCreatePost && (
+                <Button 
+                  className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
+                  onClick={() => setShowPostDialog(true)}
+                  size="sm"
+                >
+                  <Upload className="mr-2" size={16} />
+                  Novo Post
+                </Button>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Posts */}
+      <div className="space-y-4">
+        {postsByInstructor.length > 0 ? (
+          postsByInstructor.map((post) => (
+            <Card key={post.id} className="bg-[#1a2332] border-[#374151]">
+              <CardContent className="p-4">
+                {/* Post Image */}
+                {post.image_url && (
+                  <div className="mb-4 rounded-lg overflow-hidden max-h-96">
+                    <img src={post.image_url} alt="post" className="w-full object-cover" />
+                  </div>
+                )}
+
+                {/* Caption */}
+                {post.caption && (
+                  <p className="text-white mb-3">{post.caption}</p>
+                )}
+
+                {/* Likes and Comments Button */}
+                <div className="flex gap-3 text-sm text-[#9ca3af] mb-3 border-b border-[#374151] pb-3">
+                  <button className="flex items-center gap-1 hover:text-[#fbbf24]">
+                    <Heart size={16} />
+                    {post.likes_count || 0}
+                  </button>
+                  <button 
+                    onClick={() => setSelectedPost(post.id)}
+                    className="flex items-center gap-1 hover:text-[#fbbf24]"
+                  >
+                    <MessageCircle size={16} />
+                    {commentsByInstructor.filter(c => c.comment && c.comment.includes(post.id)).length}
+                  </button>
+                </div>
+
+                {/* Comments */}
+                <div className="space-y-2 mb-3">
+                  {commentsByInstructor
+                    .filter(c => !c.rating) // Mostrar apenas comentários de usuários, não reviews
+                    .slice(0, 3)
+                    .map((comment) => (
+                      <div key={comment.id} className="text-sm">
+                        <span className="font-semibold text-white">{comment.student_name}</span>
+                        <p className="text-[#9ca3af]">{comment.comment}</p>
+                      </div>
+                    ))}
+                </div>
+
+                {/* Comment Input */}
+                {userType === 'student' && (
+                  <div className="flex gap-2">
+                    <Input 
+                      placeholder="Adicionar comentário..."
+                      className="bg-[#111827] border-[#374151] text-white text-sm"
+                      value={selectedPost === post.id ? commentText : ''}
+                      onChange={(e) => {
+                        setSelectedPost(post.id);
+                        setCommentText(e.target.value);
+                      }}
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                          handleAddComment(post.id);
+                        }
+                      }}
+                    />
+                    <Button 
+                      size="sm"
+                      className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
+                      onClick={() => handleAddComment(post.id)}
+                      disabled={!commentText.trim()}
+                    >
+                      <Send size={14} />
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          <Card className="bg-[#1a2332] border-[#374151]">
+            <CardContent className="p-8 text-center">
+              <p className="text-[#9ca3af]">Nenhum post ainda</p>
             </CardContent>
           </Card>
         )}
-
-        {/* Posts Section */}
-        <div className="mt-6">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold text-white">Minhas Fotos</h2>
-            <Button
-              onClick={() => setShowPostDialog(true)}
-              className="bg-[#f0c41b] text-white hover:bg-[#d4aa00]"
-            >
-              <ImageIcon className="mr-2" size={18} />
-              Nova Foto
-            </Button>
-          </div>
-
-          <div className="grid grid-cols-3 gap-2">
-            {posts.map((post) => (
-              <div key={post.id} className="relative group aspect-square">
-                <img 
-                  src={post.image_url} 
-                  alt={post.caption}
-                  className="w-full h-full object-cover rounded-lg"
-                />
-                <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => handleDeletePost(post.id)}
-                  >
-                    <Trash2 size={16} />
-                  </Button>
-                </div>
-                {post.caption && (
-                  <p className="absolute bottom-2 left-2 right-2 text-xs text-white bg-black/50 p-1 rounded">
-                    {post.caption}
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Comments Section */}
-        <div className="mt-8">
-          <h2 className="text-xl font-bold text-white mb-4">Comentários ({comments.length})</h2>
-          <div className="space-y-3">
-            {comments.map((comment) => (
-              <Card key={comment.id} className="bg-[#1a2332] border-[#374151]">
-                <CardContent className="p-4">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="font-bold text-white">{comment.student_name}</p>
-                      {comment.rating > 0 && (
-                        <div className="flex gap-1 my-1">
-                          {[...Array(5)].map((_, i) => (
-                            <span key={i} className={i < comment.rating ? 'text-[#f0c41b]' : 'text-gray-600'}>
-                              ★
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                      <p className="text-[#9ca3af] mt-1">{comment.comment}</p>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleDeleteComment(comment.id)}
-                    >
-                      <Trash2 size={16} className="text-red-500" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
       </div>
 
-      {/* Dialog: Contrato Assinado */}
-      <Dialog open={showContractDialog} onOpenChange={setShowContractDialog}>
-        <DialogContent className="bg-[#1a2332] border-[#374151] max-w-3xl text-white">
-          <DialogHeader>
-            <DialogTitle>Contrato assinado</DialogTitle>
-          </DialogHeader>
-          <div className="max-h-[70vh] overflow-auto whitespace-pre-wrap text-sm leading-relaxed">
-            {instructor?.contract_text || 'Contrato não disponível.'}
-          </div>
-        </DialogContent>
-      </Dialog>
+      {/* Dialog de Novo Post */}
+      {showPostDialog && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <Card className="bg-[#1a2332] border-[#374151] w-full max-w-lg">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <h2 className="text-xl font-bold text-white">Novo Post</h2>
+              <button onClick={() => setShowPostDialog(false)} className="text-[#9ca3af] hover:text-white">
+                <X size={20} />
+              </button>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Upload Image */}
+              <div>
+                <label className="block text-sm font-medium text-white mb-2">Foto</label>
+                <label className="w-full h-40 rounded-lg border-2 border-dashed border-[#374151] flex items-center justify-center cursor-pointer hover:border-[#fbbf24] transition-colors bg-[#111827]">
+                  {postData.image_url ? (
+                    <img src={postData.image_url} alt="preview" className="w-full h-full object-cover rounded" />
+                  ) : (
+                    <Upload className="text-[#9ca3af]" size={32} />
+                  )}
+                  <input type="file" className="hidden" accept="image/*" onChange={handleFileUpload} />
+                </label>
+              </div>
 
-      {/* New Post Dialog */}
-      <Dialog open={showPostDialog} onOpenChange={setShowPostDialog}>
-        <DialogContent className="bg-[#1a2332] border-[#374151]">
-          <DialogHeader>
-            <DialogTitle className="text-white">Nova Foto</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden"
-                id="post-image-upload"
-              />
-              <label htmlFor="post-image-upload">
-                <Button type="button" variant="outline" className="w-full cursor-pointer" asChild>
-                  <span>
-                    <Upload className="mr-2" size={18} />
-                    {uploadingImage ? 'Enviando...' : 'Escolher Imagem'}
-                  </span>
+              {/* Caption */}
+              <div>
+                <label className="block text-sm font-medium text-white mb-2">Descrição (opcional)</label>
+                <Textarea 
+                  placeholder="O que você está compartilhando?"
+                  className="bg-[#111827] border-[#374151]"
+                  value={postData.caption}
+                  onChange={(e) => setPostData({ ...postData, caption: e.target.value })}
+                  rows={4}
+                />
+              </div>
+
+              {/* Buttons */}
+              <div className="flex gap-2 justify-end">
+                <Button 
+                  variant="outline" 
+                  className="border-[#374151] text-white"
+                  onClick={() => setShowPostDialog(false)}
+                >
+                  Cancelar
                 </Button>
-              </label>
-              {newPost.image_url && (
-                <img src={newPost.image_url} alt="Preview" className="mt-3 w-full aspect-square object-cover rounded-lg" />
-              )}
-            </div>
-            <Textarea
-              value={newPost.caption}
-              onChange={(e) => setNewPost({...newPost, caption: e.target.value})}
-              placeholder="Escreva uma legenda..."
-              className="bg-[#0d1117] border-[#374151] text-white"
-            />
-            <Button
-              onClick={handleCreatePost}
-              className="w-full bg-[#f0c41b] text-white hover:bg-[#d4aa00]"
-              disabled={!newPost.image_url}
-            >
-              Publicar
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+                <Button 
+                  className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
+                  onClick={handleCreatePost}
+                  disabled={!postData.image_url && !postData.caption}
+                >
+                  Publicar
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }
