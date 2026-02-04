@@ -268,27 +268,70 @@ export default function Home() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
             <Clock className="text-[#fbbf24]" />
-            Próximas Aulas
+            Minhas Aulas Agendadas
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {upcomingLessons.length > 0 ? (
-            <div className="space-y-3">
-              {upcomingLessons.map((lesson) => (
-                <div key={lesson.id} className="flex items-center justify-between p-3 bg-[#111827] rounded-lg border border-[#374151]">
-                  <div className="flex items-center gap-3">
-                    {lesson.type === 'carro' ? <Car className="text-[#3b82f6]" /> : <Bike className="text-[#fbbf24]" />}
-                    <div>
-                      <p className="font-medium">{lesson.type === 'carro' ? 'Aula de Carro' : 'Aula de Moto'}</p>
-                      <p className="text-sm text-[#9ca3af]">{lesson.instructor_name}</p>
+          {student.payment_status === 'pago' && upcomingLessons.length > 0 ? (
+            <div className="space-y-4">
+              {upcomingLessons.map((lesson) => {
+                const typeNames = {
+                  carro: 'CARRO',
+                  moto: 'MOTO',
+                  onibus: 'ÔNIBUS',
+                  caminhao: 'CAMINHÃO',
+                  carreta: 'CARRETA'
+                };
+                const loc = settings?.lesson_locations?.[lesson.type];
+                
+                return (
+                  <div key={lesson.id} className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
+                    {/* Cabeçalho da aula */}
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        {lesson.type === 'carro' && <Car className="text-[#3b82f6]" size={24} />}
+                        {lesson.type === 'moto' && <Bike className="text-[#fbbf24]" size={24} />}
+                        {lesson.type === 'onibus' && <Bike className="text-green-400" size={24} />}
+                        {lesson.type === 'caminhao' && <Bike className="text-orange-400" size={24} />}
+                        {lesson.type === 'carreta' && <Bike className="text-purple-400" size={24} />}
+                        <div>
+                          <p className="font-bold text-white uppercase">{typeNames[lesson.type] || lesson.type}</p>
+                          <p className="text-sm text-[#9ca3af]">{lesson.instructor_name}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-medium text-white">{new Date(lesson.date).toLocaleDateString('pt-BR')}</p>
+                        <p className="text-sm text-[#fbbf24] font-bold">{lesson.time}</p>
+                      </div>
                     </div>
+
+                    {/* Local da aula */}
+                    {loc && (
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <MapPin className="text-[#fbbf24]" size={14} />
+                          <span className="font-semibold text-xs text-white uppercase">ENDEREÇO AULA {typeNames[lesson.type]}</span>
+                        </div>
+                        <p className="text-[#e6edf3] text-xs mb-2">{loc.address || 'Endereço não definido'}</p>
+                        
+                        {typeof loc.lat === 'number' && typeof loc.lng === 'number' && (
+                          <div className="rounded-lg overflow-hidden border border-[#374151]">
+                            <iframe
+                              width="100%"
+                              height="150"
+                              frameBorder="0"
+                              style={{ border: 0 }}
+                              src={`https://www.google.com/maps?q=${loc.lat},${loc.lng}&output=embed&z=15`}
+                              allowFullScreen
+                              title={`Mapa ${typeNames[lesson.type]}`}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
-                  <div className="text-right">
-                    <p className="font-medium">{new Date(lesson.date).toLocaleDateString('pt-BR')}</p>
-                    <p className="text-sm text-[#fbbf24]">{lesson.time}</p>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <div className="text-center py-6 text-[#9ca3af]">
