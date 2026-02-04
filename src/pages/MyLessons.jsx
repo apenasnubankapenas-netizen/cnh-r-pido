@@ -506,25 +506,26 @@ export default function MyLessons() {
               </Select>
             </div>
 
-            {settings?.lesson_locations?.[selectedType] && (
-              <div className="p-3 bg-[#111827] rounded border border-[#374151]">
-                <div className="flex items-center gap-2 text-sm">
+            {student.payment_status === 'pago' && settings?.lesson_locations?.[selectedType] && (
+              <div className="p-3 bg-[#111827] rounded-lg border border-[#374151]">
+                <div className="flex items-center gap-2 mb-2">
                   <MapPin className="text-[#fbbf24]" size={16} />
-                  <span>Local da aula de {selectedType}:</span>
+                  <span className="font-bold uppercase text-white">ENDEREÇO AULA {selectedType.toUpperCase()}</span>
                 </div>
-                <div className="mt-1 text-sm">
-                  <p>{settings.lesson_locations[selectedType]?.address || 'Endereço não definido'}</p>
-                  {typeof settings.lesson_locations[selectedType]?.lat === 'number' && typeof settings.lesson_locations[selectedType]?.lng === 'number' && (
-                    <a
-                      className="text-[#3b82f6] underline"
-                      href={`https://www.google.com/maps?q=${settings.lesson_locations[selectedType].lat},${settings.lesson_locations[selectedType].lng}`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Abrir no Maps
-                    </a>
-                  )}
-                </div>
+                <p className="text-[#e6edf3] text-sm mb-3">{settings.lesson_locations[selectedType]?.address || 'Endereço não definido'}</p>
+                {typeof settings.lesson_locations[selectedType]?.lat === 'number' && typeof settings.lesson_locations[selectedType]?.lng === 'number' && (
+                  <div className="rounded-lg overflow-hidden border border-[#374151]">
+                    <iframe
+                      width="100%"
+                      height="200"
+                      frameBorder="0"
+                      style={{ border: 0 }}
+                      src={`https://www.google.com/maps?q=${settings.lesson_locations[selectedType].lat},${settings.lesson_locations[selectedType].lng}&output=embed&z=15`}
+                      allowFullScreen
+                      title={`Mapa ${selectedType}`}
+                    />
+                  </div>
+                )}
               </div>
             )}
 
