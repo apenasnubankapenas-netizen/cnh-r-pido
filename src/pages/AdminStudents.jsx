@@ -213,8 +213,8 @@ export default function AdminStudents() {
                       </span>
                     </div>
                     <div>
-                      <p className="font-bold">{student.full_name}</p>
-                      <p className="text-sm text-[#9ca3af]">
+                      <p className="font-bold text-[#fbbf24]">{student.full_name}</p>
+                      <p className="text-sm text-white">
                         RENACH: {student.renach} | Categoria: {student.category}
                       </p>
                     </div>
@@ -250,17 +250,17 @@ export default function AdminStudents() {
             <>
               <DialogHeader>
                 <div className="flex items-center justify-between">
-                  <DialogTitle className="text-xl">{selectedStudent.full_name}</DialogTitle>
+                  <DialogTitle className="text-xl text-[#fbbf24]">{selectedStudent.full_name}</DialogTitle>
                   <div className="flex items-center gap-2">
                     {user?.email === 'tcnhpara@gmail.com' && (
-                      <Button variant="destructive" size="sm" onClick={() => setConfirmDeleteOpen(true)}>
-                        <Trash size={16} className="mr-1" /> Apagar
-                      </Button>
-                    )}
+                       <Button variant="destructive" size="sm" className="text-white" onClick={() => setConfirmDeleteOpen(true)}>
+                         <Trash size={16} className="mr-1" /> Apagar
+                       </Button>
+                     )}
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="border-[#374151]"
+                      className="border-[#374151] text-white"
                       onClick={editing ? handleSaveEdit : openEdit}
                     >
                       {editing ? <><Save size={16} className="mr-1" /> Salvar</> : <><Edit size={16} className="mr-1" /> Editar</>}
@@ -405,7 +405,7 @@ export default function AdminStudents() {
                     <div className="p-4 bg-[#fbbf24]/10 border border-[#fbbf24]/50 rounded-lg">
                       <p className="text-[#fbbf24] mb-3">Aluno marcou as aulas como finalizadas. Confirmar?</p>
                       <Button 
-                        className="bg-green-600 hover:bg-green-700"
+                        className="bg-green-600 hover:bg-green-700 text-white"
                         onClick={() => handleConfirmCompletion(selectedStudent)}
                       >
                         <CheckCircle className="mr-2" size={18} />
@@ -430,12 +430,12 @@ export default function AdminStudents() {
 
                     {!selectedStudent.cnh_approved && (
                       <Button 
-                        className="w-full bg-green-600 hover:bg-green-700"
-                        onClick={() => handleApproveCNH(selectedStudent)}
-                      >
-                        <CheckCircle className="mr-2" size={18} />
-                        Aprovar Documentos
-                      </Button>
+                          className="w-full bg-green-600 hover:bg-green-700 text-white"
+                          onClick={() => handleApproveCNH(selectedStudent)}
+                        >
+                          <CheckCircle className="mr-2" size={18} />
+                          Aprovar Documentos
+                        </Button>
                     )}
                     
                     {selectedStudent.cnh_approved && (
@@ -459,8 +459,8 @@ export default function AdminStudents() {
           </DialogHeader>
           <p className="text-sm text-[#e5e7eb]">Esta ação é permanente e irá apagar o aluno, todas as aulas agendadas/realizadas, pagamentos, conversas e mensagens.</p>
           <DialogFooter>
-            <Button variant="outline" className="border-[#374151]" onClick={() => setConfirmDeleteOpen(false)}>Cancelar</Button>
-            <Button variant="destructive" onClick={handleDeleteStudent} disabled={deleting}>{deleting ? 'Apagando...' : 'Apagar tudo'}</Button>
+            <Button variant="outline" className="border-[#374151] text-white" onClick={() => setConfirmDeleteOpen(false)}>Cancelar</Button>
+            <Button variant="destructive" className="text-white" onClick={handleDeleteStudent} disabled={deleting}>{deleting ? 'Apagando...' : 'Apagar tudo'}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
