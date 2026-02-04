@@ -11,7 +11,9 @@ import {
   CheckCircle,
   XCircle,
   AlertCircle,
-  MapPin
+  MapPin,
+  Download,
+  FileText
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,6 +22,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import SuggestiveCalendar from "../components/schedule/SuggestiveCalendar";
 import TimeGrid from "../components/schedule/TimeGrid";
 import { Badge } from "@/components/ui/badge";
+import jsPDF from 'jspdf';
 
 export default function MyLessons() {
   const [student, setStudent] = useState(null);
@@ -138,6 +141,100 @@ export default function MyLessons() {
     const fixedInstructorId = typeLessons[0]?.instructor_id;
     return i.id === fixedInstructorId;
   });
+
+  const downloadContractPDF = () => {
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    let yPos = 20;
+
+    // Header
+    doc.setFontSize(16);
+    doc.setFont(undefined, 'bold');
+    doc.text('CONTRATO DE PRESTAÇÃO DE SERVIÇOS', pageWidth / 2, yPos, { align: 'center' });
+    yPos += 15;
+
+    // Date
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    const today = new Date().toLocaleDateString('pt-BR');
+    doc.text(`Data: ${today}`, 20, yPos);
+    yPos += 10;
+
+    // Student Info
+    doc.setFont(undefined, 'bold');
+    doc.text('INFORMAÇÕES DO ALUNO:', 20, yPos);
+    yPos += 7;
+
+    doc.setFont(undefined, 'normal');
+    doc.setFontSize(9);
+    doc.text(`Aluno: ${student?.full_name || 'N/A'}`, 25, yPos);
+    yPos += 6;
+    doc.text(`CPF: ${student?.cpf || 'N/A'}`, 25, yPos);
+    yPos += 6;
+    doc.text(`Categoria: ${student?.category || 'N/A'}`, 25, yPos);
+    yPos += 6;
+    
+    // Calculate contract value
+    let contractValue = 0;
+    if (settings) {
+      if (student?.category === 'A') contractValue = settings.category_a_price || 548;
+      else if (student?.category === 'B') contractValue = settings.category_b_price || 548;
+      else if (student?.category === 'AB') contractValue = settings.category_ab_price || 992;
+      else if (student?.category === 'inclusao_A') contractValue = settings.category_inclusao_a_price || 400;
+      else if (student?.category === 'inclusao_B') contractValue = settings.category_inclusao_b_price || 400;
+      else if (student?.category === 'onibus') contractValue = settings.category_bus_price || 1500;
+      else if (student?.category === 'caminhao') contractValue = settings.category_truck_price || 1800;
+      else if (student?.category === 'carreta') contractValue = settings.category_trailer_price || 2200;
+    }
+
+    doc.text(`Valor do Contrato: R$ ${contractValue.toFixed(2)}`, 25, yPos);
+    yPos += 12;
+
+    // Contract text
+    doc.setFont(undefined, 'bold');
+    doc.text('TERMOS E CONDIÇÕES:', 20, yPos);
+    yPos += 7;
+
+    doc.setFont(undefined, 'normal');
+    doc.setFontSize(8);
+    
+    const contractText = [
+      '1. O contratante aceita os termos de prestação de serviços de aulas de direção conforme',
+      'apresentado pela instituição.',
+      '',
+      '2. O aluno compromete-se a cumprir as regras de segurança, horários marcados e',
+      'pagamento das aulas contratadas.',
+      '',
+      '3. A instituição fornecerá aulas teóricas e práticas conforme programação acordada.',
+      '',
+      '4. O pagamento deve ser realizado conforme cronograma estabelecido.',
+      '',
+      '5. Este contrato é válido até a conclusão do curso ou cancelamento mútuo.'
+    ];
+
+    contractText.forEach(line => {
+      if (yPos > pageHeight - 30) {
+        doc.addPage();
+        yPos = 20;
+      }
+      doc.text(line, 20, yPos, { maxWidth: pageWidth - 40 });
+      yPos += 5;
+    });
+
+    yPos += 15;
+
+    // Signature area
+    doc.setFont(undefined, 'bold');
+    doc.setFontSize(9);
+    doc.text('Assinatura do Aluno: ________________________', 20, yPos);
+    yPos += 15;
+    doc.text('Data: ________________________', 20, yPos);
+
+    // Download PDF
+    const filename = `contrato_${(student?.full_name || 'aluno').replace(/\s+/g, '_')}_${new Date().getTime()}.pdf`;
+    doc.save(filename);
+  };
 
   const handleSchedule = async () => {
     if (!selectedDate || !selectedTime || !selectedInstructor) return;
@@ -299,17 +396,27 @@ export default function MyLessons() {
   return (
     <div className="max-w-6xl mx-auto space-y-4 sm:space-y-6 px-3 sm:px-0">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-        <h1 className="text-xl sm:text-2xl font-bold">Minhas Aulas</h1>
-        <Button 
-          className="bg-[#f0c41b] text-black hover:bg-[#d4aa00] w-full sm:w-auto h-10"
-          onClick={() => {
-            setShowScheduleDialog(true);
-          }}
-        >
-          <Calendar className="mr-2" size={16} />
-          Agendar Nova Aula
-        </Button>
-      </div>
+         <h1 className="text-xl sm:text-2xl font-bold">Minhas Aulas</h1>
+         <div className="flex gap-2 w-full sm:w-auto flex-col sm:flex-row">
+           <Button 
+             variant="outline"
+             className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24]/10 h-10"
+             onClick={downloadContractPDF}
+           >
+             <Download className="mr-2" size={16} />
+             Contrato em PDF
+           </Button>
+           <Button 
+             className="bg-[#f0c41b] text-black hover:bg-[#d4aa00] h-10"
+             onClick={() => {
+               setShowScheduleDialog(true);
+             }}
+           >
+             <Calendar className="mr-2" size={16} />
+             Agendar Nova Aula
+           </Button>
+         </div>
+       </div>
 
       {student.payment_status !== 'pago' && (
         <Card className="bg-[#1a2332] border-[#fbbf24]/40">
