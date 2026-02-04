@@ -339,7 +339,29 @@ export default function Home() {
                 const loc = settings?.lesson_locations?.[lesson.type];
                 
                 return (
-                  <div key={lesson.id} className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
+                  <div key={lesson.id} className={`p-4 bg-[#111827] rounded-lg border-2 ${
+                    lesson.status === 'realizada' ? 'border-green-500' : 
+                    lesson.status === 'falta' ? 'border-red-500' : 
+                    'border-[#374151]'
+                  }`}>
+                    {/* Status da aula */}
+                    {lesson.status === 'realizada' && (
+                      <div className="mb-3 p-2 bg-green-500/20 border border-green-500 rounded-lg">
+                        <p className="text-sm text-green-400 font-semibold text-center flex items-center justify-center gap-2">
+                          <CheckCircle size={16} />
+                          Aula Realizada
+                        </p>
+                      </div>
+                    )}
+                    {lesson.status === 'falta' && (
+                      <div className="mb-3 p-2 bg-red-500/20 border border-red-500 rounded-lg">
+                        <p className="text-sm text-red-400 font-semibold text-center flex items-center justify-center gap-2">
+                          <Clock size={16} />
+                          Falta Registrada
+                        </p>
+                      </div>
+                    )}
+                    
                     {/* Cabeçalho da aula */}
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-3 flex-1">
