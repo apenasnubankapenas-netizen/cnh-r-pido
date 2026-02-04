@@ -132,7 +132,7 @@ export default function Home() {
               <div className="w-12 h-12 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-3">
                 <Bike className="text-[#fbbf24]" />
               </div>
-              <h3 className="font-bold mb-1 text-white text-lg">Categoria A</h3>
+              <h3 className="font-bold mb-1 text-[#fbbf24] text-lg">Categoria A</h3>
 
             </CardContent>
           </Card>
@@ -142,7 +142,7 @@ export default function Home() {
               <div className="w-12 h-12 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-3">
                 <Car className="text-[#fbbf24]" />
               </div>
-              <h3 className="font-bold mb-1 text-white text-lg">Categoria B</h3>
+              <h3 className="font-bold mb-1 text-[#fbbf24] text-lg">Categoria B</h3>
 
             </CardContent>
           </Card>
@@ -155,7 +155,7 @@ export default function Home() {
                   <Car className="text-[#fbbf24]" size={18} />
                 </div>
               </div>
-              <h3 className="font-bold mb-1 text-white text-lg">Categoria AB</h3>
+              <h3 className="font-bold mb-1 text-[#fbbf24] text-lg">Categoria AB</h3>
 
             </CardContent>
           </Card>
@@ -264,7 +264,7 @@ export default function Home() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-[#9ca3af] text-xs">Progresso</p>
+                <p className="text-white text-xs">Progresso</p>
                 <p className="text-2xl font-bold text-[#fbbf24]">{progressPercentage()}%</p>
               </div>
               <div className="w-12 h-12 bg-[#1e40af]/20 rounded-full flex items-center justify-center">
@@ -278,8 +278,8 @@ export default function Home() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-[#9ca3af] text-xs">Aulas Carro</p>
-                <p className="text-2xl font-bold">{student.completed_car_lessons || 0}/{student.total_car_lessons || 0}</p>
+                <p className="text-white text-xs">Aulas Carro</p>
+                <p className="text-2xl font-bold text-white">{student.completed_car_lessons || 0}/{student.total_car_lessons || 0}</p>
               </div>
               <div className="w-12 h-12 bg-[#1e40af]/20 rounded-full flex items-center justify-center">
                 <Car className="text-[#3b82f6]" />
@@ -292,8 +292,8 @@ export default function Home() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-[#9ca3af] text-xs">Aulas Moto</p>
-                <p className="text-2xl font-bold">{student.completed_moto_lessons || 0}/{student.total_moto_lessons || 0}</p>
+                <p className="text-white text-xs">Aulas Moto</p>
+                <p className="text-2xl font-bold text-white">{student.completed_moto_lessons || 0}/{student.total_moto_lessons || 0}</p>
               </div>
               <div className="w-12 h-12 bg-[#1e40af]/20 rounded-full flex items-center justify-center">
                 <Bike className="text-[#3b82f6]" />
@@ -306,7 +306,7 @@ export default function Home() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-[#9ca3af] text-xs">Categoria</p>
+                <p className="text-white text-xs">Categoria</p>
                 <p className="text-2xl font-bold text-[#fbbf24]">{student.category || '-'}</p>
               </div>
               <div className="w-12 h-12 bg-[#fbbf24]/20 rounded-full flex items-center justify-center">
@@ -464,8 +464,8 @@ export default function Home() {
             <CardContent className="p-6 flex items-center gap-4">
               <Users className="text-[#3b82f6]" size={32} />
               <div>
-                <h3 className="font-bold">Instrutores</h3>
-                <p className="text-sm text-[#9ca3af]">Conheça nossos instrutores</p>
+                <h3 className="font-bold text-white">Instrutores</h3>
+                <p className="text-sm text-white">Conheça nossos instrutores</p>
               </div>
             </CardContent>
           </Card>
@@ -476,8 +476,8 @@ export default function Home() {
             <CardContent className="p-6 flex items-center gap-4">
               <BookOpen className="text-[#fbbf24]" size={32} />
               <div>
-                <h3 className="font-bold">Simulados</h3>
-                <p className="text-sm text-[#9ca3af]">Pratique para a prova</p>
+                <h3 className="font-bold text-white">Simulados</h3>
+                <p className="text-sm text-white">Pratique para a prova</p>
               </div>
             </CardContent>
           </Card>
@@ -488,8 +488,8 @@ export default function Home() {
             <CardContent className="p-6 flex items-center gap-4">
               <MessageSquare className="text-green-500" size={32} />
               <div>
-                <h3 className="font-bold">Chat</h3>
-                <p className="text-sm text-[#9ca3af]">Fale com a autoescola</p>
+                <h3 className="font-bold text-white">Chat</h3>
+                <p className="text-sm text-white">Fale com a autoescola</p>
               </div>
             </CardContent>
           </Card>
@@ -500,13 +500,13 @@ export default function Home() {
       {student.all_lessons_completed && student.admin_confirmed && settings?.practical_test_location && (
         <Card className="bg-[#1a2332] border-[#374151]">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
+            <CardTitle className="flex items-center gap-2 text-lg text-white">
               <MapPin className="text-[#fbbf24]" />
               Local da Prova Prática
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-[#9ca3af] mb-4">{settings.practical_test_location.address}</p>
+            <p className="text-white mb-4">{settings.practical_test_location.address}</p>
             <a 
               href={settings.detran_url || 'https://goias.gov.br/detran/agendamento-detran/'} 
               target="_blank" 
