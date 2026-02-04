@@ -362,17 +362,15 @@ export default function AdminLessons() {
         <div className="flex items-center gap-3">
           <div className="flex gap-2">
             <Button
-              variant={viewMode === 'calendar' ? 'default' : 'outline'}
               size="sm"
-              className={viewMode === 'calendar' ? 'bg-[#fbbf24] text-black' : 'border-[#374151] text-white'}
+              className="bg-black hover:bg-[#1a1a1a] text-[#fbbf24]"
               onClick={() => setViewMode('calendar')}
             >
               Dia
             </Button>
             <Button
-              variant={viewMode === 'list' ? 'default' : 'outline'}
               size="sm"
-              className={viewMode === 'list' ? 'bg-[#fbbf24] text-black' : 'border-[#374151] text-white'}
+              className="bg-black hover:bg-[#1a1a1a] text-[#fbbf24]"
               onClick={() => setViewMode('list')}
             >
               Todas
