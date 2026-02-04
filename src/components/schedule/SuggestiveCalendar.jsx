@@ -64,10 +64,10 @@ export default function SuggestiveCalendar({
 
           const base = 'h-10 w-10 rounded-lg flex items-center justify-center text-sm transition border';
           const state = isPast
-            ? 'opacity-40 cursor-not-allowed border-transparent'
+            ? 'opacity-40 cursor-not-allowed border-transparent text-white'
             : full
               ? 'bg-red-600/20 text-red-400 border-red-500/40'
-              : 'bg-[#0b1220] hover:bg-[#0f172a] border-[#1f2a44]';
+              : 'bg-[#0b1220] hover:bg-[#0f172a] border-[#1f2a44] text-white';
           const selectedCls = isSelected ? ' ring-2 ring-[#f0c41b]' : '';
 
           return (
