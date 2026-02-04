@@ -939,6 +939,7 @@ export default function StudentRegister() {
                       caminhao: 'CAMINHÃO',
                       carreta: 'CARRETA'
                     };
+                    const typeLessons = lessonSchedules.filter(s => s.type === type);
                     return (
                       <div key={type} className="p-3 bg-[#111827] rounded-lg border border-[#374151]">
                         <div className="flex items-center gap-2 mb-2">
@@ -946,6 +947,23 @@ export default function StudentRegister() {
                           <span className="font-bold uppercase text-white">ENDEREÇO AULA {typeNames[type] || type.toUpperCase()}</span>
                         </div>
                         <p className="text-[#e6edf3] text-sm mb-3">{loc.address || 'Endereço não definido'}</p>
+
+                        {/* Horários agendados para este tipo */}
+                        <div className="mb-3 space-y-1">
+                          <p className="text-[#9ca3af] text-xs font-semibold mb-1">HORÁRIOS AGENDADOS:</p>
+                          {typeLessons.map((lesson, idx) => {
+                            const [year, month, day] = lesson.date.split('-');
+                            const displayDate = `${day}/${month}/${year}`;
+                            return (
+                              <div key={idx} className="text-xs bg-[#0d1117] p-2 rounded border border-[#374151]">
+                                <span className="text-[#fbbf24] font-bold">{displayDate}</span>
+                                <span className="text-white mx-2">•</span>
+                                <span className="text-white font-semibold">{lesson.time}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+
                         {typeof loc.lat === 'number' && typeof loc.lng === 'number' && (
                           <div className="rounded-lg overflow-hidden border border-[#374151]">
                             <iframe
