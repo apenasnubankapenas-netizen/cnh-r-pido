@@ -662,7 +662,7 @@ export default function Layout({ children, currentPageName }) {
       </aside>
 
       {/* Main Content */}
-      <main className={`pt-14 min-h-screen transition-all duration-200 ${isSidebarMinimized ? 'lg:ml-20' : 'lg:ml-64'}`}
+      <main className={`pt-14 min-h-screen transition-all duration-200 ${isSidebarMinimized ? 'lg:ml-20' : 'lg:ml-64'}`}>
         <div className="p-4 md:p-6">
           {location.pathname !== createPageUrl('Home') && location.pathname !== '/' && (
             <button
