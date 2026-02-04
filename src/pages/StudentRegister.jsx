@@ -943,7 +943,7 @@ export default function StudentRegister() {
                       <div key={type} className="p-3 bg-[#111827] rounded-lg border border-[#374151]">
                         <div className="flex items-center gap-2 mb-2">
                           <MapPin className="text-[#fbbf24]" size={16} />
-                          <span className="font-bold uppercase text-white">{typeNames[type] || type.toUpperCase()}</span>
+                          <span className="font-bold uppercase text-white">ENDEREÇO AULA {typeNames[type] || type.toUpperCase()}</span>
                         </div>
                         <p className="text-[#e6edf3] text-sm mb-3">{loc.address || 'Endereço não definido'}</p>
                         {typeof loc.lat === 'number' && typeof loc.lng === 'number' && (
