@@ -381,7 +381,7 @@ export default function MyLessons() {
                       <Bike className="text-[#fbbf24] flex-shrink-0" size={24} />
                     )}
                     <div className="flex-1 min-w-0">
-                      <p className="font-bold text-sm sm:text-base truncate">Aula de {lesson.type === 'carro' ? 'Carro' : 'Moto'}</p>
+                      <p className="font-bold text-sm sm:text-base truncate text-white">Aula de {lesson.type === 'carro' ? 'Carro' : 'Moto'}</p>
                       <p className="text-xs sm:text-sm text-[#9ca3af] flex items-center gap-1">
                         <User className="inline flex-shrink-0" size={12} />
                         <span className="truncate">{lesson.instructor_name}</span>
@@ -434,7 +434,7 @@ export default function MyLessons() {
                       <Bike className="text-[#fbbf24]" size={20} />
                     )}
                     <div>
-                      <p className="font-medium text-sm">{new Date(lesson.date).toLocaleDateString('pt-BR')} - {lesson.time}</p>
+                      <p className="font-medium text-sm text-white">{new Date(lesson.date).toLocaleDateString('pt-BR')} - {lesson.time}</p>
                       <p className="text-xs text-[#9ca3af]">{lesson.instructor_name}</p>
                     </div>
                   </div>
@@ -631,7 +631,7 @@ export default function MyLessons() {
             </div>
 
             <div className="p-3 bg-[#111827] rounded border border-[#374151] flex items-center justify-between">
-              <span>Total</span>
+              <span className="text-white">Total</span>
               <span className="text-[#fbbf24] font-bold">
                 R$ {(((settings?.lesson_price || 98) * parseInt(purchaseQty || '1'))).toFixed(2)}
               </span>
