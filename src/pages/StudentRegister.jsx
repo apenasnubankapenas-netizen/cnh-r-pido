@@ -907,16 +907,20 @@ export default function StudentRegister() {
             <div className="space-y-2">
               <h3 className="font-semibold text-sm text-[#fbbf24]">Aulas Agendadas ({lessonSchedules.length})</h3>
               <div className="max-h-48 overflow-y-auto space-y-1">
-                {lessonSchedules.map((schedule, idx) => (
-                  <div key={idx} className="p-2 bg-[#111827] rounded text-xs flex items-center justify-between">
-                    <span className="truncate flex-1">
-                      <span className={schedule.type === 'carro' || schedule.type === 'moto' ? 'text-white' : ''}>{schedule.type.toUpperCase()}</span> - <span className="text-[#fbbf24] font-bold">{schedule.instructor_name}</span>
-                    </span>
-                    <span className="text-[#fbbf24] font-semibold whitespace-nowrap ml-2">
-                      {new Date(schedule.date).toLocaleDateString('pt-BR')} {schedule.time}
-                    </span>
-                  </div>
-                ))}
+                {lessonSchedules.map((schedule, idx) => {
+                  const [year, month, day] = schedule.date.split('-');
+                  const displayDate = `${day}/${month}/${year}`;
+                  return (
+                    <div key={idx} className="p-2 bg-[#111827] rounded text-xs flex items-center justify-between">
+                      <span className="truncate flex-1">
+                        <span className={schedule.type === 'carro' || schedule.type === 'moto' ? 'text-white' : ''}>{schedule.type.toUpperCase()}</span> - <span className="text-[#fbbf24] font-bold">{schedule.instructor_name}</span>
+                      </span>
+                      <span className="text-[#fbbf24] font-semibold whitespace-nowrap ml-2">
+                        {displayDate} {schedule.time}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
