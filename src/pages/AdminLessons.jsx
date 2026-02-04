@@ -466,69 +466,67 @@ export default function AdminLessons() {
                 </div>
 
                 <div className="flex items-center gap-3">
-                  {getStatusBadge(lesson.status)}
-                  
-                  {lesson.status === 'agendada' && (new Date(`${lesson.date}T${lesson.time}:00`) <= new Date()) && (
-                    <div className="flex gap-1">
-                      <Button 
-                        size="sm" 
-                        className="bg-green-600 hover:bg-green-700 text-white"
-                        onClick={() => handleStatusChange(lesson, 'realizada')}
-                      >
-                        <CheckCircle size={14} />
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        className="bg-red-600 hover:bg-red-700 text-white"
-                        onClick={() => handleStatusChange(lesson, 'falta')}
-                      >
-                        <XCircle size={14} />
-                      </Button>
-                    </div>
-                  )}
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="border-[#374151] text-white hover:text-white"
-                    disabled={isNextDay(lesson.date)}
-                    onClick={() => { if (isNextDay(lesson.date)) return; handleOpenEdit(lesson); }}
-                  >
-                    <Edit size={14} className="mr-1" />
-                    Editar
-                  </Button>
+                   {getStatusBadge(lesson.status)}
 
-                  {isSuperadmin && isNextDay(lesson.date) && (
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      className="text-white"
-                      onClick={async () => {
-                        if (!confirm('Confirmar exclusão desta aula do dia seguinte?')) return;
-                        await base44.entities.Lesson.delete(lesson.id);
-                        loadData();
-                      }}
-                    >
-                      <Trash size={14} className="mr-1" />
-                      Excluir
-                    </Button>
-                  )}
-
+                   {lesson.status === 'agendada' && (new Date(`${lesson.date}T${lesson.time}:00`) <= new Date()) && (
+                     <div className="flex gap-1">
+                       <Button 
+                         size="sm" 
+                         className="bg-black hover:bg-gray-900 text-[#fbbf24]"
+                         onClick={() => handleStatusChange(lesson, 'realizada')}
+                       >
+                         <CheckCircle size={14} />
+                       </Button>
+                       <Button 
+                         size="sm" 
+                         className="bg-black hover:bg-gray-900 text-[#fbbf24]"
+                         onClick={() => handleStatusChange(lesson, 'falta')}
+                       >
+                         <XCircle size={14} />
+                       </Button>
+                     </div>
+                   )}
                    <Button 
-                     variant="outline" 
                      size="sm" 
-                     className="border-[#374151] text-white hover:text-white"
-                     onClick={() => {
-                      setSelectedLesson(lesson);
-                      setEditData({
-                        instructor_comment: lesson.instructor_comment || '',
-                        instructor_rating: lesson.instructor_rating || ''
-                      });
-                    }}
-                  >
-                    <MessageSquare size={14} className="mr-1" />
-                    Avaliar
-                  </Button>
-                </div>
+                     className="bg-black hover:bg-gray-900 text-[#fbbf24]"
+                     disabled={isNextDay(lesson.date)}
+                     onClick={() => { if (isNextDay(lesson.date)) return; handleOpenEdit(lesson); }}
+                   >
+                     <Edit size={14} className="mr-1" />
+                     Editar
+                   </Button>
+
+                   {isSuperadmin && isNextDay(lesson.date) && (
+                     <Button
+                       variant="destructive"
+                       size="sm"
+                       className="text-white"
+                       onClick={async () => {
+                         if (!confirm('Confirmar exclusão desta aula do dia seguinte?')) return;
+                         await base44.entities.Lesson.delete(lesson.id);
+                         loadData();
+                       }}
+                     >
+                       <Trash size={14} className="mr-1" />
+                       Excluir
+                     </Button>
+                   )}
+
+                    <Button 
+                      size="sm" 
+                      className="bg-black hover:bg-gray-900 text-[#fbbf24]"
+                      onClick={() => {
+                       setSelectedLesson(lesson);
+                       setEditData({
+                         instructor_comment: lesson.instructor_comment || '',
+                         instructor_rating: lesson.instructor_rating || ''
+                       });
+                     }}
+                   >
+                     <MessageSquare size={14} className="mr-1" />
+                     Avaliar
+                   </Button>
+                 </div>
               </div>
 
               {/* Endereço e Mapa da Aula */}
