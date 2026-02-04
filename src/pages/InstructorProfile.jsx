@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { 
@@ -17,8 +17,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
 export default function InstructorProfile() {
-  const { instructorId } = useParams();
   const navigate = useNavigate();
+  const instructorId = new URLSearchParams(window.location.search).get('id');
   const [user, setUser] = useState(null);
   const [instructor, setInstructor] = useState(null);
   const [posts, setPosts] = useState([]);

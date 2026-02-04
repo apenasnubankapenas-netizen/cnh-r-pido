@@ -330,7 +330,7 @@ export default function AdminInstructors() {
                     </div>
 
                     <div className="flex gap-2 mt-3 flex-wrap">
-                      <Link to={`${createPageUrl('InstructorProfile')}/${instructor.id}`}>
+                      <Link to={`${createPageUrl('InstructorProfile')}?id=${instructor.id}`}>
                         <Button 
                           variant="outline" 
                           size="sm" 
