@@ -126,7 +126,7 @@ export default function Home() {
               <div className="w-12 h-12 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-3">
                 <Bike className="text-[#fbbf24]" />
               </div>
-              <h3 className="font-bold mb-1">Categoria A</h3>
+              <h3 className="font-bold mb-1 text-white text-lg">Categoria A</h3>
 
             </CardContent>
           </Card>
@@ -136,7 +136,7 @@ export default function Home() {
               <div className="w-12 h-12 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-3">
                 <Car className="text-[#fbbf24]" />
               </div>
-              <h3 className="font-bold mb-1">Categoria B</h3>
+              <h3 className="font-bold mb-1 text-white text-lg">Categoria B</h3>
 
             </CardContent>
           </Card>
@@ -149,7 +149,7 @@ export default function Home() {
                   <Car className="text-[#fbbf24]" size={18} />
                 </div>
               </div>
-              <h3 className="font-bold mb-1">Categoria AB</h3>
+              <h3 className="font-bold mb-1 text-white text-lg">Categoria AB</h3>
 
             </CardContent>
           </Card>
