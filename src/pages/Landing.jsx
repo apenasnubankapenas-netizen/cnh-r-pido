@@ -154,55 +154,55 @@ export default function Landing() {
                 <div className="w-16 h-16 bg-[#f0c41b]/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Bike className="text-[#f0c41b]" size={32} />
                 </div>
-                <h3 className="font-bold mb-2">Categoria A</h3>
+                <h3 className="font-bold mb-2 text-white text-lg">Categoria A</h3>
                 <p className="text-[#9ca3af] text-sm mb-2">Moto</p>
 
-              </CardContent>
-            </Card>
+                </CardContent>
+                </Card>
 
-            <Card className="bg-[#1a2332] border-[#374151] hover:border-[#f0c41b] transition-all">
-              <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Car className="text-[#3b82f6]" size={32} />
-                </div>
-                <h3 className="font-bold mb-2">Categoria B</h3>
-                <p className="text-[#9ca3af] text-sm mb-2">Carro</p>
+                <Card className="bg-[#1a2332] border-[#374151] hover:border-[#f0c41b] transition-all">
+                <CardContent className="p-6 text-center">
+                 <div className="w-16 h-16 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                   <Car className="text-[#3b82f6]" size={32} />
+                 </div>
+                 <h3 className="font-bold mb-2 text-white text-lg">Categoria B</h3>
+                 <p className="text-[#9ca3af] text-sm mb-2">Carro</p>
 
-              </CardContent>
-            </Card>
+                </CardContent>
+                </Card>
 
-            <Card className="bg-[#1a2332] border-[#374151] hover:border-[#f0c41b] transition-all">
-              <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <div className="flex gap-1">
-                    <Car className="text-[#3b82f6]" size={24} />
-                    <Bike className="text-[#f0c41b]" size={24} />
-                  </div>
-                </div>
-                <h3 className="font-bold mb-2">Categoria AB</h3>
-                <p className="text-[#9ca3af] text-sm mb-2">Carro + Moto</p>
+                <Card className="bg-[#1a2332] border-[#374151] hover:border-[#f0c41b] transition-all">
+                <CardContent className="p-6 text-center">
+                 <div className="w-16 h-16 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                   <div className="flex gap-1">
+                     <Car className="text-[#3b82f6]" size={24} />
+                     <Bike className="text-[#f0c41b]" size={24} />
+                   </div>
+                 </div>
+                 <h3 className="font-bold mb-2 text-white text-lg">Categoria AB</h3>
+                 <p className="text-[#9ca3af] text-sm mb-2">Carro + Moto</p>
 
-              </CardContent>
-            </Card>
+                </CardContent>
+                </Card>
 
-            <Card className="bg-[#1a2332] border-[#374151] hover:border-[#f0c41b] transition-all">
-              <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Bus className="text-[#3b82f6]" size={32} />
-                </div>
-                <h3 className="font-bold mb-2">Ônibus</h3>
-                <p className="text-[#9ca3af] text-sm mb-2">Categoria D</p>
+                <Card className="bg-[#1a2332] border-[#374151] hover:border-[#f0c41b] transition-all">
+                <CardContent className="p-6 text-center">
+                 <div className="w-16 h-16 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                   <Bus className="text-[#3b82f6]" size={32} />
+                 </div>
+                 <h3 className="font-bold mb-2 text-white text-lg">Ônibus</h3>
+                 <p className="text-[#9ca3af] text-sm mb-2">Categoria D</p>
 
-              </CardContent>
-            </Card>
+                </CardContent>
+                </Card>
 
-            <Card className="bg-[#1a2332] border-[#374151] hover:border-[#f0c41b] transition-all">
-              <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Truck className="text-[#3b82f6]" size={32} />
-                </div>
-                <h3 className="font-bold mb-2">Carreta</h3>
-                <p className="text-[#9ca3af] text-sm mb-2">Categoria E</p>
+                <Card className="bg-[#1a2332] border-[#374151] hover:border-[#f0c41b] transition-all">
+                <CardContent className="p-6 text-center">
+                 <div className="w-16 h-16 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                   <Truck className="text-[#3b82f6]" size={32} />
+                 </div>
+                 <h3 className="font-bold mb-2 text-white text-lg">Carreta</h3>
+                 <p className="text-[#9ca3af] text-sm mb-2">Categoria E</p>
 
               </CardContent>
             </Card>
