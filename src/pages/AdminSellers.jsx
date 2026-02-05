@@ -86,7 +86,7 @@ export default function AdminSellers() {
         password: newPassword,
         session_version: (passwordSeller.session_version || 1) + 1
       });
-      alert('Senha atualizada. O vendedor será desconectado.');
+      alert('Senha atualizada. O consultor será desconectado.');
       setShowPasswordDialog(false);
       setPasswordSeller(null);
       setNewPassword('');
@@ -97,7 +97,7 @@ export default function AdminSellers() {
   };
 
   const handleDelete = async (sellerId) => {
-    if (confirm('Tem certeza que deseja excluir este vendedor?')) {
+    if (confirm('Tem certeza que deseja excluir este consultor?')) {
       try {
         await base44.entities.Seller.delete(sellerId);
         loadData();
@@ -139,7 +139,7 @@ export default function AdminSellers() {
           </Button>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <UserCog className="text-[#fbbf24]" />
-            Gerenciar Vendedores
+            Gerenciar Consultores
           </h1>
         </div>
         <Button 
@@ -147,15 +147,15 @@ export default function AdminSellers() {
           onClick={() => { resetForm(); setShowDialog(true); }}
         >
           <Plus className="mr-2" size={18} />
-          Novo Vendedor
+          Novo Consultor
         </Button>
       </div>
 
       <p className="text-[#9ca3af] text-sm">
-        Vendedores podem responder às mensagens dos alunos no chat.
+        Consultores podem responder às mensagens dos alunos no chat.
       </p>
 
-      {/* Lista de Vendedores */}
+      {/* Lista de Consultores */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         {sellers.map((seller) => (
           <Card key={seller.id} className="bg-[#1a2332] border-[#374151]">
@@ -219,13 +219,13 @@ export default function AdminSellers() {
         <Card className="bg-[#1a2332] border-[#374151]">
           <CardContent className="p-8 text-center">
             <UserCog className="mx-auto text-[#9ca3af] mb-4" size={48} />
-            <p className="text-[#9ca3af]">Nenhum vendedor cadastrado</p>
+            <p className="text-[#9ca3af]">Nenhum consultor cadastrado</p>
             <Button 
               className="bg-[#1e40af] hover:bg-[#3b82f6] mt-4"
               onClick={() => { resetForm(); setShowDialog(true); }}
             >
               <Plus className="mr-2" size={18} />
-              Adicionar Vendedor
+              Adicionar Consultor
             </Button>
           </CardContent>
         </Card>
@@ -235,7 +235,7 @@ export default function AdminSellers() {
       <Dialog open={showDialog} onOpenChange={() => { setShowDialog(false); resetForm(); }}>
         <DialogContent className="bg-[#1a2332] border-[#374151] text-white">
           <DialogHeader>
-            <DialogTitle>{editingSeller ? 'Editar Vendedor' : 'Novo Vendedor'}</DialogTitle>
+            <DialogTitle>{editingSeller ? 'Editar Consultor' : 'Novo Consultor'}</DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4">
@@ -268,7 +268,7 @@ export default function AdminSellers() {
             </div>
 
             <div className="flex items-center justify-between p-3 bg-[#111827] rounded border border-[#374151]">
-              <span>Vendedor Ativo</span>
+              <span>Consultor Ativo</span>
               <Switch 
                 checked={formData.active}
                 onCheckedChange={(checked) => setFormData({...formData, active: checked})}
@@ -296,11 +296,11 @@ export default function AdminSellers() {
       <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
         <DialogContent className="bg-[#1a2332] border-[#374151] text-white">
           <DialogHeader>
-            <DialogTitle>Definir/Alterar Senha do Vendedor</DialogTitle>
+            <DialogTitle>Definir/Alterar Senha do Consultor</DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
             <div className="text-sm text-[#9ca3af]">
-              Ao alterar a senha, o vendedor será desconectado na próxima tentativa de acesso.
+              Ao alterar a senha, o consultor será desconectado na próxima tentativa de acesso.
             </div>
             <div>
               <Label>Nova Senha</Label>
