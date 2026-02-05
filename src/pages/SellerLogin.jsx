@@ -4,7 +4,7 @@ import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, UserCog, AlertCircle, Check } from 'lucide-react';
+import { ArrowLeft, UserCog, AlertCircle, Check, Upload } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -15,6 +15,7 @@ export default function SellerLogin() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [showRegister, setShowRegister] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
   const [registering, setRegistering] = useState(false);
   const [success, setSuccess] = useState('');
   const [accessCode, setAccessCode] = useState('');
@@ -24,7 +25,11 @@ export default function SellerLogin() {
     email: '',
     phone: '',
     whatsapp_link: '',
+    photo: '',
+    password: '',
   });
+
+  const [loginPassword, setLoginPassword] = useState('');
 
   const navigate = useNavigate();
 
@@ -73,9 +78,33 @@ export default function SellerLogin() {
     }
   };
 
+  const handleFileUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const url = await base44.integrations.Core.UploadFile({ file });
+      setFormData({...formData, photo: url.file_url});
+    } catch (error) {
+      setError('Erro ao fazer upload da foto: ' + error.message);
+    }
+  };
+
+  const formatPhone = (value) => {
+    const cleaned = value.replace(/\D/g, '');
+    if (cleaned.length <= 2) return cleaned;
+    if (cleaned.length <= 7) return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2)}`;
+    return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 7)}-${cleaned.slice(7, 11)}`;
+  };
+
   const handleRegister = async () => {
-    if (!formData.full_name || !formData.phone || !formData.whatsapp_link || !formData.email) {
+    if (!formData.full_name || !formData.phone || !formData.whatsapp_link || !formData.email || !formData.password || !formData.photo) {
       setError('Preencha todos os campos obrigatórios.');
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError('Senha deve ter no mínimo 6 caracteres.');
       return;
     }
 
@@ -84,12 +113,9 @@ export default function SellerLogin() {
     setSuccess('');
 
     try {
-      const generatedPassword = Math.random().toString(36).substring(2, 12);
-
       const newSeller = await base44.entities.Seller.create({
         ...formData,
         active: true,
-        password: generatedPassword,
         session_version: 1,
         cashback_balance: 0,
         total_referrals: 0
@@ -97,14 +123,16 @@ export default function SellerLogin() {
 
       await base44.integrations.Core.SendEmail({
         to: formData.email,
-        subject: 'Bem-vindo! Sua senha de acesso como Colaborador',
-        body: `Olá ${formData.full_name},\n\nSeu cadastro como colaborador foi realizado com sucesso!\n\nPara acessar a plataforma como colaborador, use:\n\nEmail: ${formData.email}\nSenha: ${generatedPassword}\n\nAcesse em: ${window.location.origin}${createPageUrl('SellerLogin')}\n\nNota: Sua senha foi enviada para este email. Guarde com segurança.\n\nAtenciosamente,\nCNH Para Todos`
+        subject: 'Bem-vindo! Seu cadastro como Colaborador foi realizado',
+        body: `Olá ${formData.full_name},\n\nSeu cadastro como colaborador foi realizado com sucesso!\n\nPara acessar a plataforma como colaborador, use:\n\nEmail: ${formData.email}\nSenha: A senha que você cadastrou\n\nAcesse em: ${window.location.origin}${createPageUrl('SellerLogin')}\n\nGuarde sua senha com segurança.\n\nAtenciosamente,\nCNH Para Todos`
       });
 
-      setSuccess('✅ Cadastro realizado! Verifique seu email para a senha.');
+      setSuccess('✅ Cadastro realizado com sucesso! Você será redirecionado para login.');
       
       setTimeout(() => {
-        navigate(createPageUrl('SellerLogin'));
+        setFormData({full_name: '', email: '', phone: '', whatsapp_link: '', photo: '', password: ''});
+        setShowRegister(false);
+        setShowLogin(true);
       }, 2000);
     } catch (error) {
       console.error(error);
@@ -112,6 +140,21 @@ export default function SellerLogin() {
     } finally {
       setRegistering(false);
     }
+  };
+
+  const handleLogin = () => {
+    setError('');
+    if (!seller) {
+      setError('Sua conta não está como Colaborador.');
+      return;
+    }
+    if (!loginPassword || loginPassword !== (seller.password || '')) {
+      setError('Senha inválida.');
+      return;
+    }
+    const key = `seller_session_version:${user.email}`;
+    localStorage.setItem(key, String(seller.session_version || 1));
+    navigate(createPageUrl('AdminDashboard'));
   };
 
   if (loading) {
@@ -252,6 +295,22 @@ export default function SellerLogin() {
               Verificar Código
             </Button>
 
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-[#374151]"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-[#1a2332] text-[#9ca3af]">OU</span>
+              </div>
+            </div>
+
+            <Button 
+              className="w-full bg-[#34d399] text-black hover:bg-[#10b981] py-6 text-base font-bold"
+              onClick={() => setShowLogin(true)}
+            >
+              JÁ É COLABORADOR? Entre aqui
+            </Button>
+
             <Button 
               variant="outline" 
               className="w-full border-[#374151]"
@@ -265,33 +324,4 @@ export default function SellerLogin() {
     );
   }
 
-  // Tela de login de colaborador existente
-  return (
-    <div className="min-h-screen bg-[#0a0e1a] flex items-center justify-center p-4">
-      <Card className="bg-[#1a2332] border-[#374151] w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="w-16 h-16 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-            <UserCog className="text-[#3b82f6]" size={32} />
-          </div>
-          <CardTitle className="text-xl text-white">Login de Colaborador</CardTitle>
-          <p className="text-[#9ca3af] text-sm mt-2">Informe a senha definida pelo Super Admin.</p>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label>Senha do Colaborador</Label>
-            <Input type="password" className="bg-[#111827] border-[#374151] mt-1" value={password} onChange={(e) => setPassword(e.target.value)} />
-          </div>
-          {error && <p className="text-red-400 text-sm">{error}</p>}
-          <Button className="w-full bg-[#1e40af] hover:bg-[#3b82f6]" onClick={handleEnter}>Entrar</Button>
-          <Button 
-            variant="outline" 
-            className="w-full border-[#374151]"
-            onClick={() => navigate(createPageUrl('Landing'))}
-          >
-            <ArrowLeft className="mr-2" size={18} /> Voltar
-          </Button>
-        </CardContent>
-      </Card>
-    </div>
-  );
 }
