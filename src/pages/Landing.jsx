@@ -45,12 +45,12 @@ export default function Landing() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0e1a] relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-[#1a1f2e] via-[#0f1419] to-[#1a1f2e] relative overflow-hidden">
       {/* Animated background gradient */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0e1a] via-[#1e40af]/10 to-[#0a0e1a]" />
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#fbbf24]/10 rounded-full filter blur-3xl animate-pulse" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#1e40af]/10 rounded-full filter blur-3xl animate-pulse" style={{animationDelay: '2s'}} />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1e2a3a] via-[#1e40af]/20 to-[#1a2332]" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#fbbf24]/20 rounded-full filter blur-3xl animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#1e40af]/20 rounded-full filter blur-3xl animate-pulse" style={{animationDelay: '2s'}} />
       </div>
 
       {/* Hero Section */}
@@ -75,10 +75,10 @@ export default function Landing() {
             </h1>
             
             {/* Subtitle */}
-            <p className="text-lg md:text-xl text-[#9ca3af] mb-4 max-w-2xl mx-auto font-medium">
+            <p className="text-lg md:text-xl text-[#cbd5e1] mb-4 max-w-2xl mx-auto font-medium">
               O futuro da sua habilitação está aqui
             </p>
-            <p className="text-base text-[#6b7280] mb-12 max-w-xl mx-auto">
+            <p className="text-base text-[#94a3b8] mb-12 max-w-xl mx-auto">
               Plataforma completa para gestão, acompanhamento e conquista da sua CNH com tecnologia de ponta
             </p>
           </div>
@@ -145,8 +145,8 @@ export default function Landing() {
       {/* Categorias */}
       <div className="relative max-w-6xl mx-auto px-4 pb-16">
         <div className="mb-16">
-          <h2 className="text-2xl font-bold text-center mb-8">
-            Escolha sua <span className="text-[#f0c41b]">Categoria</span>
+          <h2 className="text-2xl font-bold text-center mb-8 text-white">
+            Escolha sua <span className="text-[#fbbf24]">Categoria</span>
           </h2>
           <div className="grid md:grid-cols-5 gap-4">
             <Card className="bg-[#1a2332] border-[#374151] hover:border-[#f0c41b] transition-all">
@@ -211,65 +211,65 @@ export default function Landing() {
 
         {/* Vantagens */}
         <div className="mb-16">
-          <h2 className="text-2xl font-bold text-center mb-8">
-            Por que escolher a <span className="text-[#f0c41b]">CNH PARA TODOS?</span>
+          <h2 className="text-2xl font-bold text-center mb-8 text-white">
+            Por que escolher a <span className="text-[#fbbf24]">CNH PARA TODOS?</span>
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card className="bg-[#1a2332] border-[#374151]">
+            <Card className="bg-[#1e2a3a]/80 border-[#3b82f6]/30 backdrop-blur-sm">
               <CardContent className="p-6">
                 <CheckCircle className="text-[#3b82f6] mb-4" size={40} />
                 <h3 className="font-bold mb-2 text-lg text-white">Conforto e Comodidade</h3>
-                <p className="text-[#9ca3af]">
+                <p className="text-[#cbd5e1]">
                   Agendamento 100% online: Marque suas aulas quando e onde quiser, sem burocracia e sem filas.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="bg-[#1a2332] border-[#374151]">
+            <Card className="bg-[#1e2a3a]/80 border-[#3b82f6]/30 backdrop-blur-sm">
               <CardContent className="p-6">
                 <CheckCircle className="text-[#3b82f6] mb-4" size={40} />
                 <h3 className="font-bold mb-2 text-lg text-white">Flexibilidade Financeira</h3>
-                <p className="text-[#9ca3af]">
+                <p className="text-[#cbd5e1]">
                   Pagamento facilitado: Parcelamos em até 10 vezes sem juros, tornando o investimento na sua habilitação muito mais acessível.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="bg-[#1a2332] border-[#374151]">
+            <Card className="bg-[#1e2a3a]/80 border-[#3b82f6]/30 backdrop-blur-sm">
               <CardContent className="p-6">
                 <CheckCircle className="text-[#3b82f6] mb-4" size={40} />
                 <h3 className="font-bold mb-2 text-lg text-white">Segurança e Suporte</h3>
-                <p className="text-[#9ca3af]">
+                <p className="text-[#cbd5e1]">
                   Notificações e lembretes automáticos: Nunca mais perca uma aula! Receba alertas por e-mail e WhatsApp com antecedência.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="bg-[#1a2332] border-[#374151]">
+            <Card className="bg-[#1e2a3a]/80 border-[#3b82f6]/30 backdrop-blur-sm">
               <CardContent className="p-6">
                 <CheckCircle className="text-[#3b82f6] mb-4" size={40} />
                 <h3 className="font-bold mb-2 text-lg text-white">Instrutores Qualificados</h3>
-                <p className="text-[#9ca3af]">
+                <p className="text-[#cbd5e1]">
                   Equipe experiente e preparada: Nossos instrutores são altamente qualificados, garantindo uma aprendizagem segura e eficiente.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="bg-[#1a2332] border-[#374151]">
+            <Card className="bg-[#1e2a3a]/80 border-[#3b82f6]/30 backdrop-blur-sm">
               <CardContent className="p-6">
                 <CheckCircle className="text-[#3b82f6] mb-4" size={40} />
                 <h3 className="font-bold mb-2 text-lg text-white">Transparência e Controle</h3>
-                <p className="text-[#9ca3af]">
+                <p className="text-[#cbd5e1]">
                   Acesso total ao progresso: Veja seu histórico de aulas, localizações e horários, tudo de forma clara e organizada.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="bg-[#1a2332] border-[#374151]">
+            <Card className="bg-[#1e2a3a]/80 border-[#3b82f6]/30 backdrop-blur-sm">
               <CardContent className="p-6">
                 <CheckCircle className="text-[#3b82f6] mb-4" size={40} />
                 <h3 className="font-bold mb-2 text-lg text-white">Reagendamento Simplificado</h3>
-                <p className="text-[#9ca3af]">
+                <p className="text-[#cbd5e1]">
                   Flexibilidade em caso de imprevistos: Se houver algum conflito, você pode reagendar suas aulas sem complicação, com total comodidade.
                 </p>
               </CardContent>
