@@ -288,33 +288,29 @@ export default function AdminInstructors() {
                     <div className="flex gap-2 mt-3 flex-wrap">
                       <Link to={`${createPageUrl('InstructorProfile')}?id=${instructor.id}`}>
                         <Button 
-                          variant="outline" 
                           size="sm" 
-                          className="border-[#fbbf24] text-[#fbbf24]"
+                          className="bg-[#fbbf24] text-black hover:bg-[#d4aa00]"
                         >
                           Perfil
                         </Button>
                       </Link>
                       <Button 
-                        variant="outline" 
                         size="sm" 
-                        className="border-[#374151] text-white"
+                        className="bg-[#fbbf24] text-black hover:bg-[#d4aa00]"
                         onClick={() => handleEdit(instructor)}
                       >
                         <Edit size={14} className="mr-1" /> Editar
                       </Button>
                       <Button 
-                        variant="outline" 
                         size="sm" 
-                        className="border-[#374151] text-white"
+                        className="bg-[#fbbf24] text-black hover:bg-[#d4aa00]"
                         onClick={() => openPasswordDialog(instructor)}
                       >
                         <Lock size={14} className="mr-1" /> Senha
                       </Button>
                       <Button 
-                        variant="outline" 
                         size="sm" 
-                        className="border-red-500/50 text-red-400"
+                        className="bg-[#fbbf24] text-black hover:bg-[#d4aa00]"
                         onClick={() => handleDelete(instructor.id)}
                       >
                         <Trash2 size={14} className="mr-1" /> Excluir
