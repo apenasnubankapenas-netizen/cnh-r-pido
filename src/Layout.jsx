@@ -441,33 +441,29 @@ export default function Layout({ children, currentPageName }) {
 
           <div className="flex items-center gap-2">
             {userType !== 'student' && (
-              <div className="flex items-center gap-0">
+              <div className="flex items-center gap-1.5">
                 <Link to={createPageUrl('Landing')}>
-                  <button className="text-[10px] sm:text-xs text-[#cbd5e1] hover:text-[#e6edf3] px-2.5 py-1.5 rounded transition-colors font-semibold">
+                  <button className="text-[10px] sm:text-xs text-black bg-[#fbbf24] hover:bg-[#fcd34d] border-2 border-[#fbbf24] px-3 py-2 rounded-lg transition-all font-bold min-h-[44px] min-w-[60px] active:scale-95">
                     INÍCIO
                   </button>
                 </Link>
-                <span className="text-[#cbd5e1] text-xs">|</span>
                 <Link to={createPageUrl('AdminLogin')}>
-                  <button className="text-[10px] sm:text-xs text-[#cbd5e1] hover:text-[#0969da] px-2.5 py-1.5 rounded transition-colors font-semibold">
+                  <button className="text-[10px] sm:text-xs text-black bg-[#fbbf24] hover:bg-[#fcd34d] border-2 border-[#fbbf24] px-3 py-2 rounded-lg transition-all font-bold min-h-[44px] min-w-[60px] active:scale-95">
                     ADMIN
                   </button>
                 </Link>
-                <span className="text-[#cbd5e1] text-xs">|</span>
                 <Link to={createPageUrl('SellerLogin')}>
-                  <button className="text-[10px] sm:text-xs text-[#cbd5e1] hover:text-[#34d399] px-2.5 py-1.5 rounded transition-colors font-semibold">
+                  <button className="text-[10px] sm:text-xs text-black bg-[#fbbf24] hover:bg-[#fcd34d] border-2 border-[#fbbf24] px-3 py-2 rounded-lg transition-all font-bold min-h-[44px] min-w-[80px] active:scale-95">
                     CONSULTORES
                   </button>
                 </Link>
-                <span className="text-[#cbd5e1] text-xs">|</span>
                 <Link to={createPageUrl('InstructorRegisterNew')}>
-                    <button className="text-[10px] sm:text-xs text-[#cbd5e1] hover:text-[#a78bfa] px-2.5 py-1.5 rounded transition-colors font-semibold">
-                      INSTRUTORES
-                    </button>
-                  </Link>
-                <span className="text-[#cbd5e1] text-xs">|</span>
+                  <button className="text-[10px] sm:text-xs text-black bg-[#fbbf24] hover:bg-[#fcd34d] border-2 border-[#fbbf24] px-3 py-2 rounded-lg transition-all font-bold min-h-[44px] min-w-[80px] active:scale-95">
+                    INSTRUTORES
+                  </button>
+                </Link>
                 <Link to={createPageUrl('SuperAdminLogin')}>
-                  <button className="text-[10px] sm:text-xs text-[#cbd5e1] hover:text-[#f0c41b] px-2.5 py-1.5 rounded transition-colors font-semibold">
+                  <button className="text-[10px] sm:text-xs text-black bg-[#fbbf24] hover:bg-[#fcd34d] border-2 border-[#fbbf24] px-3 py-2 rounded-lg transition-all font-bold min-h-[44px] min-w-[60px] active:scale-95">
                     SUPER
                   </button>
                 </Link>
