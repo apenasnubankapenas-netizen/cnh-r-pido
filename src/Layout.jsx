@@ -464,7 +464,6 @@ export default function Layout({ children, currentPageName }) {
               </div>
             )}
 
-            <span className="text-xs text-[#e6edf3] hidden md:block font-medium truncate max-w-[120px]">{user?.full_name || user?.email}</span>
             <button 
               onClick={handleLogout} 
               className="p-2 hover:bg-[#1a2332] rounded text-[#ef4444] hover:text-[#ff5555] transition-colors"
