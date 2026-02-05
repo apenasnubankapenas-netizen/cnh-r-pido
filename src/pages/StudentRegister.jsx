@@ -636,61 +636,64 @@ export default function StudentRegister() {
             <div className="p-4 bg-[#111827] rounded-lg border border-[#374151] mt-4 space-y-4">
               <div>
                 <Label className="mb-3 block text-white font-semibold">Você já fez os exames médicos?</Label>
-                <div className="flex gap-3">
-                  <Button
-                    variant={formData.exam_done ? 'default' : 'outline'}
-                    className={formData.exam_done ? 'bg-[#1e40af]' : 'border-[#374151]'}
-                    onClick={() => setFormData({...formData, exam_done: true})}
-                  >
-                    Sim
-                  </Button>
-                  <Button
-                    variant={!formData.exam_done ? 'default' : 'outline'}
-                    className={!formData.exam_done ? 'bg-[#1e40af]' : 'border-[#374151]'}
-                    onClick={() => setFormData({...formData, exam_done: false})}
-                  >
-                    Não
-                  </Button>
+                <div 
+                  onClick={() => setFormData({...formData, exam_done: !formData.exam_done})}
+                  className={`p-4 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 ${
+                    formData.exam_done 
+                      ? 'border-[#10b981] bg-[#10b981]/10' 
+                      : 'border-[#374151] hover:border-[#3b82f6]'
+                  }`}
+                >
+                  <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all ${
+                    formData.exam_done 
+                      ? 'bg-[#10b981] border-[#10b981]' 
+                      : 'border-[#374151]'
+                  }`}>
+                    {formData.exam_done && <Check className="text-white" size={16} />}
+                  </div>
+                  <span className="text-white font-medium">Sim, já fiz os exames médicos</span>
                 </div>
               </div>
 
               <div>
                 <Label className="mb-3 block text-white font-semibold">Você já fez a prova teórica?</Label>
-                <div className="flex gap-3">
-                  <Button
-                    variant={formData.theoretical_test_done ? 'default' : 'outline'}
-                    className={formData.theoretical_test_done ? 'bg-[#1e40af]' : 'border-[#374151]'}
-                    onClick={() => setFormData({...formData, theoretical_test_done: true})}
-                  >
-                    Sim
-                  </Button>
-                  <Button
-                    variant={!formData.theoretical_test_done ? 'default' : 'outline'}
-                    className={!formData.theoretical_test_done ? 'bg-[#1e40af]' : 'border-[#374151]'}
-                    onClick={() => setFormData({...formData, theoretical_test_done: false})}
-                  >
-                    Não
-                  </Button>
+                <div 
+                  onClick={() => setFormData({...formData, theoretical_test_done: !formData.theoretical_test_done})}
+                  className={`p-4 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 ${
+                    formData.theoretical_test_done 
+                      ? 'border-[#10b981] bg-[#10b981]/10' 
+                      : 'border-[#374151] hover:border-[#3b82f6]'
+                  }`}
+                >
+                  <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all ${
+                    formData.theoretical_test_done 
+                      ? 'bg-[#10b981] border-[#10b981]' 
+                      : 'border-[#374151]'
+                  }`}>
+                    {formData.theoretical_test_done && <Check className="text-white" size={16} />}
+                  </div>
+                  <span className="text-white font-medium">Sim, já fiz a prova teórica</span>
                 </div>
               </div>
 
               <div>
                 <Label className="mb-3 block text-white font-semibold">Você já fez a prova prática?</Label>
-                <div className="flex gap-3">
-                  <Button
-                    variant={formData.practical_test_done ? 'default' : 'outline'}
-                    className={formData.practical_test_done ? 'bg-[#1e40af]' : 'border-[#374151]'}
-                    onClick={() => setFormData({...formData, practical_test_done: true})}
-                  >
-                    Sim
-                  </Button>
-                  <Button
-                    variant={!formData.practical_test_done ? 'default' : 'outline'}
-                    className={!formData.practical_test_done ? 'bg-[#1e40af]' : 'border-[#374151]'}
-                    onClick={() => setFormData({...formData, practical_test_done: false})}
-                  >
-                    Não
-                  </Button>
+                <div 
+                  onClick={() => setFormData({...formData, practical_test_done: !formData.practical_test_done})}
+                  className={`p-4 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 ${
+                    formData.practical_test_done 
+                      ? 'border-[#10b981] bg-[#10b981]/10' 
+                      : 'border-[#374151] hover:border-[#3b82f6]'
+                  }`}
+                >
+                  <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all ${
+                    formData.practical_test_done 
+                      ? 'bg-[#10b981] border-[#10b981]' 
+                      : 'border-[#374151]'
+                  }`}>
+                    {formData.practical_test_done && <Check className="text-white" size={16} />}
+                  </div>
+                  <span className="text-white font-medium">Sim, já fiz a prova prática</span>
                 </div>
               </div>
             </div>
