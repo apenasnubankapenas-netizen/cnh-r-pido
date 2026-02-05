@@ -381,14 +381,25 @@ export default function Layout({ children, currentPageName }) {
     const enforceSellerSession = async () => {
       try {
         if (userType !== 'seller' || !user) return;
+        const key = `seller_session_version:${user.email}`;
+        const stored = localStorage.getItem(key);
+        
+        // Se não tem versão de sessão salva, salva a atual
+        if (!stored) {
+          const sellers = await base44.entities.Seller.filter({ email: user.email });
+          if (sellers.length > 0) {
+            localStorage.setItem(key, String(sellers[0].session_version || 1));
+          }
+          return;
+        }
+        
         const sellers = await base44.entities.Seller.filter({ email: user.email });
         if (sellers.length === 0) return;
         const s = sellers[0];
-        const key = `seller_session_version:${user.email}`;
-        const stored = localStorage.getItem(key);
         const current = String(s.session_version || 1);
+        
+        // Só força logout se a versão mudou (senha alterada)
         if (stored !== current) {
-          // Força logout e redireciona para ADMIN
           base44.auth.logout();
           setTimeout(() => {
             navigate(createPageUrl('SellerLogin'));
@@ -399,7 +410,7 @@ export default function Layout({ children, currentPageName }) {
       }
     };
     enforceSellerSession();
-  }, [userType, user]);
+  }, [userType, user, navigate]);
 
   // Enforce instructor password session; logout if version mismatch
   useEffect(() => {
