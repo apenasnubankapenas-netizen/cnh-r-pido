@@ -69,7 +69,7 @@ export default function Landing() {
             
             {/* Title */}
             <h1 className="text-6xl md:text-8xl font-black mb-6 tracking-tight">
-              <span className="animate-color-shift bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-white via-[#fbbf24] to-white bg-clip-text text-transparent animate-color-shift">
                 CNH PARA TODOS
               </span>
             </h1>
