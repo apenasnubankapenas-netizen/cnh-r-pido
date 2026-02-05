@@ -281,6 +281,69 @@ export default function SellerLogin() {
     );
   }
 
+  // Tela de login direto para colaborador existente
+  if (showLogin) {
+    return (
+      <div className="min-h-screen bg-[#0a0e1a] flex items-center justify-center p-4">
+        <Card className="bg-[#1a2332] border-[#374151] w-full max-w-md">
+          <CardHeader className="text-center">
+            <div className="w-16 h-16 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <UserCog className="text-[#3b82f6]" size={32} />
+            </div>
+            <CardTitle className="text-xl text-white">Login de Colaborador</CardTitle>
+            <p className="text-[#9ca3af] text-sm mt-2">Digite seu email e senha para acessar.</p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {error && (
+              <div className="p-3 bg-red-500/10 border border-red-500 rounded flex items-center gap-2 text-red-400 text-sm">
+                <AlertCircle size={18} />
+                {error}
+              </div>
+            )}
+
+            <div>
+              <Label>Email *</Label>
+              <Input 
+                type="email"
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={loginEmail}
+                onChange={(e) => setLoginEmail(e.target.value)}
+                placeholder="seu@email.com"
+              />
+            </div>
+
+            <div>
+              <Label>Senha *</Label>
+              <Input 
+                type="password" 
+                className="bg-[#111827] border-[#374151] mt-1" 
+                value={loginPassword} 
+                onChange={(e) => setLoginPassword(e.target.value)} 
+                placeholder="Digite sua senha"
+              />
+            </div>
+
+            <Button 
+              className="w-full bg-[#34d399] text-black hover:bg-[#10b981] py-6 text-base font-bold"
+              onClick={handleDirectLogin}
+              disabled={loggingIn || !loginEmail || !loginPassword}
+            >
+              {loggingIn ? 'Entrando...' : 'Entrar'}
+            </Button>
+
+            <Button 
+              variant="outline" 
+              className="w-full border-[#374151]"
+              onClick={() => { setShowLogin(false); setLoginEmail(''); setLoginPassword(''); setError(''); }}
+            >
+              <ArrowLeft className="mr-2" size={18} /> Voltar
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   // Tela de código de acesso
   if (!seller) {
     return (
