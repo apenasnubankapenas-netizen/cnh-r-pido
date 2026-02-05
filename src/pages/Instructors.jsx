@@ -139,12 +139,12 @@ export default function Instructors() {
         >
           <ArrowLeft size={16} />
         </Button>
-        <h1 className="text-xl sm:text-2xl font-bold">Nossos Instrutores</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-white">Nossos Instrutores</h1>
       </div>
 
       {postSignup && (
         <div className="p-3 rounded-lg border border-[#fbbf24]/50 bg-[#fbbf24]/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <span className="text-xs sm:text-sm">Cadastro concluído! Explore os instrutores e depois finalize o pagamento.</span>
+          <span className="text-xs sm:text-sm text-white">Cadastro concluído! Explore os instrutores e depois finalize o pagamento.</span>
           <Button className="bg-[#f0c41b] text-black hover:bg-[#d4aa00] w-full sm:w-auto h-9 text-sm whitespace-nowrap" onClick={() => navigate(createPageUrl('Payment') + '?amount=' + (amountParam || 0))}>Ir para pagamento</Button>
         </div>
       )}
@@ -173,10 +173,10 @@ export default function Instructors() {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-sm sm:text-base truncate">{instructor.full_name}</h3>
+                    <h3 className="font-bold text-sm sm:text-base truncate text-white">{instructor.full_name}</h3>
                     <div className="flex items-center gap-1 text-xs sm:text-sm">
                       <Star className="text-[#fbbf24] fill-[#fbbf24]" size={12} />
-                      <span>{rating}</span>
+                      <span className="text-white">{rating}</span>
                       <span className="text-[#9ca3af]">({reviewCount})</span>
                     </div>
                     <div className="flex gap-1 sm:gap-2 mt-1 sm:mt-2 flex-wrap">
@@ -218,7 +218,7 @@ export default function Instructors() {
                     <DialogTitle className="text-xl">{selectedInstructor.full_name}</DialogTitle>
                     <div className="flex items-center gap-2 mt-1">
                       <Star className="text-[#fbbf24] fill-[#fbbf24]" size={16} />
-                      <span>{getAverageRating(selectedInstructor.id)}</span>
+                      <span className="text-white">{getAverageRating(selectedInstructor.id)}</span>
                       <span className="text-[#9ca3af]">({getInstructorReviews(selectedInstructor.id).length} avaliações)</span>
                     </div>
                   </div>
@@ -323,7 +323,7 @@ export default function Instructors() {
                 <TabsContent value="avaliacoes" className="mt-4 space-y-4">
                   {student && (
                     <div className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
-                      <h4 className="font-bold mb-3">Deixe seu comentário</h4>
+                      <h4 className="font-bold mb-3 text-white">Deixe seu comentário</h4>
                       <div className="mb-3">
                         <label className="text-sm text-[#9ca3af] mb-2 block">Avaliação (opcional)</label>
                         <div className="flex gap-1">
@@ -360,7 +360,7 @@ export default function Instructors() {
                     {getInstructorComments(selectedInstructor.id).map((comment) => (
                       <div key={comment.id} className="p-3 bg-[#111827] rounded-lg border border-[#374151]">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="font-medium">{comment.student_name}</span>
+                          <span className="font-medium text-white">{comment.student_name}</span>
                           {comment.rating > 0 && (
                             <div className="flex">
                               {[1, 2, 3, 4, 5].map((star) => (
