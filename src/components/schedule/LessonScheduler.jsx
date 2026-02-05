@@ -153,12 +153,14 @@ export default function LessonScheduler({
       return;
     }
     
-    // Mostrar modal para continuar
-    setShowContinueModal(true);
-    setTimeout(() => setShowContinueModal(false), 5000);
-    
-    // Scroll para o topo para continuar agendando
+    // Scroll para o topo e mostrar modal
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // Mostrar modal após um pequeno delay para sincronizar com o scroll
+    setTimeout(() => {
+      setShowContinueModal(true);
+      setTimeout(() => setShowContinueModal(false), 5000);
+    }, 300);
     
     // Resetar campos para próxima aula
     setSelectedDate('');
