@@ -69,13 +69,13 @@ import Landing from './pages/Landing';
 import MyLessons from './pages/MyLessons';
 import Payment from './pages/Payment';
 import SellerLogin from './pages/SellerLogin';
+import SellerRegister from './pages/SellerRegister';
 import Simulados from './pages/Simulados';
 import StudentPayments from './pages/StudentPayments';
 import StudentProfile from './pages/StudentProfile';
 import StudentRegister from './pages/StudentRegister';
 import StudentSellers from './pages/StudentSellers';
 import SuperAdminLogin from './pages/SuperAdminLogin';
-import SellerRegister from './pages/SellerRegister';
 import __Layout from './Layout.jsx';
 
 
@@ -102,13 +102,13 @@ export const PAGES = {
     "MyLessons": MyLessons,
     "Payment": Payment,
     "SellerLogin": SellerLogin,
+    "SellerRegister": SellerRegister,
     "Simulados": Simulados,
     "StudentPayments": StudentPayments,
     "StudentProfile": StudentProfile,
     "StudentRegister": StudentRegister,
     "StudentSellers": StudentSellers,
     "SuperAdminLogin": SuperAdminLogin,
-    "SellerRegister": SellerRegister,
 }
 
 export const pagesConfig = {

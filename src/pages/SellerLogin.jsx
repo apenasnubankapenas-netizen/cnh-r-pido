@@ -202,7 +202,7 @@ export default function SellerLogin() {
           <CardHeader className="text-center">
             <CardTitle className="text-[#fbbf24]">Complete seu Cadastro</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 max-h-[60vh] overflow-y-auto">
+          <CardContent className="space-y-4 max-h-[70vh] overflow-y-auto">
             {error && (
               <div className="p-3 bg-red-500/10 border border-red-500 rounded flex items-center gap-2 text-red-400 text-sm">
                 <AlertCircle size={18} />
@@ -217,13 +217,33 @@ export default function SellerLogin() {
               </div>
             )}
 
+            {/* Foto de Perfil */}
+            <div>
+              <Label>Foto de Perfil *</Label>
+              <div className="mt-2 flex flex-col gap-2">
+                {formData.photo && (
+                  <img src={formData.photo} alt="Perfil" className="w-20 h-20 rounded-lg object-cover" />
+                )}
+                <label className="flex items-center justify-center gap-2 px-3 py-2 bg-[#111827] border border-[#374151] rounded cursor-pointer hover:bg-[#161b22] transition-colors">
+                  <Upload size={18} className="text-[#cbd5e1]" />
+                  <span className="text-xs text-[#cbd5e1] font-medium">Selecionar foto</span>
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    onChange={handleFileUpload}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+            </div>
+
             <div>
               <Label>Nome Completo *</Label>
               <Input 
                 className="bg-[#111827] border-[#374151] mt-1"
                 value={formData.full_name}
-                onChange={(e) => setFormData({...formData, full_name: e.target.value})}
-                placeholder="Seu nome completo"
+                onChange={(e) => setFormData({...formData, full_name: e.target.value.toUpperCase()})}
+                placeholder="SEU NOME COMPLETO"
               />
             </div>
 
@@ -232,7 +252,7 @@ export default function SellerLogin() {
               <Input 
                 className="bg-[#111827] border-[#374151] mt-1"
                 value={formData.phone}
-                onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                onChange={(e) => setFormData({...formData, phone: formatPhone(e.target.value)})}
                 placeholder="(00) 00000-0000"
               />
             </div>
@@ -245,7 +265,6 @@ export default function SellerLogin() {
                 onChange={(e) => setFormData({...formData, whatsapp_link: e.target.value})}
                 placeholder="https://wa.me/5511999999999"
               />
-              <p className="text-xs text-[#9ca3af] mt-1">Alunos poderão entrar em contato via WhatsApp.</p>
             </div>
 
             <div>
@@ -255,6 +274,17 @@ export default function SellerLogin() {
                 className="bg-[#111827] border-[#374151] mt-1"
                 value={formData.email}
                 disabled
+              />
+            </div>
+
+            <div>
+              <Label>Criar Senha *</Label>
+              <Input 
+                type="password"
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={formData.password}
+                onChange={(e) => setFormData({...formData, password: e.target.value})}
+                placeholder="Mínimo 6 caracteres"
               />
             </div>
 
@@ -270,7 +300,7 @@ export default function SellerLogin() {
               <Button 
                 className="flex-1 bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
                 onClick={handleRegister}
-                disabled={registering || !formData.full_name || !formData.phone || !formData.whatsapp_link}
+                disabled={registering || !formData.full_name || !formData.phone || !formData.whatsapp_link || !formData.password || !formData.photo}
               >
                 {registering ? 'Cadastrando...' : 'Cadastrar'}
               </Button>
