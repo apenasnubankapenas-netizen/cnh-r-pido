@@ -293,8 +293,8 @@ export default function Layout({ children, currentPageName }) {
     );
   }
 
-  // Se está em página pública ou não tem cadastro, mostrar top bar mas sem sidebar
-  if (isPublicPage || (userType === null && user.role === 'user')) {
+  // Se está em página pública, mostrar top bar mas sem sidebar
+  if (isPublicPage) {
     return (
       <div className="min-h-screen bg-black/60 text-white font-mono backdrop-blur-sm">
         <style>{`
@@ -422,11 +422,35 @@ export default function Layout({ children, currentPageName }) {
     );
   }
 
-  // Se está logado mas ainda carregando o tipo de usuário
-  if (!userType) {
+  // Se está logado mas ainda carregando o tipo de usuário, mostrar interface básica
+  if (!userType && user.role === 'user') {
     return (
-      <div className="min-h-screen bg-black/60 text-white font-mono backdrop-blur-sm flex items-center justify-center">
-        <div className="animate-pulse text-[#fbbf24]">Carregando...</div>
+      <div className="min-h-screen bg-black/60 text-white font-mono backdrop-blur-sm">
+        <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        * {
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+          font-weight: 500;
+          letter-spacing: -0.01em;
+        }
+        `}</style>
+        <div className="fixed top-0 left-0 right-0 h-14 bg-black/40 border-b border-[#30363d] z-40 flex items-center justify-between px-3 backdrop-blur-md">
+          <div className="flex items-center gap-2">
+            <Car className="text-[#f0c41b]" size={24} />
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-[#e6edf3] hidden md:block font-medium truncate max-w-[120px]">{user?.full_name || user?.email}</span>
+            <button onClick={handleLogout} className="p-2 hover:bg-[#1a2332] rounded text-[#ef4444] hover:text-[#ff5555] transition-colors">
+              <LogOut size={18} />
+            </button>
+          </div>
+        </div>
+        <main className="pt-14 min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-pulse text-[#fbbf24] text-xl mb-4">Carregando seu perfil...</div>
+            <p className="text-[#9ca3af] text-sm">Aguarde enquanto carregamos suas informações</p>
+          </div>
+        </main>
       </div>
     );
   }
