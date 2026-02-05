@@ -128,8 +128,8 @@ export default function LessonScheduler({
     }
     
     // Bloquear instrutor nas 2 primeiras aulas de cada tipo (carro e moto)
-    const currentTypeScheduled = schedules.filter(s => s.type === currentType).length;
-    if (currentTypeScheduled === 0 && (currentType === 'carro' || currentType === 'moto')) {
+    const typeScheduledCount = schedules.filter(s => s.type === currentType).length;
+    if (typeScheduledCount === 0 && (currentType === 'carro' || currentType === 'moto')) {
       setLockedInstructors(prev => ({ ...prev, [currentType]: selectedInstructor }));
     }
     
