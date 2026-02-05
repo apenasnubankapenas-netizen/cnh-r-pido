@@ -41,6 +41,10 @@ export default function Layout({ children, currentPageName }) {
   const [selectedInstructorForView, setSelectedInstructorForView] = useState(null);
   const [showInstructorSelectorModal, setShowInstructorSelectorModal] = useState(false);
   const [pendingInstructorPage, setPendingInstructorPage] = useState(null);
+  const [allSellers, setAllSellers] = useState([]);
+  const [selectedSellerForView, setSelectedSellerForView] = useState(null);
+  const [showSellerSelectorModal, setShowSellerSelectorModal] = useState(false);
+  const [pendingSellerPage, setPendingSellerPage] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -48,6 +52,7 @@ export default function Layout({ children, currentPageName }) {
     loadUser();
     loadStudentsForSelector();
     loadInstructorsForSelector();
+    loadSellersForSelector();
     // Carregar aluno selecionado do localStorage
     const savedStudent = localStorage.getItem('admin_view_student');
     if (savedStudent) {
@@ -57,6 +62,11 @@ export default function Layout({ children, currentPageName }) {
     const savedInstructor = localStorage.getItem('admin_view_instructor');
     if (savedInstructor) {
       setSelectedInstructorForView(JSON.parse(savedInstructor));
+    }
+    // Carregar colaborador selecionado do localStorage
+    const savedSeller = localStorage.getItem('admin_view_seller');
+    if (savedSeller) {
+      setSelectedSellerForView(JSON.parse(savedSeller));
     }
   }, []);
 
@@ -100,6 +110,15 @@ export default function Layout({ children, currentPageName }) {
     }
   };
 
+  const loadSellersForSelector = async () => {
+    try {
+      const sellers = await base44.entities.Seller.list();
+      setAllSellers(sellers);
+    } catch (e) {
+      console.error('Erro ao carregar colaboradores:', e);
+    }
+  };
+
   const handleStudentPageClick = (pageName) => {
     if (userType === 'superadmin') {
       setPendingStudentPage(pageName);
@@ -135,6 +154,21 @@ export default function Layout({ children, currentPageName }) {
   const clearInstructorView = () => {
     setSelectedInstructorForView(null);
     localStorage.removeItem('admin_view_instructor');
+  };
+
+  const selectSellerAndNavigate = (seller) => {
+    setSelectedSellerForView(seller);
+    localStorage.setItem('admin_view_seller', JSON.stringify(seller));
+    setShowSellerSelectorModal(false);
+    if (pendingSellerPage) {
+      navigate(createPageUrl(pendingSellerPage));
+      setPendingSellerPage(null);
+    }
+  };
+
+  const clearSellerView = () => {
+    setSelectedSellerForView(null);
+    localStorage.removeItem('admin_view_seller');
   };
 
   const loadUserType = async () => {
@@ -235,6 +269,7 @@ export default function Layout({ children, currentPageName }) {
         { name: 'Configurações', icon: Settings, page: 'AdminSettings' },
         { name: '---', icon: null, page: null }, // Separador visual
         { name: 'Simular Visão Instrutor', icon: Car, page: null, action: 'selectInstructor' },
+        { name: 'Simular Visão Colaborador', icon: UserCog, page: null, action: 'selectSeller' },
         { name: 'Simular Visão Aluno', icon: Users, page: null, action: 'selectStudent' },
         { name: '---', icon: null, page: null }, // Separador visual
         { name: 'Ver Instrutores (Aluno)', icon: Users, page: 'Instructors', viewAs: 'student' },
@@ -775,7 +810,7 @@ export default function Layout({ children, currentPageName }) {
             const Icon = item.icon;
             const isActive = currentPageName === item.page;
             
-            // Se for ação especial (selectInstructor ou selectStudent)
+            // Se for ação especial (selectInstructor, selectSeller ou selectStudent)
             if (item.action && userType === 'superadmin') {
               return (
                 <button
@@ -785,6 +820,9 @@ export default function Layout({ children, currentPageName }) {
                     if (item.action === 'selectInstructor') {
                       setPendingInstructorPage('AdminDashboard');
                       setShowInstructorSelectorModal(true);
+                    } else if (item.action === 'selectSeller') {
+                      setPendingSellerPage('AdminDashboard');
+                      setShowSellerSelectorModal(true);
                     } else if (item.action === 'selectStudent') {
                       setPendingStudentPage('Home');
                       setShowStudentSelectorModal(true);
@@ -912,6 +950,23 @@ export default function Layout({ children, currentPageName }) {
             </div>
           )}
           
+          {/* Indicador de visualização como colaborador */}
+          {userType === 'superadmin' && selectedSellerForView && (
+            <div className="mb-4 p-3 bg-[#34d399]/10 border border-[#34d399] rounded-lg flex items-center justify-between">
+              <div>
+                <p className="text-sm text-[#34d399] font-semibold">Visualizando como Colaborador:</p>
+                <p className="text-white font-bold">{selectedSellerForView.full_name}</p>
+                <p className="text-xs text-[#9ca3af]">Email: {selectedSellerForView.email}</p>
+              </div>
+              <button
+                onClick={clearSellerView}
+                className="px-3 py-1 bg-[#ef4444] hover:bg-[#dc2626] rounded text-white text-xs font-semibold"
+              >
+                Limpar
+              </button>
+            </div>
+          )}
+          
           {/* Indicador de visualização como aluno */}
           {userType === 'superadmin' && selectedStudentForView && (
             <div className="mb-4 p-3 bg-[#10b981]/10 border border-[#10b981] rounded-lg flex items-center justify-between">
@@ -932,6 +987,75 @@ export default function Layout({ children, currentPageName }) {
           {children}
         </div>
       </main>
+
+      {/* Seller Selector Modal */}
+      {showSellerSelectorModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#1a2332] border-2 border-[#34d399] rounded-xl w-full max-w-2xl max-h-[80vh] overflow-hidden">
+            <div className="border-b border-[#374151] p-4 bg-gradient-to-r from-[#34d399] to-[#10b981]">
+              <h2 className="text-lg font-bold text-white">Selecione um Colaborador para Visualizar</h2>
+              <p className="text-sm text-white/80 mt-1">Escolha qual colaborador você deseja visualizar na página de {pendingSellerPage}</p>
+            </div>
+            <div className="p-6 overflow-y-auto max-h-[60vh]">
+              {selectedSellerForView && (
+                <div className="mb-4 p-3 bg-[#34d399]/10 border border-[#34d399] rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-[#34d399] font-semibold">Visualizando atualmente como:</p>
+                      <p className="text-white font-bold">{selectedSellerForView.full_name}</p>
+                      <p className="text-xs text-[#9ca3af]">Email: {selectedSellerForView.email}</p>
+                    </div>
+                    <button
+                      onClick={clearSellerView}
+                      className="px-3 py-1 bg-[#ef4444] hover:bg-[#dc2626] rounded text-white text-xs font-semibold"
+                    >
+                      Limpar
+                    </button>
+                  </div>
+                </div>
+              )}
+              
+              <div className="space-y-2">
+                {allSellers.length === 0 ? (
+                  <p className="text-[#9ca3af] text-center py-8">Nenhum colaborador cadastrado ainda.</p>
+                ) : (
+                  allSellers.map((seller) => (
+                    <button
+                      key={seller.id}
+                      onClick={() => selectSellerAndNavigate(seller)}
+                      className="w-full p-4 bg-[#111827] border border-[#374151] rounded-lg hover:border-[#34d399] hover:bg-[#1a2332] transition-all text-left"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <p className="font-bold text-white">{seller.full_name}</p>
+                          <p className="text-sm text-[#9ca3af]">{seller.email}</p>
+                          <p className="text-xs text-[#9ca3af] mt-1">Telefone: {seller.phone || 'N/A'}</p>
+                        </div>
+                        <div className="text-right">
+                          <div className={`text-xs font-semibold ${seller.active ? 'text-green-400' : 'text-red-400'}`}>
+                            {seller.active ? 'Ativo' : 'Inativo'}
+                          </div>
+                        </div>
+                      </div>
+                    </button>
+                  ))
+                )}
+              </div>
+            </div>
+            <div className="border-t border-[#374151] p-4 bg-[#111827]">
+              <button
+                onClick={() => {
+                  setShowSellerSelectorModal(false);
+                  setPendingSellerPage(null);
+                }}
+                className="w-full px-4 py-2 border border-[#374151] rounded text-white font-semibold text-sm hover:bg-[#161b22] transition-colors"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Instructor Selector Modal */}
       {showInstructorSelectorModal && (
