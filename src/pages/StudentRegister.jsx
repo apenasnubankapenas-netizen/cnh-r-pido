@@ -62,7 +62,7 @@ export default function StudentRegister() {
   });
   
   const [lessonSchedules, setLessonSchedules] = useState([]);
-  const [timeRemaining, setTimeRemaining] = useState(300);
+  const [timeRemaining, setTimeRemaining] = useState(600);
   const [paymentMethod, setPaymentMethod] = useState('');
 
 
@@ -1083,7 +1083,7 @@ export default function StudentRegister() {
           lessonsConfig={lessonQuantities}
           onSchedulesComplete={(schedules) => {
             setLessonSchedules(schedules);
-            setTimeRemaining(300);
+            setTimeRemaining(600);
             setStep(5);
           }}
           onBack={() => setStep(3)}
