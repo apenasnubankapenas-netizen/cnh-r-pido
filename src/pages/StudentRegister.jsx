@@ -34,7 +34,6 @@ export default function StudentRegister() {
   const [isInstructor, setIsInstructor] = useState(false);
 
   const [formData, setFormData] = useState({
-    renach: '',
     cpf: '',
     full_name: '',
     cep: '',
@@ -239,6 +238,7 @@ export default function StudentRegister() {
         const { seller_code, ...studentPayload } = formData;
         const studentData = {
           ...studentPayload,
+          renach: `TEMP-${Date.now()}`,
           user_email: user?.email,
           ref_seller_id: referralSeller?.id,
           ref_seller_name: referralSeller?.full_name,
@@ -264,7 +264,7 @@ export default function StudentRegister() {
           await base44.entities.Lesson.create({
             student_id: newStudent.id,
             student_name: formData.full_name,
-            student_renach: formData.renach,
+            student_renach: newStudent.renach,
             instructor_id: schedule.instructor_id,
             instructor_name: schedule.instructor_name,
             date: schedule.date,
@@ -302,6 +302,7 @@ export default function StudentRegister() {
         const { seller_code, ...studentPayload } = formData;
         const studentData = {
           ...studentPayload,
+          renach: `TEMP-${Date.now()}`,
           user_email: user?.email,
           ref_seller_id: referralSeller?.id,
           ref_seller_name: referralSeller?.full_name,
@@ -327,7 +328,7 @@ export default function StudentRegister() {
           await base44.entities.Lesson.create({
             student_id: newStudent.id,
             student_name: formData.full_name,
-            student_renach: formData.renach,
+            student_renach: newStudent.renach,
             instructor_id: schedule.instructor_id,
             instructor_name: schedule.instructor_name,
             date: schedule.date,
@@ -437,26 +438,15 @@ export default function StudentRegister() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>CPF *</Label>
-                <Input 
-                  className="bg-[#111827] border-[#374151] mt-1"
-                  value={formData.cpf}
-                  onChange={(e) => setFormData({...formData, cpf: formatCPF(e.target.value)})}
-                  placeholder="000.000.000-00"
-                  maxLength={14}
-                />
-              </div>
-              <div>
-                <Label>RENACH *</Label>
-                <Input 
-                  className="bg-[#111827] border-[#374151] mt-1"
-                  value={formData.renach}
-                  onChange={(e) => setFormData({...formData, renach: e.target.value.toUpperCase()})}
-                  placeholder="Número do RENACH"
-                />
-              </div>
+            <div>
+              <Label>CPF *</Label>
+              <Input 
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={formData.cpf}
+                onChange={(e) => setFormData({...formData, cpf: formatCPF(e.target.value)})}
+                placeholder="000.000.000-00"
+                maxLength={14}
+              />
             </div>
 
             <div>
@@ -535,7 +525,6 @@ export default function StudentRegister() {
              disabled={
                !formData.full_name ||
                !formData.cpf ||
-               !formData.renach ||
                !formData.whatsapp ||
                !formData.phone ||
                ((formData.cep || '').replace(/\D/g,'').length !== 8) ||
