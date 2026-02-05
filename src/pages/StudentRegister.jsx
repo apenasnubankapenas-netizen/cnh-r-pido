@@ -526,15 +526,13 @@ export default function StudentRegister() {
             </div>
 
             <div className="flex gap-3 mt-6">
-              {step > 1 && (
-                <Button 
-                  variant="outline" 
-                  className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black px-6 py-6 text-base font-bold" 
-                  onClick={() => navigate(createPageUrl('Landing'))}
-                >
-                  <ArrowLeft className="mr-2" size={20} /> CANCELAR
-                </Button>
-              )}
+              <Button 
+                variant="outline" 
+                className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black px-6 py-6 text-base font-bold" 
+                onClick={() => navigate(createPageUrl('Landing'))}
+              >
+                <ArrowLeft className="mr-2" size={20} /> CANCELAR
+              </Button>
               <Button 
                 className="flex-1 bg-[#f0c41b] text-black hover:bg-[#d4aa00] px-6 py-6 text-base font-bold"
                 onClick={() => {
