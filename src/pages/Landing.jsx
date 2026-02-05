@@ -21,6 +21,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 export default function Landing() {
   const [settings, setSettings] = useState(null);
   const [user, setUser] = useState(null);
+  const [hasRegistration, setHasRegistration] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadData();
@@ -36,11 +38,25 @@ export default function Landing() {
       try {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
+        
+        // Verificar se o usuário tem algum tipo de cadastro
+        if (currentUser) {
+          const [students, instructors, sellers] = await Promise.all([
+            base44.entities.Student.filter({ user_email: currentUser.email }),
+            base44.entities.Instructor.filter({ user_email: currentUser.email }),
+            base44.entities.Seller.filter({ email: currentUser.email })
+          ]);
+          
+          const hasAnyRegistration = students.length > 0 || instructors.length > 0 || sellers.length > 0 || currentUser.role === 'admin';
+          setHasRegistration(hasAnyRegistration);
+        }
       } catch (e) {
         // Usuário não logado
       }
     } catch (e) {
       console.log(e);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -85,7 +101,11 @@ export default function Landing() {
 
           {/* Login/Register Cards */}
           <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-16">
-            {user ? (
+            {loading ? (
+              <div className="md:col-span-2 text-center py-12">
+                <div className="animate-pulse text-[#fbbf24] text-xl">Carregando...</div>
+              </div>
+            ) : (user && hasRegistration) ? (
               <div className="md:col-span-2">
                 <Link to={createPageUrl('Home')} className="block">
                   <button className="group relative w-full bg-gradient-to-r from-[#1e40af] to-[#3b82f6] hover:from-[#1e3a8a] hover:to-[#2563eb] text-white p-8 rounded-2xl shadow-2xl hover:shadow-[#3b82f6]/50 transition-all duration-300 active:scale-95 border-2 border-[#3b82f6]/30 min-h-[120px] touch-manipulation">
