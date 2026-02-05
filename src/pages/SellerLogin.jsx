@@ -30,6 +30,8 @@ export default function SellerLogin() {
   });
 
   const [loginPassword, setLoginPassword] = useState('');
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loggingIn, setLoggingIn] = useState(false);
 
   const navigate = useNavigate();
 
@@ -142,19 +144,46 @@ export default function SellerLogin() {
     }
   };
 
-  const handleLogin = () => {
+  const handleDirectLogin = async () => {
     setError('');
-    if (!seller) {
-      setError('Sua conta não está como Colaborador.');
+    setLoggingIn(true);
+
+    if (!loginEmail || !loginPassword) {
+      setError('Preencha email e senha.');
+      setLoggingIn(false);
       return;
     }
-    if (!loginPassword || loginPassword !== (seller.password || '')) {
-      setError('Senha inválida.');
-      return;
+
+    try {
+      const sellers = await base44.entities.Seller.filter({ email: loginEmail });
+      
+      if (sellers.length === 0) {
+        setError('Email ou senha inválidos.');
+        setLoggingIn(false);
+        return;
+      }
+
+      const sellerData = sellers[0];
+      
+      if (!sellerData.active) {
+        setError('Sua conta está inativa. Contate o Super Admin.');
+        setLoggingIn(false);
+        return;
+      }
+
+      if (loginPassword !== (sellerData.password || '')) {
+        setError('Email ou senha inválidos.');
+        setLoggingIn(false);
+        return;
+      }
+
+      const key = `seller_session_version:${loginEmail}`;
+      localStorage.setItem(key, String(sellerData.session_version || 1));
+      navigate(createPageUrl('AdminDashboard'));
+    } catch (err) {
+      setError('Erro ao fazer login: ' + err.message);
+      setLoggingIn(false);
     }
-    const key = `seller_session_version:${user.email}`;
-    localStorage.setItem(key, String(seller.session_version || 1));
-    navigate(createPageUrl('AdminDashboard'));
   };
 
   if (loading) {
