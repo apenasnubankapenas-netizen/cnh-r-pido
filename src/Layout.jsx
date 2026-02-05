@@ -431,12 +431,6 @@ export default function Layout({ children, currentPageName }) {
         {/* Top Bar */}
         <div className="fixed top-0 left-0 right-0 h-14 bg-black/40 border-b border-[#30363d] z-40 flex items-center justify-between px-3 backdrop-blur-md">
           <div className="flex items-center gap-2">
-            <Link 
-              to={createPageUrl('Landing')} 
-              className="flex items-center hover:opacity-80 transition-opacity p-1.5"
-            >
-              <Car className="text-[#f0c41b]" size={24} />
-            </Link>
           </div>
 
           <div className="flex items-center gap-2">
