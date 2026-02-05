@@ -31,8 +31,11 @@ export default function Layout({ children, currentPageName }) {
   const [userType, setUserType] = useState(null);
   const [instructor, setInstructor] = useState(null);
   const [showGenerateCodeModal, setShowGenerateCodeModal] = useState(false);
+  const [showGenerateSellerCodeModal, setShowGenerateSellerCodeModal] = useState(false);
   const [generatedCode, setGeneratedCode] = useState('');
+  const [generatedSellerCode, setGeneratedSellerCode] = useState('');
   const [codeLoading, setCodeLoading] = useState(false);
+  const [sellerCodeLoading, setSellerCodeLoading] = useState(false);
   const [showStudentSelectorModal, setShowStudentSelectorModal] = useState(false);
   const [allStudents, setAllStudents] = useState([]);
   const [selectedStudentForView, setSelectedStudentForView] = useState(null);
@@ -249,6 +252,29 @@ export default function Layout({ children, currentPageName }) {
       alert('Erro ao gerar código: ' + e.message);
     } finally {
       setCodeLoading(false);
+    }
+  };
+
+  const generateSellerCode = async () => {
+    setSellerCodeLoading(true);
+    try {
+      const code = Math.random().toString(36).substring(2, 11).toUpperCase();
+      const expiresAt = new Date();
+      expiresAt.setDate(expiresAt.getDate() + 30); // Válido por 30 dias
+      
+      await base44.entities.SellerAccessCode.create({
+        code,
+        used: false,
+        expires_at: expiresAt.toISOString(),
+        notes: `Gerado para ${user?.full_name}`
+      });
+      
+      setGeneratedSellerCode(code);
+      navigator.clipboard.writeText(code).catch(() => {});
+    } catch (e) {
+      alert('Erro ao gerar código: ' + e.message);
+    } finally {
+      setSellerCodeLoading(false);
     }
   };
 
@@ -882,16 +908,22 @@ export default function Layout({ children, currentPageName }) {
             );
           })}
           
-          {/* Generate Instructor Code Button (SuperAdmin) */}
+          {/* Generate Codes Buttons (SuperAdmin) */}
           {userType === 'superadmin' && (
             <>
               <div className="my-3 border-t border-[#374151]" />
-              <div className="p-3 bg-[#161b22] rounded-lg border border-[#30363d] terminal-glow">
+              <div className="p-3 bg-[#161b22] rounded-lg border border-[#30363d] terminal-glow space-y-2">
                 <button
                   onClick={() => setShowGenerateCodeModal(true)}
                   className="w-full px-3 py-2 bg-[#0969da] hover:bg-[#0550ae] rounded text-xs font-semibold text-white transition-colors"
                 >
                   Gerar Código Instrutor
+                </button>
+                <button
+                  onClick={() => setShowGenerateSellerCodeModal(true)}
+                  className="w-full px-3 py-2 bg-[#34d399] hover:bg-[#10b981] rounded text-xs font-semibold text-black transition-colors"
+                >
+                  Gerar Código Consultor
                 </button>
               </div>
             </>
@@ -1200,7 +1232,7 @@ export default function Layout({ children, currentPageName }) {
         </div>
       )}
 
-      {/* Generate Code Modal */}
+      {/* Generate Instructor Code Modal */}
       {showGenerateCodeModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-[#1a2332] border-2 border-[#fbbf24] rounded-xl w-full max-w-md">
@@ -1242,6 +1274,59 @@ export default function Layout({ children, currentPageName }) {
                   </button>
                   <button
                     onClick={() => setShowGenerateCodeModal(false)}
+                    className="w-full px-4 py-2 border border-[#374151] rounded text-white font-semibold text-sm hover:bg-[#161b22] transition-colors"
+                  >
+                    Cancelar
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Generate Seller Code Modal */}
+      {showGenerateSellerCodeModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#1a2332] border-2 border-[#34d399] rounded-xl w-full max-w-md">
+            <div className="border-b border-[#374151] p-4 bg-gradient-to-r from-[#34d399] to-[#10b981]">
+              <h2 className="text-lg font-bold text-white">Gerar Código de Colaborador</h2>
+            </div>
+            <div className="p-6 space-y-4">
+              {generatedSellerCode ? (
+                <>
+                  <div className="text-center">
+                    <p className="text-[#9ca3af] text-sm mb-3">Código gerado com sucesso!</p>
+                    <div className="p-4 bg-[#111827] border border-[#374151] rounded-lg">
+                      <p className="text-3xl font-bold text-[#34d399] tracking-widest">{generatedSellerCode}</p>
+                    </div>
+                    <p className="text-xs text-[#9ca3af] mt-3">Válido por 30 dias. Já foi copiado!</p>
+                  </div>
+                  <button
+                    onClick={() => navigator.clipboard.writeText(generatedSellerCode)}
+                    className="w-full px-4 py-2 bg-[#34d399] hover:bg-[#10b981] rounded text-black font-semibold text-sm transition-colors"
+                  >
+                    Copiar Novamente
+                  </button>
+                  <button
+                    onClick={() => { setGeneratedSellerCode(''); setShowGenerateSellerCodeModal(false); }}
+                    className="w-full px-4 py-2 border border-[#374151] rounded text-white font-semibold text-sm hover:bg-[#161b22] transition-colors"
+                  >
+                    Fechar
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p className="text-[#9ca3af] text-sm">Gere um código único para que um novo colaborador se registre no sistema.</p>
+                  <button
+                    onClick={generateSellerCode}
+                    disabled={sellerCodeLoading}
+                    className="w-full px-4 py-3 bg-[#34d399] hover:bg-[#10b981] rounded text-black font-bold transition-colors disabled:opacity-50"
+                  >
+                    {sellerCodeLoading ? 'Gerando...' : 'Gerar Código'}
+                  </button>
+                  <button
+                    onClick={() => setShowGenerateSellerCodeModal(false)}
                     className="w-full px-4 py-2 border border-[#374151] rounded text-white font-semibold text-sm hover:bg-[#161b22] transition-colors"
                   >
                     Cancelar
