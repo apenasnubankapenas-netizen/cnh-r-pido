@@ -295,7 +295,16 @@ export default function LessonScheduler({
 
           {currentType && (
             <div>
-              <label className="text-xs sm:text-sm text-[#9ca3af] block mb-3">
+              <style>{`
+                @keyframes blinkYellowWhite {
+                  0%, 100% { color: #fbbf24; }
+                  50% { color: #ffffff; }
+                }
+                .blink-instructor {
+                  animation: blinkYellowWhite 1s ease-in-out infinite;
+                }
+              `}</style>
+              <label className={`text-lg sm:text-xl font-bold block mb-3 uppercase ${scheduledLessons < totalLessons ? 'blink-instructor' : 'text-[#fbbf24]'}`}>
                 Escolha seu Instrutor {lockedInstructor && schedules.length < 2 && '(Bloqueado para as 2 primeiras aulas)'}
               </label>
               
