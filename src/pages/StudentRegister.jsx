@@ -738,164 +738,295 @@ export default function StudentRegister() {
         </Card>
       )}
 
-      {/* Step 3: Escolher Quantidade de Aulas */}
+      {/* Step 3: Pacote e Aulas Extras */}
       {step === 3 && (
         <Card className="bg-[#1a2332] border-[#374151]">
           <CardHeader>
-            <CardTitle className="text-[#fbbf24]">Quantas aulas você quer agendar?</CardTitle>
+            <CardTitle className="text-[#fbbf24]">Pacote de Aulas Práticas</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="text-sm text-[#9ca3af]">Escolha quantas aulas de cada tipo você deseja agendar agora. Você pode adicionar mais aulas depois.</p>
             
-            {(['B', 'AB', 'onibus', 'carreta', 'inclusao_B'].includes(formData.category)) && (
-              <div className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <Car size={24} className="text-[#3b82f6]" />
-                    <span className="font-bold text-white">Aulas de Carro</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="border-[#374151] h-10 w-10"
-                      onClick={() => setLessonQuantities({...lessonQuantities, carro: Math.max(2, lessonQuantities.carro - 1)})}
-                    >
-                      <Minus size={18} />
-                    </Button>
-                    <span className="w-12 text-center font-bold text-xl text-white">{lessonQuantities.carro}</span>
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="border-[#374151] h-10 w-10"
-                      onClick={() => setLessonQuantities({...lessonQuantities, carro: lessonQuantities.carro + 1})}
-                    >
-                      <Plus size={18} />
-                    </Button>
-                  </div>
+            {/* Pacote Base Incluso */}
+            <div className="p-5 bg-gradient-to-br from-[#10b981]/20 to-[#059669]/20 rounded-lg border-2 border-[#10b981]">
+              <div className="flex items-start gap-3 mb-3">
+                <div className="w-8 h-8 rounded-full bg-[#10b981] flex items-center justify-center flex-shrink-0 mt-1">
+                  <Check className="text-white" size={20} />
+                </div>
+                <div>
+                  <h3 className="text-white font-bold text-lg mb-1">PACOTE INCLUSO</h3>
+                  <p className="text-[#d1fae5] text-sm">Incluído no valor da sua categoria</p>
                 </div>
               </div>
-            )}
+              
+              <div className="space-y-3 ml-11">
+                {(['B', 'AB', 'onibus', 'carreta', 'inclusao_B'].includes(formData.category)) && (
+                  <div className="flex items-center justify-between p-3 bg-[#111827]/50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <Car size={20} className="text-[#3b82f6]" />
+                      <span className="font-semibold text-white">2 Aulas de Carro</span>
+                    </div>
+                    <span className="text-[#10b981] font-bold">GRÁTIS</span>
+                  </div>
+                )}
+                
+                {(['A', 'AB', 'inclusao_A'].includes(formData.category)) && (
+                  <div className="flex items-center justify-between p-3 bg-[#111827]/50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <Bike size={20} className="text-[#fbbf24]" />
+                      <span className="font-semibold text-white">2 Aulas de Moto</span>
+                    </div>
+                    <span className="text-[#10b981] font-bold">GRÁTIS</span>
+                  </div>
+                )}
 
-            {(['A', 'AB', 'inclusao_A'].includes(formData.category)) && (
-              <div className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <Bike size={24} className="text-[#fbbf24]" />
-                    <span className="font-bold text-white">Aulas de Moto</span>
+                {formData.category === 'onibus' && (
+                  <div className="flex items-center justify-between p-3 bg-[#111827]/50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <Bus size={20} className="text-green-400" />
+                      <span className="font-semibold text-white">2 Aulas de Ônibus</span>
+                    </div>
+                    <span className="text-[#10b981] font-bold">GRÁTIS</span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="border-[#374151] h-10 w-10"
-                      onClick={() => setLessonQuantities({...lessonQuantities, moto: Math.max(2, lessonQuantities.moto - 1)})}
-                    >
-                      <Minus size={18} />
-                    </Button>
-                    <span className="w-12 text-center font-bold text-xl text-white">{lessonQuantities.moto}</span>
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="border-[#374151] h-10 w-10"
-                      onClick={() => setLessonQuantities({...lessonQuantities, moto: lessonQuantities.moto + 1})}
-                    >
-                      <Plus size={18} />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            )}
+                )}
 
-            {formData.category === 'onibus' && (
-              <div className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <Bus size={24} className="text-green-400" />
-                    <span className="font-bold text-white">Aulas de Ônibus</span>
+                {formData.category === 'caminhao' && (
+                  <div className="flex items-center justify-between p-3 bg-[#111827]/50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <Truck size={20} className="text-orange-400" />
+                      <span className="font-semibold text-white">2 Aulas de Caminhão</span>
+                    </div>
+                    <span className="text-[#10b981] font-bold">GRÁTIS</span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="border-[#374151] h-10 w-10"
-                      onClick={() => setLessonQuantities({...lessonQuantities, onibus: Math.max(2, lessonQuantities.onibus - 1)})}
-                    >
-                      <Minus size={18} />
-                    </Button>
-                    <span className="w-12 text-center font-bold text-xl text-white">{lessonQuantities.onibus}</span>
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="border-[#374151] h-10 w-10"
-                      onClick={() => setLessonQuantities({...lessonQuantities, onibus: lessonQuantities.onibus + 1})}
-                    >
-                      <Plus size={18} />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            )}
+                )}
 
-            {formData.category === 'caminhao' && (
-              <div className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <Truck size={24} className="text-orange-400" />
-                    <span className="font-bold text-white">Aulas de Caminhão</span>
+                {formData.category === 'carreta' && (
+                  <div className="flex items-center justify-between p-3 bg-[#111827]/50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <Truck size={20} className="text-purple-400" />
+                      <span className="font-semibold text-white">2 Aulas de Carreta</span>
+                    </div>
+                    <span className="text-[#10b981] font-bold">GRÁTIS</span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="border-[#374151] h-10 w-10"
-                      onClick={() => setLessonQuantities({...lessonQuantities, caminhao: Math.max(2, lessonQuantities.caminhao - 1)})}
-                    >
-                      <Minus size={18} />
-                    </Button>
-                    <span className="w-12 text-center font-bold text-xl text-white">{lessonQuantities.caminhao}</span>
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="border-[#374151] h-10 w-10"
-                      onClick={() => setLessonQuantities({...lessonQuantities, caminhao: lessonQuantities.caminhao + 1})}
-                    >
-                      <Plus size={18} />
-                    </Button>
-                  </div>
-                </div>
+                )}
               </div>
-            )}
+            </div>
 
-            {formData.category === 'carreta' && (
-              <div className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <Truck size={24} className="text-purple-400" />
-                    <span className="font-bold text-white">Aulas de Carreta</span>
+            {/* Aulas Avulsas Extras */}
+            <div>
+              <h3 className="font-bold text-white text-lg mb-3">Deseja adicionar aulas extras?</h3>
+              <p className="text-sm text-[#9ca3af] mb-4">Adicione mais aulas práticas conforme sua necessidade. Você também pode comprar aulas depois.</p>
+              
+              <div className="space-y-3">
+                {(['B', 'AB', 'onibus', 'carreta', 'inclusao_B'].includes(formData.category)) && (
+                  <div className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="flex items-center gap-2">
+                        <Car size={24} className="text-[#3b82f6]" />
+                        <div>
+                          <span className="font-bold text-white block">Aulas de Carro</span>
+                          <span className="text-xs text-[#fbbf24]">R$ {(settings?.lesson_price_car || settings?.lesson_price || 98).toFixed(2)} por aula</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Button 
+                          variant="outline" 
+                          size="icon" 
+                          className="border-[#374151] h-10 w-10"
+                          onClick={() => setLessonQuantities({...lessonQuantities, carro: Math.max(2, lessonQuantities.carro - 1)})}
+                          disabled={lessonQuantities.carro <= 2}
+                        >
+                          <Minus size={18} />
+                        </Button>
+                        <span className="w-12 text-center font-bold text-xl text-white">{lessonQuantities.carro - 2}</span>
+                        <Button 
+                          variant="outline" 
+                          size="icon" 
+                          className="border-[#374151] h-10 w-10"
+                          onClick={() => setLessonQuantities({...lessonQuantities, carro: lessonQuantities.carro + 1})}
+                        >
+                          <Plus size={18} />
+                        </Button>
+                      </div>
+                    </div>
+                    {lessonQuantities.carro > 2 && (
+                      <div className="text-right text-sm mt-2">
+                        <span className="text-[#9ca3af]">Subtotal: </span>
+                        <span className="text-[#fbbf24] font-bold">R$ {((lessonQuantities.carro - 2) * (settings?.lesson_price_car || settings?.lesson_price || 98)).toFixed(2)}</span>
+                      </div>
+                    )}
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="border-[#374151] h-10 w-10"
-                      onClick={() => setLessonQuantities({...lessonQuantities, carreta: Math.max(2, lessonQuantities.carreta - 1)})}
-                    >
-                      <Minus size={18} />
-                    </Button>
-                    <span className="w-12 text-center font-bold text-xl text-white">{lessonQuantities.carreta}</span>
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="border-[#374151] h-10 w-10"
-                      onClick={() => setLessonQuantities({...lessonQuantities, carreta: lessonQuantities.carreta + 1})}
-                    >
-                      <Plus size={18} />
-                    </Button>
+                )}
+
+                {(['A', 'AB', 'inclusao_A'].includes(formData.category)) && (
+                  <div className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="flex items-center gap-2">
+                        <Bike size={24} className="text-[#fbbf24]" />
+                        <div>
+                          <span className="font-bold text-white block">Aulas de Moto</span>
+                          <span className="text-xs text-[#fbbf24]">R$ {(settings?.lesson_price_moto || settings?.lesson_price || 98).toFixed(2)} por aula</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Button 
+                          variant="outline" 
+                          size="icon" 
+                          className="border-[#374151] h-10 w-10"
+                          onClick={() => setLessonQuantities({...lessonQuantities, moto: Math.max(2, lessonQuantities.moto - 1)})}
+                          disabled={lessonQuantities.moto <= 2}
+                        >
+                          <Minus size={18} />
+                        </Button>
+                        <span className="w-12 text-center font-bold text-xl text-white">{lessonQuantities.moto - 2}</span>
+                        <Button 
+                          variant="outline" 
+                          size="icon" 
+                          className="border-[#374151] h-10 w-10"
+                          onClick={() => setLessonQuantities({...lessonQuantities, moto: lessonQuantities.moto + 1})}
+                        >
+                          <Plus size={18} />
+                        </Button>
+                      </div>
+                    </div>
+                    {lessonQuantities.moto > 2 && (
+                      <div className="text-right text-sm mt-2">
+                        <span className="text-[#9ca3af]">Subtotal: </span>
+                        <span className="text-[#fbbf24] font-bold">R$ {((lessonQuantities.moto - 2) * (settings?.lesson_price_moto || settings?.lesson_price || 98)).toFixed(2)}</span>
+                      </div>
+                    )}
                   </div>
-                </div>
+                )}
+
+                {formData.category === 'onibus' && (
+                  <div className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="flex items-center gap-2">
+                        <Bus size={24} className="text-green-400" />
+                        <div>
+                          <span className="font-bold text-white block">Aulas de Ônibus</span>
+                          <span className="text-xs text-[#fbbf24]">R$ {(settings?.lesson_price_bus || 150).toFixed(2)} por aula</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Button 
+                          variant="outline" 
+                          size="icon" 
+                          className="border-[#374151] h-10 w-10"
+                          onClick={() => setLessonQuantities({...lessonQuantities, onibus: Math.max(2, lessonQuantities.onibus - 1)})}
+                          disabled={lessonQuantities.onibus <= 2}
+                        >
+                          <Minus size={18} />
+                        </Button>
+                        <span className="w-12 text-center font-bold text-xl text-white">{lessonQuantities.onibus - 2}</span>
+                        <Button 
+                          variant="outline" 
+                          size="icon" 
+                          className="border-[#374151] h-10 w-10"
+                          onClick={() => setLessonQuantities({...lessonQuantities, onibus: lessonQuantities.onibus + 1})}
+                        >
+                          <Plus size={18} />
+                        </Button>
+                      </div>
+                    </div>
+                    {lessonQuantities.onibus > 2 && (
+                      <div className="text-right text-sm mt-2">
+                        <span className="text-[#9ca3af]">Subtotal: </span>
+                        <span className="text-[#fbbf24] font-bold">R$ {((lessonQuantities.onibus - 2) * (settings?.lesson_price_bus || 150)).toFixed(2)}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {formData.category === 'caminhao' && (
+                  <div className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="flex items-center gap-2">
+                        <Truck size={24} className="text-orange-400" />
+                        <div>
+                          <span className="font-bold text-white block">Aulas de Caminhão</span>
+                          <span className="text-xs text-[#fbbf24]">R$ {(settings?.lesson_price_truck || 180).toFixed(2)} por aula</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Button 
+                          variant="outline" 
+                          size="icon" 
+                          className="border-[#374151] h-10 w-10"
+                          onClick={() => setLessonQuantities({...lessonQuantities, caminhao: Math.max(2, lessonQuantities.caminhao - 1)})}
+                          disabled={lessonQuantities.caminhao <= 2}
+                        >
+                          <Minus size={18} />
+                        </Button>
+                        <span className="w-12 text-center font-bold text-xl text-white">{lessonQuantities.caminhao - 2}</span>
+                        <Button 
+                          variant="outline" 
+                          size="icon" 
+                          className="border-[#374151] h-10 w-10"
+                          onClick={() => setLessonQuantities({...lessonQuantities, caminhao: lessonQuantities.caminhao + 1})}
+                        >
+                          <Plus size={18} />
+                        </Button>
+                      </div>
+                    </div>
+                    {lessonQuantities.caminhao > 2 && (
+                      <div className="text-right text-sm mt-2">
+                        <span className="text-[#9ca3af]">Subtotal: </span>
+                        <span className="text-[#fbbf24] font-bold">R$ {((lessonQuantities.caminhao - 2) * (settings?.lesson_price_truck || 180)).toFixed(2)}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {formData.category === 'carreta' && (
+                  <div className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="flex items-center gap-2">
+                        <Truck size={24} className="text-purple-400" />
+                        <div>
+                          <span className="font-bold text-white block">Aulas de Carreta</span>
+                          <span className="text-xs text-[#fbbf24]">R$ {(settings?.lesson_price_trailer || 200).toFixed(2)} por aula</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Button 
+                          variant="outline" 
+                          size="icon" 
+                          className="border-[#374151] h-10 w-10"
+                          onClick={() => setLessonQuantities({...lessonQuantities, carreta: Math.max(2, lessonQuantities.carreta - 1)})}
+                          disabled={lessonQuantities.carreta <= 2}
+                        >
+                          <Minus size={18} />
+                        </Button>
+                        <span className="w-12 text-center font-bold text-xl text-white">{lessonQuantities.carreta - 2}</span>
+                        <Button 
+                          variant="outline" 
+                          size="icon" 
+                          className="border-[#374151] h-10 w-10"
+                          onClick={() => setLessonQuantities({...lessonQuantities, carreta: lessonQuantities.carreta + 1})}
+                        >
+                          <Plus size={18} />
+                        </Button>
+                      </div>
+                    </div>
+                    {lessonQuantities.carreta > 2 && (
+                      <div className="text-right text-sm mt-2">
+                        <span className="text-[#9ca3af]">Subtotal: </span>
+                        <span className="text-[#fbbf24] font-bold">R$ {((lessonQuantities.carreta - 2) * (settings?.lesson_price_trailer || 200)).toFixed(2)}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
-            )}
+            </div>
+
+            {/* Resumo do Valor Total */}
+            <div className="p-4 bg-[#0d1117] rounded-lg border-2 border-[#fbbf24]">
+              <div className="flex justify-between items-center">
+                <span className="text-white font-bold text-lg">VALOR TOTAL:</span>
+                <span className="text-[#fbbf24] font-bold text-2xl">R$ {calculateTotal().toFixed(2)}</span>
+              </div>
+              <p className="text-xs text-[#9ca3af] mt-2">Pagamento será realizado no próximo passo</p>
+            </div>
 
             <div className="flex gap-3 mt-6">
               <Button 
