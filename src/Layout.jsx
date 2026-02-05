@@ -113,7 +113,7 @@ export default function Layout({ children, currentPageName }) {
         return;
       }
       
-      // HIERARQUIA 2: VENDEDORES (admin sem ser super)
+      // HIERARQUIA 2: CONSULTORES (admin sem ser super)
       if (user.role === 'admin') {
         const sellers = await base44.entities.Seller.filter({ email: user.email });
         if (sellers.length > 0 && sellers[0].active) {
@@ -122,7 +122,7 @@ export default function Layout({ children, currentPageName }) {
         }
       }
       
-      // HIERARQUIA 3: INSTRUTORES (admin sem ser super nem vendedor)
+      // HIERARQUIA 3: INSTRUTORES (admin sem ser super nem consultor)
       if (user.role === 'admin') {
         const instructors = await base44.entities.Instructor.filter({ user_email: user.email });
         if (instructors.length > 0 && instructors[0].active) {
@@ -138,7 +138,7 @@ export default function Layout({ children, currentPageName }) {
         return;
       }
       
-      // Se admin mas não é vendedor nem instrutor, pode ser um admin genérico
+      // Se admin mas não é consultor nem instrutor, pode ser um admin genérico
       if (user.role === 'admin') {
         setUserType('admin');
         return;
@@ -203,7 +203,7 @@ export default function Layout({ children, currentPageName }) {
       ];
     }
     
-    // HIERARQUIA 2: VENDEDORES - Dashboard, Alunos, Aulas, Conversas, Pagamentos (SEM Configurações)
+    // HIERARQUIA 2: CONSULTORES - Dashboard, Alunos, Aulas, Conversas, Pagamentos (SEM Configurações)
     if (userType === 'seller') {
       return [
         { name: 'Dashboard', icon: Home, page: 'AdminDashboard' },
@@ -677,7 +677,7 @@ export default function Layout({ children, currentPageName }) {
               <span className="text-[#cbd5e1] text-xs">|</span>
               <Link to={createPageUrl('SellerLogin')}>
                 <button className="text-[10px] sm:text-xs text-[#cbd5e1] hover:text-[#34d399] px-2.5 py-1.5 rounded transition-colors font-semibold">
-                  VENDEDORES
+                  CONSULTORES
                 </button>
               </Link>
               <span className="text-[#cbd5e1] text-xs">|</span>
