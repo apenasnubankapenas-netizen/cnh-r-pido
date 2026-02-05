@@ -152,6 +152,13 @@ export default function Layout({ children, currentPageName }) {
         { name: 'Pagamentos Instrutores', icon: DollarSign, page: 'AdminPayouts' },
         { name: 'Vendedores', icon: UserCog, page: 'AdminSellers' },
         { name: 'Configurações', icon: Settings, page: 'AdminSettings' },
+        { name: '---', icon: null, page: null }, // Separador visual
+        { name: 'Ver Instrutores (Aluno)', icon: Users, page: 'Instructors' },
+        { name: 'Minhas Aulas (Aluno)', icon: Calendar, page: 'MyLessons' },
+        { name: 'Chat (Aluno)', icon: MessageSquare, page: 'Chat' },
+        { name: 'Pagamentos (Aluno)', icon: DollarSign, page: 'StudentPayments' },
+        { name: 'Vendedores (Aluno)', icon: UserCog, page: 'StudentSellers' },
+        { name: 'Perfil (Aluno)', icon: GraduationCap, page: 'StudentProfile' },
       ];
     }
     
@@ -669,7 +676,14 @@ export default function Layout({ children, currentPageName }) {
           </button>
         </div>
         <nav className="p-3 space-y-1">
-          {menuItems.map((item) => {
+          {menuItems.map((item, idx) => {
+            // Separador visual
+            if (item.name === '---') {
+              return (
+                <div key={`separator-${idx}`} className="my-2 border-t border-[#374151]" />
+              );
+            }
+            
             const Icon = item.icon;
             const isActive = currentPageName === item.page;
             return (
