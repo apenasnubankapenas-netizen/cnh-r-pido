@@ -123,6 +123,9 @@ export default function SellerLogin() {
         total_referrals: 0
       });
 
+      // Cria usuário Base44 como admin
+      await base44.users.inviteUser(formData.email, 'admin');
+
       await base44.integrations.Core.SendEmail({
         to: formData.email,
         subject: 'Bem-vindo! Seu cadastro como Colaborador foi realizado',
@@ -177,9 +180,23 @@ export default function SellerLogin() {
         return;
       }
 
+      // Cria ou atualiza usuário Base44 como admin
+      try {
+        const users = await base44.entities.User.filter({ email: loginEmail });
+        if (users.length === 0) {
+          await base44.users.inviteUser(loginEmail, 'admin');
+        }
+      } catch (err) {
+        console.log('Nota: usuário já existe ou erro ao criar:', err.message);
+      }
+
       const key = `seller_session_version:${loginEmail}`;
       localStorage.setItem(key, String(sellerData.session_version || 1));
-      navigate(createPageUrl('AdminDashboard'));
+      
+      // Redireciona após pequeno delay para garantir autenticação
+      setTimeout(() => {
+        navigate(createPageUrl('AdminDashboard'));
+      }, 500);
     } catch (err) {
       setError('Erro ao fazer login: ' + err.message);
       setLoggingIn(false);
