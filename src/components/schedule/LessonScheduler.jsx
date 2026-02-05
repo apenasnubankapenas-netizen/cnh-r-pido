@@ -24,6 +24,7 @@ export default function LessonScheduler({
   const [instructorLessons, setInstructorLessons] = useState([]);
   const [lockedInstructor, setLockedInstructor] = useState(null);
   const [allLessons, setAllLessons] = useState([]);
+  const [blockMessage, setBlockMessage] = useState('');
 
   const typesAvailable = Object.entries(lessonsConfig).filter(([_, count]) => count > 0);
 
@@ -199,7 +200,21 @@ export default function LessonScheduler({
   }
 
   return (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="space-y-4 sm:space-y-6 relative">
+      {/* Mensagem de Bloqueio Flutuante */}
+      {blockMessage && (
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 animate-bounce max-w-md px-4">
+          <div className="bg-gradient-to-r from-[#ef4444] to-[#dc2626] border-2 border-[#fbbf24] rounded-lg px-6 py-4 shadow-2xl shadow-[#ef4444]/50">
+            <div className="flex items-center gap-3">
+              <AlertTriangle size={24} className="text-[#fbbf24] flex-shrink-0" />
+              <p className="text-white font-bold text-sm sm:text-base">
+                {blockMessage}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Progress */}
       <Card className="bg-[#1a2332] border-[#fbbf24]/40">
         <CardContent className="p-3 sm:p-4">
