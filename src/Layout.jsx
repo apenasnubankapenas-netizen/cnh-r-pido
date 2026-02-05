@@ -675,7 +675,7 @@ export default function Layout({ children, currentPageName }) {
             {isSidebarMinimized ? '→' : '←'}
           </button>
         </div>
-        <nav className="p-3 space-y-1">
+        <nav className="p-3 space-y-1 pb-32">
           {menuItems.map((item, idx) => {
             // Separador visual
             if (item.name === '---') {
@@ -703,19 +703,22 @@ export default function Layout({ children, currentPageName }) {
               </Link>
             );
           })}
+          
+          {/* Generate Instructor Code Button (SuperAdmin) */}
+          {userType === 'superadmin' && (
+            <>
+              <div className="my-3 border-t border-[#374151]" />
+              <div className="p-3 bg-[#161b22] rounded-lg border border-[#30363d] terminal-glow">
+                <button
+                  onClick={() => setShowGenerateCodeModal(true)}
+                  className="w-full px-3 py-2 bg-[#0969da] hover:bg-[#0550ae] rounded text-xs font-semibold text-white transition-colors"
+                >
+                  Gerar Código Instrutor
+                </button>
+              </div>
+            </>
+          )}
         </nav>
-
-        {/* Generate Instructor Code Button (SuperAdmin) */}
-        {userType === 'superadmin' && (
-          <div className="absolute bottom-4 left-4 right-4 p-3 bg-[#161b22] rounded-lg border border-[#30363d] terminal-glow space-y-2">
-            <button
-              onClick={() => setShowGenerateCodeModal(true)}
-              className="w-full px-3 py-2 bg-[#0969da] hover:bg-[#0550ae] rounded text-xs font-semibold text-white transition-colors"
-            >
-              Gerar Código Instrutor
-            </button>
-          </div>
-        )}
 
         {/* User Status */}
         {student && (
