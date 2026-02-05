@@ -246,10 +246,24 @@ export default function LessonScheduler({
             <div className="grid grid-cols-2 gap-3">
               {getAvailableTypes().map(([type, count]) => {
                 const scheduled = schedules.filter(s => s.type === type).length;
-                const isNextType = scheduled === 0 && getAvailableTypes().findIndex(([t]) => schedules.filter(s => s.type === t).length < lessonsConfig[t]) === getAvailableTypes().findIndex(([t]) => t === type);
                 const isActive = currentType === type;
                 const isCompleted = scheduled >= count;
-                const isAvailable = scheduled < count;
+                
+                // Verificar se existe tipo anterior incompleto
+                const typeIndex = getAvailableTypes().findIndex(([t]) => t === type);
+                let hasPendingPreviousType = false;
+                let pendingTypeName = '';
+                for (let i = 0; i < typeIndex; i++) {
+                  const [prevType, prevCount] = getAvailableTypes()[i];
+                  const prevScheduled = schedules.filter(s => s.type === prevType).length;
+                  if (prevScheduled < prevCount) {
+                    hasPendingPreviousType = true;
+                    pendingTypeName = getTypeName(prevType);
+                    break;
+                  }
+                }
+                
+                const isAvailable = scheduled < count && !hasPendingPreviousType;
                 
                 // Ícone baseado no tipo
                 let Icon = Car;
@@ -263,6 +277,11 @@ export default function LessonScheduler({
                   <button
                     key={type}
                     onClick={() => {
+                      if (hasPendingPreviousType) {
+                        setBlockMessage(`Você precisa finalizar as aulas de ${pendingTypeName} antes de agendar ${getTypeName(type)}!`);
+                        setTimeout(() => setBlockMessage(''), 4000);
+                        return;
+                      }
                       if (isAvailable) {
                         setCurrentType(type);
                         setSelectedDate('');
@@ -272,12 +291,14 @@ export default function LessonScheduler({
                         }
                       }
                     }}
-                    disabled={!isAvailable}
+                    disabled={!isAvailable && !hasPendingPreviousType}
                     className={`relative p-6 rounded-xl border-2 transition-all ${
                       isActive 
                         ? 'border-[#fbbf24] bg-[#fbbf24]/10 shadow-lg shadow-[#fbbf24]/30' 
                         : isCompleted
                         ? 'border-[#10b981] bg-[#10b981]/10 cursor-default'
+                        : hasPendingPreviousType
+                        ? 'border-[#ef4444] bg-[#111827] opacity-60 cursor-pointer hover:border-[#ef4444] hover:opacity-80'
                         : isAvailable
                         ? 'border-[#374151] bg-[#111827] hover:border-[#3b82f6] hover:shadow-md cursor-pointer'
                         : 'border-[#374151] bg-[#111827] opacity-50 cursor-not-allowed'
