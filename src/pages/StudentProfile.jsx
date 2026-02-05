@@ -138,7 +138,7 @@ export default function StudentProfile() {
           >
             <ArrowLeft size={16} />
           </Button>
-          <h1 className="text-xl sm:text-2xl font-bold">Meu Perfil</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-white">Meu Perfil</h1>
         </div>
         <Button 
           variant={editing ? "default" : "outline"}
@@ -178,12 +178,12 @@ export default function StudentProfile() {
                   onChange={(e) => setEditData({...editData, full_name: e.target.value})}
                 />
               ) : (
-                <p className="font-medium mt-1">{student.full_name}</p>
+                <p className="font-medium mt-1 text-white">{student.full_name}</p>
               )}
             </div>
             <div>
               <Label className="text-[#9ca3af]">CPF</Label>
-              <p className="font-medium mt-1">{student.cpf}</p>
+              <p className="font-medium mt-1 text-white">{student.cpf}</p>
             </div>
             <div>
               <Label className="text-[#9ca3af]">RENACH</Label>
@@ -191,7 +191,7 @@ export default function StudentProfile() {
             </div>
             <div>
               <Label className="text-[#9ca3af]">Categoria</Label>
-              <p className="font-medium mt-1">{student.category}</p>
+              <p className="font-medium mt-1 text-white">{student.category}</p>
             </div>
             <div>
               <Label className="text-[#9ca3af]">WhatsApp</Label>
@@ -202,7 +202,7 @@ export default function StudentProfile() {
                   onChange={(e) => setEditData({...editData, whatsapp: e.target.value})}
                 />
               ) : (
-                <p className="font-medium mt-1">{student.whatsapp}</p>
+                <p className="font-medium mt-1 text-white">{student.whatsapp}</p>
               )}
             </div>
             <div>
@@ -214,7 +214,7 @@ export default function StudentProfile() {
                   onChange={(e) => setEditData({...editData, phone: e.target.value})}
                 />
               ) : (
-                <p className="font-medium mt-1">{student.phone || '-'}</p>
+                <p className="font-medium mt-1 text-white">{student.phone || '-'}</p>
               )}
             </div>
           </div>
@@ -232,7 +232,7 @@ export default function StudentProfile() {
         <CardContent className="space-y-4">
           <div>
             <div className="flex justify-between mb-2">
-              <span>Progresso Total</span>
+              <span className="text-white">Progresso Total</span>
               <span className="text-[#fbbf24]">{progressPercentage()}%</span>
             </div>
             <Progress value={progressPercentage()} className="h-3 bg-[#111827]" />
@@ -243,9 +243,9 @@ export default function StudentProfile() {
               <div className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
                 <div className="flex items-center gap-3 mb-2">
                   <Car className="text-[#3b82f6]" />
-                  <span className="font-bold">Aulas de Carro</span>
+                  <span className="font-bold text-white">Aulas de Carro</span>
                 </div>
-                <p className="text-2xl font-bold">
+                <p className="text-2xl font-bold text-white">
                   {student.completed_car_lessons || 0}
                   <span className="text-[#9ca3af] text-lg">/{student.total_car_lessons}</span>
                 </p>
@@ -256,9 +256,9 @@ export default function StudentProfile() {
               <div className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
                 <div className="flex items-center gap-3 mb-2">
                   <Bike className="text-[#fbbf24]" />
-                  <span className="font-bold">Aulas de Moto</span>
+                  <span className="font-bold text-white">Aulas de Moto</span>
                 </div>
-                <p className="text-2xl font-bold">
+                <p className="text-2xl font-bold text-white">
                   {student.completed_moto_lessons || 0}
                   <span className="text-[#9ca3af] text-lg">/{student.total_moto_lessons}</span>
                 </p>
@@ -285,7 +285,7 @@ export default function StudentProfile() {
                 ) : (
                   <Circle className="text-[#374151]" />
                 )}
-                <span>Exames Médicos</span>
+                <span className="text-white">Exames Médicos</span>
               </div>
               <Checkbox 
                 checked={student.exam_done}
@@ -300,7 +300,7 @@ export default function StudentProfile() {
                 ) : (
                   <Circle className="text-[#374151]" />
                 )}
-                <span>Prova Teórica</span>
+                <span className="text-white">Prova Teórica</span>
               </div>
               <Checkbox 
                 checked={student.theoretical_test_done}
@@ -315,7 +315,7 @@ export default function StudentProfile() {
                 ) : (
                   <Circle className="text-[#374151]" />
                 )}
-                <span>Prova Prática</span>
+                <span className="text-white">Prova Prática</span>
               </div>
               <Checkbox 
                 checked={student.practical_test_done}
@@ -326,14 +326,14 @@ export default function StudentProfile() {
             {student.all_lessons_completed && !student.admin_confirmed && (
               <div className="p-4 bg-[#fbbf24]/10 border border-[#fbbf24]/50 rounded-lg flex items-center gap-3">
                 <AlertCircle className="text-[#fbbf24]" />
-                <span className="text-sm">Aguardando confirmação do administrador</span>
+                <span className="text-sm text-white">Aguardando confirmação do administrador</span>
               </div>
             )}
 
             {student.all_lessons_completed && student.admin_confirmed && (
               <div className="p-4 bg-green-500/10 border border-green-500/50 rounded-lg flex items-center gap-3">
                 <CheckCircle className="text-green-500" />
-                <span className="text-sm">Aulas finalizadas com sucesso!</span>
+                <span className="text-sm text-white">Aulas finalizadas com sucesso!</span>
               </div>
             )}
 
@@ -377,7 +377,7 @@ export default function StudentProfile() {
                       <Bike className="text-[#fbbf24]" size={20} />
                     )}
                     <div>
-                      <p className="font-medium text-sm">
+                      <p className="font-medium text-sm text-white">
                         {new Date(lesson.date).toLocaleDateString('pt-BR')} - {lesson.time}
                       </p>
                       <p className="text-xs text-[#9ca3af]">Instrutor: {lesson.instructor_name}</p>
