@@ -70,11 +70,11 @@ import MyLessons from './pages/MyLessons';
 import Payment from './pages/Payment';
 import SellerLogin from './pages/SellerLogin';
 import Simulados from './pages/Simulados';
+import StudentPayments from './pages/StudentPayments';
 import StudentProfile from './pages/StudentProfile';
 import StudentRegister from './pages/StudentRegister';
-import SuperAdminLogin from './pages/SuperAdminLogin';
-import StudentPayments from './pages/StudentPayments';
 import StudentSellers from './pages/StudentSellers';
+import SuperAdminLogin from './pages/SuperAdminLogin';
 import __Layout from './Layout.jsx';
 
 
@@ -102,11 +102,11 @@ export const PAGES = {
     "Payment": Payment,
     "SellerLogin": SellerLogin,
     "Simulados": Simulados,
+    "StudentPayments": StudentPayments,
     "StudentProfile": StudentProfile,
     "StudentRegister": StudentRegister,
-    "SuperAdminLogin": SuperAdminLogin,
-    "StudentPayments": StudentPayments,
     "StudentSellers": StudentSellers,
+    "SuperAdminLogin": SuperAdminLogin,
 }
 
 export const pagesConfig = {

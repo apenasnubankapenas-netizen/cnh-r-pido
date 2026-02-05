@@ -214,33 +214,63 @@ export default function Landing() {
           <h2 className="text-2xl font-bold text-center mb-8">
             Por que escolher a <span className="text-[#f0c41b]">CNH PARA TODOS?</span>
           </h2>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Card className="bg-[#1a2332] border-[#374151]">
               <CardContent className="p-6">
-                <CheckCircle className="text-[#f0c41b] mb-4" size={40} />
-                <h3 className="font-bold mb-2 text-lg">Instrutores Qualificados</h3>
+                <CheckCircle className="text-[#3b82f6] mb-4" size={40} />
+                <h3 className="font-bold mb-2 text-lg text-white">Conforto e Comodidade</h3>
                 <p className="text-[#9ca3af]">
-                  Equipe experiente e preparada para te ensinar com segurança
+                  Agendamento 100% online: Marque suas aulas quando e onde quiser, sem burocracia e sem filas.
                 </p>
               </CardContent>
             </Card>
 
             <Card className="bg-[#1a2332] border-[#374151]">
               <CardContent className="p-6">
-                <CheckCircle className="text-[#f0c41b] mb-4" size={40} />
-                <h3 className="font-bold mb-2 text-lg">Pagamento Facilitado</h3>
+                <CheckCircle className="text-[#3b82f6] mb-4" size={40} />
+                <h3 className="font-bold mb-2 text-lg text-white">Flexibilidade Financeira</h3>
                 <p className="text-[#9ca3af]">
-                  Parcelamento em até 10x sem juros no cartão de crédito
+                  Pagamento facilitado: Parcelamos em até 10 vezes sem juros, tornando o investimento na sua habilitação muito mais acessível.
                 </p>
               </CardContent>
             </Card>
 
             <Card className="bg-[#1a2332] border-[#374151]">
               <CardContent className="p-6">
-                <CheckCircle className="text-[#f0c41b] mb-4" size={40} />
-                <h3 className="font-bold mb-2 text-lg">Agendamento Online</h3>
+                <CheckCircle className="text-[#3b82f6] mb-4" size={40} />
+                <h3 className="font-bold mb-2 text-lg text-white">Segurança e Suporte</h3>
                 <p className="text-[#9ca3af]">
-                  Marque suas aulas direto pelo aplicativo quando quiser
+                  Notificações e lembretes automáticos: Nunca mais perca uma aula! Receba alertas por e-mail e WhatsApp com antecedência.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-[#1a2332] border-[#374151]">
+              <CardContent className="p-6">
+                <CheckCircle className="text-[#3b82f6] mb-4" size={40} />
+                <h3 className="font-bold mb-2 text-lg text-white">Instrutores Qualificados</h3>
+                <p className="text-[#9ca3af]">
+                  Equipe experiente e preparada: Nossos instrutores são altamente qualificados, garantindo uma aprendizagem segura e eficiente.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-[#1a2332] border-[#374151]">
+              <CardContent className="p-6">
+                <CheckCircle className="text-[#3b82f6] mb-4" size={40} />
+                <h3 className="font-bold mb-2 text-lg text-white">Transparência e Controle</h3>
+                <p className="text-[#9ca3af]">
+                  Acesso total ao progresso: Veja seu histórico de aulas, localizações e horários, tudo de forma clara e organizada.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-[#1a2332] border-[#374151]">
+              <CardContent className="p-6">
+                <CheckCircle className="text-[#3b82f6] mb-4" size={40} />
+                <h3 className="font-bold mb-2 text-lg text-white">Reagendamento Simplificado</h3>
+                <p className="text-[#9ca3af]">
+                  Flexibilidade em caso de imprevistos: Se houver algum conflito, você pode reagendar suas aulas sem complicação, com total comodidade.
                 </p>
               </CardContent>
             </Card>
