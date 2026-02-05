@@ -295,26 +295,120 @@ export default function LessonScheduler({
 
           {currentType && (
             <div>
-              <label className="text-xs sm:text-sm text-[#9ca3af] block mb-2">
-                Instrutor {lockedInstructor && schedules.length < 2 && '(Bloqueado para as 2 primeiras aulas)'}
+              <label className="text-xs sm:text-sm text-[#9ca3af] block mb-3">
+                Escolha seu Instrutor {lockedInstructor && schedules.length < 2 && '(Bloqueado para as 2 primeiras aulas)'}
               </label>
-              <Select 
-                value={selectedInstructor} 
-                onValueChange={setSelectedInstructor}
-                disabled={lockedInstructor && schedules.length < 2}
-              >
-                <SelectTrigger className="bg-[#111827] border-[#374151] h-10 text-[#fbbf24]">
-                  <SelectValue placeholder="Selecione um instrutor" />
-                </SelectTrigger>
-                <SelectContent className="bg-[#1a2332] border-[#374151]">
-                  {filteredInstructors.map(i => (
-                    <SelectItem key={i.id} value={i.id} className="text-[#fbbf24]">{i.full_name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              
+              {/* Perfis dos Instrutores */}
+              <div className="relative mb-4">
+                <div className="flex gap-3 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-thin scrollbar-thumb-[#fbbf24] scrollbar-track-[#111827]">
+                  {filteredInstructors.map(instructor => {
+                    const isSelected = selectedInstructor === instructor.id;
+                    const isLocked = lockedInstructor && lockedInstructor !== instructor.id && schedules.length < 2;
+                    
+                    return (
+                      <button
+                        key={instructor.id}
+                        onClick={() => !isLocked && setSelectedInstructor(instructor.id)}
+                        disabled={isLocked}
+                        className={`flex-shrink-0 w-40 snap-start rounded-xl overflow-hidden border-2 transition-all ${
+                          isSelected 
+                            ? 'border-[#fbbf24] bg-[#fbbf24]/10 shadow-lg shadow-[#fbbf24]/30' 
+                            : isLocked
+                            ? 'border-[#374151] bg-[#111827] opacity-50 cursor-not-allowed'
+                            : 'border-[#374151] bg-[#111827] hover:border-[#3b82f6] hover:shadow-md'
+                        }`}
+                      >
+                        {/* Foto do Instrutor */}
+                        <div className="relative h-32 bg-gradient-to-br from-[#1e40af] to-[#0c1844] overflow-hidden">
+                          {instructor.photo ? (
+                            <img 
+                              src={instructor.photo} 
+                              alt={instructor.full_name}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <User size={48} className="text-[#374151]" />
+                            </div>
+                          )}
+                          {isSelected && (
+                            <div className="absolute top-2 right-2 w-6 h-6 bg-[#10b981] rounded-full flex items-center justify-center">
+                              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                              </svg>
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* Info do Instrutor */}
+                        <div className="p-3">
+                          <h4 className={`font-bold text-sm mb-1 truncate ${isSelected ? 'text-[#fbbf24]' : 'text-white'}`}>
+                            {instructor.full_name}
+                          </h4>
+                          
+                          {/* Badge de Veículos */}
+                          <div className="flex flex-wrap gap-1 mb-2">
+                            {instructor.teaches_car && (
+                              <span className="text-[9px] px-1.5 py-0.5 bg-[#3b82f6]/20 text-[#3b82f6] rounded font-semibold">
+                                CARRO
+                              </span>
+                            )}
+                            {instructor.teaches_moto && (
+                              <span className="text-[9px] px-1.5 py-0.5 bg-[#fbbf24]/20 text-[#fbbf24] rounded font-semibold">
+                                MOTO
+                              </span>
+                            )}
+                            {instructor.teaches_bus && (
+                              <span className="text-[9px] px-1.5 py-0.5 bg-green-500/20 text-green-400 rounded font-semibold">
+                                ÔNIBUS
+                              </span>
+                            )}
+                            {instructor.teaches_truck && (
+                              <span className="text-[9px] px-1.5 py-0.5 bg-orange-500/20 text-orange-400 rounded font-semibold">
+                                CAMINHÃO
+                              </span>
+                            )}
+                            {instructor.teaches_trailer && (
+                              <span className="text-[9px] px-1.5 py-0.5 bg-purple-500/20 text-purple-400 rounded font-semibold">
+                                CARRETA
+                              </span>
+                            )}
+                          </div>
+                          
+                          {/* Bio curta */}
+                          {instructor.bio && (
+                            <p className="text-[10px] text-[#9ca3af] line-clamp-2 leading-tight">
+                              {instructor.bio}
+                            </p>
+                          )}
+                          
+                          {/* Estatísticas */}
+                          {instructor.total_lessons > 0 && (
+                            <div className="mt-2 pt-2 border-t border-[#374151]">
+                              <div className="flex items-center justify-center gap-1">
+                                <span className="text-[10px] text-[#9ca3af]">Aulas dadas:</span>
+                                <span className="text-xs font-bold text-[#fbbf24]">{instructor.total_lessons || 0}</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+                
+                {/* Indicador de scroll */}
+                {filteredInstructors.length > 2 && (
+                  <div className="text-center mt-2">
+                    <p className="text-[10px] text-[#9ca3af]">← Deslize para ver mais instrutores →</p>
+                  </div>
+                )}
+              </div>
+              
               {lockedInstructor && schedules.length < 2 && (
-                <p className="text-xs text-[#fbbf24] mt-1">
-                  Você deve fazer as 2 primeiras aulas com o mesmo instrutor
+                <p className="text-xs text-[#fbbf24] mb-3 p-2 bg-[#fbbf24]/10 border border-[#fbbf24] rounded">
+                  ⚠️ Você deve fazer as 2 primeiras aulas com o mesmo instrutor
                 </p>
               )}
             </div>
