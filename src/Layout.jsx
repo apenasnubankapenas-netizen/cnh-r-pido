@@ -191,14 +191,14 @@ export default function Layout({ children, currentPageName }) {
         { name: 'Conversas', icon: MessageSquare, page: 'AdminChats' },
         { name: 'Pagamentos', icon: DollarSign, page: 'AdminPayments' },
         { name: 'Pagamentos Instrutores', icon: DollarSign, page: 'AdminPayouts' },
-        { name: 'Vendedores', icon: UserCog, page: 'AdminSellers' },
+        { name: 'Consultores', icon: UserCog, page: 'AdminSellers' },
         { name: 'Configurações', icon: Settings, page: 'AdminSettings' },
         { name: '---', icon: null, page: null }, // Separador visual
         { name: 'Ver Instrutores (Aluno)', icon: Users, page: 'Instructors' },
         { name: 'Minhas Aulas (Aluno)', icon: Calendar, page: 'MyLessons' },
         { name: 'Chat (Aluno)', icon: MessageSquare, page: 'Chat' },
         { name: 'Pagamentos (Aluno)', icon: DollarSign, page: 'StudentPayments' },
-        { name: 'Vendedores (Aluno)', icon: UserCog, page: 'StudentSellers' },
+        { name: 'Consultores (Aluno)', icon: UserCog, page: 'StudentSellers' },
         { name: 'Perfil (Aluno)', icon: GraduationCap, page: 'StudentProfile' },
       ];
     }
@@ -226,7 +226,7 @@ export default function Layout({ children, currentPageName }) {
       // Pagamentos não disponíveis para instrutores
       
       if (instructor?.can_view_sellers) {
-        items.push({ name: 'Vendedores', icon: UserCog, page: 'AdminSellers' });
+        items.push({ name: 'Consultores', icon: UserCog, page: 'AdminSellers' });
       }
       
       if (instructor?.can_view_settings) {
@@ -254,7 +254,7 @@ export default function Layout({ children, currentPageName }) {
         { name: 'Minhas Aulas', icon: Calendar, page: 'MyLessons' },
         { name: 'Conversas', icon: MessageSquare, page: 'Chat' },
         { name: 'Meus Pagamentos', icon: DollarSign, page: 'StudentPayments' },
-        { name: 'Vendedores', icon: UserCog, page: 'StudentSellers' },
+        { name: 'Consultores', icon: UserCog, page: 'StudentSellers' },
         { name: 'Meu Perfil', icon: GraduationCap, page: 'StudentProfile' },
       ];
     }
@@ -435,7 +435,7 @@ export default function Layout({ children, currentPageName }) {
                 <span className="text-[#cbd5e1] text-xs">|</span>
                 <Link to={createPageUrl('SellerLogin')}>
                   <button className="text-[10px] sm:text-xs text-[#cbd5e1] hover:text-[#34d399] px-2.5 py-1.5 rounded transition-colors font-semibold">
-                    VENDEDORES
+                    CONSULTORES
                   </button>
                 </Link>
                 <span className="text-[#cbd5e1] text-xs">|</span>
