@@ -37,16 +37,26 @@ export default function Layout({ children, currentPageName }) {
   const [allStudents, setAllStudents] = useState([]);
   const [selectedStudentForView, setSelectedStudentForView] = useState(null);
   const [pendingStudentPage, setPendingStudentPage] = useState(null);
+  const [allInstructors, setAllInstructors] = useState([]);
+  const [selectedInstructorForView, setSelectedInstructorForView] = useState(null);
+  const [showInstructorSelectorModal, setShowInstructorSelectorModal] = useState(false);
+  const [pendingInstructorPage, setPendingInstructorPage] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     loadUser();
     loadStudentsForSelector();
+    loadInstructorsForSelector();
     // Carregar aluno selecionado do localStorage
     const savedStudent = localStorage.getItem('admin_view_student');
     if (savedStudent) {
       setSelectedStudentForView(JSON.parse(savedStudent));
+    }
+    // Carregar instrutor selecionado do localStorage
+    const savedInstructor = localStorage.getItem('admin_view_instructor');
+    if (savedInstructor) {
+      setSelectedInstructorForView(JSON.parse(savedInstructor));
     }
   }, []);
 
@@ -81,6 +91,15 @@ export default function Layout({ children, currentPageName }) {
     }
   };
 
+  const loadInstructorsForSelector = async () => {
+    try {
+      const instructors = await base44.entities.Instructor.list();
+      setAllInstructors(instructors);
+    } catch (e) {
+      console.error('Erro ao carregar instrutores:', e);
+    }
+  };
+
   const handleStudentPageClick = (pageName) => {
     if (userType === 'superadmin') {
       setPendingStudentPage(pageName);
@@ -101,6 +120,21 @@ export default function Layout({ children, currentPageName }) {
   const clearStudentView = () => {
     setSelectedStudentForView(null);
     localStorage.removeItem('admin_view_student');
+  };
+
+  const selectInstructorAndNavigate = (instructor) => {
+    setSelectedInstructorForView(instructor);
+    localStorage.setItem('admin_view_instructor', JSON.stringify(instructor));
+    setShowInstructorSelectorModal(false);
+    if (pendingInstructorPage) {
+      navigate(createPageUrl(pendingInstructorPage));
+      setPendingInstructorPage(null);
+    }
+  };
+
+  const clearInstructorView = () => {
+    setSelectedInstructorForView(null);
+    localStorage.removeItem('admin_view_instructor');
   };
 
   const loadUserType = async () => {
@@ -190,22 +224,22 @@ export default function Layout({ children, currentPageName }) {
     // HIERARQUIA 1: SUPERADMINISTRADOR - Acesso TOTAL a tudo
     if (userType === 'superadmin') {
       return [
-        { name: 'Dashboard', icon: Home, page: 'AdminDashboard' },
-        { name: 'Alunos', icon: Users, page: 'AdminStudents' },
-        { name: 'Instrutores', icon: Car, page: 'AdminInstructors' },
-        { name: 'Aulas', icon: Calendar, page: 'AdminLessons' },
-        { name: 'Conversas', icon: MessageSquare, page: 'AdminChats' },
-        { name: 'Pagamentos', icon: DollarSign, page: 'AdminPayments' },
+        { name: 'Dashboard (Admin)', icon: Home, page: 'AdminDashboard', viewAs: 'instructor' },
+        { name: 'Alunos (Admin)', icon: Users, page: 'AdminStudents', viewAs: 'instructor' },
+        { name: 'Instrutores (Admin)', icon: Car, page: 'AdminInstructors', viewAs: 'instructor' },
+        { name: 'Aulas (Admin)', icon: Calendar, page: 'AdminLessons', viewAs: 'instructor' },
+        { name: 'Conversas (Admin)', icon: MessageSquare, page: 'AdminChats', viewAs: 'instructor' },
+        { name: 'Pagamentos (Admin)', icon: DollarSign, page: 'AdminPayments', viewAs: 'instructor' },
         { name: 'Pagamentos Instrutores', icon: DollarSign, page: 'AdminPayouts' },
         { name: 'Consultores', icon: UserCog, page: 'AdminSellers' },
         { name: 'Configurações', icon: Settings, page: 'AdminSettings' },
         { name: '---', icon: null, page: null }, // Separador visual
-        { name: 'Ver Instrutores (Aluno)', icon: Users, page: 'Instructors' },
-        { name: 'Minhas Aulas (Aluno)', icon: Calendar, page: 'MyLessons' },
-        { name: 'Chat (Aluno)', icon: MessageSquare, page: 'Chat' },
-        { name: 'Pagamentos (Aluno)', icon: DollarSign, page: 'StudentPayments' },
-        { name: 'Consultores (Aluno)', icon: UserCog, page: 'StudentSellers' },
-        { name: 'Perfil (Aluno)', icon: GraduationCap, page: 'StudentProfile' },
+        { name: 'Ver Instrutores (Aluno)', icon: Users, page: 'Instructors', viewAs: 'student' },
+        { name: 'Minhas Aulas (Aluno)', icon: Calendar, page: 'MyLessons', viewAs: 'student' },
+        { name: 'Chat (Aluno)', icon: MessageSquare, page: 'Chat', viewAs: 'student' },
+        { name: 'Pagamentos (Aluno)', icon: DollarSign, page: 'StudentPayments', viewAs: 'student' },
+        { name: 'Consultores (Aluno)', icon: UserCog, page: 'StudentSellers', viewAs: 'student' },
+        { name: 'Perfil (Aluno)', icon: GraduationCap, page: 'StudentProfile', viewAs: 'student' },
       ];
     }
     
@@ -737,16 +771,20 @@ export default function Layout({ children, currentPageName }) {
             
             const Icon = item.icon;
             const isActive = currentPageName === item.page;
-            const isStudentPage = item.name.includes('(Aluno)');
             
-            // Se for página de aluno e usuário é superadmin, interceptar clique
-            if (isStudentPage && userType === 'superadmin') {
+            // Se for página com viewAs e usuário é superadmin, interceptar clique
+            if (item.viewAs && userType === 'superadmin') {
               return (
                 <button
                   key={item.page}
                   onClick={() => {
                     setIsSidebarOpen(false);
-                    handleStudentPageClick(item.page);
+                    if (item.viewAs === 'student') {
+                      handleStudentPageClick(item.page);
+                    } else if (item.viewAs === 'instructor') {
+                      setPendingInstructorPage(item.page);
+                      setShowInstructorSelectorModal(true);
+                    }
                   }}
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer ${
                     isActive 
@@ -829,9 +867,119 @@ export default function Layout({ children, currentPageName }) {
               <span className="text-sm font-medium">Voltar</span>
             </button>
           )}
+          
+          {/* Indicador de visualização como instrutor */}
+          {userType === 'superadmin' && selectedInstructorForView && (
+            <div className="mb-4 p-3 bg-[#a78bfa]/10 border border-[#a78bfa] rounded-lg flex items-center justify-between">
+              <div>
+                <p className="text-sm text-[#a78bfa] font-semibold">Visualizando como Instrutor:</p>
+                <p className="text-white font-bold">{selectedInstructorForView.full_name}</p>
+                <p className="text-xs text-[#9ca3af]">CPF: {selectedInstructorForView.cpf}</p>
+              </div>
+              <button
+                onClick={clearInstructorView}
+                className="px-3 py-1 bg-[#ef4444] hover:bg-[#dc2626] rounded text-white text-xs font-semibold"
+              >
+                Limpar
+              </button>
+            </div>
+          )}
+          
+          {/* Indicador de visualização como aluno */}
+          {userType === 'superadmin' && selectedStudentForView && (
+            <div className="mb-4 p-3 bg-[#10b981]/10 border border-[#10b981] rounded-lg flex items-center justify-between">
+              <div>
+                <p className="text-sm text-[#10b981] font-semibold">Visualizando como Aluno:</p>
+                <p className="text-white font-bold">{selectedStudentForView.full_name}</p>
+                <p className="text-xs text-[#9ca3af]">RENACH: {selectedStudentForView.renach}</p>
+              </div>
+              <button
+                onClick={clearStudentView}
+                className="px-3 py-1 bg-[#ef4444] hover:bg-[#dc2626] rounded text-white text-xs font-semibold"
+              >
+                Limpar
+              </button>
+            </div>
+          )}
+          
           {children}
         </div>
       </main>
+
+      {/* Instructor Selector Modal */}
+      {showInstructorSelectorModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#1a2332] border-2 border-[#a78bfa] rounded-xl w-full max-w-2xl max-h-[80vh] overflow-hidden">
+            <div className="border-b border-[#374151] p-4 bg-gradient-to-r from-[#a78bfa] to-[#8b5cf6]">
+              <h2 className="text-lg font-bold text-white">Selecione um Instrutor para Visualizar</h2>
+              <p className="text-sm text-white/80 mt-1">Escolha qual instrutor você deseja visualizar na página de {pendingInstructorPage}</p>
+            </div>
+            <div className="p-6 overflow-y-auto max-h-[60vh]">
+              {selectedInstructorForView && (
+                <div className="mb-4 p-3 bg-[#a78bfa]/10 border border-[#a78bfa] rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-[#a78bfa] font-semibold">Visualizando atualmente como:</p>
+                      <p className="text-white font-bold">{selectedInstructorForView.full_name}</p>
+                      <p className="text-xs text-[#9ca3af]">CPF: {selectedInstructorForView.cpf}</p>
+                    </div>
+                    <button
+                      onClick={clearInstructorView}
+                      className="px-3 py-1 bg-[#ef4444] hover:bg-[#dc2626] rounded text-white text-xs font-semibold"
+                    >
+                      Limpar
+                    </button>
+                  </div>
+                </div>
+              )}
+              
+              <div className="space-y-2">
+                {allInstructors.length === 0 ? (
+                  <p className="text-[#9ca3af] text-center py-8">Nenhum instrutor cadastrado ainda.</p>
+                ) : (
+                  allInstructors.map((instructor) => (
+                    <button
+                      key={instructor.id}
+                      onClick={() => selectInstructorAndNavigate(instructor)}
+                      className="w-full p-4 bg-[#111827] border border-[#374151] rounded-lg hover:border-[#a78bfa] hover:bg-[#1a2332] transition-all text-left"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <p className="font-bold text-white">{instructor.full_name}</p>
+                          <p className="text-sm text-[#9ca3af]">CPF: {instructor.cpf}</p>
+                          <div className="flex gap-2 mt-1">
+                            {instructor.teaches_car && <span className="text-xs bg-[#3b82f6]/20 text-[#3b82f6] px-2 py-0.5 rounded">Carro</span>}
+                            {instructor.teaches_moto && <span className="text-xs bg-[#fbbf24]/20 text-[#fbbf24] px-2 py-0.5 rounded">Moto</span>}
+                            {instructor.teaches_bus && <span className="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded">Ônibus</span>}
+                            {instructor.teaches_truck && <span className="text-xs bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded">Caminhão</span>}
+                            {instructor.teaches_trailer && <span className="text-xs bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded">Carreta</span>}
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className={`text-xs font-semibold ${instructor.active ? 'text-green-400' : 'text-red-400'}`}>
+                            {instructor.active ? 'Ativo' : 'Inativo'}
+                          </div>
+                        </div>
+                      </div>
+                    </button>
+                  ))
+                )}
+              </div>
+            </div>
+            <div className="border-t border-[#374151] p-4 bg-[#111827]">
+              <button
+                onClick={() => {
+                  setShowInstructorSelectorModal(false);
+                  setPendingInstructorPage(null);
+                }}
+                className="w-full px-4 py-2 border border-[#374151] rounded text-white font-semibold text-sm hover:bg-[#161b22] transition-colors"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Student Selector Modal */}
       {showStudentSelectorModal && (
