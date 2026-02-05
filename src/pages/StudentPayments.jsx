@@ -15,11 +15,25 @@ export default function StudentPayments() {
   const loadPayments = async () => {
     try {
       const user = await base44.auth.me();
-      const students = await base44.entities.Student.filter({ user_email: user.email });
       
-      if (students.length > 0) {
-        setStudent(students[0]);
-        const studentPayments = await base44.entities.Payment.filter({ student_id: students[0].id });
+      // Verificar se admin está visualizando como aluno
+      const savedStudent = localStorage.getItem('admin_view_student');
+      let studentToLoad = null;
+
+      if (savedStudent && user.role === 'admin') {
+        // Admin visualizando como aluno
+        studentToLoad = JSON.parse(savedStudent);
+      } else {
+        // Aluno normal
+        const students = await base44.entities.Student.filter({ user_email: user.email });
+        if (students.length > 0) {
+          studentToLoad = students[0];
+        }
+      }
+      
+      if (studentToLoad) {
+        setStudent(studentToLoad);
+        const studentPayments = await base44.entities.Payment.filter({ student_id: studentToLoad.id });
         setPayments(studentPayments.sort((a, b) => new Date(b.created_date) - new Date(a.created_date)));
       }
     } catch (e) {

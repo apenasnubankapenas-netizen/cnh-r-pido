@@ -20,10 +20,24 @@ export default function StudentSellers() {
   const loadSellers = async () => {
     try {
       const user = await base44.auth.me();
-      const students = await base44.entities.Student.filter({ user_email: user.email });
       
-      if (students.length > 0) {
-        setStudent(students[0]);
+      // Verificar se admin está visualizando como aluno
+      const savedStudent = localStorage.getItem('admin_view_student');
+      let studentToLoad = null;
+
+      if (savedStudent && user.role === 'admin') {
+        // Admin visualizando como aluno
+        studentToLoad = JSON.parse(savedStudent);
+      } else {
+        // Aluno normal
+        const students = await base44.entities.Student.filter({ user_email: user.email });
+        if (students.length > 0) {
+          studentToLoad = students[0];
+        }
+      }
+      
+      if (studentToLoad) {
+        setStudent(studentToLoad);
       }
 
       const allSellers = await base44.entities.Seller.filter({ active: true });
