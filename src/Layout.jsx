@@ -138,6 +138,12 @@ export default function Layout({ children, currentPageName }) {
         return;
       }
       
+      // Se é user mas não tem cadastro de student, definir como 'new_user' para redirecionar ao registro
+      if (user.role === 'user' && !student) {
+        setUserType('new_user');
+        return;
+      }
+      
       // Se admin mas não é consultor nem instrutor, pode ser um admin genérico
       if (user.role === 'admin') {
         setUserType('admin');
@@ -469,6 +475,13 @@ export default function Layout({ children, currentPageName }) {
       </div>
     );
   }
+
+  // Se é um novo usuário sem cadastro de Student, redirecionar para registro
+  useEffect(() => {
+    if (userType === 'new_user') {
+      navigate(createPageUrl('StudentRegister'));
+    }
+  }, [userType, navigate]);
 
   // Se está logado mas ainda carregando o tipo de usuário, mostrar interface básica
   if (!userType && user.role === 'user') {
