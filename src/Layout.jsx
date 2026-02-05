@@ -33,11 +33,21 @@ export default function Layout({ children, currentPageName }) {
   const [showGenerateCodeModal, setShowGenerateCodeModal] = useState(false);
   const [generatedCode, setGeneratedCode] = useState('');
   const [codeLoading, setCodeLoading] = useState(false);
+  const [showStudentSelectorModal, setShowStudentSelectorModal] = useState(false);
+  const [allStudents, setAllStudents] = useState([]);
+  const [selectedStudentForView, setSelectedStudentForView] = useState(null);
+  const [pendingStudentPage, setPendingStudentPage] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     loadUser();
+    loadStudentsForSelector();
+    // Carregar aluno selecionado do localStorage
+    const savedStudent = localStorage.getItem('admin_view_student');
+    if (savedStudent) {
+      setSelectedStudentForView(JSON.parse(savedStudent));
+    }
   }, []);
 
   useEffect(() => {
@@ -60,6 +70,37 @@ export default function Layout({ children, currentPageName }) {
     } catch (e) {
       console.log('Not logged in');
     }
+  };
+
+  const loadStudentsForSelector = async () => {
+    try {
+      const students = await base44.entities.Student.list();
+      setAllStudents(students);
+    } catch (e) {
+      console.error('Erro ao carregar alunos:', e);
+    }
+  };
+
+  const handleStudentPageClick = (pageName) => {
+    if (userType === 'superadmin') {
+      setPendingStudentPage(pageName);
+      setShowStudentSelectorModal(true);
+    }
+  };
+
+  const selectStudentAndNavigate = (student) => {
+    setSelectedStudentForView(student);
+    localStorage.setItem('admin_view_student', JSON.stringify(student));
+    setShowStudentSelectorModal(false);
+    if (pendingStudentPage) {
+      navigate(createPageUrl(pendingStudentPage));
+      setPendingStudentPage(null);
+    }
+  };
+
+  const clearStudentView = () => {
+    setSelectedStudentForView(null);
+    localStorage.removeItem('admin_view_student');
   };
 
   const loadUserType = async () => {
@@ -686,6 +727,30 @@ export default function Layout({ children, currentPageName }) {
             
             const Icon = item.icon;
             const isActive = currentPageName === item.page;
+            const isStudentPage = item.name.includes('(Aluno)');
+            
+            // Se for página de aluno e usuário é superadmin, interceptar clique
+            if (isStudentPage && userType === 'superadmin') {
+              return (
+                <button
+                  key={item.page}
+                  onClick={() => {
+                    setIsSidebarOpen(false);
+                    handleStudentPageClick(item.page);
+                  }}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer ${
+                    isActive 
+                      ? 'bg-gradient-to-r from-[#0969da] to-[#0550ae] text-white shadow-md' 
+                      : 'hover:bg-[#161b22] text-[#cbd5e1] hover:text-white'
+                  } ${isSidebarMinimized ? 'justify-center' : ''}`}
+                  title={isSidebarMinimized ? item.name : ''}
+                >
+                  <Icon size={20} className={isActive ? 'text-[#f0c41b]' : ''} />
+                  {!isSidebarMinimized && <span className="text-sm font-medium">{item.name}</span>}
+                </button>
+              );
+            }
+            
             return (
               <Link
                 key={item.page}
@@ -757,6 +822,74 @@ export default function Layout({ children, currentPageName }) {
           {children}
         </div>
       </main>
+
+      {/* Student Selector Modal */}
+      {showStudentSelectorModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#1a2332] border-2 border-[#fbbf24] rounded-xl w-full max-w-2xl max-h-[80vh] overflow-hidden">
+            <div className="border-b border-[#374151] p-4 bg-gradient-to-r from-[#0969da] to-[#0550ae]">
+              <h2 className="text-lg font-bold text-white">Selecione um Aluno para Visualizar</h2>
+              <p className="text-sm text-[#cbd5e1] mt-1">Escolha qual aluno você deseja visualizar na página de {pendingStudentPage}</p>
+            </div>
+            <div className="p-6 overflow-y-auto max-h-[60vh]">
+              {selectedStudentForView && (
+                <div className="mb-4 p-3 bg-[#10b981]/10 border border-[#10b981] rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-[#10b981] font-semibold">Visualizando atualmente como:</p>
+                      <p className="text-white font-bold">{selectedStudentForView.full_name}</p>
+                      <p className="text-xs text-[#9ca3af]">RENACH: {selectedStudentForView.renach}</p>
+                    </div>
+                    <button
+                      onClick={clearStudentView}
+                      className="px-3 py-1 bg-[#ef4444] hover:bg-[#dc2626] rounded text-white text-xs font-semibold"
+                    >
+                      Limpar
+                    </button>
+                  </div>
+                </div>
+              )}
+              
+              <div className="space-y-2">
+                {allStudents.length === 0 ? (
+                  <p className="text-[#9ca3af] text-center py-8">Nenhum aluno cadastrado ainda.</p>
+                ) : (
+                  allStudents.map((student) => (
+                    <button
+                      key={student.id}
+                      onClick={() => selectStudentAndNavigate(student)}
+                      className="w-full p-4 bg-[#111827] border border-[#374151] rounded-lg hover:border-[#3b82f6] hover:bg-[#1a2332] transition-all text-left"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <p className="font-bold text-white">{student.full_name}</p>
+                          <p className="text-sm text-[#9ca3af]">RENACH: {student.renach}</p>
+                          <p className="text-xs text-[#9ca3af]">Categoria: {student.category}</p>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-xs text-[#9ca3af]">CPF</div>
+                          <div className="text-sm text-white font-mono">{student.cpf}</div>
+                        </div>
+                      </div>
+                    </button>
+                  ))
+                )}
+              </div>
+            </div>
+            <div className="border-t border-[#374151] p-4 bg-[#111827]">
+              <button
+                onClick={() => {
+                  setShowStudentSelectorModal(false);
+                  setPendingStudentPage(null);
+                }}
+                className="w-full px-4 py-2 border border-[#374151] rounded text-white font-semibold text-sm hover:bg-[#161b22] transition-colors"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Generate Code Modal */}
       {showGenerateCodeModal && (
