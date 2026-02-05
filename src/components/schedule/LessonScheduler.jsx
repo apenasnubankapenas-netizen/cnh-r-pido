@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Calendar, Clock, User, MapPin, AlertTriangle, ArrowLeft } from 'lucide-react';
+import { Calendar, Clock, User, MapPin, AlertTriangle, ArrowLeft, Car, Bike, Bus, Truck } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -237,37 +237,110 @@ export default function LessonScheduler({
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* Tipo de Aula */}
+          {/* Tipo de Aula - Ícones Clicáveis */}
           <div>
-            <label className="text-xs sm:text-sm text-[#9ca3af] block mb-2">
-              Tipo de Aula
-              {getAvailableTypes().length > 1 && (
-                <span className="text-[#fbbf24] ml-2">(Você pode trocar o tipo a qualquer momento)</span>
-              )}
+            <label className="text-base sm:text-lg font-bold text-white block mb-3 uppercase">
+              Escolha o Tipo de Aula
             </label>
-            <Select value={currentType} onValueChange={(val) => {
-              setCurrentType(val);
-              setSelectedDate('');
-              setSelectedTime('');
-              // Resetar instrutor se já tiver agendado 2 aulas
-              if (schedules.length >= 2) {
-                setSelectedInstructor('');
-              }
-            }}>
-              <SelectTrigger className="bg-[#111827] border-[#374151] h-10 text-[#fbbf24]">
-                <SelectValue placeholder="Selecione o tipo de aula" />
-              </SelectTrigger>
-              <SelectContent className="bg-[#1a2332] border-[#374151]">
-                {getAvailableTypes().map(([type, count]) => {
-                  const scheduled = schedules.filter(s => s.type === type).length;
-                  return (
-                    <SelectItem key={type} value={type} className="text-[#fbbf24]">
-                      {getTypeName(type)} ({scheduled}/{count} agendadas)
-                    </SelectItem>
-                  );
-                })}
-              </SelectContent>
-            </Select>
+            
+            <div className="grid grid-cols-2 gap-3">
+              {getAvailableTypes().map(([type, count]) => {
+                const scheduled = schedules.filter(s => s.type === type).length;
+                const isNextType = scheduled === 0 && getAvailableTypes().findIndex(([t]) => schedules.filter(s => s.type === t).length < lessonsConfig[t]) === getAvailableTypes().findIndex(([t]) => t === type);
+                const isActive = currentType === type;
+                const isCompleted = scheduled >= count;
+                const isAvailable = scheduled < count;
+                
+                // Ícone baseado no tipo
+                let Icon = Car;
+                let colorClass = 'text-[#3b82f6]';
+                if (type === 'moto') { Icon = Bike; colorClass = 'text-[#fbbf24]'; }
+                if (type === 'onibus') { Icon = Bus; colorClass = 'text-green-400'; }
+                if (type === 'caminhao') { Icon = Truck; colorClass = 'text-orange-400'; }
+                if (type === 'carreta') { Icon = Truck; colorClass = 'text-purple-400'; }
+                
+                return (
+                  <button
+                    key={type}
+                    onClick={() => {
+                      if (isAvailable) {
+                        setCurrentType(type);
+                        setSelectedDate('');
+                        setSelectedTime('');
+                        if (schedules.length >= 2) {
+                          setSelectedInstructor('');
+                        }
+                      }
+                    }}
+                    disabled={!isAvailable}
+                    className={`relative p-6 rounded-xl border-2 transition-all ${
+                      isActive 
+                        ? 'border-[#fbbf24] bg-[#fbbf24]/10 shadow-lg shadow-[#fbbf24]/30' 
+                        : isCompleted
+                        ? 'border-[#10b981] bg-[#10b981]/10 cursor-default'
+                        : isAvailable
+                        ? 'border-[#374151] bg-[#111827] hover:border-[#3b82f6] hover:shadow-md cursor-pointer'
+                        : 'border-[#374151] bg-[#111827] opacity-50 cursor-not-allowed'
+                    }`}
+                  >
+                    {/* Badge de Status */}
+                    <div className="absolute top-2 right-2 flex gap-1">
+                      {isCompleted && (
+                        <div className="w-6 h-6 bg-[#10b981] rounded-full flex items-center justify-center">
+                          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Ícone do Veículo */}
+                    <div className="flex flex-col items-center">
+                      <Icon 
+                        size={48} 
+                        className={`mb-3 ${
+                          isActive ? 'text-[#fbbf24]' : 
+                          isCompleted ? 'text-[#10b981]' : 
+                          colorClass
+                        }`} 
+                      />
+                      <h3 className={`font-bold text-base mb-2 uppercase ${
+                        isActive ? 'text-[#fbbf24]' : 
+                        isCompleted ? 'text-[#10b981]' : 
+                        'text-white'
+                      }`}>
+                        {getTypeName(type)}
+                      </h3>
+                      
+                      {/* Contador de Aulas */}
+                      <div className={`text-sm font-semibold ${
+                        isActive ? 'text-[#fbbf24]' : 
+                        isCompleted ? 'text-[#10b981]' : 
+                        'text-[#9ca3af]'
+                      }`}>
+                        {scheduled}/{count} agendadas
+                      </div>
+                      
+                      {/* Status Text */}
+                      {isCompleted && (
+                        <div className="mt-2 text-xs text-[#10b981] font-bold uppercase">
+                          Completo ✓
+                        </div>
+                      )}
+                      {isActive && !isCompleted && (
+                        <div className="mt-2 text-xs text-[#fbbf24] font-bold uppercase">
+                          Agendando...
+                        </div>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+            
+            <p className="text-xs text-[#9ca3af] mt-3 text-center">
+              Agende todas as aulas de cada tipo antes de passar para o próximo
+            </p>
           </div>
 
           {/* Local da aula */}
