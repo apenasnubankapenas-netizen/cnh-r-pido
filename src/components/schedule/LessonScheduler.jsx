@@ -22,7 +22,7 @@ export default function LessonScheduler({
   const [selectedInstructor, setSelectedInstructor] = useState('');
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [instructorLessons, setInstructorLessons] = useState([]);
-  const [lockedInstructor, setLockedInstructor] = useState(null);
+  const [lockedInstructors, setLockedInstructors] = useState({});
   const [allLessons, setAllLessons] = useState([]);
   const [blockMessage, setBlockMessage] = useState('');
   const [showContinueModal, setShowContinueModal] = useState(false);
@@ -127,9 +127,10 @@ export default function LessonScheduler({
       return;
     }
     
-    // Bloquear instrutor nas 2 primeiras aulas
-    if (schedules.length === 0) {
-      setLockedInstructor(selectedInstructor);
+    // Bloquear instrutor nas 2 primeiras aulas de cada tipo (carro e moto)
+    const currentTypeScheduled = schedules.filter(s => s.type === currentType).length;
+    if (currentTypeScheduled === 0 && (currentType === 'carro' || currentType === 'moto')) {
+      setLockedInstructors(prev => ({ ...prev, [currentType]: selectedInstructor }));
     }
     
     const instructor = instructors.find(i => i.id === selectedInstructor);
@@ -179,10 +180,15 @@ export default function LessonScheduler({
     }
     // Se ainda há aulas do tipo atual, manter o tipo selecionado
     
-    if (updatedSchedules.length >= 2) {
-      // Após 2 aulas, liberar seleção de instrutor
+    // Liberar instrutor após 2 aulas do mesmo tipo
+    const typeScheduledAfter = updatedSchedules.filter(s => s.type === currentType).length;
+    if (typeScheduledAfter >= 2 && (currentType === 'carro' || currentType === 'moto')) {
+      setLockedInstructors(prev => {
+        const updated = { ...prev };
+        delete updated[currentType];
+        return updated;
+      });
       setSelectedInstructor('');
-      setLockedInstructor(null);
     }
     
     setCurrentLessonIndex(currentLessonIndex + 1);
@@ -359,8 +365,13 @@ export default function LessonScheduler({
                         setCurrentType(type);
                         setSelectedDate('');
                         setSelectedTime('');
-                        if (schedules.length >= 2) {
+                        // Limpar instrutor apenas se não houver bloqueio para este tipo
+                        const typeScheduledCount = schedules.filter(s => s.type === type).length;
+                        if (typeScheduledCount >= 2 || !lockedInstructors[type]) {
                           setSelectedInstructor('');
+                        } else if (lockedInstructors[type]) {
+                          // Se há instrutor bloqueado para este tipo, selecionar automaticamente
+                          setSelectedInstructor(lockedInstructors[type]);
                         }
                       }
                     }}
@@ -472,7 +483,7 @@ export default function LessonScheduler({
                 }
               `}</style>
               <label className={`text-lg sm:text-xl font-bold block mb-3 uppercase ${scheduledLessons < totalLessons ? 'blink-instructor' : 'text-[#fbbf24]'}`}>
-                Escolha seu Instrutor {lockedInstructor && schedules.length < 2 && '(Bloqueado para as 2 primeiras aulas)'}
+                Escolha seu Instrutor {lockedInstructors[currentType] && schedules.filter(s => s.type === currentType).length < 2 && `(Bloqueado para as 2 primeiras aulas de ${getTypeName(currentType)})`}
               </label>
               
               {/* Perfis dos Instrutores */}
@@ -480,7 +491,8 @@ export default function LessonScheduler({
                 <div className="flex gap-3 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-thin scrollbar-thumb-[#fbbf24] scrollbar-track-[#111827]">
                   {filteredInstructors.map(instructor => {
                     const isSelected = selectedInstructor === instructor.id;
-                    const isLocked = lockedInstructor && lockedInstructor !== instructor.id && schedules.length < 2;
+                    const currentTypeScheduledCount = schedules.filter(s => s.type === currentType).length;
+                    const isLocked = lockedInstructors[currentType] && lockedInstructors[currentType] !== instructor.id && currentTypeScheduledCount < 2;
                     
                     return (
                       <button
@@ -582,9 +594,9 @@ export default function LessonScheduler({
                 )}
               </div>
               
-              {lockedInstructor && schedules.length < 2 && (
+              {lockedInstructors[currentType] && schedules.filter(s => s.type === currentType).length < 2 && (
                 <p className="text-xs text-[#fbbf24] mb-3 p-2 bg-[#fbbf24]/10 border border-[#fbbf24] rounded">
-                  ⚠️ Você deve fazer as 2 primeiras aulas com o mesmo instrutor
+                  ⚠️ Você deve fazer as 2 primeiras aulas de {getTypeName(currentType)} com o mesmo instrutor
                 </p>
               )}
             </div>
