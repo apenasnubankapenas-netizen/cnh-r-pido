@@ -224,15 +224,18 @@ export default function Layout({ children, currentPageName }) {
     // HIERARQUIA 1: SUPERADMINISTRADOR - Acesso TOTAL a tudo
     if (userType === 'superadmin') {
       return [
-        { name: 'Dashboard (Admin)', icon: Home, page: 'AdminDashboard', viewAs: 'instructor' },
-        { name: 'Alunos (Admin)', icon: Users, page: 'AdminStudents', viewAs: 'instructor' },
-        { name: 'Instrutores (Admin)', icon: Car, page: 'AdminInstructors', viewAs: 'instructor' },
-        { name: 'Aulas (Admin)', icon: Calendar, page: 'AdminLessons', viewAs: 'instructor' },
-        { name: 'Conversas (Admin)', icon: MessageSquare, page: 'AdminChats', viewAs: 'instructor' },
-        { name: 'Pagamentos (Admin)', icon: DollarSign, page: 'AdminPayments', viewAs: 'instructor' },
+        { name: 'Dashboard', icon: Home, page: 'AdminDashboard' },
+        { name: 'Alunos', icon: Users, page: 'AdminStudents' },
+        { name: 'Instrutores', icon: Car, page: 'AdminInstructors' },
+        { name: 'Aulas', icon: Calendar, page: 'AdminLessons' },
+        { name: 'Conversas', icon: MessageSquare, page: 'AdminChats' },
+        { name: 'Pagamentos', icon: DollarSign, page: 'AdminPayments' },
         { name: 'Pagamentos Instrutores', icon: DollarSign, page: 'AdminPayouts' },
         { name: 'Consultores', icon: UserCog, page: 'AdminSellers' },
         { name: 'Configurações', icon: Settings, page: 'AdminSettings' },
+        { name: '---', icon: null, page: null }, // Separador visual
+        { name: 'Simular Visão Instrutor', icon: Car, page: null, action: 'selectInstructor' },
+        { name: 'Simular Visão Aluno', icon: Users, page: null, action: 'selectStudent' },
         { name: '---', icon: null, page: null }, // Separador visual
         { name: 'Ver Instrutores (Aluno)', icon: Users, page: 'Instructors', viewAs: 'student' },
         { name: 'Minhas Aulas (Aluno)', icon: Calendar, page: 'MyLessons', viewAs: 'student' },
@@ -771,6 +774,30 @@ export default function Layout({ children, currentPageName }) {
             
             const Icon = item.icon;
             const isActive = currentPageName === item.page;
+            
+            // Se for ação especial (selectInstructor ou selectStudent)
+            if (item.action && userType === 'superadmin') {
+              return (
+                <button
+                  key={`action-${idx}`}
+                  onClick={() => {
+                    setIsSidebarOpen(false);
+                    if (item.action === 'selectInstructor') {
+                      setPendingInstructorPage('AdminDashboard');
+                      setShowInstructorSelectorModal(true);
+                    } else if (item.action === 'selectStudent') {
+                      setPendingStudentPage('Home');
+                      setShowStudentSelectorModal(true);
+                    }
+                  }}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer hover:bg-[#374151] text-[#fbbf24] hover:text-white ${isSidebarMinimized ? 'justify-center' : ''}`}
+                  title={isSidebarMinimized ? item.name : ''}
+                >
+                  <Icon size={20} />
+                  {!isSidebarMinimized && <span className="text-sm font-medium">{item.name}</span>}
+                </button>
+              );
+            }
             
             // Se for página com viewAs e usuário é superadmin, interceptar clique
             if (item.viewAs && userType === 'superadmin') {
