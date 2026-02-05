@@ -307,14 +307,15 @@ export default function Layout({ children, currentPageName }) {
       ];
     }
     
-    // HIERARQUIA 2: CONSULTORES - Dashboard, Alunos, Aulas, Conversas, Pagamentos (SEM Configurações)
+    // HIERARQUIA 2: CONSULTORES - Acesso completo a: alunos, aulas, conversas, horários, perfil colaboradores
     if (userType === 'seller') {
       return [
         { name: 'Dashboard', icon: Home, page: 'AdminDashboard' },
         { name: 'Alunos', icon: Users, page: 'AdminStudents' },
         { name: 'Aulas', icon: Calendar, page: 'AdminLessons' },
         { name: 'Conversas', icon: MessageSquare, page: 'AdminChats' },
-        { name: 'Pagamentos', icon: DollarSign, page: 'AdminPayments' },
+        { name: 'Colaboradores', icon: UserCog, page: 'AdminSellers' },
+        { name: 'Configurações', icon: Settings, page: 'AdminSettings' },
       ];
     }
     
