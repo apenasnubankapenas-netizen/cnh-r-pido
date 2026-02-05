@@ -87,8 +87,8 @@ export default function Landing() {
           <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-16">
             {user ? (
               <div className="md:col-span-2">
-                <Link to={createPageUrl('Home')}>
-                  <button className="group relative w-full bg-gradient-to-r from-[#1e40af] to-[#3b82f6] hover:from-[#1e3a8a] hover:to-[#2563eb] text-white p-8 rounded-2xl shadow-2xl hover:shadow-[#3b82f6]/50 transition-all duration-300 transform hover:scale-105 border-2 border-[#3b82f6]/30">
+                <Link to={createPageUrl('Home')} className="block">
+                  <button className="group relative w-full bg-gradient-to-r from-[#1e40af] to-[#3b82f6] hover:from-[#1e3a8a] hover:to-[#2563eb] text-white p-8 rounded-2xl shadow-2xl hover:shadow-[#3b82f6]/50 transition-all duration-300 active:scale-95 border-2 border-[#3b82f6]/30 min-h-[120px] touch-manipulation">
                     <div className="flex items-center justify-center gap-3">
                       <div className="bg-white/10 p-3 rounded-xl">
                         <ArrowRight className="h-8 w-8" />
@@ -105,10 +105,13 @@ export default function Landing() {
               <>
                 {/* Login Card */}
                 <button 
-                  onClick={() => base44.auth.redirectToLogin(createPageUrl('Home'))}
-                  className="group relative bg-gradient-to-br from-[#1a2332] to-[#0d1117] p-8 rounded-2xl border-2 border-[#1e40af]/30 hover:border-[#3b82f6] transition-all duration-300 hover:shadow-2xl hover:shadow-[#1e40af]/30 transform hover:scale-105"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    base44.auth.redirectToLogin(createPageUrl('Home'));
+                  }}
+                  className="group relative bg-gradient-to-br from-[#1a2332] to-[#0d1117] p-8 rounded-2xl border-2 border-[#1e40af]/30 hover:border-[#3b82f6] transition-all duration-300 hover:shadow-2xl hover:shadow-[#1e40af]/30 active:scale-95 min-h-[200px] touch-manipulation"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#1e40af]/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#1e40af]/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                   <div className="relative">
                     <div className="flex justify-center mb-4">
                       <div className="bg-gradient-to-br from-[#1e40af] to-[#3b82f6] p-4 rounded-xl">
@@ -122,10 +125,13 @@ export default function Landing() {
 
                 {/* Register Card */}
                 <button 
-                  onClick={() => base44.auth.redirectToLogin(createPageUrl('StudentRegister'))}
-                  className="group relative bg-gradient-to-br from-[#1a2332] to-[#0d1117] p-8 rounded-2xl border-2 border-[#fbbf24]/30 hover:border-[#fcd34d] transition-all duration-300 hover:shadow-2xl hover:shadow-[#fbbf24]/30 transform hover:scale-105"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    base44.auth.redirectToLogin(createPageUrl('StudentRegister'));
+                  }}
+                  className="group relative bg-gradient-to-br from-[#1a2332] to-[#0d1117] p-8 rounded-2xl border-2 border-[#fbbf24]/30 hover:border-[#fcd34d] transition-all duration-300 hover:shadow-2xl hover:shadow-[#fbbf24]/30 active:scale-95 min-h-[200px] touch-manipulation"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#fbbf24]/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#fbbf24]/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                   <div className="relative">
                     <div className="flex justify-center mb-4">
                       <div className="bg-gradient-to-br from-[#fbbf24] to-[#fcd34d] p-4 rounded-xl">
