@@ -180,21 +180,10 @@ export default function SellerLogin() {
         return;
       }
 
-      // Cria ou atualiza usuário Base44 como admin
-      try {
-        const users = await base44.entities.User.filter({ email: loginEmail });
-        if (users.length === 0) {
-          await base44.users.inviteUser(loginEmail, 'admin');
-        }
-      } catch (err) {
-        console.log('Nota: usuário já existe:', err.message);
-      }
-
+      // Salva sessão e redireciona
       const key = `seller_session_version:${loginEmail}`;
       localStorage.setItem(key, String(sellerData.session_version || 1));
-      
-      // Recarrega a página para forçar novo loadUserType no Layout
-      window.location.href = createPageUrl('AdminDashboard');
+      navigate(createPageUrl('AdminDashboard'));
     } catch (err) {
       setError('Erro ao fazer login: ' + err.message);
       setLoggingIn(false);
