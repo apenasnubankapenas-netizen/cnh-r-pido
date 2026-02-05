@@ -220,32 +220,55 @@ export default function LessonScheduler({
         </div>
       )}
 
-      {/* Modal de Continuar Agendando */}
+      {/* Modal de Continuar Agendando - Centro da Tela */}
       {showContinueModal && (
-        <div className="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 max-w-md px-4 animate-bounce">
-          <div className="bg-gradient-to-r from-[#10b981] to-[#059669] border-2 border-[#fbbf24] rounded-lg px-6 py-5 shadow-2xl shadow-[#10b981]/50">
-            <div className="flex flex-col items-center gap-3">
-              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
-                <svg className="w-8 h-8 text-[#10b981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <div className="text-center">
-                <p className="text-white font-bold text-lg mb-1">
-                  ✓ Aula {schedules.length} Agendada!
-                </p>
-                <p className="text-white/90 font-semibold text-sm">
-                  Continue agendando abaixo
-                </p>
-                <div className="mt-2 px-3 py-1 bg-white/20 rounded-full">
-                  <span className="text-white font-bold text-xs">
-                    {totalLessons - schedules.length} aula{totalLessons - schedules.length !== 1 ? 's' : ''} restante{totalLessons - schedules.length !== 1 ? 's' : ''}
-                  </span>
+        <>
+          {/* Overlay Escuro */}
+          <div className="fixed inset-0 bg-black/70 z-50 animate-fadeIn" />
+          
+          {/* Modal */}
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-[90%] max-w-md animate-scaleIn">
+            <div className="bg-gradient-to-r from-[#10b981] to-[#059669] border-4 border-[#fbbf24] rounded-2xl px-8 py-8 shadow-2xl shadow-[#10b981]/70">
+              <div className="flex flex-col items-center gap-4">
+                <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center animate-pulse">
+                  <svg className="w-12 h-12 text-[#10b981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <div className="text-center">
+                  <p className="text-white font-bold text-2xl mb-2">
+                    ✓ Aula {schedules.length} Agendada!
+                  </p>
+                  <p className="text-white font-semibold text-lg mb-3">
+                    Continue agendando a próxima aula
+                  </p>
+                  <div className="mt-3 px-5 py-2 bg-white rounded-full">
+                    <span className="text-[#10b981] font-bold text-base">
+                      {totalLessons - schedules.length} aula{totalLessons - schedules.length !== 1 ? 's' : ''} restante{totalLessons - schedules.length !== 1 ? 's' : ''}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+          
+          <style>{`
+            @keyframes fadeIn {
+              from { opacity: 0; }
+              to { opacity: 1; }
+            }
+            @keyframes scaleIn {
+              from { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+              to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            }
+            .animate-fadeIn {
+              animation: fadeIn 0.3s ease-out;
+            }
+            .animate-scaleIn {
+              animation: scaleIn 0.3s ease-out;
+            }
+          `}</style>
+        </>
       )}
 
       {/* Progress */}
