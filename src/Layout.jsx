@@ -334,6 +334,13 @@ export default function Layout({ children, currentPageName }) {
     }
   }, [userType, currentPageName]);
 
+  // Redirect new users without Student record to registration
+  useEffect(() => {
+    if (userType === 'new_user') {
+      navigate(createPageUrl('StudentRegister'));
+    }
+  }, [userType, navigate]);
+
    // Páginas públicas sem menu lateral (Landing, Login pages, Chat público)
    const publicPages = ['Landing', 'AdminLogin', 'SuperAdminLogin', 'SellerLogin', 'InstructorLogin', 'StudentRegister', 'InstructorRegister'];
   const isPublicPage = publicPages.includes(currentPageName);
@@ -475,13 +482,6 @@ export default function Layout({ children, currentPageName }) {
       </div>
     );
   }
-
-  // Se é um novo usuário sem cadastro de Student, redirecionar para registro
-  useEffect(() => {
-    if (userType === 'new_user') {
-      navigate(createPageUrl('StudentRegister'));
-    }
-  }, [userType, navigate]);
 
   // Se está logado mas ainda carregando o tipo de usuário, mostrar interface básica
   if (!userType && user.role === 'user') {
