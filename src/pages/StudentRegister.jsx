@@ -758,6 +758,18 @@ export default function StudentRegister() {
                 </div>
               </div>
               
+              {/* Benefícios do Pacote */}
+              <div className="space-y-2 ml-11 mb-4 pb-4 border-b border-[#10b981]/30">
+                <div className="flex items-center gap-2">
+                  <Check className="text-[#10b981]" size={16} />
+                  <span className="text-white text-sm">Veículo para as aulas práticas</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="text-[#10b981]" size={16} />
+                  <span className="text-white text-sm">Suporte nas suas aulas práticas</span>
+                </div>
+              </div>
+
               <div className="space-y-3 ml-11">
                 {(['B', 'AB', 'onibus', 'carreta', 'inclusao_B'].includes(formData.category)) && (
                   <div className="flex items-center justify-between p-3 bg-[#111827]/50 rounded-lg">
