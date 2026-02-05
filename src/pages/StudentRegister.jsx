@@ -185,23 +185,32 @@ export default function StudentRegister() {
     else if (formData.category === 'caminhao') categoryPrice = settings.category_truck_price || 1800;
     else if (formData.category === 'carreta') categoryPrice = settings.category_trailer_price || 2200;
     
-    // Calcular custo das aulas extras (após as 2 primeiras incluídas)
+    // Calcular custo das aulas extras baseado nas quantidades selecionadas
     let extraCost = 0;
-    if (lessonSchedules.length > 2) {
-      const extraLessons = lessonSchedules.slice(2);
-      extraLessons.forEach(lesson => {
-        if (lesson.type === 'carro') {
-          extraCost += settings.lesson_price_car || settings.lesson_price || 98;
-        } else if (lesson.type === 'moto') {
-          extraCost += settings.lesson_price_moto || settings.lesson_price || 98;
-        } else if (lesson.type === 'onibus') {
-          extraCost += settings.lesson_price_bus || 150;
-        } else if (lesson.type === 'caminhao') {
-          extraCost += settings.lesson_price_truck || 180;
-        } else if (lesson.type === 'carreta') {
-          extraCost += settings.lesson_price_trailer || 200;
-        }
-      });
+    
+    // Carro (acima de 2)
+    if (lessonQuantities.carro > 2) {
+      extraCost += (lessonQuantities.carro - 2) * (settings.lesson_price_car || settings.lesson_price || 98);
+    }
+    
+    // Moto (acima de 2)
+    if (lessonQuantities.moto > 2) {
+      extraCost += (lessonQuantities.moto - 2) * (settings.lesson_price_moto || settings.lesson_price || 98);
+    }
+    
+    // Ônibus (acima de 2)
+    if (lessonQuantities.onibus > 2) {
+      extraCost += (lessonQuantities.onibus - 2) * (settings.lesson_price_bus || 150);
+    }
+    
+    // Caminhão (acima de 2)
+    if (lessonQuantities.caminhao > 2) {
+      extraCost += (lessonQuantities.caminhao - 2) * (settings.lesson_price_truck || 180);
+    }
+    
+    // Carreta (acima de 2)
+    if (lessonQuantities.carreta > 2) {
+      extraCost += (lessonQuantities.carreta - 2) * (settings.lesson_price_trailer || 200);
     }
     
     return categoryPrice + extraCost;
