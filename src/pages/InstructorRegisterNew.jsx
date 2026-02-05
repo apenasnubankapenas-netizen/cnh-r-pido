@@ -33,6 +33,7 @@ export default function InstructorRegisterNew() {
     full_name: '',
     cpf: '',
     phone: '',
+    whatsapp_link: '',
     email: '',
     photo: '',
     cover_photo: '',
@@ -109,7 +110,7 @@ export default function InstructorRegisterNew() {
   };
 
   const handleRegister = async () => {
-    if (!formData.full_name || !formData.cpf || !formData.phone || !formData.email) {
+    if (!formData.full_name || !formData.cpf || !formData.phone || !formData.whatsapp_link || !formData.email) {
       setError('Preencha todos os campos obrigatórios.');
       return;
     }
@@ -373,6 +374,18 @@ export default function InstructorRegisterNew() {
                 </div>
               </div>
 
+              {/* Link WhatsApp */}
+              <div>
+                <Label>Link do WhatsApp *</Label>
+                <Input 
+                  className="bg-[#111827] border-[#374151] mt-1"
+                  value={formData.whatsapp_link}
+                  onChange={(e) => setFormData({...formData, whatsapp_link: e.target.value})}
+                  placeholder="https://wa.me/5511999999999"
+                />
+                <p className="text-xs text-[#9ca3af] mt-1">Alunos poderão entrar em contato via WhatsApp usando este link.</p>
+              </div>
+
               {/* Email do Google */}
               <div>
                 <Label>Email do Google *</Label>
@@ -454,10 +467,10 @@ export default function InstructorRegisterNew() {
                   Voltar
                 </Button>
                 <Button 
-                  className="flex-1 bg-[#f0c41b] text-black hover:bg-[#d4aa00] py-6"
-                  onClick={handleRegister}
-                  disabled={registering || !formData.full_name || !formData.cpf || !formData.phone || !formData.email}
-                >
+                   className="flex-1 bg-[#f0c41b] text-black hover:bg-[#d4aa00] py-6"
+                   onClick={handleRegister}
+                   disabled={registering || !formData.full_name || !formData.cpf || !formData.phone || !formData.whatsapp_link || !formData.email}
+                 >
                   {registering ? 'Cadastrando...' : (
                     <>
                       Finalizar Cadastro <Check className="ml-2" size={18} />
