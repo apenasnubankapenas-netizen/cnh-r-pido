@@ -226,7 +226,7 @@ export default function AdminInstructors() {
             <Card key={instructor.id} className="bg-[#1a2332] border-[#374151]">
               <CardContent className="p-4">
                 <div className="flex items-start gap-4">
-                  <div className="w-16 h-16 rounded-full bg-[#1e40af]/20 flex items-center justify-center overflow-hidden">
+                  <div className="w-20 h-28 rounded-2xl bg-[#1e40af]/20 flex items-center justify-center overflow-hidden">
                     {instructor.photo ? (
                       <img src={instructor.photo} alt={instructor.full_name} className="w-full h-full object-cover" />
                     ) : (
