@@ -187,16 +187,14 @@ export default function SellerLogin() {
           await base44.users.inviteUser(loginEmail, 'admin');
         }
       } catch (err) {
-        console.log('Nota: usuário já existe ou erro ao criar:', err.message);
+        console.log('Nota: usuário já existe:', err.message);
       }
 
       const key = `seller_session_version:${loginEmail}`;
       localStorage.setItem(key, String(sellerData.session_version || 1));
       
-      // Redireciona após pequeno delay para garantir autenticação
-      setTimeout(() => {
-        navigate(createPageUrl('AdminDashboard'));
-      }, 500);
+      // Recarrega a página para forçar novo loadUserType no Layout
+      window.location.href = createPageUrl('AdminDashboard');
     } catch (err) {
       setError('Erro ao fazer login: ' + err.message);
       setLoggingIn(false);
