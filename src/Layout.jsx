@@ -264,6 +264,13 @@ export default function Layout({ children, currentPageName }) {
         { name: 'Meu Perfil', icon: GraduationCap, page: 'StudentProfile' },
       ];
     }
+
+    // Novos usuários sem cadastro - menu básico
+    if (userType === 'new_user') {
+      return [
+        { name: 'Página Inicial', icon: Home, page: 'Landing' },
+      ];
+    }
     
     return [];
   };
@@ -334,15 +341,16 @@ export default function Layout({ children, currentPageName }) {
     }
   }, [userType, currentPageName]);
 
-  // Redirect new users without Student record to registration
+  // Redirect new users without Student record to registration ONLY if not on public pages
   useEffect(() => {
-    if (userType === 'new_user') {
-      navigate(createPageUrl('StudentRegister'));
+    const publicPages = ['Landing', 'AdminLogin', 'SuperAdminLogin', 'SellerLogin', 'InstructorLogin', 'StudentRegister', 'InstructorRegister', 'InstructorRegisterNew'];
+    if (userType === 'new_user' && !publicPages.includes(currentPageName)) {
+      navigate(createPageUrl('Landing'));
     }
-  }, [userType, navigate]);
+  }, [userType, currentPageName, navigate]);
 
    // Páginas públicas sem menu lateral (Landing, Login pages, Chat público)
-   const publicPages = ['Landing', 'AdminLogin', 'SuperAdminLogin', 'SellerLogin', 'InstructorLogin', 'StudentRegister', 'InstructorRegister'];
+   const publicPages = ['Landing', 'AdminLogin', 'SuperAdminLogin', 'SellerLogin', 'InstructorLogin', 'StudentRegister', 'InstructorRegister', 'InstructorRegisterNew'];
   const isPublicPage = publicPages.includes(currentPageName);
   
   // Se não está logado
