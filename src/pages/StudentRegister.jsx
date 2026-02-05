@@ -795,7 +795,7 @@ export default function StudentRegister() {
                       <Car size={20} className="text-[#3b82f6]" />
                       <span className="font-semibold text-white">2 Aulas de Carro</span>
                     </div>
-                    <span className="text-[#10b981] font-bold">GRÁTIS</span>
+                    <span className="text-[#10b981] font-bold">INCLUSO</span>
                   </div>
                 )}
                 
@@ -805,7 +805,7 @@ export default function StudentRegister() {
                       <Bike size={20} className="text-[#fbbf24]" />
                       <span className="font-semibold text-white">2 Aulas de Moto</span>
                     </div>
-                    <span className="text-[#10b981] font-bold">GRÁTIS</span>
+                    <span className="text-[#10b981] font-bold">INCLUSO</span>
                   </div>
                 )}
 
@@ -815,7 +815,7 @@ export default function StudentRegister() {
                       <Bus size={20} className="text-green-400" />
                       <span className="font-semibold text-white">2 Aulas de Ônibus</span>
                     </div>
-                    <span className="text-[#10b981] font-bold">GRÁTIS</span>
+                    <span className="text-[#10b981] font-bold">INCLUSO</span>
                   </div>
                 )}
 
@@ -825,7 +825,7 @@ export default function StudentRegister() {
                       <Truck size={20} className="text-orange-400" />
                       <span className="font-semibold text-white">2 Aulas de Caminhão</span>
                     </div>
-                    <span className="text-[#10b981] font-bold">GRÁTIS</span>
+                    <span className="text-[#10b981] font-bold">INCLUSO</span>
                   </div>
                 )}
 
@@ -835,7 +835,7 @@ export default function StudentRegister() {
                       <Truck size={20} className="text-purple-400" />
                       <span className="font-semibold text-white">2 Aulas de Carreta</span>
                     </div>
-                    <span className="text-[#10b981] font-bold">GRÁTIS</span>
+                    <span className="text-[#10b981] font-bold">INCLUSO</span>
                   </div>
                 )}
               </div>
