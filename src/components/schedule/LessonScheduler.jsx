@@ -25,6 +25,7 @@ export default function LessonScheduler({
   const [lockedInstructor, setLockedInstructor] = useState(null);
   const [allLessons, setAllLessons] = useState([]);
   const [blockMessage, setBlockMessage] = useState('');
+  const [showContinueModal, setShowContinueModal] = useState(false);
 
   const typesAvailable = Object.entries(lessonsConfig).filter(([_, count]) => count > 0);
 
@@ -152,6 +153,10 @@ export default function LessonScheduler({
       return;
     }
     
+    // Mostrar modal para continuar
+    setShowContinueModal(true);
+    setTimeout(() => setShowContinueModal(false), 5000);
+    
     // Scroll para o topo para continuar agendando
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
@@ -210,6 +215,34 @@ export default function LessonScheduler({
               <p className="text-white font-bold text-sm sm:text-base">
                 {blockMessage}
               </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Continuar Agendando */}
+      {showContinueModal && (
+        <div className="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 max-w-md px-4 animate-bounce">
+          <div className="bg-gradient-to-r from-[#10b981] to-[#059669] border-2 border-[#fbbf24] rounded-lg px-6 py-5 shadow-2xl shadow-[#10b981]/50">
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
+                <svg className="w-8 h-8 text-[#10b981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <div className="text-center">
+                <p className="text-white font-bold text-lg mb-1">
+                  ✓ Aula {schedules.length} Agendada!
+                </p>
+                <p className="text-white/90 font-semibold text-sm">
+                  Continue agendando abaixo
+                </p>
+                <div className="mt-2 px-3 py-1 bg-white/20 rounded-full">
+                  <span className="text-white font-bold text-xs">
+                    {totalLessons - schedules.length} aula{totalLessons - schedules.length !== 1 ? 's' : ''} restante{totalLessons - schedules.length !== 1 ? 's' : ''}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
