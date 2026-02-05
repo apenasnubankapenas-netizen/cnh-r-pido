@@ -199,12 +199,14 @@ export default function Layout({ children, currentPageName }) {
       ];
     }
     
-    // HIERARQUIA 4: ALUNOS - Apenas Instrutores, Minhas Aulas, Conversas, Meu Perfil
+    // HIERARQUIA 4: ALUNOS - Acesso completo ao sistema
     if (userType === 'student') {
       return [
         { name: 'Instrutores', icon: Users, page: 'Instructors' },
         { name: 'Minhas Aulas', icon: Calendar, page: 'MyLessons' },
         { name: 'Conversas', icon: MessageSquare, page: 'Chat' },
+        { name: 'Meus Pagamentos', icon: DollarSign, page: 'StudentPayments' },
+        { name: 'Vendedores', icon: UserCog, page: 'StudentSellers' },
         { name: 'Meu Perfil', icon: GraduationCap, page: 'StudentProfile' },
       ];
     }

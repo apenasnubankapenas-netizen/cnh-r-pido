@@ -73,6 +73,8 @@ import Simulados from './pages/Simulados';
 import StudentProfile from './pages/StudentProfile';
 import StudentRegister from './pages/StudentRegister';
 import SuperAdminLogin from './pages/SuperAdminLogin';
+import StudentPayments from './pages/StudentPayments';
+import StudentSellers from './pages/StudentSellers';
 import __Layout from './Layout.jsx';
 
 
@@ -103,6 +105,8 @@ export const PAGES = {
     "StudentProfile": StudentProfile,
     "StudentRegister": StudentRegister,
     "SuperAdminLogin": SuperAdminLogin,
+    "StudentPayments": StudentPayments,
+    "StudentSellers": StudentSellers,
 }
 
 export const pagesConfig = {
