@@ -54,6 +54,7 @@ export default function Layout({ children, currentPageName }) {
   const [selectedSellerForView, setSelectedSellerForView] = useState(null);
   const [showSellerSelectorModal, setShowSellerSelectorModal] = useState(false);
   const [pendingSellerPage, setPendingSellerPage] = useState(null);
+  const [searchStudent, setSearchStudent] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -139,11 +140,17 @@ export default function Layout({ children, currentPageName }) {
     setSelectedStudentForView(student);
     localStorage.setItem('admin_view_student', JSON.stringify(student));
     setShowStudentSelectorModal(false);
+    setSearchStudent('');
     if (pendingStudentPage) {
       navigate(createPageUrl(pendingStudentPage));
       setPendingStudentPage(null);
     }
   };
+
+  const filteredStudents = allStudents.filter(student =>
+    student.full_name.toLowerCase().includes(searchStudent.toLowerCase()) ||
+    student.cpf.includes(searchStudent)
+  );
 
   const clearStudentView = () => {
     setSelectedStudentForView(null);
@@ -1242,12 +1249,28 @@ export default function Layout({ children, currentPageName }) {
                   </div>
                 </div>
               )}
+
+              <div className="mb-4">
+                <Input 
+                  placeholder="Pesquisar por nome ou CPF..."
+                  value={searchStudent}
+                  onChange={(e) => setSearchStudent(e.target.value)}
+                  className="bg-[#111827] border-[#374151]"
+                />
+                {searchStudent && (
+                  <p className="text-xs text-[#9ca3af] mt-2">
+                    {filteredStudents.length} aluno(s) encontrado(s)
+                  </p>
+                )}
+              </div>
               
               <div className="space-y-2">
-                {allStudents.length === 0 ? (
-                  <p className="text-[#9ca3af] text-center py-8">Nenhum aluno cadastrado ainda.</p>
+                {filteredStudents.length === 0 ? (
+                  <p className="text-[#9ca3af] text-center py-8">
+                    {searchStudent ? 'Nenhum aluno encontrado.' : 'Nenhum aluno cadastrado ainda.'}
+                  </p>
                 ) : (
-                  allStudents.map((student) => (
+                  filteredStudents.map((student) => (
                     <button
                       key={student.id}
                       onClick={() => selectStudentAndNavigate(student)}
