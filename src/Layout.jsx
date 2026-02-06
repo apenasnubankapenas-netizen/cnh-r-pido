@@ -875,42 +875,42 @@ export default function Layout({ children, currentPageName }) {
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer hover:bg-[#374151] text-[#fbbf24] hover:text-white ${isSidebarMinimized ? 'justify-center' : ''}`}
                   title={isSidebarMinimized ? item.name : ''}
                 >
-                  <Icon size={20} className="text-[#fbbf24]" />
-                  {!isSidebarMinimized && <span className="text-sm font-medium text-[#fbbf24]">{item.name}</span>}
+                  <Icon size={20} />
+                  {!isSidebarMinimized && <span className="text-sm font-medium">{item.name}</span>}
                 </button>
               );
             }
             
             // Se for página com viewAs e usuário é superadmin, interceptar clique
-            if (item.viewAs && userType === 'superadmin') {
-              return (
-                <button
-                  key={item.page}
-                  onClick={() => {
-                    setIsSidebarOpen(false);
-                    if (item.viewAs === 'student') {
-                      setPendingStudentPage(item.page);
-                      setPendingCodeType('view_student');
-                      setPasswordInput('');
-                      setPasswordError('');
-                      setShowPasswordModal(true);
-                    } else if (item.viewAs === 'instructor') {
-                      setPendingInstructorPage(item.page);
-                      setShowInstructorSelectorModal(true);
-                    }
-                  }}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer ${
-                    isActive 
-                      ? 'bg-gradient-to-r from-[#0969da] to-[#0550ae] text-white shadow-md' 
-                      : 'hover:bg-[#161b22] text-[#cbd5e1] hover:text-white'
-                  } ${isSidebarMinimized ? 'justify-center' : ''}`}
-                  title={isSidebarMinimized ? item.name : ''}
-                >
-                  <Icon size={20} className={isActive ? 'text-[#f0c41b]' : ''} />
-                  {!isSidebarMinimized && <span className="text-sm font-medium">{item.name}</span>}
-                </button>
-              );
-            }
+             if (item.viewAs && userType === 'superadmin') {
+               return (
+                 <button
+                   key={item.page}
+                   onClick={() => {
+                     setIsSidebarOpen(false);
+                     if (item.viewAs === 'student') {
+                       setPendingStudentPage(item.page);
+                       setPendingCodeType('view_student');
+                       setPasswordInput('');
+                       setPasswordError('');
+                       setShowPasswordModal(true);
+                     } else if (item.viewAs === 'instructor') {
+                       setPendingInstructorPage(item.page);
+                       setShowInstructorSelectorModal(true);
+                     }
+                   }}
+                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer ${
+                     isActive 
+                       ? 'bg-gradient-to-r from-[#0969da] to-[#0550ae] text-white shadow-md shadow-[#0969da]/50' 
+                       : 'hover:bg-[#161b22]/60 text-[#cbd5e1] hover:text-white hover:border-l-2 hover:border-[#0969da]'
+                   } ${isSidebarMinimized ? 'justify-center' : ''}`}
+                   title={isSidebarMinimized ? item.name : ''}
+                 >
+                   <Icon size={20} className={isActive ? 'text-[#f0c41b]' : 'text-[#3b82f6]'} />
+                   {!isSidebarMinimized && <span className="text-sm font-medium">{item.name}</span>}
+                 </button>
+               );
+             }
             
             // Se for Dashboard, sempre abrir modal de seleção de instrutor
             if (item.page === 'AdminDashboard') {
