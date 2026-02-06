@@ -1195,7 +1195,10 @@ export default function StudentRegister() {
               </Button>
               <Button 
                 className="flex-1 bg-[#f0c41b] text-black hover:bg-[#d4aa00] px-6 py-6 text-base font-bold"
-                onClick={() => setStep(4)}
+                onClick={() => {
+                  setTimeRemaining(600);
+                  setStep(4);
+                }}
               >
                 CONTINUAR <ArrowRight className="ml-2" size={20} />
               </Button>
