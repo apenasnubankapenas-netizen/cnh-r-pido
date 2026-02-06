@@ -72,7 +72,12 @@ export default function AdminSettings() {
     },
     simulado_url: 'https://simulado.detran.gov.br',
     detran_url: 'https://goias.gov.br/detran/agendamento-detran/',
-    seller_cashback_amount: 10
+    seller_cashback_amount: 10,
+    category_d_toxicological_exam: 150,
+    category_d_medical_exam: 190,
+    category_d_detran_fee: 304,
+    category_d_bus_lessons: 1810,
+    category_d_total: 2500
   });
 
   const navigate = useNavigate();
