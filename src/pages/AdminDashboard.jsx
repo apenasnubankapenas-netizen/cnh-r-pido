@@ -101,7 +101,13 @@ export default function AdminDashboard() {
         }, 0)
     : 0;
 
-  const filteredStudents = students.filter(s => 
+  const instructorStudents = (isInstructor && currentInstructor)
+    ? students.filter(s => 
+        instructorLessons.some(l => l.student_id === s.id)
+      )
+    : students;
+
+  const filteredStudents = instructorStudents.filter(s => 
     s.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     s.renach?.includes(searchTerm) ||
     s.cpf?.includes(searchTerm)
@@ -143,8 +149,12 @@ export default function AdminDashboard() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-white text-xs">Total Alunos</p>
-                <p className="text-2xl font-bold text-[#fbbf24]">{students.length}</p>
+                <p className="text-white text-xs">
+                  {isInstructor ? 'Meus Alunos' : 'Total Alunos'}
+                </p>
+                <p className="text-2xl font-bold text-[#fbbf24]">
+                  {isInstructor ? instructorStudents.length : students.length}
+                </p>
               </div>
               <Users className="text-[#3b82f6]" size={32} />
             </div>
@@ -297,13 +307,19 @@ export default function AdminDashboard() {
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2 text-white">
             <Calendar className="text-[#fbbf24]" />
-            Aulas de Hoje
+            {isInstructor ? 'Minhas Aulas de Hoje' : 'Aulas de Hoje'}
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {todayLessons.length > 0 ? (
+          {(isInstructor ? instructorLessons.filter(l => {
+            const today = new Date().toISOString().split('T')[0];
+            return l.date === today;
+          }) : todayLessons).length > 0 ? (
             <div className="space-y-2">
-              {todayLessons.sort((a, b) => a.time.localeCompare(b.time)).map((lesson) => (
+              {(isInstructor ? instructorLessons.filter(l => {
+                const today = new Date().toISOString().split('T')[0];
+                return l.date === today;
+              }) : todayLessons).sort((a, b) => a.time.localeCompare(b.time)).map((lesson) => (
                 <div key={lesson.id} className="flex items-center justify-between p-3 bg-[#111827] rounded-lg border border-[#374151]">
                   <div className="flex items-center gap-3">
                     <div className="text-center min-w-[60px]">
