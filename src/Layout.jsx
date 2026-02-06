@@ -1148,9 +1148,9 @@ export default function Layout({ children, currentPageName }) {
       {/* Instructor Selector Modal */}
       {showInstructorSelectorModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#1a2332] border-2 border-[#a78bfa] rounded-xl w-full max-w-2xl max-h-[80vh] overflow-hidden">
-            <div className="border-b border-[#374151] p-4 bg-gradient-to-r from-[#a78bfa] to-[#8b5cf6]">
-              <h2 className="text-lg font-bold text-white">Selecione um Instrutor para Visualizar</h2>
+          <div className="bg-[#1a2332] border-2 border-[#a78bfa] rounded-xl w-full max-w-2xl max-h-[80vh] overflow-hidden shadow-lg shadow-[#a78bfa]/30">
+            <div className="border-b-2 border-[#a78bfa] p-4 bg-gradient-to-r from-[#a78bfa] to-[#8b5cf6]">
+               <h2 className="text-lg font-bold text-white">Selecione um Instrutor para Visualizar</h2>
               <p className="text-sm text-white/80 mt-1">Escolha qual instrutor você deseja visualizar na página de {pendingInstructorPage}</p>
             </div>
             <div className="p-6 overflow-y-auto max-h-[60vh]">
