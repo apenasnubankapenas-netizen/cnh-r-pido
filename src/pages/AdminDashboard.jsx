@@ -76,7 +76,7 @@ export default function AdminDashboard() {
 
   const studentsAwaitingConfirmation = students.filter(s => s.all_lessons_completed && !s.admin_confirmed);
 
-  // Dados do instrutor logado - APENAS SEUS GANHOS (não vê pagamentos de alunos)
+  // Dados do instrutor logado
   const instructorLessons = (isInstructor && currentInstructor)
     ? lessons.filter(l => l.instructor_id === currentInstructor.id)
     : [];
@@ -112,9 +112,7 @@ export default function AdminDashboard() {
         >
           <ArrowLeft size={18} />
         </Button>
-        <h1 className="text-2xl font-bold text-white">
-          {isInstructor ? 'Meu Dashboard - Instrutor' : 'Dashboard Administrativo'}
-        </h1>
+        <h1 className="text-2xl font-bold text-white">Dashboard Administrativo</h1>
       </div>
 
       {/* Stats Cards */}
@@ -143,7 +141,6 @@ export default function AdminDashboard() {
           </CardContent>
         </Card>
 
-        {/* BLOQUEIO: Cards de pagamentos OCULTOS para instrutores */}
         {!isInstructor && (
          <div className="contents">
             <Card className="bg-[#1a2332] border-[#374151]">
@@ -172,38 +169,22 @@ export default function AdminDashboard() {
           </div>
           )}
 
-        {/* CARD EXCLUSIVO PARA INSTRUTORES: Mostra apenas seus ganhos, não pagamentos de alunos */}
         {isInstructor && (
-          <>
-            <Card className="bg-[#1a2332] border-[#374151]">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-white text-xs">Seus Ganhos (Realizadas)</p>
-                    <p className="text-2xl font-bold text-[#fbbf24]">R$ {instructorEarnings.toFixed(0)}</p>
-                  </div>
-                  <Car className="text-green-400" size={32} />
+          <Card className="bg-[#1a2332] border-[#374151]">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-white text-xs">Seus Ganhos</p>
+                  <p className="text-2xl font-bold text-[#fbbf24]">R$ {instructorEarnings.toFixed(0)}</p>
                 </div>
-                <div className="mt-2 text-xs text-white">
-                  <span className="mr-3">Carro: R$ 12/aula</span>
-                  <span>Moto: R$ 7/aula</span>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="bg-[#1a2332] border-[#374151]">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-white text-xs">Suas Aulas Realizadas</p>
-                    <p className="text-2xl font-bold text-[#fbbf24]">
-                      {instructorLessons.filter(l => l.status === 'realizada').length}
-                    </p>
-                  </div>
-                  <CheckCircle className="text-green-400" size={32} />
-                </div>
-              </CardContent>
-            </Card>
-          </>
+                <Car className="text-green-400" size={32} />
+              </div>
+              <div className="mt-2 text-xs text-white">
+                <span className="mr-3">Carro: R$ 12/aula</span>
+                <span>Moto: R$ 7/aula</span>
+              </div>
+            </CardContent>
+          </Card>
         )}
       </div>
 
@@ -366,7 +347,6 @@ export default function AdminDashboard() {
           </Card>
         </Link>
 
-        {/* BLOQUEIO: Link de pagamentos oculto para instrutores */}
         {!isInstructor && (
           <Link to={createPageUrl('AdminPayments')}>
             <Card className="bg-[#1a2332] border-[#374151] hover:border-green-500 transition-all cursor-pointer">
