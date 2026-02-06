@@ -30,10 +30,18 @@ export default function SellerRegister() {
     try {
       const me = await base44.auth.me();
       setUser(me);
+      if (me) {
+        setFormData({...formData, email: me.email});
+        setStep(3);
+      }
     } catch (e) {
       setUser(null);
     }
   };
+
+  React.useEffect(() => {
+    checkUser();
+  }, []);
 
   const verifyCode = async () => {
     if (!accessCode.trim()) {
@@ -43,12 +51,36 @@ export default function SellerRegister() {
 
     try {
       setError('');
+      
+      // Buscar código no banco de dados
+      const codes = await base44.entities.SellerAccessCode.filter({ code: accessCode.trim() });
+      
+      if (codes.length === 0) {
+        setError('Código de acesso inválido.');
+        return;
+      }
+      
+      const codeData = codes[0];
+      
+      // Verificar se o código já foi usado
+      if (codeData.used) {
+        setError('Este código já foi utilizado.');
+        return;
+      }
+      
+      // Verificar se o código expirou
+      if (codeData.expires_at && new Date(codeData.expires_at) < new Date()) {
+        setError('Este código expirou.');
+        return;
+      }
+      
+      // Código válido - avançar para autenticação
       const me = await base44.auth.me();
       setUser(me);
       
       if (me) {
         setFormData({...formData, email: me.email});
-        setStep(2);
+        setStep(3);
       } else {
         setStep(2);
       }
@@ -85,6 +117,19 @@ export default function SellerRegister() {
         cashback_balance: 0,
         total_referrals: 0
       });
+
+      // Marcar código como usado
+      const codes = await base44.entities.SellerAccessCode.filter({ code: accessCode.trim() });
+      if (codes.length > 0) {
+        await base44.entities.SellerAccessCode.update(codes[0].id, {
+          used: true,
+          used_by_email: formData.email,
+          used_at: new Date().toISOString()
+        });
+      }
+
+      // Convidar usuário como admin
+      await base44.users.inviteUser(formData.email, 'admin');
 
       // Enviar email com senha
       await base44.integrations.Core.SendEmail({
