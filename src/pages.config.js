@@ -48,67 +48,67 @@
  * The mainPage value must match a key in the PAGES object exactly.
  */
 import AdminChats from './pages/AdminChats';
-import AdminDashboard from './pages/AdminDashboard';
 import AdminInstructors from './pages/AdminInstructors';
 import AdminLessons from './pages/AdminLessons';
 import AdminLogin from './pages/AdminLogin';
-import AdminPayments from './pages/AdminPayments';
 import AdminPayouts from './pages/AdminPayouts';
 import AdminSellers from './pages/AdminSellers';
-import AdminSettings from './pages/AdminSettings';
-import AdminStudents from './pages/AdminStudents';
 import Chat from './pages/Chat';
-import Home from './pages/Home';
-import InstructorLogin from './pages/InstructorLogin';
 import InstructorProfile from './pages/InstructorProfile';
 import InstructorRegister from './pages/InstructorRegister';
 import InstructorRegisterInvite from './pages/InstructorRegisterInvite';
-import InstructorRegisterNew from './pages/InstructorRegisterNew';
 import Instructors from './pages/Instructors';
 import Landing from './pages/Landing';
 import MyLessons from './pages/MyLessons';
 import Payment from './pages/Payment';
-import SellerLogin from './pages/SellerLogin';
-import SellerRegister from './pages/SellerRegister';
 import Simulados from './pages/Simulados';
 import StudentPayments from './pages/StudentPayments';
 import StudentProfile from './pages/StudentProfile';
 import StudentRegister from './pages/StudentRegister';
 import StudentSellers from './pages/StudentSellers';
 import SuperAdminLogin from './pages/SuperAdminLogin';
+import Home from './pages/Home';
+import InstructorLogin from './pages/InstructorLogin';
+import InstructorRegisterNew from './pages/InstructorRegisterNew';
+import SellerLogin from './pages/SellerLogin';
+import SellerRegister from './pages/SellerRegister';
+import AdminSettings from './pages/AdminSettings';
+import AdminStudents from './pages/AdminStudents';
+import AdminDashboard from './pages/AdminDashboard';
+import AdminPayments from './pages/AdminPayments';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "AdminChats": AdminChats,
-    "AdminDashboard": AdminDashboard,
     "AdminInstructors": AdminInstructors,
     "AdminLessons": AdminLessons,
     "AdminLogin": AdminLogin,
-    "AdminPayments": AdminPayments,
     "AdminPayouts": AdminPayouts,
     "AdminSellers": AdminSellers,
-    "AdminSettings": AdminSettings,
-    "AdminStudents": AdminStudents,
     "Chat": Chat,
-    "Home": Home,
-    "InstructorLogin": InstructorLogin,
     "InstructorProfile": InstructorProfile,
     "InstructorRegister": InstructorRegister,
     "InstructorRegisterInvite": InstructorRegisterInvite,
-    "InstructorRegisterNew": InstructorRegisterNew,
     "Instructors": Instructors,
     "Landing": Landing,
     "MyLessons": MyLessons,
     "Payment": Payment,
-    "SellerLogin": SellerLogin,
-    "SellerRegister": SellerRegister,
     "Simulados": Simulados,
     "StudentPayments": StudentPayments,
     "StudentProfile": StudentProfile,
     "StudentRegister": StudentRegister,
     "StudentSellers": StudentSellers,
     "SuperAdminLogin": SuperAdminLogin,
+    "Home": Home,
+    "InstructorLogin": InstructorLogin,
+    "InstructorRegisterNew": InstructorRegisterNew,
+    "SellerLogin": SellerLogin,
+    "SellerRegister": SellerRegister,
+    "AdminSettings": AdminSettings,
+    "AdminStudents": AdminStudents,
+    "AdminDashboard": AdminDashboard,
+    "AdminPayments": AdminPayments,
 }
 
 export const pagesConfig = {
