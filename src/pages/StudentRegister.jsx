@@ -1133,45 +1133,7 @@ export default function StudentRegister() {
                   </div>
                 )}
 
-                {formData.category === 'carreta' && (
-                  <div className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
-                    <div className="flex justify-between items-center mb-2">
-                      <div className="flex items-center gap-2">
-                        <Truck size={24} className="text-purple-400" />
-                        <div>
-                          <span className="font-bold text-white block">Aulas Avulsas de Carreta</span>
-                          <span className="text-xs text-[#fbbf24]">R$ {(settings?.lesson_price_trailer || 200).toFixed(2)} por aula</span>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Button 
-                          variant="outline" 
-                          size="icon" 
-                          className="border-[#374151] h-10 w-10"
-                          onClick={() => setLessonQuantities({...lessonQuantities, carreta: Math.max(10, lessonQuantities.carreta - 1)})}
-                          disabled={lessonQuantities.carreta <= 10}
-                        >
-                          <Minus size={18} />
-                        </Button>
-                        <span className="w-12 text-center font-bold text-xl text-white">{lessonQuantities.carreta - 10}</span>
-                        <Button 
-                          variant="outline" 
-                          size="icon" 
-                          className="border-[#374151] h-10 w-10"
-                          onClick={() => setLessonQuantities({...lessonQuantities, carreta: lessonQuantities.carreta + 1})}
-                        >
-                          <Plus size={18} />
-                        </Button>
-                      </div>
-                    </div>
-                    {lessonQuantities.carreta > 10 && (
-                      <div className="text-right text-sm mt-2">
-                        <span className="text-[#9ca3af]">Subtotal (aulas avulsas): </span>
-                        <span className="text-[#fbbf24] font-bold">R$ {((lessonQuantities.carreta - 10) * (settings?.lesson_price_trailer || 200)).toFixed(2)}</span>
-                      </div>
-                    )}
-                  </div>
-                )}
+
               </div>
             </div>
             )}
