@@ -1291,26 +1291,25 @@ export default function StudentRegister() {
                         </div>
                       </>
                     )}
-                    {lessonSchedules.length > 2 && (
-                      <div className="space-y-1">
-                        <div className="flex justify-between text-[#9ca3af] text-xs">
-                          <span>Aulas extras:</span>
-                        </div>
-                        {lessonSchedules.slice(2).map((lesson, idx) => {
-                          const price = lesson.type === 'carro' ? (settings.lesson_price_car || settings.lesson_price || 98) :
-                            lesson.type === 'moto' ? (settings.lesson_price_moto || settings.lesson_price || 98) :
-                            lesson.type === 'onibus' ? (settings.lesson_price_bus || 150) :
-                            lesson.type === 'caminhao' ? (settings.lesson_price_truck || 180) :
-                            lesson.type === 'carreta' ? (settings.lesson_price_trailer || 200) : 98;
-                          return (
-                            <div key={idx} className="flex justify-between text-sm">
-                              <span className="text-[#9ca3af]">• {lesson.type === 'carro' ? 'Carro' : lesson.type === 'moto' ? 'Moto' : lesson.type === 'onibus' ? 'Ônibus' : lesson.type === 'caminhao' ? 'Caminhão' : 'Carreta'}</span>
-                              <span className="font-semibold text-white text-base">R$ {price.toFixed(2)}</span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
+                    {formData.category !== 'onibus' && lessonSchedules.length > 2 && (
+                       <div className="space-y-1">
+                         <div className="flex justify-between text-[#9ca3af] text-xs">
+                           <span>Aulas extras:</span>
+                         </div>
+                         {lessonSchedules.slice(2).map((lesson, idx) => {
+                           const price = lesson.type === 'carro' ? (settings.lesson_price_car || settings.lesson_price || 98) :
+                             lesson.type === 'moto' ? (settings.lesson_price_moto || settings.lesson_price || 98) :
+                             lesson.type === 'caminhao' ? (settings.lesson_price_truck || 180) :
+                             lesson.type === 'carreta' ? (settings.lesson_price_trailer || 200) : 98;
+                           return (
+                             <div key={idx} className="flex justify-between text-sm">
+                               <span className="text-[#9ca3af]">• {lesson.type === 'carro' ? 'Carro' : lesson.type === 'moto' ? 'Moto' : lesson.type === 'caminhao' ? 'Caminhão' : 'Carreta'}</span>
+                               <span className="font-semibold text-white text-base">R$ {price.toFixed(2)}</span>
+                             </div>
+                           );
+                         })}
+                       </div>
+                     )}
                     <div className="border-t border-[#374151] pt-2 mt-2 flex justify-between text-lg sm:text-xl">
                       <span className="text-[#fbbf24] font-bold">TOTAL:</span>
                       <span className="text-[#fbbf24] font-bold">R$ {calculateTotal().toFixed(2)}</span>
