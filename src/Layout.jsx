@@ -931,8 +931,8 @@ export default function Layout({ children, currentPageName }) {
             );
           })}
           
-          {/* Generate Codes Buttons (SuperAdmin) */}
-          {userType === 'superadmin' && (
+          {/* Generate Codes Buttons (SuperAdmin e Instrutores) */}
+          {(userType === 'superadmin' || userType === 'instructor') && (
             <>
               <div className="my-3 border-t border-[#374151]" />
               <div className="p-3 bg-[#161b22] rounded-lg border border-[#30363d] terminal-glow space-y-2">
@@ -942,12 +942,14 @@ export default function Layout({ children, currentPageName }) {
                 >
                   Gerar Código Instrutor
                 </button>
-                <button
-                  onClick={() => setShowGenerateSellerCodeModal(true)}
-                  className="w-full px-3 py-2 bg-[#34d399] hover:bg-[#10b981] rounded text-xs font-semibold text-black transition-colors"
-                >
-                  Gerar Código Consultor
-                </button>
+                {userType === 'superadmin' && (
+                  <button
+                    onClick={() => setShowGenerateSellerCodeModal(true)}
+                    className="w-full px-3 py-2 bg-[#34d399] hover:bg-[#10b981] rounded text-xs font-semibold text-black transition-colors"
+                  >
+                    Gerar Código Consultor
+                  </button>
+                )}
               </div>
             </>
           )}

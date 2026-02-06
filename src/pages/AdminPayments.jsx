@@ -34,32 +34,17 @@ export default function AdminPayments() {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
       
-      // SUPER ADMIN sempre tem acesso
-      if (currentUser?.email === 'tcnhpara@gmail.com') {
-        loadData();
-        return;
-      }
-      
-      // Verificar se está na lista de autorizados
-      const settingsList = await base44.entities.AppSettings.list();
-      const authorizedEmails = settingsList[0]?.authorized_payment_viewers || [];
-      
-      if (authorizedEmails.includes(currentUser?.email)) {
-        loadData();
-        return;
-      }
-      
-      // BLOQUEIO: Verificar se é instrutor ou não autorizado
-      if (currentUser?.role === 'admin') {
+      // BLOQUEIO: Verificar se é instrutor
+      if (currentUser?.role === 'admin' && currentUser.email !== 'tcnhpara@gmail.com') {
         const instructors = await base44.entities.Instructor.filter({ user_email: currentUser.email });
         if (instructors.length > 0 && instructors[0].active) {
           setIsInstructor(true);
+          navigate('/');
+          return;
         }
       }
       
-      // Se não é super admin nem está autorizado, bloquear
-      setIsInstructor(true);
-      setLoading(false);
+      loadData();
     } catch (e) {
       console.log(e);
       setLoading(false);
