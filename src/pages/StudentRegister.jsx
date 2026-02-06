@@ -923,84 +923,44 @@ export default function StudentRegister() {
                 )}
 
                 {(['A', 'AB', 'inclusao_A'].includes(formData.category)) && (
-                  <div className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
-                    <div className="flex justify-between items-center mb-2">
-                      <div className="flex items-center gap-2">
-                        <Bike size={24} className="text-[#fbbf24]" />
-                        <div>
-                          <span className="font-bold text-white block">Aulas de Moto</span>
-                          <span className="text-xs text-[#fbbf24]">R$ {(settings?.lesson_price_moto || settings?.lesson_price || 98).toFixed(2)} por aula</span>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Button 
-                          variant="outline" 
-                          size="icon" 
-                          className="border-[#374151] h-10 w-10"
-                          onClick={() => setLessonQuantities({...lessonQuantities, moto: Math.max(2, lessonQuantities.moto - 1)})}
-                          disabled={lessonQuantities.moto <= 2}
-                        >
-                          <Minus size={18} />
-                        </Button>
-                        <span className="w-12 text-center font-bold text-xl text-white">{lessonQuantities.moto - 2}</span>
-                        <Button 
-                          variant="outline" 
-                          size="icon" 
-                          className="border-[#374151] h-10 w-10"
-                          onClick={() => setLessonQuantities({...lessonQuantities, moto: lessonQuantities.moto + 1})}
-                        >
-                          <Plus size={18} />
-                        </Button>
-                      </div>
-                    </div>
-                    {lessonQuantities.moto > 2 && (
-                      <div className="text-right text-sm mt-2">
-                        <span className="text-[#9ca3af]">Subtotal: </span>
-                        <span className="text-[#fbbf24] font-bold">R$ {((lessonQuantities.moto - 2) * (settings?.lesson_price_moto || settings?.lesson_price || 98)).toFixed(2)}</span>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {formData.category === 'onibus' && (
-                  <div className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
-                    <div className="flex justify-between items-center mb-2">
-                      <div className="flex items-center gap-2">
-                        <Bus size={24} className="text-green-400" />
-                        <div>
-                          <span className="font-bold text-white block">Aulas de Ônibus</span>
-                          <span className="text-xs text-[#fbbf24]">R$ {(settings?.lesson_price_bus || 150).toFixed(2)} por aula</span>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Button 
-                          variant="outline" 
-                          size="icon" 
-                          className="border-[#374151] h-10 w-10"
-                          onClick={() => setLessonQuantities({...lessonQuantities, onibus: Math.max(2, lessonQuantities.onibus - 1)})}
-                          disabled={lessonQuantities.onibus <= 2}
-                        >
-                          <Minus size={18} />
-                        </Button>
-                        <span className="w-12 text-center font-bold text-xl text-white">{lessonQuantities.onibus - 2}</span>
-                        <Button 
-                          variant="outline" 
-                          size="icon" 
-                          className="border-[#374151] h-10 w-10"
-                          onClick={() => setLessonQuantities({...lessonQuantities, onibus: lessonQuantities.onibus + 1})}
-                        >
-                          <Plus size={18} />
-                        </Button>
-                      </div>
-                    </div>
-                    {lessonQuantities.onibus > 2 && (
-                      <div className="text-right text-sm mt-2">
-                        <span className="text-[#9ca3af]">Subtotal: </span>
-                        <span className="text-[#fbbf24] font-bold">R$ {((lessonQuantities.onibus - 2) * (settings?.lesson_price_bus || 150)).toFixed(2)}</span>
-                      </div>
-                    )}
-                  </div>
-                )}
+                   <div className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
+                     <div className="flex justify-between items-center mb-2">
+                       <div className="flex items-center gap-2">
+                         <Bike size={24} className="text-[#fbbf24]" />
+                         <div>
+                           <span className="font-bold text-white block">Aulas de Moto</span>
+                           <span className="text-xs text-[#fbbf24]">R$ {(settings?.lesson_price_moto || settings?.lesson_price || 98).toFixed(2)} por aula</span>
+                         </div>
+                       </div>
+                       <div className="flex items-center gap-3">
+                         <Button 
+                           variant="outline" 
+                           size="icon" 
+                           className="border-[#374151] h-10 w-10"
+                           onClick={() => setLessonQuantities({...lessonQuantities, moto: Math.max(2, lessonQuantities.moto - 1)})}
+                           disabled={lessonQuantities.moto <= 2}
+                         >
+                           <Minus size={18} />
+                         </Button>
+                         <span className="w-12 text-center font-bold text-xl text-white">{lessonQuantities.moto - 2}</span>
+                         <Button 
+                           variant="outline" 
+                           size="icon" 
+                           className="border-[#374151] h-10 w-10"
+                           onClick={() => setLessonQuantities({...lessonQuantities, moto: lessonQuantities.moto + 1})}
+                         >
+                           <Plus size={18} />
+                         </Button>
+                       </div>
+                     </div>
+                     {lessonQuantities.moto > 2 && (
+                       <div className="text-right text-sm mt-2">
+                         <span className="text-[#9ca3af]">Subtotal: </span>
+                         <span className="text-[#fbbf24] font-bold">R$ {((lessonQuantities.moto - 2) * (settings?.lesson_price_moto || settings?.lesson_price || 98)).toFixed(2)}</span>
+                       </div>
+                     )}
+                   </div>
+                 )}
 
                 {formData.category === 'caminhao' && (
                   <div className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
