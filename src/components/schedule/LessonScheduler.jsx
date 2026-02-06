@@ -96,9 +96,17 @@ export default function LessonScheduler({
     if (typesAvailable.length === 1 && typesAvailable[0][0] === 'onibus') {
       return typesAvailable;
     }
-    // Caso contrário, filtra normalmente
+    // Se tem apenas carreta (Categoria E), retorna só carreta
+    if (typesAvailable.length === 1 && typesAvailable[0][0] === 'carreta') {
+      return typesAvailable;
+    }
+    // Caso contrário, filtra normalmente (remove carro e moto para carreta)
     return typesAvailable.filter(([type, count]) => {
       const scheduled = schedules.filter(s => s.type === type).length;
+      // Se é carreta, não mostra carro
+      if (type === 'carro' && typesAvailable.some(([t]) => t === 'carreta')) {
+        return false;
+      }
       return scheduled < count;
     });
   };
