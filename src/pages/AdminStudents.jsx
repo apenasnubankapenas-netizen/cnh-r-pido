@@ -38,6 +38,7 @@ export default function AdminStudents() {
   const [editData, setEditData] = useState({});
   const [user, setUser] = useState(null);
   const [instructorId, setInstructorId] = useState(null);
+  const [isInstructor, setIsInstructor] = useState(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [exportingPDF, setExportingPDF] = useState(false);
@@ -62,7 +63,10 @@ export default function AdminStudents() {
       try {
         if (!user) return;
         const ins = await base44.entities.Instructor.filter({ user_email: user.email });
-        if (ins.length > 0) setInstructorId(ins[0].id);
+        if (ins.length > 0) {
+          setInstructorId(ins[0].id);
+          setIsInstructor(true);
+        }
       } catch (e) {}
     })();
   }, [user]);
@@ -312,6 +316,10 @@ export default function AdminStudents() {
                   {selectedStudent.cnh_front_photo && (
                     <TabsTrigger value="documentos" className="data-[state=active]:bg-[#1e40af]">Docs</TabsTrigger>
                   )}
+                  {/* BLOQUEIO: Aba de pagamentos OCULTA para instrutores */}
+                  {!isInstructor && (
+                    <TabsTrigger value="pagamentos" className="data-[state=active]:bg-[#1e40af]">Pagamentos</TabsTrigger>
+                  )}
                 </TabsList>
 
                 <TabsContent value="dados" className="mt-4 space-y-4">
@@ -348,6 +356,26 @@ export default function AdminStudents() {
                       <Label className="text-[#9ca3af]">Telefone</Label>
                       <p className="font-medium">{selectedStudent.phone || '-'}</p>
                     </div>
+
+                    {/* BLOQUEIO: Informações financeiras OCULTAS para instrutores */}
+                    {!isInstructor && (
+                      <>
+                        <div>
+                          <Label className="text-[#9ca3af]">Total Pago</Label>
+                          <p className="font-medium text-green-400">R$ {(selectedStudent.total_paid || 0).toFixed(2)}</p>
+                        </div>
+                        <div>
+                          <Label className="text-[#9ca3af]">Status Pagamento</Label>
+                          <Badge className={
+                            selectedStudent.payment_status === 'pago' ? 'bg-green-500/20 text-green-400' :
+                            selectedStudent.payment_status === 'parcial' ? 'bg-yellow-500/20 text-yellow-400' :
+                            'bg-red-500/20 text-red-400'
+                          }>
+                            {selectedStudent.payment_status || 'pendente'}
+                          </Badge>
+                        </div>
+                      </>
+                    )}
                     <div>
                       <Label className="text-[#9ca3af]">Aulas Carro</Label>
                       {editing ? (
@@ -480,12 +508,34 @@ export default function AdminStudents() {
                       </div>
                     )}
                   </TabsContent>
-                )}
-              </Tabs>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
+                  )}
+
+                  {/* BLOQUEIO: Aba de pagamentos disponível APENAS para não-instrutores */}
+                  {!isInstructor && (
+                  <TabsContent value="pagamentos" className="mt-4 space-y-4">
+                    <div className="space-y-3">
+                      <div className="p-3 bg-[#111827] rounded-lg">
+                        <Label className="text-[#9ca3af] text-xs">Total Pago</Label>
+                        <p className="text-2xl font-bold text-green-400">R$ {(selectedStudent.total_paid || 0).toFixed(2)}</p>
+                      </div>
+                      <div className="p-3 bg-[#111827] rounded-lg">
+                        <Label className="text-[#9ca3af] text-xs">Status de Pagamento</Label>
+                        <Badge className={
+                          selectedStudent.payment_status === 'pago' ? 'bg-green-500/20 text-green-400 border-green-500/50' :
+                          selectedStudent.payment_status === 'parcial' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50' :
+                          'bg-red-500/20 text-red-400 border-red-500/50'
+                        }>
+                          {selectedStudent.payment_status || 'pendente'}
+                        </Badge>
+                      </div>
+                    </div>
+                  </TabsContent>
+                  )}
+                  </Tabs>
+                  </>
+                  )}
+                  </DialogContent>
+                  </Dialog>
 
       <Dialog open={confirmDeleteOpen} onOpenChange={setConfirmDeleteOpen}>
         <DialogContent className="bg-[#1a2332] border-[#374151] text-white">

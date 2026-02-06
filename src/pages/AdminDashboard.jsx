@@ -112,7 +112,9 @@ export default function AdminDashboard() {
         >
           <ArrowLeft size={18} />
         </Button>
-        <h1 className="text-2xl font-bold text-white">Dashboard Administrativo</h1>
+        <h1 className="text-2xl font-bold text-white">
+          {isInstructor ? 'Meu Dashboard - Instrutor' : 'Dashboard Administrativo'}
+        </h1>
       </div>
 
       {/* Stats Cards */}
