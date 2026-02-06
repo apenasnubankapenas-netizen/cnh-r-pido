@@ -1083,6 +1083,7 @@ export default function StudentRegister() {
                 )}
               </div>
             </div>
+            )}
 
             {/* Resumo do Valor Total */}
             <div className="p-4 bg-[#0d1117] rounded-lg border-2 border-[#fbbf24]">
