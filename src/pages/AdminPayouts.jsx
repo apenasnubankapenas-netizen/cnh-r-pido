@@ -190,8 +190,7 @@ export default function AdminPayouts() {
               </Button>
               <Button 
                 type="button"
-                variant="outline"
-                className="w-full border-[#374151] text-white hover:bg-[#161b22]"
+                className="w-full bg-white text-black hover:bg-gray-200 font-semibold"
                 onClick={() => navigate(-1)}
               >
                 Não sei / Voltar
