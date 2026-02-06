@@ -77,7 +77,7 @@ export default function Layout({ children, currentPageName }) {
     if (user) {
       loadUserType();
     }
-  }, [user, student]);
+  }, [user, student, instructor]);
 
   const loadUser = async () => {
     try {
@@ -200,8 +200,9 @@ export default function Layout({ children, currentPageName }) {
       if (user.role === 'admin') {
         const instructors = await base44.entities.Instructor.filter({ user_email: user.email });
         if (instructors.length > 0 && instructors[0].active) {
-          setUserType('instructor');
+          console.log('Instrutor encontrado:', instructors[0]);
           setInstructor(instructors[0]);
+          setUserType('instructor');
           return;
         }
       }
@@ -386,9 +387,6 @@ export default function Layout({ children, currentPageName }) {
   };
 
   const menuItems = getMenuItems();
-
-  // Debug: verificar estado dos dados
-  console.log('Layout Debug:', { userType, instructor, user, menuItems: menuItems.length });
 
   // Enforce seller password session; logout if version mismatch
   useEffect(() => {
