@@ -1375,7 +1375,7 @@ export default function StudentRegister() {
                         </div>
                       </>
                     )}
-                    {formData.category !== 'onibus' && lessonSchedules.length > 2 && (
+                    {formData.category !== 'onibus' && formData.category !== 'carreta' && lessonSchedules.length > 2 && (
                        <div className="space-y-1">
                          <div className="flex justify-between text-[#9ca3af] text-xs">
                            <span>Aulas extras:</span>
