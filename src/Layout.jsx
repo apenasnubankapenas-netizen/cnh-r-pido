@@ -176,7 +176,10 @@ export default function Layout({ children, currentPageName }) {
 
   const loadUserType = async () => {
     try {
-      if (!user) return;
+      if (!user) {
+        setUserType(null);
+        return;
+      }
       
       // HIERARQUIA 1: SUPERADMINISTRADOR (acesso total)
       if (user.role === 'admin' && user.email === 'tcnhpara@gmail.com') {
@@ -223,7 +226,7 @@ export default function Layout({ children, currentPageName }) {
       
       setUserType(null);
     } catch (e) {
-      console.log(e);
+      console.error('Erro em loadUserType:', e);
       setUserType(null);
     }
   };
@@ -384,7 +387,7 @@ export default function Layout({ children, currentPageName }) {
         const key = `seller_session_version:${user.email}`;
         const stored = localStorage.getItem(key);
         
-        // Se não tem versão de sessão salva, salva a atual
+        // Se não tem versão de sessão salva, salva a atual e não faz nada
         if (!stored) {
           const sellers = await base44.entities.Seller.filter({ email: user.email });
           if (sellers.length > 0) {
@@ -400,17 +403,19 @@ export default function Layout({ children, currentPageName }) {
         
         // Só força logout se a versão mudou (senha alterada)
         if (stored !== current) {
-          base44.auth.logout();
-          setTimeout(() => {
-            navigate(createPageUrl('SellerLogin'));
-          }, 200);
+          localStorage.removeItem(key);
+          base44.auth.logout(createPageUrl('SellerLogin'));
         }
       } catch (e) {
-        console.log(e);
+        console.error('Erro enforceSellerSession:', e);
       }
     };
-    enforceSellerSession();
-  }, [userType, user, navigate]);
+    
+    // Evitar loop - só executar se já temos userType definido
+    if (userType) {
+      enforceSellerSession();
+    }
+  }, [userType, user]);
 
   // Enforce instructor password session; logout if version mismatch
   useEffect(() => {
