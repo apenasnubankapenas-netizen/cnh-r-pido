@@ -57,12 +57,11 @@ export default function Home() {
           const today = new Date().toISOString().split('T')[0];
           if (students[0].payment_status === 'pago') {
             const lessons = await base44.entities.Lesson.filter({ 
-              student_id: students[0].id,
-              status: 'agendada'
+              student_id: students[0].id
             });
-            setUpcomingLessons((lessons || []).filter(l => !l.trial && l.date >= today).sort((a, b) => {
-              if (a.date !== b.date) return a.date.localeCompare(b.date);
-              return a.time.localeCompare(b.time);
+            setUpcomingLessons((lessons || []).filter(l => !l.trial && (l.status === 'agendada' || l.status === 'falta' || l.status === 'realizada')).sort((a, b) => {
+              if (a.date !== b.date) return b.date.localeCompare(a.date);
+              return b.time.localeCompare(a.time);
             }));
           }
         }
@@ -324,12 +323,12 @@ export default function Home() {
         </Card>
       </div>
 
-      {/* Próximas Aulas */}
+      {/* Histórico de Aulas */}
       <Card className="bg-[#1a2332] border-[#374151]">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
             <Clock className="text-[#fbbf24]" />
-            Minhas Aulas Agendadas
+            Histórico de Aulas
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -361,11 +360,70 @@ export default function Home() {
                       </div>
                     )}
                     {lesson.status === 'falta' && (
-                      <div className="mb-3 p-2 bg-red-500/20 border border-red-500 rounded-lg">
-                        <p className="text-sm text-red-400 font-semibold text-center flex items-center justify-center gap-2">
-                          <Clock size={16} />
-                          Falta Registrada
-                        </p>
+                      <div className="mb-3 space-y-3">
+                        <div className="p-2 bg-red-500/20 border border-red-500 rounded-lg">
+                          <p className="text-sm text-red-400 font-semibold text-center flex items-center justify-center gap-2">
+                            <Clock size={16} />
+                            Falta Registrada
+                          </p>
+                        </div>
+                        
+                        {/* Fotos da Falta */}
+                        {(lesson.absence_instructor_photo_url || lesson.absence_location_photo_url) && (
+                          <div className="space-y-2">
+                            <p className="text-xs font-semibold text-red-400 uppercase">Comprovantes do Instrutor:</p>
+                            <div className="grid grid-cols-2 gap-2">
+                              {lesson.absence_instructor_photo_url && (
+                                <div>
+                                  <p className="text-xs text-[#9ca3af] mb-1">Selfie do Instrutor</p>
+                                  <img 
+                                    src={lesson.absence_instructor_photo_url} 
+                                    alt="Selfie do instrutor" 
+                                    className="w-full h-32 object-cover rounded-lg border border-red-500/30"
+                                  />
+                                </div>
+                              )}
+                              {lesson.absence_location_photo_url && (
+                                <div>
+                                  <p className="text-xs text-[#9ca3af] mb-1">Foto do Local</p>
+                                  <img 
+                                    src={lesson.absence_location_photo_url} 
+                                    alt="Foto do local" 
+                                    className="w-full h-32 object-cover rounded-lg border border-red-500/30"
+                                  />
+                                </div>
+                              )}
+                            </div>
+                            {lesson.absence_photos_timestamp && (
+                              <p className="text-xs text-[#9ca3af]">
+                                Registrado em: {new Date(lesson.absence_photos_timestamp).toLocaleString('pt-BR')}
+                              </p>
+                            )}
+                          </div>
+                        )}
+                        
+                        {/* Comentário do Instrutor */}
+                        {lesson.instructor_comment && (
+                          <div className="p-3 bg-[#0d1117] border border-[#374151] rounded-lg">
+                            <p className="text-xs font-semibold text-[#fbbf24] uppercase mb-1">Motivo da Falta:</p>
+                            <p className="text-sm text-white">{lesson.instructor_comment}</p>
+                          </div>
+                        )}
+                        
+                        {/* Avaliação do Instrutor */}
+                        {lesson.instructor_rating && (
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-semibold text-[#9ca3af] uppercase">Avaliação:</span>
+                            <span className={`px-2 py-1 rounded text-xs font-bold ${
+                              lesson.instructor_rating === 'excelente' ? 'bg-green-500/20 text-green-400' :
+                              lesson.instructor_rating === 'boa' ? 'bg-blue-500/20 text-blue-400' :
+                              lesson.instructor_rating === 'regular' ? 'bg-yellow-500/20 text-yellow-400' :
+                              'bg-red-500/20 text-red-400'
+                            }`}>
+                              {lesson.instructor_rating.toUpperCase()}
+                            </span>
+                          </div>
+                        )}
                       </div>
                     )}
                     
@@ -383,6 +441,9 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="text-right">
+                        <p className="text-xs text-[#9ca3af] uppercase">
+                          {new Date(lesson.date + 'T00:00:00').toLocaleDateString('pt-BR', { weekday: 'long' })}
+                        </p>
                         <p className="font-medium text-white">{new Date(lesson.date).toLocaleDateString('pt-BR')}</p>
                         <p className="text-sm text-[#fbbf24] font-bold">{lesson.time} - {getPeriodOfDay(lesson.time)}</p>
                       </div>
