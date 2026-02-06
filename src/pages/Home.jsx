@@ -24,6 +24,7 @@ import { Label } from "@/components/ui/label";
 import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [student, setStudent] = useState(null);
   const [upcomingLessons, setUpcomingLessons] = useState([]);
@@ -32,6 +33,9 @@ export default function Home() {
 
   const [isInstructor, setIsInstructor] = useState(false);
   const [copiedId, setCopiedId] = useState(null);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState(false);
 
   useEffect(() => {
     loadData();
