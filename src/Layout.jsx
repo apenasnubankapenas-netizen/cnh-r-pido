@@ -1056,7 +1056,7 @@ export default function Layout({ children, currentPageName }) {
           
           {/* Indicador de visualização como aluno */}
           {userType === 'superadmin' && selectedStudentForView && (
-            <div className="mb-4 p-3 bg-[#10b981]/10 border border-[#10b981] rounded-lg flex items-center justify-between">
+            <div className="mb-4 p-3 bg-[#10b981]/10 border-2 border-[#10b981] rounded-lg flex items-center justify-between shadow-lg shadow-[#10b981]/20">
               <div>
                 <p className="text-sm text-[#10b981] font-semibold">Visualizando como Aluno:</p>
                 <p className="text-white font-bold">{selectedStudentForView.full_name}</p>
