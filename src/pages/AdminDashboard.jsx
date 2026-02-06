@@ -127,7 +127,14 @@ export default function AdminDashboard() {
         >
           <ArrowLeft size={18} />
         </Button>
-        <h1 className="text-2xl font-bold text-white">Dashboard Administrativo</h1>
+        <div>
+          <h1 className="text-2xl font-bold text-white">Dashboard Administrativo</h1>
+          {isInstructor && currentInstructor && (
+            <p className="text-sm text-[#a78bfa] mt-1">
+              Visualizando: {currentInstructor.full_name}
+            </p>
+          )}
+        </div>
       </div>
 
       {/* Stats Cards */}
