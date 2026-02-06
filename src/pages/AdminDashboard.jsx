@@ -19,7 +19,7 @@ import InstructorSchedule from "../components/instructor/InstructorSchedule";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { useUserPermissions } from "@/components/useUserPermissions";
+import { useUserPermissions } from "../components/useUserPermissions";
 
 export default function AdminDashboard() {
   const [students, setStudents] = useState([]);
