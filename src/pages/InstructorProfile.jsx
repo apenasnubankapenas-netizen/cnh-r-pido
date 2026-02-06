@@ -9,8 +9,10 @@ import {
   Upload,
   Send,
   X,
-  Edit
+  Edit,
+  Calendar
 } from 'lucide-react';
+import InstructorSchedule from "../components/instructor/InstructorSchedule";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -30,6 +32,8 @@ export default function InstructorProfile() {
   const [postFile, setPostFile] = useState(null);
   const [selectedPost, setSelectedPost] = useState(null);
   const [commentText, setCommentText] = useState('');
+  const [lessons, setLessons] = useState([]);
+  const [settings, setSettings] = useState(null);
 
   useEffect(() => {
     loadData();
@@ -48,19 +52,35 @@ export default function InstructorProfile() {
         if (currentUser.email === 'tcnhpara@gmail.com') {
           setUserType('superadmin');
         } else {
-          const sellers = await base44.entities.Seller.filter({ email: currentUser.email });
-          if (sellers.length > 0 && sellers[0].active) {
-            setUserType('seller');
+          const instructors = await base44.entities.Instructor.filter({ user_email: currentUser.email });
+          if (instructors.length > 0 && instructors[0].active) {
+            setUserType('instructor');
           } else {
-            setUserType('admin');
+            const sellers = await base44.entities.Seller.filter({ email: currentUser.email });
+            if (sellers.length > 0 && sellers[0].active) {
+              setUserType('seller');
+            } else {
+              setUserType('admin');
+            }
           }
         }
       }
 
-      const [instructorData, postsData, commentsData] = await Promise.all([
-        base44.entities.Instructor.filter({ id: instructorId }),
-        base44.entities.InstructorPost.filter({ instructor_id: instructorId }),
-        base44.entities.InstructorComment.filter({ instructor_id: instructorId })
+      // Se não passou ID, buscar o instrutor do usuário logado
+      let targetInstructorId = instructorId;
+      if (!targetInstructorId && currentUser?.role === 'admin') {
+        const instructors = await base44.entities.Instructor.filter({ user_email: currentUser.email });
+        if (instructors.length > 0) {
+          targetInstructorId = instructors[0].id;
+        }
+      }
+
+      const [instructorData, postsData, commentsData, lessonsData, settingsData] = await Promise.all([
+        targetInstructorId ? base44.entities.Instructor.filter({ id: targetInstructorId }) : Promise.resolve([]),
+        targetInstructorId ? base44.entities.InstructorPost.filter({ instructor_id: targetInstructorId }) : Promise.resolve([]),
+        targetInstructorId ? base44.entities.InstructorComment.filter({ instructor_id: targetInstructorId }) : Promise.resolve([]),
+        targetInstructorId ? base44.entities.Lesson.filter({ instructor_id: targetInstructorId }) : Promise.resolve([]),
+        base44.entities.AppSettings.list()
       ]);
 
       if (instructorData.length > 0) {
@@ -68,6 +88,14 @@ export default function InstructorProfile() {
       }
       setPosts(postsData || []);
       setComments(commentsData || []);
+      
+      // Para ganhos: apenas aulas realizadas
+      // Para mapa: todas as aulas (agendadas, realizadas, etc)
+      setLessons(lessonsData || []);
+      
+      if (settingsData.length > 0) {
+        setSettings(settingsData[0]);
+      }
     } catch (e) {
       console.log(e);
     } finally {
@@ -124,6 +152,25 @@ export default function InstructorProfile() {
   };
 
   const canCreatePost = userType === 'superadmin' && instructor?.user_email === user?.email;
+  
+  // Calcular ganhos (apenas aulas realizadas)
+  const realizedLessons = lessons.filter(l => l.status === 'realizada' && !l.trial);
+  const carLessons = realizedLessons.filter(l => l.type === 'carro').length;
+  const motoLessons = realizedLessons.filter(l => l.type === 'moto').length;
+  const busLessons = realizedLessons.filter(l => l.type === 'onibus').length;
+  const truckLessons = realizedLessons.filter(l => l.type === 'caminhao').length;
+  const trailerLessons = realizedLessons.filter(l => l.type === 'carreta').length;
+  
+  const carEarnings = carLessons * (settings?.instructor_car_commission || 12);
+  const motoEarnings = motoLessons * (settings?.instructor_moto_commission || 7);
+  const busEarnings = busLessons * (settings?.instructor_bus_commission || 15);
+  const truckEarnings = truckLessons * (settings?.instructor_truck_commission || 15);
+  const trailerEarnings = trailerLessons * (settings?.instructor_trailer_commission || 20);
+  
+  const totalEarnings = carEarnings + motoEarnings + busEarnings + truckEarnings + trailerEarnings;
+  
+  // Verificar se é o próprio instrutor visualizando
+  const isOwnProfile = instructor?.user_email === user?.email;
 
   if (loading) {
     return (
@@ -202,6 +249,16 @@ export default function InstructorProfile() {
                 <p className="text-[#e6edf3] text-sm mb-4">{instructor.bio}</p>
               )}
 
+              {/* Botão WhatsApp para alunos */}
+              {userType === 'student' && instructor.whatsapp_link && (
+                <a href={instructor.whatsapp_link} target="_blank" rel="noopener noreferrer">
+                  <Button className="bg-green-600 hover:bg-green-700 mb-3">
+                    <MessageCircle size={16} className="mr-2" />
+                    Conversar no WhatsApp
+                  </Button>
+                </a>
+              )}
+
               {canCreatePost && (
                 <Button 
                   className="bg-[#f0c41b] text-black hover:bg-[#d4aa00]"
@@ -216,6 +273,74 @@ export default function InstructorProfile() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Mapa de Aulas - Apenas para o próprio instrutor */}
+      {isOwnProfile && (
+        <Card className="bg-[#1a2332] border-[#374151] mb-6">
+          <CardHeader>
+            <h3 className="text-lg font-bold text-white flex items-center gap-2">
+              <Calendar className="text-[#fbbf24]" />
+              Mapa de Aulas (Próximos 14 dias)
+            </h3>
+          </CardHeader>
+          <CardContent>
+            <InstructorSchedule lessons={lessons.filter(l => l.status === 'agendada')} />
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Ganhos e Estatísticas - Apenas para o próprio instrutor */}
+      {isOwnProfile && (
+        <Card className="bg-[#1a2332] border-[#374151] mb-6">
+          <CardHeader>
+            <h3 className="text-lg font-bold text-white">💰 Meus Ganhos</h3>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="p-3 bg-[#111827] rounded-lg">
+                <p className="text-xs text-[#9ca3af] mb-1">🚗 Aulas de Carro</p>
+                <p className="text-xl font-bold text-white">{carLessons}</p>
+                <p className="text-sm text-[#fbbf24]">R$ {carEarnings.toFixed(2)}</p>
+                <p className="text-xs text-[#9ca3af]">R$ {settings?.instructor_car_commission || 12}/aula</p>
+              </div>
+              <div className="p-3 bg-[#111827] rounded-lg">
+                <p className="text-xs text-[#9ca3af] mb-1">🏍️ Aulas de Moto</p>
+                <p className="text-xl font-bold text-white">{motoLessons}</p>
+                <p className="text-sm text-[#fbbf24]">R$ {motoEarnings.toFixed(2)}</p>
+                <p className="text-xs text-[#9ca3af]">R$ {settings?.instructor_moto_commission || 7}/aula</p>
+              </div>
+              {busLessons > 0 && (
+                <div className="p-3 bg-[#111827] rounded-lg">
+                  <p className="text-xs text-[#9ca3af] mb-1">🚌 Aulas de Ônibus</p>
+                  <p className="text-xl font-bold text-white">{busLessons}</p>
+                  <p className="text-sm text-[#fbbf24]">R$ {busEarnings.toFixed(2)}</p>
+                  <p className="text-xs text-[#9ca3af]">R$ {settings?.instructor_bus_commission || 15}/aula</p>
+                </div>
+              )}
+              {truckLessons > 0 && (
+                <div className="p-3 bg-[#111827] rounded-lg">
+                  <p className="text-xs text-[#9ca3af] mb-1">🚚 Aulas de Caminhão</p>
+                  <p className="text-xl font-bold text-white">{truckLessons}</p>
+                  <p className="text-sm text-[#fbbf24]">R$ {truckEarnings.toFixed(2)}</p>
+                  <p className="text-xs text-[#9ca3af]">R$ {settings?.instructor_truck_commission || 15}/aula</p>
+                </div>
+              )}
+              {trailerLessons > 0 && (
+                <div className="p-3 bg-[#111827] rounded-lg">
+                  <p className="text-xs text-[#9ca3af] mb-1">🚛 Aulas de Carreta</p>
+                  <p className="text-xl font-bold text-white">{trailerLessons}</p>
+                  <p className="text-sm text-[#fbbf24]">R$ {trailerEarnings.toFixed(2)}</p>
+                  <p className="text-xs text-[#9ca3af]">R$ {settings?.instructor_trailer_commission || 20}/aula</p>
+                </div>
+              )}
+            </div>
+            <div className="p-4 bg-gradient-to-r from-[#0969da] to-[#f0c41b] rounded-lg">
+              <p className="text-sm text-white/80 mb-1">Total Ganho</p>
+              <p className="text-3xl font-bold text-white">R$ {totalEarnings.toFixed(2)}</p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Posts */}
       <div className="space-y-4">

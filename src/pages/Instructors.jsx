@@ -53,7 +53,25 @@ export default function Instructors() {
       const students = await base44.entities.Student.filter({ user_email: user.email });
       if (students.length > 0) setStudent(students[0]);
 
-      const allInstructors = await base44.entities.Instructor.filter({ active: true });
+      // Buscar todas as aulas do aluno para filtrar instrutores
+      let studentLessons = [];
+      if (students.length > 0) {
+        studentLessons = await base44.entities.Lesson.filter({ student_id: students[0].id });
+      }
+
+      // Pegar IDs únicos dos instrutores das aulas do aluno
+      const instructorIds = [...new Set(studentLessons.map(l => l.instructor_id).filter(Boolean))];
+
+      // Se for aluno, mostrar apenas instrutores que ele escolheu
+      // Se for admin/instrutor, mostrar todos
+      let allInstructors;
+      if (user?.role === 'user' && instructorIds.length > 0) {
+        allInstructors = await base44.entities.Instructor.filter({ active: true });
+        allInstructors = allInstructors.filter(i => instructorIds.includes(i.id));
+      } else {
+        allInstructors = await base44.entities.Instructor.filter({ active: true });
+      }
+      
       setInstructors(allInstructors);
 
       const allReviews = await base44.entities.InstructorReview.list();
