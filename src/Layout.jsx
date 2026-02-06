@@ -288,7 +288,7 @@ export default function Layout({ children, currentPageName }) {
     // HIERARQUIA 1: SUPERADMINISTRADOR - Acesso TOTAL a tudo
     if (userType === 'superadmin') {
       return [
-        { name: 'Dashboard', icon: Home, page: 'AdminDashboard' },
+        { name: 'Dashboard Super Admin', icon: Home, page: 'AdminDashboard' },
         { name: 'Alunos', icon: Users, page: 'AdminStudents' },
         { name: 'Instrutores', icon: Car, page: 'AdminInstructors' },
         { name: 'Aulas', icon: Calendar, page: 'AdminLessons' },
@@ -314,19 +314,18 @@ export default function Layout({ children, currentPageName }) {
     // HIERARQUIA 2: CONSULTORES - Acesso completo a: alunos, aulas, conversas, horários, perfil colaboradores
     if (userType === 'seller') {
       return [
-        { name: 'Dashboard', icon: Home, page: 'AdminDashboard' },
+        { name: 'Dashboard Colaborador', icon: Home, page: 'AdminSellerDashboard' },
         { name: 'Alunos', icon: Users, page: 'AdminStudents' },
         { name: 'Aulas', icon: Calendar, page: 'AdminLessons' },
         { name: 'Conversas', icon: MessageSquare, page: 'AdminChats' },
         { name: 'Colaboradores', icon: UserCog, page: 'AdminSellers' },
-        { name: 'Configurações', icon: Settings, page: 'AdminSettings' },
       ];
     }
     
-    // HIERARQUIA 3: INSTRUTORES - Dashboard, Alunos, Aulas, Conversas, Instrutores, Consultores (SEM PAGAMENTOS)
+    // HIERARQUIA 3: INSTRUTORES - Dashboard próprio, Alunos, Aulas, Conversas, Instrutores, Consultores (SEM PAGAMENTOS)
     if (userType === 'instructor') {
       const items = [
-        { name: 'Dashboard', icon: Home, page: 'AdminDashboard' },
+        { name: 'Dashboard Instrutor', icon: Home, page: 'AdminInstructorDashboard' },
         { name: 'Alunos', icon: Users, page: 'AdminStudents' },
         { name: 'Aulas', icon: Calendar, page: 'AdminLessons' },
         { name: 'Conversas', icon: MessageSquare, page: 'AdminChats' },
@@ -342,13 +341,6 @@ export default function Layout({ children, currentPageName }) {
           page: 'InstructorProfile',
           customUrl: createPageUrl('InstructorProfile') + '?id=' + instructor.id
         });
-      }
-      
-      // IMPORTANTE: Instrutores NÃO TÊM acesso a pagamentos de alunos
-      // Eles só veem seus próprios ganhos no Dashboard
-      
-      if (instructor?.can_view_settings) {
-        items.push({ name: 'Configurações', icon: Settings, page: 'AdminSettings' });
       }
       
       return items;
@@ -453,18 +445,28 @@ export default function Layout({ children, currentPageName }) {
 
   // Redirect students away from admin pages
   useEffect(() => {
-    const adminPages = ['AdminDashboard','AdminStudents','AdminInstructors','AdminLessons','AdminChats','AdminPayments','AdminSellers','AdminSettings'];
+    const adminPages = ['AdminDashboard','AdminInstructorDashboard','AdminSellerDashboard','AdminStudents','AdminInstructors','AdminLessons','AdminChats','AdminPayments','AdminSellers','AdminSettings'];
     if (user && userType === 'student' && adminPages.includes(currentPageName)) {
       navigate(createPageUrl('Home'));
     }
   }, [userType, user, currentPageName]);
 
-  // BLOQUEIO: Instrutores não podem acessar páginas de pagamentos
+  // BLOQUEIO ABSOLUTO: Instrutores não podem acessar páginas de pagamentos
   useEffect(() => {
     if (userType === 'instructor') {
-      const blockedPages = ['AdminPayments', 'AdminPayouts', 'StudentPayments'];
+      const blockedPages = ['AdminPayments', 'AdminPayouts', 'StudentPayments', 'AdminDashboard'];
       if (blockedPages.includes(currentPageName)) {
-        navigate(createPageUrl('AdminDashboard'));
+        navigate(createPageUrl('AdminInstructorDashboard'));
+      }
+    }
+  }, [userType, currentPageName, navigate]);
+
+  // BLOQUEIO: Colaboradores não podem acessar dashboard super admin
+  useEffect(() => {
+    if (userType === 'seller') {
+      const blockedPages = ['AdminDashboard'];
+      if (blockedPages.includes(currentPageName)) {
+        navigate(createPageUrl('AdminSellerDashboard'));
       }
     }
   }, [userType, currentPageName, navigate]);

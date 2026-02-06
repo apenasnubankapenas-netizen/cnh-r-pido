@@ -76,6 +76,8 @@ import StudentProfile from './pages/StudentProfile';
 import StudentRegister from './pages/StudentRegister';
 import StudentSellers from './pages/StudentSellers';
 import SuperAdminLogin from './pages/SuperAdminLogin';
+import AdminInstructorDashboard from './pages/AdminInstructorDashboard';
+import AdminSellerDashboard from './pages/AdminSellerDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -109,6 +111,8 @@ export const PAGES = {
     "StudentRegister": StudentRegister,
     "StudentSellers": StudentSellers,
     "SuperAdminLogin": SuperAdminLogin,
+    "AdminInstructorDashboard": AdminInstructorDashboard,
+    "AdminSellerDashboard": AdminSellerDashboard,
 }
 
 export const pagesConfig = {
