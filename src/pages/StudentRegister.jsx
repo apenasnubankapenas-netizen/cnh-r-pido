@@ -1345,6 +1345,13 @@ export default function StudentRegister() {
                            <span className="font-semibold text-white text-base">R$ {(lessonQuantities.onibus * (settings?.lesson_price_bus || 181)).toFixed(2)}</span>
                          </div>
                        </>
+                     ) : formData.category === 'carreta' ? (
+                       <>
+                         <div className="flex justify-between">
+                           <span className="text-[#9ca3af]">🚛 {lessonQuantities.carreta} aulas práticas de carreta:</span>
+                           <span className="font-semibold text-white text-base">R$ {(lessonQuantities.carreta * (settings?.lesson_price_trailer || 200)).toFixed(2)}</span>
+                         </div>
+                       </>
                      ) : (
                       <>
                         <div className="flex justify-between">
