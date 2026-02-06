@@ -61,16 +61,15 @@ export default function StudentRegister() {
     carreta: 0
   });
   
+  const [categoryDChecks, setCategoryDChecks] = useState({
+    toxicological_done: false,
+    detran_paid: false,
+    medical_done: false
+  });
+  
   const [lessonSchedules, setLessonSchedules] = useState([]);
   const [timeRemaining, setTimeRemaining] = useState(600);
   const [paymentMethod, setPaymentMethod] = useState('');
-  
-  // Estados para Categoria D (Ônibus)
-  const [categoriaDChecks, setCategoriaDChecks] = useState({
-    toxicologicalDone: false,
-    detranPaid: false,
-    medicalExamsDone: false
-  });
 
 
   useEffect(() => {
@@ -765,46 +764,122 @@ export default function StudentRegister() {
           <CardContent className="space-y-4">
             
             {formData.category === 'onibus' && (
-              <div className="p-5 bg-gradient-to-br from-[#34d399]/20 to-[#059669]/20 rounded-lg border-2 border-[#34d399]">
-                <div className="flex items-start gap-3 mb-3">
-                  <div className="w-8 h-8 rounded-full bg-[#34d399] flex items-center justify-center flex-shrink-0 mt-1">
-                    <Check className="text-white" size={20} />
-                  </div>
-                  <div>
-                    <h3 className="text-white font-bold text-lg mb-2">CATEGORIA D - ÔNIBUS (Combo Completo)</h3>
-                    <p className="text-[#d1fae5] text-sm mb-4">Processo completo com acompanhamento</p>
+              <div className="space-y-4">
+                {/* Checklist de Exames e Taxas */}
+                <div className="p-5 bg-gradient-to-br from-[#34d399]/20 to-[#059669]/20 rounded-lg border-2 border-[#34d399]">
+                  <h3 className="text-white font-bold text-lg mb-4">CATEGORIA D - ÔNIBUS</h3>
+                  
+                  <div className="space-y-3">
+                    {/* Exame Toxicológico */}
+                    <div 
+                      onClick={() => setCategoryDChecks({...categoryDChecks, toxicological_done: !categoryDChecks.toxicological_done})}
+                      className={`p-3 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 ${
+                        categoryDChecks.toxicological_done 
+                          ? 'border-[#10b981] bg-[#10b981]/10' 
+                          : 'border-[#374151] hover:border-[#34d399]'
+                      }`}
+                    >
+                      <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all ${
+                        categoryDChecks.toxicological_done 
+                          ? 'bg-[#10b981] border-[#10b981]' 
+                          : 'border-[#374151]'
+                      }`}>
+                        {categoryDChecks.toxicological_done && <Check className="text-white" size={16} />}
+                      </div>
+                      <div className="flex-1">
+                        <span className="text-white font-semibold">💉 Exame toxicológico - Já realizou?</span>
+                      </div>
+                    </div>
+
+                    {/* Exames Médicos */}
+                    <div 
+                      onClick={() => setCategoryDChecks({...categoryDChecks, medical_done: !categoryDChecks.medical_done})}
+                      className={`p-3 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 ${
+                        categoryDChecks.medical_done 
+                          ? 'border-[#10b981] bg-[#10b981]/10' 
+                          : 'border-[#374151] hover:border-[#34d399]'
+                      }`}
+                    >
+                      <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all ${
+                        categoryDChecks.medical_done 
+                          ? 'bg-[#10b981] border-[#10b981]' 
+                          : 'border-[#374151]'
+                      }`}>
+                        {categoryDChecks.medical_done && <Check className="text-white" size={16} />}
+                      </div>
+                      <div className="flex-1">
+                        <span className="text-white font-semibold">🩺 Exames médicos e psicológicos - Já realizou?</span>
+                      </div>
+                    </div>
+
+                    {/* Taxa DETRAN */}
+                    <div 
+                      onClick={() => setCategoryDChecks({...categoryDChecks, detran_paid: !categoryDChecks.detran_paid})}
+                      className={`p-3 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 ${
+                        categoryDChecks.detran_paid 
+                          ? 'border-[#10b981] bg-[#10b981]/10' 
+                          : 'border-[#374151] hover:border-[#34d399]'
+                      }`}
+                    >
+                      <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all ${
+                        categoryDChecks.detran_paid 
+                          ? 'bg-[#10b981] border-[#10b981]' 
+                          : 'border-[#374151]'
+                      }`}>
+                        {categoryDChecks.detran_paid && <Check className="text-white" size={16} />}
+                      </div>
+                      <div className="flex-1">
+                        <span className="text-white font-semibold">🏛️ Taxa do DETRAN - Já pagou?</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                
-                <div className="space-y-2 ml-11">
-                  <div className="flex items-center justify-between p-3 bg-[#111827]/50 rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg">💉</span>
-                      <span className="font-semibold text-white">Exame toxicológico</span>
+
+                {/* Pacote Base de 10 Aulas + Aulas Extras */}
+                <div className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
+                  <h4 className="font-bold text-white text-lg mb-4">🚌 Aulas Práticas de Ônibus</h4>
+                  
+                  {/* Aulas Base */}
+                  <div className="p-3 bg-[#0d1117] rounded-lg mb-4 border-l-4 border-[#34d399]">
+                    <div className="flex justify-between items-center">
+                      <span className="text-white font-semibold">10 aulas incluídas (pacote base)</span>
+                      <span className="text-[#34d399] font-bold text-lg">R$ {((settings?.lesson_price_bus || 181) * 10).toFixed(2)}</span>
                     </div>
-                    <span className="text-[#34d399] font-bold">R$ {(settings?.category_d_toxicological_exam || 150).toFixed(2)}</span>
                   </div>
-                  <div className="flex items-center justify-between p-3 bg-[#111827]/50 rounded-lg">
+
+                  {/* Aulas Avulsas Extras */}
+                  <div className="flex justify-between items-center mb-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-lg">🩺</span>
-                      <span className="font-semibold text-white">Exames médicos e psicológicos</span>
+                      <span className="font-bold text-white">Aulas extras</span>
+                      <span className="text-xs text-[#fbbf24]">R$ {(settings?.lesson_price_bus || 181).toFixed(2)} por aula</span>
                     </div>
-                    <span className="text-[#34d399] font-bold">R$ {(settings?.category_d_medical_exam || 190).toFixed(2)}</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-[#111827]/50 rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg">🏛️</span>
-                      <span className="font-semibold text-white">Taxa do DETRAN</span>
+                    <div className="flex items-center gap-3">
+                      <Button 
+                        variant="outline" 
+                        size="icon" 
+                        className="border-[#374151] h-10 w-10"
+                        onClick={() => setLessonQuantities({...lessonQuantities, onibus: Math.max(10, lessonQuantities.onibus - 1)})}
+                        disabled={lessonQuantities.onibus <= 10}
+                      >
+                        <Minus size={18} />
+                      </Button>
+                      <span className="w-12 text-center font-bold text-xl text-white">{lessonQuantities.onibus - 10}</span>
+                      <Button 
+                        variant="outline" 
+                        size="icon" 
+                        className="border-[#374151] h-10 w-10"
+                        onClick={() => setLessonQuantities({...lessonQuantities, onibus: lessonQuantities.onibus + 1})}
+                      >
+                        <Plus size={18} />
+                      </Button>
                     </div>
-                    <span className="text-[#34d399] font-bold">R$ {(settings?.category_d_detran_fee || 304).toFixed(2)}</span>
                   </div>
-                  <div className="flex items-center justify-between p-3 bg-[#111827]/50 rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg">🚌</span>
-                      <span className="font-semibold text-white">20 aulas práticas de ônibus</span>
+                  {lessonQuantities.onibus > 10 && (
+                    <div className="text-right text-sm mt-2">
+                      <span className="text-[#9ca3af]">Subtotal extras: </span>
+                      <span className="text-[#fbbf24] font-bold">R$ {((lessonQuantities.onibus - 10) * (settings?.lesson_price_bus || 181)).toFixed(2)}</span>
                     </div>
-                    <span className="text-[#34d399] font-bold">R$ {(settings?.category_d_bus_lessons || 3620).toFixed(2)}</span>
-                  </div>
+                  )}
                 </div>
               </div>
             )}
