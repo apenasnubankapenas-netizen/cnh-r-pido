@@ -19,7 +19,6 @@ import InstructorSchedule from "../components/instructor/InstructorSchedule";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { useUserPermissions } from "../components/useUserPermissions";
 
 export default function AdminDashboard() {
   const [students, setStudents] = useState([]);
@@ -28,19 +27,48 @@ export default function AdminDashboard() {
   const [instructors, setInstructors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  
-  const { user, permissions, metadata, isInstructor } = useUserPermissions();
+  const [user, setUser] = useState(null);
+  const [isInstructor, setIsInstructor] = useState(false);
+  const [currentInstructor, setCurrentInstructor] = useState(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user && !loading) {
-      loadData();
-    }
-  }, [user, permissions]);
+    loadData();
+  }, []);
 
   const loadData = async () => {
     try {
-      // Carregar dados base
+      const currentUser = await base44.auth.me();
+      setUser(currentUser);
+      
+      // Verificar autorização para ver pagamentos
+      let canViewPayments = false;
+      
+      // SUPER ADMIN sempre pode ver
+      if (currentUser?.email === 'tcnhpara@gmail.com') {
+        canViewPayments = true;
+      } else {
+        // Verificar se está na lista de autorizados
+        const settingsList = await base44.entities.AppSettings.list();
+        const authorizedEmails = settingsList[0]?.authorized_payment_viewers || [];
+        canViewPayments = authorizedEmails.includes(currentUser?.email);
+      }
+      
+      // CRITICAL: Detectar se é instrutor ANTES de carregar dados financeiros
+      let isInstr = false;
+      let instrData = null;
+      if (currentUser?.role === 'admin') {
+        const instructorsCheck = await base44.entities.Instructor.filter({ user_email: currentUser.email });
+        if (instructorsCheck.length > 0 && instructorsCheck[0].active) {
+          isInstr = true;
+          instrData = instructorsCheck[0];
+          setIsInstructor(true);
+          setCurrentInstructor(instrData);
+        }
+      }
+      
+      // Carregar dados
       const [studentsData, lessonsData, instructorsData] = await Promise.all([
         base44.entities.Student.list(),
         base44.entities.Lesson.list(),
@@ -51,12 +79,12 @@ export default function AdminDashboard() {
       setLessons((lessonsData || []).filter(l => !l.trial));
       setInstructors(instructorsData);
       
-      // Carregar pagamentos APENAS se autorizado
-      if (permissions.canViewPayments) {
+      // BLOQUEIO: Só carregar pagamentos se autorizado E não for apenas instrutor
+      if (canViewPayments && !isInstr) {
         const paymentsData = await base44.entities.Payment.list();
         setPayments(paymentsData);
       } else {
-        setPayments([]);
+        setPayments([]); // Não autorizado vê lista vazia
       }
     } catch (e) {
       console.log(e);
@@ -76,10 +104,10 @@ export default function AdminDashboard() {
   const studentsAwaitingConfirmation = students.filter(s => s.all_lessons_completed && !s.admin_confirmed);
 
   // Dados do instrutor logado - APENAS SEUS GANHOS (não vê pagamentos de alunos)
-  const instructorLessons = (isInstructor() && metadata.instructor)
-    ? lessons.filter(l => l.instructor_id === metadata.instructor.id)
+  const instructorLessons = (isInstructor && currentInstructor)
+    ? lessons.filter(l => l.instructor_id === currentInstructor.id)
     : [];
-  const instructorEarnings = isInstructor()
+  const instructorEarnings = isInstructor
     ? instructorLessons
         .filter(l => l.status === 'realizada')
         .reduce((acc, l) => acc + (l.type === 'carro' ? 12 : (l.type === 'moto' ? 7 : 0)), 0)
@@ -112,7 +140,7 @@ export default function AdminDashboard() {
           <ArrowLeft size={18} />
         </Button>
         <h1 className="text-2xl font-bold text-white">
-          {isInstructor() ? 'Meu Dashboard - Instrutor' : 'Dashboard Administrativo'}
+          {isInstructor ? 'Meu Dashboard - Instrutor' : 'Dashboard Administrativo'}
         </h1>
       </div>
 
@@ -143,7 +171,7 @@ export default function AdminDashboard() {
         </Card>
 
         {/* BLOQUEIO: Cards de pagamentos OCULTOS para instrutores */}
-        {permissions.canViewPayments && (
+        {!isInstructor && (
          <div className="contents">
             <Card className="bg-[#1a2332] border-[#374151]">
               <CardContent className="p-4">
@@ -172,7 +200,7 @@ export default function AdminDashboard() {
           )}
 
         {/* CARD EXCLUSIVO PARA INSTRUTORES: Mostra apenas seus ganhos, não pagamentos de alunos */}
-        {isInstructor() && (
+        {isInstructor && (
           <>
             <Card className="bg-[#1a2332] border-[#374151]">
               <CardContent className="p-4">
@@ -325,7 +353,7 @@ export default function AdminDashboard() {
         </CardContent>
       </Card>
 
-      {isInstructor() && metadata.instructor && (
+      {isInstructor && (
         <Card className="bg-[#1a2332] border-[#374151]">
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2 text-white">
@@ -334,7 +362,7 @@ export default function AdminDashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <InstructorSchedule instructorId={metadata.instructor.id} />
+            <InstructorSchedule lessons={instructorLessons} />
           </CardContent>
         </Card>
       )}
@@ -366,7 +394,7 @@ export default function AdminDashboard() {
         </Link>
 
         {/* BLOQUEIO: Link de pagamentos oculto para instrutores */}
-        {permissions.canViewPayments && (
+        {!isInstructor && (
           <Link to={createPageUrl('AdminPayments')}>
             <Card className="bg-[#1a2332] border-[#374151] hover:border-green-500 transition-all cursor-pointer">
               <CardContent className="p-6 flex items-center gap-4">

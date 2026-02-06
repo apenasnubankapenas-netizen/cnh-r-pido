@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { useUserPermissions } from '../components/useUserPermissions';
 import { 
   Users, 
   Search, 
@@ -37,12 +36,12 @@ export default function AdminStudents() {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [editing, setEditing] = useState(false);
   const [editData, setEditData] = useState({});
+  const [user, setUser] = useState(null);
   const [instructorId, setInstructorId] = useState(null);
+  const [canViewPayments, setCanViewPayments] = useState(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [exportingPDF, setExportingPDF] = useState(false);
-  
-  const { user, permissions, metadata } = useUserPermissions();
 
   const urlParams = new URLSearchParams(window.location.search);
   const studentIdFromUrl = urlParams.get('id');
@@ -60,10 +59,26 @@ export default function AdminStudents() {
   }, []);
 
   useEffect(() => {
-    if (metadata.instructor) {
-      setInstructorId(metadata.instructor.id);
-    }
-  }, [metadata]);
+    (async () => {
+      try {
+        if (!user) return;
+        
+        // Verificar autorização para ver pagamentos
+        if (user.email === 'tcnhpara@gmail.com') {
+          setCanViewPayments(true);
+        } else {
+          const settingsList = await base44.entities.AppSettings.list();
+          const authorizedEmails = settingsList[0]?.authorized_payment_viewers || [];
+          setCanViewPayments(authorizedEmails.includes(user.email));
+        }
+        
+        const ins = await base44.entities.Instructor.filter({ user_email: user.email });
+        if (ins.length > 0) {
+          setInstructorId(ins[0].id);
+        }
+      } catch (e) {}
+    })();
+  }, [user]);
 
   useEffect(() => {
     if (studentIdFromUrl && students.length > 0) {
@@ -311,7 +326,7 @@ export default function AdminStudents() {
                     <TabsTrigger value="documentos" className="data-[state=active]:bg-[#1e40af]">Docs</TabsTrigger>
                   )}
                   {/* BLOQUEIO: Aba de pagamentos APENAS para autorizados */}
-                  {permissions.canViewPayments && (
+                  {canViewPayments && (
                     <TabsTrigger value="pagamentos" className="data-[state=active]:bg-[#1e40af]">Pagamentos</TabsTrigger>
                   )}
                 </TabsList>
@@ -352,7 +367,7 @@ export default function AdminStudents() {
                     </div>
 
                     {/* BLOQUEIO: Informações financeiras APENAS para autorizados */}
-                    {permissions.canViewPayments && (
+                    {canViewPayments && (
                       <>
                         <div>
                           <Label className="text-[#9ca3af]">Total Pago</Label>
@@ -505,7 +520,7 @@ export default function AdminStudents() {
                   )}
 
                   {/* BLOQUEIO: Aba de pagamentos disponível APENAS para autorizados */}
-                  {permissions.canViewPayments && (
+                  {canViewPayments && (
                     <TabsContent value="pagamentos" className="mt-4 space-y-4">
                       <div className="space-y-3">
                         <div className="p-3 bg-[#111827] rounded-lg">
