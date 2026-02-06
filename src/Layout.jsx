@@ -458,14 +458,14 @@ export default function Layout({ children, currentPageName }) {
 
   // Redirect new users without Student record to registration ONLY from Landing
   useEffect(() => {
-    const publicPages = ['Landing', 'AdminLogin', 'SuperAdminLogin', 'SellerLogin', 'InstructorLogin', 'StudentRegister', 'InstructorRegister', 'InstructorRegisterNew'];
+    const publicPages = ['Landing', 'AdminLogin', 'SuperAdminLogin', 'SellerLogin', 'SellerRegister', 'InstructorLogin', 'StudentRegister', 'InstructorRegister', 'InstructorRegisterNew'];
     if (userType === 'new_user' && currentPageName === 'Landing') {
       navigate(createPageUrl('StudentRegister'));
     }
   }, [userType, currentPageName, navigate]);
 
    // Páginas públicas sem menu lateral (Landing, Login pages, Chat público)
-   const publicPages = ['Landing', 'AdminLogin', 'SuperAdminLogin', 'SellerLogin', 'InstructorLogin', 'StudentRegister', 'InstructorRegister', 'InstructorRegisterNew'];
+   const publicPages = ['Landing', 'AdminLogin', 'SuperAdminLogin', 'SellerLogin', 'SellerRegister', 'InstructorLogin', 'StudentRegister', 'InstructorRegister', 'InstructorRegisterNew'];
   const isPublicPage = publicPages.includes(currentPageName);
   
   // Se não está logado
@@ -549,35 +549,28 @@ export default function Layout({ children, currentPageName }) {
           </div>
 
           <div className="flex items-center gap-2">
-            {userType !== 'student' && (
-              <div className="flex items-center gap-1.5">
-                <Link to={createPageUrl('Landing')}>
-                  <button className="text-[10px] sm:text-xs text-black bg-[#fbbf24] hover:bg-[#fcd34d] border-2 border-[#fbbf24] px-3 py-2 rounded-lg transition-all font-bold min-h-[44px] min-w-[60px] active:scale-95">
-                    INÍCIO
-                  </button>
-                </Link>
-                <Link to={createPageUrl('AdminLogin')}>
-                  <button className="text-[10px] sm:text-xs text-black bg-[#fbbf24] hover:bg-[#fcd34d] border-2 border-[#fbbf24] px-3 py-2 rounded-lg transition-all font-bold min-h-[44px] min-w-[60px] active:scale-95">
-                    ADMIN
-                  </button>
-                </Link>
-                <Link to={createPageUrl('SellerLogin')}>
-                  <button className="text-[10px] sm:text-xs text-black bg-[#fbbf24] hover:bg-[#fcd34d] border-2 border-[#fbbf24] px-3 py-2 rounded-lg transition-all font-bold min-h-[44px] min-w-[80px] active:scale-95">
-                    CONSULTORES
-                  </button>
-                </Link>
-                <Link to={createPageUrl('InstructorRegisterNew')}>
-                  <button className="text-[10px] sm:text-xs text-black bg-[#fbbf24] hover:bg-[#fcd34d] border-2 border-[#fbbf24] px-3 py-2 rounded-lg transition-all font-bold min-h-[44px] min-w-[80px] active:scale-95">
-                    INSTRUTORES
-                  </button>
-                </Link>
-                <Link to={createPageUrl('SuperAdminLogin')}>
-                  <button className="text-[10px] sm:text-xs text-black bg-[#fbbf24] hover:bg-[#fcd34d] border-2 border-[#fbbf24] px-3 py-2 rounded-lg transition-all font-bold min-h-[44px] min-w-[60px] active:scale-95">
-                    SUPER
-                  </button>
-                </Link>
-              </div>
-            )}
+            <div className="flex items-center gap-1.5">
+              <Link to={createPageUrl('Landing')}>
+                <button className="text-[10px] sm:text-xs text-black bg-[#fbbf24] hover:bg-[#fcd34d] border-2 border-[#fbbf24] px-3 py-2 rounded-lg transition-all font-bold min-h-[44px] min-w-[60px] active:scale-95">
+                  INÍCIO
+                </button>
+              </Link>
+              <Link to={createPageUrl('SellerRegister')}>
+                <button className="text-[10px] sm:text-xs text-black bg-[#fbbf24] hover:bg-[#fcd34d] border-2 border-[#fbbf24] px-3 py-2 rounded-lg transition-all font-bold min-h-[44px] min-w-[80px] active:scale-95">
+                  CADASTRO CONSULTORES
+                </button>
+              </Link>
+              <Link to={createPageUrl('SellerLogin')}>
+                <button className="text-[10px] sm:text-xs text-black bg-[#fbbf24] hover:bg-[#fcd34d] border-2 border-[#fbbf24] px-3 py-2 rounded-lg transition-all font-bold min-h-[44px] min-w-[80px] active:scale-95">
+                  LOGIN CONSULTORES
+                </button>
+              </Link>
+              <Link to={createPageUrl('InstructorRegisterNew')}>
+                <button className="text-[10px] sm:text-xs text-black bg-[#fbbf24] hover:bg-[#fcd34d] border-2 border-[#fbbf24] px-3 py-2 rounded-lg transition-all font-bold min-h-[44px] min-w-[80px] active:scale-95">
+                  INSTRUTORES
+                </button>
+              </Link>
+            </div>
 
             <button 
               onClick={handleLogout} 
