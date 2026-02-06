@@ -397,20 +397,7 @@ export default function StudentRegister() {
     { value: 'carreta', label: 'Carreta', icon: Truck, desc: 'Categoria E' },
   ];
 
-  if (isInstructor) {
-    return (
-      <div className="min-h-screen bg-[#0a0e1a] flex items-center justify-center p-4">
-        <Card className="bg-[#1a2332] border-[#374151] max-w-md w-full">
-          <CardContent className="p-6 text-center">
-            <p className="text-white font-semibold">Instrutores não podem se cadastrar como alunos.</p>
-            <Button className="mt-4" onClick={() => navigate(createPageUrl('Home'))}>
-              Voltar
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+
 
   return (
     <div className="max-w-2xl mx-auto">
