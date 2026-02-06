@@ -875,8 +875,8 @@ export default function Layout({ children, currentPageName }) {
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer hover:bg-[#374151] text-[#fbbf24] hover:text-white ${isSidebarMinimized ? 'justify-center' : ''}`}
                   title={isSidebarMinimized ? item.name : ''}
                 >
-                  <Icon size={20} />
-                  {!isSidebarMinimized && <span className="text-sm font-medium">{item.name}</span>}
+                  <Icon size={20} className="text-[#fbbf24]" />
+                  {!isSidebarMinimized && <span className="text-sm font-medium text-[#fbbf24]">{item.name}</span>}
                 </button>
               );
             }
