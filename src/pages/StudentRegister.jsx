@@ -65,8 +65,14 @@ export default function StudentRegister() {
   const [timeRemaining, setTimeRemaining] = useState(600);
   const [paymentMethod, setPaymentMethod] = useState('');
   
-  // Estados para Categoria D (Ônibus)
+  // Estados para Categoria D (Ônibus) e E (Carreta)
   const [categoriaDChecks, setCategoriaDChecks] = useState({
+    toxicologicalDone: false,
+    detranPaid: false,
+    medicalExamsDone: false
+  });
+  
+  const [categoriaEChecks, setCategoriaEChecks] = useState({
     toxicologicalDone: false,
     detranPaid: false,
     medicalExamsDone: false
