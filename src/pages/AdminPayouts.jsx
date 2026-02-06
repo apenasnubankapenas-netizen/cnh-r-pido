@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { DollarSign, Calendar as CalendarIcon, QrCode, Wallet, CheckCircle2 } from "lucide-react";
+import { DollarSign, Calendar as CalendarIcon, QrCode, Wallet, CheckCircle2, Lock } from "lucide-react";
 
 export default function AdminPayouts() {
   const [settings, setSettings] = useState(null);
@@ -16,6 +16,9 @@ export default function AdminPayouts() {
   const [endDate, setEndDate] = useState(() => new Date().toISOString().slice(0, 10));
   const [payouts, setPayouts] = useState([]);
   const [generating, setGenerating] = useState(false);
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState(false);
 
   useEffect(() => {
     loadAll();
@@ -126,10 +129,66 @@ export default function AdminPayouts() {
     await loadPayouts();
   };
 
+  const handlePasswordSubmit = (e) => {
+    e.preventDefault();
+    if (password === 'KALABASTRO') {
+      setIsUnlocked(true);
+      setPasswordError(false);
+    } else {
+      setPasswordError(true);
+      setPassword('');
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-[40vh] flex items-center justify-center">
         <div className="animate-pulse text-[#fbbf24]">Carregando...</div>
+      </div>
+    );
+  }
+
+  // Modal de senha
+  if (!isUnlocked) {
+    return (
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <Card className="bg-[#1a2332] border-2 border-[#fbbf24] w-full max-w-md">
+          <CardHeader className="border-b border-[#374151] pb-4">
+            <div className="flex items-center justify-center gap-3">
+              <Lock className="text-[#fbbf24]" size={28} />
+              <CardTitle className="text-xl text-white">Área Restrita</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent className="p-6">
+            <form onSubmit={handlePasswordSubmit} className="space-y-4">
+              <div>
+                <label className="text-sm text-[#9ca3af] mb-2 block">Digite a senha para acessar os pagamentos dos instrutores</label>
+                <Input
+                  type="password"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setPasswordError(false);
+                  }}
+                  placeholder="••••••••"
+                  className={`bg-[#111827] border-[#374151] text-white text-center text-lg tracking-widest ${
+                    passwordError ? 'border-red-500 focus:border-red-500' : ''
+                  }`}
+                  autoFocus
+                />
+                {passwordError && (
+                  <p className="text-red-400 text-xs mt-2 text-center">Senha incorreta. Tente novamente.</p>
+                )}
+              </div>
+              <Button 
+                type="submit" 
+                className="w-full bg-[#f0c41b] text-black hover:bg-[#d4aa00] font-bold"
+              >
+                Desbloquear
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     );
   }
