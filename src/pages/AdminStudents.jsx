@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { useUserPermissions } from '@/lib/useUserPermissions';
+import { useUserPermissions } from '@/components/useUserPermissions';
 import { 
   Users, 
   Search, 
