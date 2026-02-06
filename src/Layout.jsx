@@ -886,7 +886,11 @@ export default function Layout({ children, currentPageName }) {
                   onClick={() => {
                     setIsSidebarOpen(false);
                     if (item.viewAs === 'student') {
-                      handleStudentPageClick(item.page);
+                      setPendingStudentPage(item.page);
+                      setPendingCodeType('view_student');
+                      setPasswordInput('');
+                      setPasswordError('');
+                      setShowPasswordModal(true);
                     } else if (item.viewAs === 'instructor') {
                       setPendingInstructorPage(item.page);
                       setShowInstructorSelectorModal(true);
@@ -1289,7 +1293,9 @@ export default function Layout({ children, currentPageName }) {
             </div>
             <div className="p-6 space-y-4">
               <p className="text-[#9ca3af] text-sm">
-                Digite a senha para gerar código de {pendingCodeType === 'instructor' ? 'instrutor' : 'consultor'}.
+                {pendingCodeType === 'view_student' 
+                  ? 'Digite a senha para visualizar como aluno.'
+                  : `Digite a senha para gerar código de ${pendingCodeType === 'instructor' ? 'instrutor' : 'consultor'}.`}
               </p>
               <div>
                 <Label>Senha</Label>
@@ -1304,8 +1310,10 @@ export default function Layout({ children, currentPageName }) {
                         setShowPasswordModal(false);
                         if (pendingCodeType === 'instructor') {
                           setShowGenerateCodeModal(true);
-                        } else {
+                        } else if (pendingCodeType === 'seller') {
                           setShowGenerateSellerCodeModal(true);
+                        } else if (pendingCodeType === 'view_student') {
+                          setShowStudentSelectorModal(true);
                         }
                       } else {
                         setPasswordError('Senha incorreta');
@@ -1331,8 +1339,10 @@ export default function Layout({ children, currentPageName }) {
                       setShowPasswordModal(false);
                       if (pendingCodeType === 'instructor') {
                         setShowGenerateCodeModal(true);
-                      } else {
+                      } else if (pendingCodeType === 'seller') {
                         setShowGenerateSellerCodeModal(true);
+                      } else if (pendingCodeType === 'view_student') {
+                        setShowStudentSelectorModal(true);
                       }
                     } else {
                       setPasswordError('Senha incorreta');
