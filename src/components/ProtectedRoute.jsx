@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { useUserPermissions } from '@/lib/useUserPermissions';
+import { useUserPermissions } from '@/components/useUserPermissions';
 import { XCircle, Loader2 } from 'lucide-react';
 
 /**
