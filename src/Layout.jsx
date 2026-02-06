@@ -323,7 +323,7 @@ export default function Layout({ children, currentPageName }) {
       ];
     }
     
-    // HIERARQUIA 3: INSTRUTORES - Dashboard, Alunos, Aulas, Conversas + permissões personalizadas
+    // HIERARQUIA 3: INSTRUTORES - Dashboard, Alunos, Aulas, Conversas, Instrutores, Consultores (SEM PAGAMENTOS)
     if (userType === 'instructor') {
       const items = [
         { name: 'Dashboard', icon: Home, page: 'AdminDashboard' },
@@ -344,7 +344,8 @@ export default function Layout({ children, currentPageName }) {
         });
       }
       
-      // Pagamentos não disponíveis para instrutores
+      // IMPORTANTE: Instrutores NÃO TÊM acesso a pagamentos de alunos
+      // Eles só veem seus próprios ganhos no Dashboard
       
       if (instructor?.can_view_settings) {
         items.push({ name: 'Configurações', icon: Settings, page: 'AdminSettings' });
@@ -458,12 +459,15 @@ export default function Layout({ children, currentPageName }) {
     }
   }, [userType, user, currentPageName]);
 
-  // Block instructors from payments page
+  // BLOQUEIO: Instrutores não podem acessar páginas de pagamentos
   useEffect(() => {
-    if (userType === 'instructor' && currentPageName === 'AdminPayments') {
-      navigate(createPageUrl('AdminDashboard'));
+    if (userType === 'instructor') {
+      const blockedPages = ['AdminPayments', 'AdminPayouts', 'StudentPayments'];
+      if (blockedPages.includes(currentPageName)) {
+        navigate(createPageUrl('AdminDashboard'));
+      }
     }
-  }, [userType, currentPageName]);
+  }, [userType, currentPageName, navigate]);
 
   // Redirect new users without Student record to registration ONLY from Landing
   useEffect(() => {
