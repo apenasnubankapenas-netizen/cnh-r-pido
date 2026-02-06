@@ -36,6 +36,10 @@ export default function Layout({ children, currentPageName }) {
   const [generatedSellerCode, setGeneratedSellerCode] = useState('');
   const [codeLoading, setCodeLoading] = useState(false);
   const [sellerCodeLoading, setSellerCodeLoading] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [pendingCodeType, setPendingCodeType] = useState(null);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const [showStudentSelectorModal, setShowStudentSelectorModal] = useState(false);
   const [allStudents, setAllStudents] = useState([]);
   const [selectedStudentForView, setSelectedStudentForView] = useState(null);
