@@ -106,6 +106,22 @@ export default function LessonScheduler({
   const handleAddSchedule = () => {
     if (!selectedDate || !selectedTime || !selectedInstructor || !currentType) return;
     
+    // Bloquear tipos inválidos para Categoria D (ônibus) e E (carreta)
+    const categoryDTypesAllowed = ['onibus'];
+    const categoryETypesAllowed = ['carreta'];
+    const hasOnlyOnibusPending = Object.keys(lessonsConfig).length === 1 && lessonsConfig.onibus > 0;
+    const hasOnlyCarretaPending = Object.keys(lessonsConfig).length === 1 && lessonsConfig.carreta > 0;
+    
+    if (hasOnlyOnibusPending && !categoryDTypesAllowed.includes(currentType)) {
+      alert('Categoria D (Ônibus) requer APENAS aulas de ônibus. Selecione ônibus.');
+      return;
+    }
+    
+    if (hasOnlyCarretaPending && !categoryETypesAllowed.includes(currentType)) {
+      alert('Categoria E (Carreta) requer APENAS aulas de carreta. Selecione carreta.');
+      return;
+    }
+    
     // Verificar se horário está disponível (não ocupado por alunos que já pagaram)
     const occupied = allLessons.some(l => 
       l.instructor_id === selectedInstructor && 
