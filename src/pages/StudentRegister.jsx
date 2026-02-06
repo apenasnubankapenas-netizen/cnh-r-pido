@@ -1007,7 +1007,7 @@ export default function StudentRegister() {
             )}
 
             {/* Aulas Avulsas Extras */}
-            {formData.category !== 'onibus' && formData.category !== 'carreta' && (
+            {formData.category !== 'onibus' && (
             <div>
               <h3 className="font-bold text-white text-lg mb-3">Deseja adicionar aulas extras?</h3>
               <p className="text-sm text-[#9ca3af] mb-4">Adicione mais aulas práticas conforme sua necessidade. Você também pode comprar aulas depois.</p>
