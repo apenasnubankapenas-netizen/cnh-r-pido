@@ -8,6 +8,13 @@ function formatDateISO(date) {
   return `${y}-${m}-${d}`;
 }
 
+function getPeriod(time) {
+  const hour = parseInt(time.split(':')[0]);
+  if (hour < 12) return 'Manhã';
+  if (hour < 18) return 'Tarde';
+  return 'Noite';
+}
+
 const weekday = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
 export default function InstructorSchedule({ lessons = [] }) {
@@ -33,8 +40,12 @@ export default function InstructorSchedule({ lessons = [] }) {
           >
             <div className="flex items-center justify-between mb-2">
               <div>
-                <div className="text-xs text-[#9ca3af]">{weekday[day.date.getDay()]}</div>
-                <div className="font-bold">{String(day.date.getDate()).padStart(2, '0')}/{String(day.date.getMonth()+1).padStart(2, '0')}</div>
+                <div className={`text-sm font-semibold ${day.busy ? 'text-red-400' : 'text-white'}`}>
+                  {weekday[day.date.getDay()]}
+                </div>
+                <div className={`font-bold ${day.busy ? 'text-red-400' : 'text-white'}`}>
+                  {String(day.date.getDate()).padStart(2, '0')}/{String(day.date.getMonth()+1).padStart(2, '0')}
+                </div>
               </div>
               <Badge className={day.busy ? "bg-red-500/20 text-red-400" : "bg-green-500/20 text-green-400"}>
                 {day.busy ? "Aulas" : "Livre"}
@@ -43,12 +54,10 @@ export default function InstructorSchedule({ lessons = [] }) {
             {day.busy ? (
               <div className="flex flex-wrap gap-1">
                 {day.times.map((t, idx) => (
-                  <span
-                    key={idx}
-                    className="text-xs px-2 py-1 rounded bg-red-500/10 text-red-300 border border-red-500/30"
-                  >
-                    {t}
-                  </span>
+                  <div key={idx} className="text-xs px-2 py-1 rounded bg-red-500/10 text-red-300 border border-red-500/30">
+                    <div className="font-semibold">{t}</div>
+                    <div className="text-[10px] text-red-400/70">{getPeriod(t)}</div>
+                  </div>
                 ))}
               </div>
             ) : (
