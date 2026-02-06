@@ -98,12 +98,77 @@ export default function Home() {
               <CardTitle className="text-[#fbbf24]">Acesso de Instrutor</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-[#9ca3af]">Instrutores não podem se cadastrar como alunos.</p>
-              <Link to={createPageUrl('AdminDashboard')}>
-                <Button className="bg-[#1e40af] hover:bg-[#3b82f6]">Ir para o Painel</Button>
-              </Link>
+              <p className="text-[#9ca3af]">Você pode se cadastrar como aluno com a senha de acesso, ou voltar ao painel.</p>
+              <div className="flex gap-2">
+                <Button className="flex-1 bg-[#fbbf24] text-black hover:bg-[#d4aa00]" onClick={() => setShowPasswordModal(true)}>
+                  Cadastrar como Aluno
+                </Button>
+                <Link to={createPageUrl('AdminDashboard')} className="flex-1">
+                  <Button className="w-full bg-[#1e40af] hover:bg-[#3b82f6]">Ir para o Painel</Button>
+                </Link>
+              </div>
             </CardContent>
           </Card>
+
+          {/* Password Modal */}
+          {showPasswordModal && (
+            <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <Card className="bg-[#1a2332] border-2 border-[#fbbf24] w-full max-w-md">
+                <CardHeader className="border-b border-[#374151]">
+                  <div className="flex items-center gap-2">
+                    <Lock className="text-[#fbbf24]" size={20} />
+                    <CardTitle className="text-[#fbbf24]">Senha de Acesso</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <form onSubmit={(e) => {
+                    e.preventDefault();
+                    if (password === 'KALABASTRO') {
+                      navigate(createPageUrl('StudentRegister'));
+                    } else {
+                      setPasswordError(true);
+                      setPassword('');
+                    }
+                  }} className="space-y-4">
+                    <div>
+                      <Label className="text-sm text-[#9ca3af]">Digite a senha para continuar</Label>
+                      <Input
+                        type="password"
+                        value={password}
+                        onChange={(e) => {
+                          setPassword(e.target.value);
+                          setPasswordError(false);
+                        }}
+                        placeholder="••••••••"
+                        className={`bg-[#111827] border-[#374151] text-white text-center text-lg tracking-widest mt-2 ${
+                          passwordError ? 'border-red-500 focus:border-red-500' : ''
+                        }`}
+                        autoFocus
+                      />
+                      {passwordError && (
+                        <p className="text-red-400 text-xs mt-2 text-center">Senha incorreta</p>
+                      )}
+                    </div>
+                    <Button type="submit" className="w-full bg-[#fbbf24] text-black hover:bg-[#d4aa00]">
+                      Confirmar
+                    </Button>
+                    <Button 
+                      type="button"
+                      variant="outline"
+                      className="w-full border-[#374151]"
+                      onClick={() => {
+                        setShowPasswordModal(false);
+                        setPassword('');
+                        setPasswordError(false);
+                      }}
+                    >
+                      Cancelar
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+            </div>
+          )}
         </div>
       );
     }
