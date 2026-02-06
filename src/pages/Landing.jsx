@@ -31,11 +31,15 @@ export default function Landing() {
   }, []);
 
   useEffect(() => {
-    // Redirecionar automaticamente usuários logados com registro
-    if (user && hasRegistration && userType) {
+    // Redirecionar automaticamente usuários logados
+    if (user && userType && userType !== 'new_user') {
       navigate(getRedirectUrl());
     }
-  }, [user, hasRegistration, userType]);
+    // Novos usuários vão para o cadastro
+    if (user && userType === 'new_user') {
+      navigate(createPageUrl('StudentRegister'));
+    }
+  }, [user, userType, navigate]);
 
   const loadData = async () => {
     setLoading(false); // Mostra botões imediatamente

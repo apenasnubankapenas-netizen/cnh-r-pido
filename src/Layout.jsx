@@ -456,10 +456,10 @@ export default function Layout({ children, currentPageName }) {
     }
   }, [userType, currentPageName]);
 
-  // Redirect new users without Student record to registration
+  // Redirect new users without Student record to registration ONLY from Landing
   useEffect(() => {
-    const publicPages = ['AdminLogin', 'SuperAdminLogin', 'SellerLogin', 'InstructorLogin', 'StudentRegister', 'InstructorRegister', 'InstructorRegisterNew'];
-    if (userType === 'new_user' && !publicPages.includes(currentPageName)) {
+    const publicPages = ['Landing', 'AdminLogin', 'SuperAdminLogin', 'SellerLogin', 'InstructorLogin', 'StudentRegister', 'InstructorRegister', 'InstructorRegisterNew'];
+    if (userType === 'new_user' && currentPageName === 'Landing') {
       navigate(createPageUrl('StudentRegister'));
     }
   }, [userType, currentPageName, navigate]);
