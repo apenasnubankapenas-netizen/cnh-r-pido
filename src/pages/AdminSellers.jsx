@@ -34,6 +34,9 @@ export default function AdminSellers() {
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [passwordSeller, setPasswordSeller] = useState(null);
   const [newPassword, setNewPassword] = useState('');
+  const [accessGranted, setAccessGranted] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   const navigate = useNavigate();
 
@@ -117,10 +120,71 @@ export default function AdminSellers() {
     });
   };
 
+  const handlePasswordCheck = () => {
+    if (passwordInput === 'KALABASTRO') {
+      setAccessGranted(true);
+      setPasswordError('');
+    } else {
+      setPasswordError('Senha incorreta');
+    }
+  };
+
+  const handleGoBack = () => {
+    navigate(-1);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-pulse text-[#fbbf24]">Carregando...</div>
+      </div>
+    );
+  }
+
+  if (!accessGranted) {
+    return (
+      <div className="flex items-center justify-center min-h-[500px]">
+        <Card className="bg-[#1a2332] border-[#374151] w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-[#fbbf24] flex items-center gap-2">
+              <Lock size={24} />
+              Acesso Restrito
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-[#9ca3af] text-sm">
+              Esta seção requer senha de acesso.
+            </p>
+            <div>
+              <Label>Senha</Label>
+              <Input 
+                type="password"
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handlePasswordCheck()}
+                placeholder="Digite a senha"
+              />
+              {passwordError && (
+                <p className="text-red-400 text-xs mt-1">{passwordError}</p>
+              )}
+            </div>
+            <div className="flex gap-2">
+              <Button 
+                className="flex-1 bg-white hover:bg-gray-100 text-black font-bold"
+                onClick={handleGoBack}
+              >
+                Não sei / Voltar
+              </Button>
+              <Button 
+                className="flex-1 bg-[#1e40af] hover:bg-[#3b82f6]"
+                onClick={handlePasswordCheck}
+              >
+                Acessar
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
