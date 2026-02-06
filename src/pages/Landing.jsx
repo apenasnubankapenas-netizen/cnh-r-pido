@@ -30,77 +30,65 @@ export default function Landing() {
   }, []);
 
   const loadData = async () => {
+    setLoading(false); // Mostra botões imediatamente
+    
     try {
       const settingsData = await base44.entities.AppSettings.list();
       if (settingsData.length > 0) {
         setSettings(settingsData[0]);
       }
-
-      try {
-        const currentUser = await base44.auth.me();
-        setUser(currentUser);
-        
-        // Verificar tipo de usuário
-        if (currentUser) {
-          // SuperAdmin
-          if (currentUser.role === 'admin' && currentUser.email === 'tcnhpara@gmail.com') {
-            setHasRegistration(true);
-            setUserType('superadmin');
-            setLoading(false);
-            return;
-          }
-          
-          const [students, instructors, sellers] = await Promise.all([
-            base44.entities.Student.filter({ user_email: currentUser.email }),
-            base44.entities.Instructor.filter({ user_email: currentUser.email }),
-            base44.entities.Seller.filter({ email: currentUser.email })
-          ]);
-          
-          // Instrutor
-          if (instructors.length > 0 && instructors[0].active) {
-            setHasRegistration(true);
-            setUserType('instructor');
-            setLoading(false);
-            return;
-          }
-          
-          // Consultor
-          if (sellers.length > 0 && sellers[0].active) {
-            setHasRegistration(true);
-            setUserType('seller');
-            setLoading(false);
-            return;
-          }
-          
-          // Aluno
-          if (students.length > 0) {
-            setHasRegistration(true);
-            setUserType('student');
-            setLoading(false);
-            return;
-          }
-          
-          // Admin genérico
-          if (currentUser.role === 'admin') {
-            setHasRegistration(true);
-            setUserType('admin');
-            setLoading(false);
-            return;
-          }
-          
-          // Usuário logado mas sem cadastro - não redirecionar, deixar na landing
-          setLoading(false);
-        } else {
-          // Usuário não logado
-          setLoading(false);
-        }
-      } catch (e) {
-        // Usuário não logado
-        setLoading(false);
-      }
     } catch (e) {
       console.log(e);
-      setLoading(false);
+    }
+
+    try {
+      const currentUser = await base44.auth.me();
+      setUser(currentUser);
+      
+      if (!currentUser) return;
+      
+      // SuperAdmin
+      if (currentUser.role === 'admin' && currentUser.email === 'tcnhpara@gmail.com') {
+        setHasRegistration(true);
+        setUserType('superadmin');
+        return;
+      }
+      
+      const [students, instructors, sellers] = await Promise.all([
+        base44.entities.Student.filter({ user_email: currentUser.email }),
+        base44.entities.Instructor.filter({ user_email: currentUser.email }),
+        base44.entities.Seller.filter({ email: currentUser.email })
+      ]);
+      
+      // Instrutor
+      if (instructors.length > 0 && instructors[0].active) {
+        setHasRegistration(true);
+        setUserType('instructor');
+        return;
+      }
+      
+      // Consultor
+      if (sellers.length > 0 && sellers[0].active) {
+        setHasRegistration(true);
+        setUserType('seller');
+        return;
+      }
+      
+      // Aluno
+      if (students.length > 0) {
+        setHasRegistration(true);
+        setUserType('student');
+        return;
+      }
+      
+      // Admin genérico
+      if (currentUser.role === 'admin') {
+        setHasRegistration(true);
+        setUserType('admin');
+        return;
+      }
+    } catch (e) {
+      // Usuário não logado - ok, botões já aparecem
     }
   };
 
