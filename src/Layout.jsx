@@ -331,17 +331,8 @@ export default function Layout({ children, currentPageName }) {
         { name: 'Conversas', icon: MessageSquare, page: 'AdminChats' },
         { name: 'Instrutores', icon: Car, page: 'Instructors' },
         { name: 'Consultores', icon: UserCog, page: 'StudentSellers' },
+        { name: 'Meu Perfil', icon: GraduationCap, page: 'InstructorProfile' },
       ];
-      
-      // Adicionar link do perfil com ID do instrutor
-      if (instructor?.id) {
-        items.push({ 
-          name: 'Meu Perfil', 
-          icon: GraduationCap, 
-          page: 'InstructorProfile',
-          customUrl: createPageUrl('InstructorProfile') + '?id=' + instructor.id
-        });
-      }
       
       // Pagamentos não disponíveis para instrutores
       
@@ -386,9 +377,6 @@ export default function Layout({ children, currentPageName }) {
   };
 
   const menuItems = getMenuItems();
-
-  // Debug: verificar estado dos dados
-  console.log('Layout Debug:', { userType, instructor, user, menuItems: menuItems.length });
 
   // Enforce seller password session; logout if version mismatch
   useEffect(() => {
@@ -914,7 +902,7 @@ export default function Layout({ children, currentPageName }) {
             return (
               <Link
                 key={item.page}
-                to={item.customUrl || createPageUrl(item.page)}
+                to={createPageUrl(item.page)}
                 onClick={() => setIsSidebarOpen(false)}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer ${
                   isActive 
