@@ -1278,6 +1278,74 @@ export default function Layout({ children, currentPageName }) {
         </div>
       )}
 
+      {/* Password Modal */}
+      {showPasswordModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#1a2332] border-2 border-[#fbbf24] rounded-xl w-full max-w-md">
+            <div className="border-b border-[#374151] p-4 bg-gradient-to-r from-[#0969da] to-[#0550ae]">
+              <h2 className="text-lg font-bold text-white">Senha Requerida</h2>
+            </div>
+            <div className="p-6 space-y-4">
+              <p className="text-[#9ca3af] text-sm">
+                Digite a senha para gerar código de {pendingCodeType === 'instructor' ? 'instrutor' : 'consultor'}.
+              </p>
+              <div>
+                <Label>Senha</Label>
+                <Input 
+                  type="password"
+                  className="bg-[#111827] border-[#374151] mt-1"
+                  value={passwordInput}
+                  onChange={(e) => setPasswordInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      if (passwordInput === 'KALABASTRO') {
+                        setShowPasswordModal(false);
+                        if (pendingCodeType === 'instructor') {
+                          setShowGenerateCodeModal(true);
+                        } else {
+                          setShowGenerateSellerCodeModal(true);
+                        }
+                      } else {
+                        setPasswordError('Senha incorreta');
+                      }
+                    }
+                  }}
+                  placeholder="Digite a senha"
+                />
+                {passwordError && (
+                  <p className="text-red-400 text-xs mt-1">{passwordError}</p>
+                )}
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setShowPasswordModal(false)}
+                  className="flex-1 px-4 py-2 bg-white hover:bg-gray-100 rounded text-black font-semibold text-sm transition-colors"
+                >
+                  Não sei / Voltar
+                </button>
+                <button
+                  onClick={() => {
+                    if (passwordInput === 'KALABASTRO') {
+                      setShowPasswordModal(false);
+                      if (pendingCodeType === 'instructor') {
+                        setShowGenerateCodeModal(true);
+                      } else {
+                        setShowGenerateSellerCodeModal(true);
+                      }
+                    } else {
+                      setPasswordError('Senha incorreta');
+                    }
+                  }}
+                  className="flex-1 px-4 py-2 bg-[#0969da] hover:bg-[#0550ae] rounded text-white font-semibold text-sm transition-colors"
+                >
+                  Confirmar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Generate Instructor Code Modal */}
       {showGenerateCodeModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
