@@ -1249,26 +1249,48 @@ export default function StudentRegister() {
                 <h3 className="font-semibold text-sm text-[#fbbf24]">Resumo do Pagamento</h3>
                 <div className="p-3 bg-[#111827] rounded border border-[#374151]">
                   <div className="space-y-2 text-xs sm:text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-[#9ca3af]">Taxa de Categoria ({formData.category}):</span>
-                      <span className="font-semibold text-white text-base">
-                        R$ {(() => {
-                          if (formData.category === 'A') return (settings.category_a_price || 548).toFixed(2);
-                          if (formData.category === 'B') return (settings.category_b_price || 548).toFixed(2);
-                          if (formData.category === 'AB') return (settings.category_ab_price || 992).toFixed(2);
-                          if (formData.category === 'inclusao_A') return (settings.category_inclusao_a_price || 400).toFixed(2);
-                          if (formData.category === 'inclusao_B') return (settings.category_inclusao_b_price || 400).toFixed(2);
-                          if (formData.category === 'onibus') return (settings.category_bus_price || 1500).toFixed(2);
-                          if (formData.category === 'caminhao') return (settings.category_truck_price || 1800).toFixed(2);
-                          if (formData.category === 'carreta') return (settings.category_trailer_price || 2200).toFixed(2);
-                          return '0.00';
-                        })()}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-[#9ca3af]">Aulas incluídas no pacote:</span>
-                      <span className="font-semibold text-white text-base">2 aulas</span>
-                    </div>
+                    {formData.category === 'onibus' ? (
+                      <>
+                        <div className="flex justify-between">
+                          <span className="text-[#9ca3af]">💉 Exame toxicológico:</span>
+                          <span className="font-semibold text-white text-base">R$ {(settings.category_d_toxicological_exam || 150).toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-[#9ca3af]">🩺 Exames médicos e psicológicos:</span>
+                          <span className="font-semibold text-white text-base">R$ {(settings.category_d_medical_exam || 190).toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-[#9ca3af]">🏛️ Taxa do DETRAN:</span>
+                          <span className="font-semibold text-white text-base">R$ {(settings.category_d_detran_fee || 304).toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-[#9ca3af]">🚌 10 aulas práticas de ônibus:</span>
+                          <span className="font-semibold text-white text-base">R$ {(settings.category_d_bus_lessons || 1810).toFixed(2)}</span>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="flex justify-between">
+                          <span className="text-[#9ca3af]">Taxa de Categoria ({formData.category}):</span>
+                          <span className="font-semibold text-white text-base">
+                            R$ {(() => {
+                              if (formData.category === 'A') return (settings.category_a_price || 548).toFixed(2);
+                              if (formData.category === 'B') return (settings.category_b_price || 548).toFixed(2);
+                              if (formData.category === 'AB') return (settings.category_ab_price || 992).toFixed(2);
+                              if (formData.category === 'inclusao_A') return (settings.category_inclusao_a_price || 400).toFixed(2);
+                              if (formData.category === 'inclusao_B') return (settings.category_inclusao_b_price || 400).toFixed(2);
+                              if (formData.category === 'caminhao') return (settings.category_truck_price || 1800).toFixed(2);
+                              if (formData.category === 'carreta') return (settings.category_trailer_price || 2200).toFixed(2);
+                              return '0.00';
+                            })()}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-[#9ca3af]">Aulas incluídas no pacote:</span>
+                          <span className="font-semibold text-white text-base">2 aulas</span>
+                        </div>
+                      </>
+                    )}
                     {lessonSchedules.length > 2 && (
                       <div className="space-y-1">
                         <div className="flex justify-between text-[#9ca3af] text-xs">
