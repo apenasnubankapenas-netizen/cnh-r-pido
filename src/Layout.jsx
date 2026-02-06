@@ -21,6 +21,8 @@ import {
   ArrowLeft
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
