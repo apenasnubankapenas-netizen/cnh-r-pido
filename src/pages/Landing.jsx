@@ -46,6 +46,7 @@ export default function Landing() {
           if (currentUser.role === 'admin' && currentUser.email === 'tcnhpara@gmail.com') {
             setHasRegistration(true);
             setUserType('superadmin');
+            setLoading(false);
             return;
           }
           
@@ -59,6 +60,7 @@ export default function Landing() {
           if (instructors.length > 0 && instructors[0].active) {
             setHasRegistration(true);
             setUserType('instructor');
+            setLoading(false);
             return;
           }
           
@@ -66,6 +68,7 @@ export default function Landing() {
           if (sellers.length > 0 && sellers[0].active) {
             setHasRegistration(true);
             setUserType('seller');
+            setLoading(false);
             return;
           }
           
@@ -73,6 +76,7 @@ export default function Landing() {
           if (students.length > 0) {
             setHasRegistration(true);
             setUserType('student');
+            setLoading(false);
             return;
           }
           
@@ -80,14 +84,25 @@ export default function Landing() {
           if (currentUser.role === 'admin') {
             setHasRegistration(true);
             setUserType('admin');
+            setLoading(false);
+            return;
           }
+          
+          // Usuário logado mas sem cadastro - redirecionar para registro
+          setLoading(false);
+          window.location.href = createPageUrl('StudentRegister');
+        } else {
+          // Usuário não logado - redirecionar para registro
+          setLoading(false);
+          base44.auth.redirectToLogin(createPageUrl('StudentRegister'));
         }
       } catch (e) {
-        // Usuário não logado
+        // Usuário não logado - redirecionar para registro
+        setLoading(false);
+        base44.auth.redirectToLogin(createPageUrl('StudentRegister'));
       }
     } catch (e) {
       console.log(e);
-    } finally {
       setLoading(false);
     }
   };
