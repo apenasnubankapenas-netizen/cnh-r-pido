@@ -272,18 +272,7 @@ export default function AdminInstructors() {
                       )}
                     </div>
 
-                    {/* Ganhos - visível apenas para admin */}
-                    <div className="mt-3 p-2 bg-[#111827] rounded border border-[#374151]">
-                      <div className="flex items-center gap-1 text-xs text-[#fbbf24] mb-1">
-                        <DollarSign size={12} />
-                        <span>Ganhos do Instrutor</span>
-                      </div>
-                      <div className="flex gap-4 text-sm text-white">
-                        <span>🚗 {earnings.carLessons} aulas = R$ {earnings.carEarnings.toFixed(2)}</span>
-                        <span>🏍️ {earnings.motoLessons} aulas = R$ {earnings.motoEarnings.toFixed(2)}</span>
-                      </div>
-                      <p className="font-bold text-[#fbbf24] mt-1">Total: R$ {earnings.total.toFixed(2)}</p>
-                    </div>
+
 
                     <div className="flex gap-2 mt-3 flex-wrap">
                       <Link to={`${createPageUrl('InstructorProfile')}?id=${instructor.id}`}>
