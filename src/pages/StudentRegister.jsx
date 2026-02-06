@@ -61,6 +61,12 @@ export default function StudentRegister() {
     carreta: 0
   });
   
+  const [categoryDChecks, setCategoryDChecks] = useState({
+    toxicological_done: false,
+    detran_paid: false,
+    medical_done: false
+  });
+  
   const [lessonSchedules, setLessonSchedules] = useState([]);
   const [timeRemaining, setTimeRemaining] = useState(600);
   const [paymentMethod, setPaymentMethod] = useState('');
