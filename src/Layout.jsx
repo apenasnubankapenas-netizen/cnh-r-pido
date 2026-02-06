@@ -77,7 +77,7 @@ export default function Layout({ children, currentPageName }) {
     if (user) {
       loadUserType();
     }
-  }, [user, student, instructor]);
+  }, [user, student]);
 
   const loadUser = async () => {
     try {
@@ -200,9 +200,8 @@ export default function Layout({ children, currentPageName }) {
       if (user.role === 'admin') {
         const instructors = await base44.entities.Instructor.filter({ user_email: user.email });
         if (instructors.length > 0 && instructors[0].active) {
-          console.log('Instrutor encontrado:', instructors[0]);
-          setInstructor(instructors[0]);
           setUserType('instructor');
+          setInstructor(instructors[0]);
           return;
         }
       }
