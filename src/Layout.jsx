@@ -899,6 +899,29 @@ export default function Layout({ children, currentPageName }) {
               );
             }
             
+            // Se for Dashboard e usuário não é superadmin, abrir modal de seleção de instrutor
+            if (item.page === 'AdminDashboard' && userType !== 'superadmin') {
+              return (
+                <button
+                  key={item.page}
+                  onClick={() => {
+                    setIsSidebarOpen(false);
+                    setPendingInstructorPage('AdminDashboard');
+                    setShowInstructorSelectorModal(true);
+                  }}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer ${
+                    isActive 
+                      ? 'bg-gradient-to-r from-[#0969da] to-[#0550ae] text-white shadow-md' 
+                      : 'hover:bg-[#161b22] text-[#cbd5e1] hover:text-white'
+                  } ${isSidebarMinimized ? 'justify-center' : ''}`}
+                  title={isSidebarMinimized ? item.name : ''}
+                >
+                  <Icon size={20} className={isActive ? 'text-[#f0c41b]' : ''} />
+                  {!isSidebarMinimized && <span className="text-sm font-medium">{item.name}</span>}
+                </button>
+              );
+            }
+            
             return (
               <Link
                 key={item.page}
