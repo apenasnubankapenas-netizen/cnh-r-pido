@@ -899,8 +899,8 @@ export default function Layout({ children, currentPageName }) {
               );
             }
             
-            // Se for Dashboard e usuário não é superadmin, abrir modal de seleção de instrutor
-            if (item.page === 'AdminDashboard' && userType !== 'superadmin') {
+            // Se for Dashboard, sempre abrir modal de seleção de instrutor
+            if (item.page === 'AdminDashboard') {
               return (
                 <button
                   key={item.page}
