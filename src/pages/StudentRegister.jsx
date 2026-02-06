@@ -199,6 +199,18 @@ export default function StudentRegister() {
       return total;
     }
     
+    // Categoria E tem preço fixo (combo completo)
+    if (formData.category === 'carreta') {
+      let total = 0;
+      // 10 aulas práticas de carreta (base)
+      total += (settings.lesson_price_trailer || 200) * 10;
+      // Aulas extras de carreta se houver
+      if (lessonQuantities.carreta > 10) {
+        total += (settings.lesson_price_trailer || 200) * (lessonQuantities.carreta - 10);
+      }
+      return total;
+    }
+    
     // Preço base da categoria
     let categoryPrice = 0;
     if (formData.category === 'A') categoryPrice = settings.category_a_price || 548;
