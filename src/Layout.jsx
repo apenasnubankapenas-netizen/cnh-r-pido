@@ -329,13 +329,12 @@ export default function Layout({ children, currentPageName }) {
         { name: 'Alunos', icon: Users, page: 'AdminStudents' },
         { name: 'Aulas', icon: Calendar, page: 'AdminLessons' },
         { name: 'Conversas', icon: MessageSquare, page: 'AdminChats' },
+        { name: 'Instrutores', icon: Car, page: 'Instructors' },
+        { name: 'Consultores', icon: UserCog, page: 'StudentSellers' },
+        { name: 'Meu Perfil', icon: GraduationCap, page: 'InstructorProfile' },
       ];
       
       // Pagamentos não disponíveis para instrutores
-      
-      if (instructor?.can_view_sellers) {
-        items.push({ name: 'Consultores', icon: UserCog, page: 'AdminSellers' });
-      }
       
       if (instructor?.can_view_settings) {
         items.push({ name: 'Configurações', icon: Settings, page: 'AdminSettings' });
