@@ -387,6 +387,9 @@ export default function Layout({ children, currentPageName }) {
 
   const menuItems = getMenuItems();
 
+  // Debug: verificar estado dos dados
+  console.log('Layout Debug:', { userType, instructor, user, menuItems: menuItems.length });
+
   // Enforce seller password session; logout if version mismatch
   useEffect(() => {
     const enforceSellerSession = async () => {
