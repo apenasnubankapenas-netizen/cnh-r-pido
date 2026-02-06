@@ -87,20 +87,27 @@ export default function TodayLessonsManager({ lessons, instructorId, onLessonUpd
 
     try {
       setLoading(true);
-      const updateData = {
-        status: status === 'presenca' ? 'realizada' : 'falta'
-      };
+      
+      // Atualizar aula
+      const lessonStatus = status === 'presenca' ? 'realizada' : 'falta';
+      await base44.entities.Lesson.update(lesson.id, { status: lessonStatus });
 
-      await base44.entities.Lesson.update(lesson.id, updateData);
+      // Atualizar progresso do aluno
+      const students = await base44.entities.Student.filter({ id: lesson.student_id });
+      if (students.length > 0) {
+        const student = students[0];
+        const updateData = {};
 
-      if (status === 'falta') {
-        const student = await base44.entities.Student.filter({ id: lesson.student_id });
-        if (student.length > 0) {
-          await base44.entities.Student.update(lesson.student_id, {
-            completed_car_lessons: (student[0].completed_car_lessons || 0),
-            completed_moto_lessons: (student[0].completed_moto_lessons || 0)
-          });
+        if (status === 'presenca') {
+          // Incrementar aulas completadas conforme tipo
+          if (lesson.type === 'carro') {
+            updateData.completed_car_lessons = (student.completed_car_lessons || 0) + 1;
+          } else if (lesson.type === 'moto') {
+            updateData.completed_moto_lessons = (student.completed_moto_lessons || 0) + 1;
+          }
         }
+
+        await base44.entities.Student.update(lesson.student_id, updateData);
       }
 
       setSuccessMsg(status === 'presenca' ? 'Presença confirmada!' : 'Falta registrada!');
