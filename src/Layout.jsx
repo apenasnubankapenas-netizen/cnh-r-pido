@@ -1119,7 +1119,8 @@ export default function Layout({ children, currentPageName }) {
                           <p className="text-xs text-[#9ca3af] mt-1">Telefone: {seller.phone || 'N/A'}</p>
                         </div>
                         <div className="text-right">
-                          <div className={`text-xs font-semibold ${seller.active ? 'text-green-400' : 'text-red-400'}`}>
+                          <div className={`text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1 ${seller.active ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                            <div className={`w-2 h-2 rounded-full ${seller.active ? 'bg-green-400' : 'bg-red-400'}`} />
                             {seller.active ? 'Ativo' : 'Inativo'}
                           </div>
                         </div>
