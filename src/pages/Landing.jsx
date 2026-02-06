@@ -145,25 +145,6 @@ export default function Landing() {
               <div className="md:col-span-2 text-center py-12">
                 <div className="animate-pulse text-[#fbbf24] text-xl">Carregando...</div>
               </div>
-            ) : (user && hasRegistration) ? (
-              <div className="md:col-span-2">
-                <Link to={getRedirectUrl()} className="block">
-                  <button className="group relative w-full bg-gradient-to-r from-[#1e40af] to-[#3b82f6] hover:from-[#1e3a8a] hover:to-[#2563eb] text-white p-8 rounded-2xl shadow-2xl hover:shadow-[#3b82f6]/50 transition-all duration-300 active:scale-95 border-2 border-[#3b82f6]/30 min-h-[120px] touch-manipulation">
-                    <div className="flex items-center justify-center gap-3">
-                      <div className="bg-white/10 p-3 rounded-xl">
-                        <ArrowRight className="h-8 w-8" />
-                      </div>
-                      <div className="text-left">
-                        <div className="text-2xl font-bold">Acessar Minha Área</div>
-                        <div className="text-sm text-white/80">
-                          {userType === 'student' && 'Continue sua jornada'}
-                          {(userType === 'instructor' || userType === 'seller' || userType === 'admin' || userType === 'superadmin') && 'Acessar Painel Administrativo'}
-                        </div>
-                      </div>
-                    </div>
-                  </button>
-                </Link>
-              </div>
             ) : (
               <>
                 {/* Login Card */}
