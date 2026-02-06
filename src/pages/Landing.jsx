@@ -169,7 +169,13 @@ export default function Landing() {
               <button 
                 onClick={(e) => {
                   e.preventDefault();
-                  base44.auth.redirectToLogin(createPageUrl('Landing'));
+                  // Se já está logado, redireciona baseado no tipo de usuário
+                  if (user && userType && userType !== 'new_user') {
+                    navigate(getRedirectUrl());
+                  } else {
+                    // Se não está logado ou é novo usuário, vai para login
+                    base44.auth.redirectToLogin(createPageUrl('Landing'));
+                  }
                 }}
                 className="group relative w-full bg-gradient-to-r from-[#fbbf24] to-[#fcd34d] hover:from-[#fcd34d] hover:to-[#fbbf24] text-black p-8 rounded-2xl shadow-2xl hover:shadow-[#fbbf24]/50 transition-all duration-300 active:scale-95 border-2 border-[#fbbf24]/50 min-h-[160px] touch-manipulation"
               >
