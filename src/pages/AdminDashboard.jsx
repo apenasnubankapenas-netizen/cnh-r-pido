@@ -39,39 +39,25 @@ export default function AdminDashboard() {
 
   const loadData = async () => {
     try {
-      const currentUser = await base44.auth.me();
-      setUser(currentUser);
-      
-      // CRITICAL: Detectar se é instrutor ANTES de carregar dados financeiros
-      let isInstr = false;
-      let instrData = null;
-      if (currentUser?.role === 'admin') {
-        const instructorsCheck = await base44.entities.Instructor.filter({ user_email: currentUser.email });
-        if (instructorsCheck.length > 0 && instructorsCheck[0].active) {
-          isInstr = true;
-          instrData = instructorsCheck[0];
-          setIsInstructor(true);
-          setCurrentInstructor(instrData);
-        }
-      }
-      
-      // Carregar dados - instrutores NÃO veem pagamentos
-      const [studentsData, lessonsData, instructorsData] = await Promise.all([
+      const [currentUser, studentsData, lessonsData, paymentsData, instructorsData] = await Promise.all([
+        base44.auth.me(),
         base44.entities.Student.list(),
         base44.entities.Lesson.list(),
+        base44.entities.Payment.list(),
         base44.entities.Instructor.list()
       ]);
       
       setStudents(studentsData);
       setLessons((lessonsData || []).filter(l => !l.trial));
+      setPayments(paymentsData);
       setInstructors(instructorsData);
-      
-      // BLOQUEIO: Só carregar pagamentos se NÃO for instrutor
-      if (!isInstr) {
-        const paymentsData = await base44.entities.Payment.list();
-        setPayments(paymentsData);
-      } else {
-        setPayments([]); // Instrutor vê lista vazia
+      setUser(currentUser);
+      if (currentUser?.role === 'admin') {
+        const instr = instructorsData.find(i => i.user_email === currentUser.email);
+        if (instr) {
+          setIsInstructor(true);
+          setCurrentInstructor(instr);
+        }
       }
     } catch (e) {
       console.log(e);
