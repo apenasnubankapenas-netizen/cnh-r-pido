@@ -29,6 +29,13 @@ export default function Landing() {
     loadData();
   }, []);
 
+  useEffect(() => {
+    // Redirecionar automaticamente usuários logados com registro
+    if (user && hasRegistration && userType) {
+      navigate(getRedirectUrl());
+    }
+  }, [user, hasRegistration, userType]);
+
   const loadData = async () => {
     setLoading(false); // Mostra botões imediatamente
     
@@ -139,54 +146,32 @@ export default function Landing() {
             </p>
           </div>
 
-          {/* Login/Register Cards */}
-          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-16">
+          {/* Botão de Acesso */}
+          <div className="max-w-lg mx-auto mb-16">
             {loading ? (
-              <div className="md:col-span-2 text-center py-12">
+              <div className="text-center py-12">
                 <div className="animate-pulse text-[#fbbf24] text-xl">Carregando...</div>
               </div>
             ) : (
-              <>
-                {/* Login Card */}
-                <button 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    base44.auth.redirectToLogin(createPageUrl('Home'));
-                  }}
-                  className="group relative bg-gradient-to-br from-[#1a2332] to-[#0d1117] p-8 rounded-2xl border-2 border-[#1e40af]/30 hover:border-[#3b82f6] transition-all duration-300 hover:shadow-2xl hover:shadow-[#1e40af]/30 active:scale-95 min-h-[200px] touch-manipulation"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#1e40af]/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-                  <div className="relative">
-                    <div className="flex justify-center mb-4">
-                      <div className="bg-gradient-to-br from-[#1e40af] to-[#3b82f6] p-4 rounded-xl">
-                        <LogIn className="h-8 w-8 text-white" />
-                      </div>
-                    </div>
-                    <h3 className="text-2xl font-bold text-white mb-2">Já tenho conta</h3>
-                    <p className="text-[#9ca3af] text-sm">Acesse sua área de aluno e continue seu progresso</p>
+              <button 
+                onClick={(e) => {
+                  e.preventDefault();
+                  base44.auth.redirectToLogin(createPageUrl('Landing'));
+                }}
+                className="group relative w-full bg-gradient-to-r from-[#fbbf24] to-[#fcd34d] hover:from-[#fcd34d] hover:to-[#fbbf24] text-black p-8 rounded-2xl shadow-2xl hover:shadow-[#fbbf24]/50 transition-all duration-300 active:scale-95 border-2 border-[#fbbf24]/50 min-h-[160px] touch-manipulation"
+              >
+                <div className="flex flex-col items-center justify-center gap-4">
+                  <div className="bg-black/10 p-4 rounded-xl">
+                    <ArrowRight className="h-10 w-10" />
                   </div>
-                </button>
-
-                {/* Register Card */}
-                <button 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    base44.auth.redirectToLogin(createPageUrl('StudentRegister'));
-                  }}
-                  className="group relative bg-gradient-to-br from-[#1a2332] to-[#0d1117] p-8 rounded-2xl border-2 border-[#fbbf24]/30 hover:border-[#fcd34d] transition-all duration-300 hover:shadow-2xl hover:shadow-[#fbbf24]/30 active:scale-95 min-h-[200px] touch-manipulation"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#fbbf24]/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-                  <div className="relative">
-                    <div className="flex justify-center mb-4">
-                      <div className="bg-gradient-to-br from-[#fbbf24] to-[#fcd34d] p-4 rounded-xl">
-                        <UserPlus className="h-8 w-8 text-black" />
-                      </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-black mb-2">COMEÇAR AGORA</div>
+                    <div className="text-base font-semibold opacity-90">
+                      Acesse ou cadastre-se na plataforma
                     </div>
-                    <h3 className="text-2xl font-bold text-white mb-2">Sou novo aqui</h3>
-                    <p className="text-[#9ca3af] text-sm">Comece sua jornada rumo à habilitação agora mesmo</p>
                   </div>
-                </button>
-              </>
+                </div>
+              </button>
             )}
           </div>
         </div>
