@@ -95,6 +95,13 @@ export default function Landing() {
         setUserType('admin');
         return;
       }
+      
+      // Se é user mas não tem cadastro, definir como 'new_user' para redirecionar ao registro
+      if (currentUser.role === 'user') {
+        setHasRegistration(false);
+        setUserType('new_user');
+        return;
+      }
     } catch (e) {
       // Usuário não logado - ok, botões já aparecem
     }
@@ -105,7 +112,8 @@ export default function Landing() {
     if (userType === 'instructor') return createPageUrl('AdminDashboard');
     if (userType === 'seller') return createPageUrl('AdminDashboard');
     if (userType === 'admin' || userType === 'superadmin') return createPageUrl('AdminDashboard');
-    return createPageUrl('Home');
+    // Novos usuários vão direto para o registro
+    return createPageUrl('StudentRegister');
   };
 
   return (
