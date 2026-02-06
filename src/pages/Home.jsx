@@ -91,7 +91,7 @@ export default function Home() {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-[#9ca3af]">Instrutores não podem se cadastrar como alunos.</p>
-              <Link to={createPageUrl('AdminDashboard')}>
+              <Link to={createPageUrl('AdminInstructorDashboard')}>
                 <Button className="bg-[#1e40af] hover:bg-[#3b82f6]">Ir para o Painel</Button>
               </Link>
             </CardContent>
