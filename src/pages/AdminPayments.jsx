@@ -15,56 +15,18 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 export default function AdminPayments() {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState('all');
-  const [user, setUser] = useState(null);
-  const [isInstructor, setIsInstructor] = useState(false);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    checkAccess();
+    loadData();
   }, []);
-
-  const checkAccess = async () => {
-    try {
-      const currentUser = await base44.auth.me();
-      setUser(currentUser);
-      
-      // SUPER ADMIN sempre tem acesso
-      if (currentUser?.email === 'tcnhpara@gmail.com') {
-        loadData();
-        return;
-      }
-      
-      // Verificar se está na lista de autorizados
-      const settingsList = await base44.entities.AppSettings.list();
-      const authorizedEmails = settingsList[0]?.authorized_payment_viewers || [];
-      
-      if (authorizedEmails.includes(currentUser?.email)) {
-        loadData();
-        return;
-      }
-      
-      // BLOQUEIO: Verificar se é instrutor ou não autorizado
-      if (currentUser?.role === 'admin') {
-        const instructors = await base44.entities.Instructor.filter({ user_email: currentUser.email });
-        if (instructors.length > 0 && instructors[0].active) {
-          setIsInstructor(true);
-        }
-      }
-      
-      // Se não é super admin nem está autorizado, bloquear
-      setIsInstructor(true);
-      setLoading(false);
-    } catch (e) {
-      console.log(e);
-      setLoading(false);
-    }
-  };
 
   const loadData = async () => {
     try {
@@ -150,17 +112,9 @@ export default function AdminPayments() {
     );
   }
 
-  if (isInstructor) {
-    return (
-      <div className="flex flex-col items-center justify-center h-64 space-y-4">
-        <XCircle className="text-red-500" size={48} />
-        <p className="text-white text-lg">Acesso negado: Instrutores não podem visualizar pagamentos de alunos.</p>
-      </div>
-    );
-  }
-
-
   return (
+    <ProtectedRoute requirePermission="canViewPayments" fallback="AdminDashboard">
+    {/* Conteúdo protegido */}
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
         <Button 
@@ -302,5 +256,6 @@ export default function AdminPayments() {
         </Card>
       )}
     </div>
+    </ProtectedRoute>
   );
 }

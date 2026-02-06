@@ -34,41 +34,14 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    loadData();
-  }, []);
+    if (user && !loading) {
+      loadData();
+    }
+  }, [user, permissions]);
 
   const loadData = async () => {
     try {
-      const currentUser = await base44.auth.me();
-      setUser(currentUser);
-      
-      // Verificar autorização para ver pagamentos
-      let canViewPayments = false;
-      
-      // SUPER ADMIN sempre pode ver
-      if (currentUser?.email === 'tcnhpara@gmail.com') {
-        canViewPayments = true;
-      } else {
-        // Verificar se está na lista de autorizados
-        const settingsList = await base44.entities.AppSettings.list();
-        const authorizedEmails = settingsList[0]?.authorized_payment_viewers || [];
-        canViewPayments = authorizedEmails.includes(currentUser?.email);
-      }
-      
-      // CRITICAL: Detectar se é instrutor ANTES de carregar dados financeiros
-      let isInstr = false;
-      let instrData = null;
-      if (currentUser?.role === 'admin') {
-        const instructorsCheck = await base44.entities.Instructor.filter({ user_email: currentUser.email });
-        if (instructorsCheck.length > 0 && instructorsCheck[0].active) {
-          isInstr = true;
-          instrData = instructorsCheck[0];
-          setIsInstructor(true);
-          setCurrentInstructor(instrData);
-        }
-      }
-      
-      // Carregar dados
+      // Carregar dados base
       const [studentsData, lessonsData, instructorsData] = await Promise.all([
         base44.entities.Student.list(),
         base44.entities.Lesson.list(),
@@ -79,12 +52,12 @@ export default function AdminDashboard() {
       setLessons((lessonsData || []).filter(l => !l.trial));
       setInstructors(instructorsData);
       
-      // BLOQUEIO: Só carregar pagamentos se autorizado E não for apenas instrutor
-      if (canViewPayments && !isInstr) {
+      // Carregar pagamentos APENAS se autorizado
+      if (permissions.canViewPayments) {
         const paymentsData = await base44.entities.Payment.list();
         setPayments(paymentsData);
       } else {
-        setPayments([]); // Não autorizado vê lista vazia
+        setPayments([]);
       }
     } catch (e) {
       console.log(e);
