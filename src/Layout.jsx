@@ -1039,7 +1039,7 @@ export default function Layout({ children, currentPageName }) {
           
           {/* Indicador de visualização como colaborador */}
           {userType === 'superadmin' && selectedSellerForView && (
-            <div className="mb-4 p-3 bg-[#34d399]/10 border border-[#34d399] rounded-lg flex items-center justify-between">
+            <div className="mb-4 p-3 bg-[#34d399]/10 border-2 border-[#34d399] rounded-lg flex items-center justify-between shadow-lg shadow-[#34d399]/20">
               <div>
                 <p className="text-sm text-[#34d399] font-semibold">Visualizando como Colaborador:</p>
                 <p className="text-white font-bold">{selectedSellerForView.full_name}</p>
