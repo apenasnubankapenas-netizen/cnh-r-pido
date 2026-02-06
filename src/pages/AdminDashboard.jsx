@@ -87,14 +87,18 @@ export default function AdminDashboard() {
 
   const studentsAwaitingConfirmation = students.filter(s => s.all_lessons_completed && !s.admin_confirmed);
 
-  // Dados do instrutor logado
+  // Dados do instrutor (logado ou selecionado pelo admin)
   const instructorLessons = (isInstructor && currentInstructor)
     ? lessons.filter(l => l.instructor_id === currentInstructor.id)
     : [];
-  const instructorEarnings = isInstructor
+  const instructorEarnings = isInstructor && currentInstructor
     ? instructorLessons
         .filter(l => l.status === 'realizada')
-        .reduce((acc, l) => acc + (l.type === 'carro' ? 12 : (l.type === 'moto' ? 7 : 0)), 0)
+        .reduce((acc, l) => {
+          if (l.type === 'carro') return acc + (currentInstructor.earnings_car || 12);
+          if (l.type === 'moto') return acc + (currentInstructor.earnings_moto || 7);
+          return acc;
+        }, 0)
     : 0;
 
   const filteredStudents = students.filter(s => 
