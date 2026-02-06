@@ -1147,8 +1147,8 @@ export default function StudentRegister() {
                           <span className="font-semibold text-white text-base">R$ {(settings.category_d_detran_fee || 304).toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-[#9ca3af]">🚌 10 aulas práticas de ônibus:</span>
-                          <span className="font-semibold text-white text-base">R$ {(settings.category_d_bus_lessons || 1810).toFixed(2)}</span>
+                          <span className="text-[#9ca3af]">🚌 20 aulas práticas de ônibus:</span>
+                          <span className="font-semibold text-white text-base">R$ {(settings.category_d_bus_lessons || 3620).toFixed(2)}</span>
                         </div>
                       </>
                     ) : (
