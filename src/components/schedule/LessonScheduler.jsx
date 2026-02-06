@@ -92,6 +92,11 @@ export default function LessonScheduler({
   });
 
   const getAvailableTypes = () => {
+    // Se tem apenas ônibus (Categoria D), retorna só ônibus
+    if (typesAvailable.length === 1 && typesAvailable[0][0] === 'onibus') {
+      return typesAvailable;
+    }
+    // Caso contrário, filtra normalmente
     return typesAvailable.filter(([type, count]) => {
       const scheduled = schedules.filter(s => s.type === type).length;
       return scheduled < count;
