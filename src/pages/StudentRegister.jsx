@@ -747,7 +747,7 @@ export default function StudentRegister() {
                 onClick={() => {
                     // Resetar quantidades baseado na categoria
                     const newQuantities = { carro: 0, moto: 0, onibus: 0, caminhao: 0, carreta: 0 };
-                    if (['B', 'AB', 'carreta', 'inclusao_B'].includes(formData.category)) {
+                    if (['B', 'AB', 'inclusao_B'].includes(formData.category)) {
                       newQuantities.carro = 2;
                     }
                     if (['A', 'AB', 'inclusao_A'].includes(formData.category)) {
@@ -763,6 +763,8 @@ export default function StudentRegister() {
                     if (formData.category === 'carreta') {
                       newQuantities.carreta = 10; // Categoria E = 10 aulas obrigatórias
                       setCategoriaEChecks({ toxicologicalDone: false, detranPaid: false, medicalExamsDone: false });
+                      newQuantities.carro = 0; // Garante que não tem carro para carreta
+                      newQuantities.moto = 0; // Garante que não tem moto para carreta
                     }
                     setLessonQuantities(newQuantities);
                     setStep(3);
