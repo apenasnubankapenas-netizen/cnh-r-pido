@@ -725,7 +725,7 @@ export default function StudentRegister() {
                       newQuantities.moto = 2;
                     }
                     if (formData.category === 'onibus') {
-                      newQuantities.onibus = 10; // Categoria D = 10 aulas obrigatórias
+                      newQuantities.onibus = 20; // Categoria D = 20 aulas obrigatórias
                     }
                     if (formData.category === 'caminhao') {
                       newQuantities.caminhao = 2;
