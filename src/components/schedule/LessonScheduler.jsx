@@ -83,8 +83,8 @@ export default function LessonScheduler({
 
   const filteredInstructors = instructors.filter(i => {
     if (!currentType) return false;
-    if (currentType === 'carro') return i.teaches_car;
-    if (currentType === 'moto') return i.teaches_moto;
+    if (currentType === 'carro') return i.teaches_car && !['onibus'].includes(Object.keys(lessonsConfig).find(k => lessonsConfig[k] > 0));
+    if (currentType === 'moto') return i.teaches_moto && !['onibus'].includes(Object.keys(lessonsConfig).find(k => lessonsConfig[k] > 0));
     if (currentType === 'onibus') return i.teaches_bus;
     if (currentType === 'caminhao') return i.teaches_truck;
     if (currentType === 'carreta') return i.teaches_trailer;
