@@ -77,7 +77,12 @@ export default function AdminSettings() {
     category_d_medical_exam: 190,
     category_d_detran_fee: 304,
     category_d_bus_lessons: 1810,
-    category_d_total: 2500
+    category_d_total: 2500,
+    category_e_toxicological_exam: 150,
+    category_e_medical_exam: 190,
+    category_e_detran_fee: 350,
+    category_e_trailer_lessons: 2310,
+    category_e_total: 3000
   });
 
   const navigate = useNavigate();
