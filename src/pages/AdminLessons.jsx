@@ -562,32 +562,7 @@ export default function AdminLessons() {
                  </div>
               </div>
 
-              {/* Endereço e Mapa da Aula */}
-              {settings?.lesson_locations?.[lesson.type] && (
-                <div className="mt-4 pt-4 border-t border-[#374151] space-y-3">
-                  <div className="flex items-start gap-2">
-                    <MapPin className="text-[#fbbf24] mt-1" size={16} />
-                    <div>
-                      <p className="text-xs text-[#fbbf24] font-semibold">LOCAL DA AULA ({lesson.type.toUpperCase()})</p>
-                      <p className="text-sm text-white mt-1">{settings.lesson_locations[lesson.type].address || 'Endereço não definido'}</p>
-                    </div>
-                  </div>
-                  {typeof settings.lesson_locations[lesson.type].lat === 'number' && typeof settings.lesson_locations[lesson.type].lng === 'number' && (
-                    <div className="rounded-lg overflow-hidden border border-[#374151] mt-3">
-                      <iframe
-                        width="100%"
-                        height="200"
-                        frameBorder="0"
-                        style={{ border: 0 }}
-                        src={`https://www.google.com/maps?q=${settings.lesson_locations[lesson.type].lat},${settings.lesson_locations[lesson.type].lng}&output=embed&z=15&gestureHandling=greedy`}
-                        allowFullScreen
-                        loading="lazy"
-                        title={`Mapa ${lesson.type}`}
-                      />
-                    </div>
-                  )}
-                </div>
-              )}
+
 
               {lesson.instructor_comment && (
                 <div className="mt-3 p-2 bg-[#111827] rounded border border-[#374151]">
