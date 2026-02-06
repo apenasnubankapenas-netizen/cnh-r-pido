@@ -875,8 +875,8 @@ export default function Layout({ children, currentPageName }) {
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer hover:bg-[#374151] text-[#fbbf24] hover:text-white ${isSidebarMinimized ? 'justify-center' : ''}`}
                   title={isSidebarMinimized ? item.name : ''}
                 >
-                  <Icon size={20} />
-                  {!isSidebarMinimized && <span className="text-sm font-medium">{item.name}</span>}
+                  <Icon size={20} className="text-[#fbbf24]" />
+                  {!isSidebarMinimized && <span className="text-sm font-medium text-[#fbbf24]">{item.name}</span>}
                 </button>
               );
             }
@@ -901,13 +901,13 @@ export default function Layout({ children, currentPageName }) {
                    }}
                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer ${
                      isActive 
-                       ? 'bg-gradient-to-r from-[#0969da] to-[#0550ae] text-white shadow-md shadow-[#0969da]/50' 
-                       : 'hover:bg-[#161b22]/60 text-[#cbd5e1] hover:text-white hover:border-l-2 hover:border-[#0969da]'
+                       ? 'bg-gradient-to-r from-[#0969da] to-[#0550ae] text-white shadow-lg shadow-[#0969da]/40' 
+                       : 'hover:bg-[#161b22]/70 text-[#cbd5e1] hover:text-[#e6edf3] border border-transparent hover:border-[#374151]'
                    } ${isSidebarMinimized ? 'justify-center' : ''}`}
                    title={isSidebarMinimized ? item.name : ''}
                  >
-                   <Icon size={20} className={isActive ? 'text-[#f0c41b]' : 'text-[#3b82f6]'} />
-                   {!isSidebarMinimized && <span className="text-sm font-medium">{item.name}</span>}
+                   <Icon size={20} className={isActive ? 'text-[#f0c41b]' : 'text-[#0969da]'} />
+                   {!isSidebarMinimized && <span className={`text-sm font-medium ${isActive ? 'text-white' : 'text-[#cbd5e1]'}`}>{item.name}</span>}
                  </button>
                );
              }
@@ -924,13 +924,13 @@ export default function Layout({ children, currentPageName }) {
                    }}
                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer ${
                      isActive 
-                       ? 'bg-gradient-to-r from-[#0969da] to-[#0550ae] text-white shadow-md shadow-[#0969da]/50' 
-                       : 'hover:bg-[#161b22]/60 text-[#cbd5e1] hover:text-white hover:border-l-2 hover:border-[#0969da]'
+                       ? 'bg-gradient-to-r from-[#0969da] to-[#0550ae] text-white shadow-lg shadow-[#0969da]/40' 
+                       : 'hover:bg-[#161b22]/70 text-[#cbd5e1] hover:text-[#e6edf3] border border-transparent hover:border-[#374151]'
                    } ${isSidebarMinimized ? 'justify-center' : ''}`}
                    title={isSidebarMinimized ? item.name : ''}
                  >
-                   <Icon size={20} className={isActive ? 'text-[#f0c41b]' : 'text-[#3b82f6]'} />
-                   {!isSidebarMinimized && <span className="text-sm font-medium">{item.name}</span>}
+                   <Icon size={20} className={isActive ? 'text-[#f0c41b]' : 'text-[#0969da]'} />
+                   {!isSidebarMinimized && <span className={`text-sm font-medium ${isActive ? 'text-white' : 'text-[#cbd5e1]'}`}>{item.name}</span>}
                  </button>
                );
              }
@@ -942,15 +942,15 @@ export default function Layout({ children, currentPageName }) {
                  onClick={() => setIsSidebarOpen(false)}
                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer ${
                    isActive 
-                     ? 'bg-gradient-to-r from-[#0969da] to-[#0550ae] text-white shadow-md shadow-[#0969da]/50' 
-                     : 'hover:bg-[#161b22]/60 text-[#cbd5e1] hover:text-white hover:border-l-2 hover:border-[#0969da]'
+                     ? 'bg-gradient-to-r from-[#0969da] to-[#0550ae] text-white shadow-lg shadow-[#0969da]/40' 
+                     : 'hover:bg-[#161b22]/70 text-[#cbd5e1] hover:text-[#e6edf3] border border-transparent hover:border-[#374151]'
                  } ${isSidebarMinimized ? 'justify-center' : ''}`}
                  title={isSidebarMinimized ? item.name : ''}
                >
-                 <Icon size={20} className={isActive ? 'text-[#f0c41b]' : 'text-[#3b82f6]'} />
-                 {!isSidebarMinimized && <span className="text-sm font-medium">{item.name}</span>}
+                 <Icon size={20} className={isActive ? 'text-[#f0c41b]' : 'text-[#0969da]'} />
+                 {!isSidebarMinimized && <span className={`text-sm font-medium ${isActive ? 'text-white' : 'text-[#cbd5e1]'}`}>{item.name}</span>}
                </Link>
-             );
+            );
           })}
           
           {/* Generate Codes Buttons (SuperAdmin) */}
