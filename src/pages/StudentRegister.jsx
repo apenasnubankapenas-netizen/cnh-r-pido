@@ -716,26 +716,26 @@ export default function StudentRegister() {
               <Button 
                 className="flex-1 bg-[#f0c41b] text-black hover:bg-[#d4aa00] px-6 py-6 text-base font-bold"
                 onClick={() => {
-                  // Resetar quantidades baseado na categoria
-                  const newQuantities = { carro: 0, moto: 0, onibus: 0, caminhao: 0, carreta: 0 };
-                  if (['B', 'AB', 'onibus', 'carreta', 'inclusao_B'].includes(formData.category)) {
-                    newQuantities.carro = 2;
-                  }
-                  if (['A', 'AB', 'inclusao_A'].includes(formData.category)) {
-                    newQuantities.moto = 2;
-                  }
-                  if (formData.category === 'onibus') {
-                    newQuantities.onibus = 2;
-                  }
-                  if (formData.category === 'caminhao') {
-                    newQuantities.caminhao = 2;
-                  }
-                  if (formData.category === 'carreta') {
-                    newQuantities.carreta = 2;
-                  }
-                  setLessonQuantities(newQuantities);
-                  setStep(3);
-                }}
+                    // Resetar quantidades baseado na categoria
+                    const newQuantities = { carro: 0, moto: 0, onibus: 0, caminhao: 0, carreta: 0 };
+                    if (['B', 'AB', 'carreta', 'inclusao_B'].includes(formData.category)) {
+                      newQuantities.carro = 2;
+                    }
+                    if (['A', 'AB', 'inclusao_A'].includes(formData.category)) {
+                      newQuantities.moto = 2;
+                    }
+                    if (formData.category === 'onibus') {
+                      newQuantities.onibus = 10; // Categoria D = 10 aulas obrigatórias
+                    }
+                    if (formData.category === 'caminhao') {
+                      newQuantities.caminhao = 2;
+                    }
+                    if (formData.category === 'carreta') {
+                      newQuantities.carreta = 2;
+                    }
+                    setLessonQuantities(newQuantities);
+                    setStep(3);
+                  }}
                 disabled={!formData.category || (formData.category === 'A' && formData.has_cnh === null)}
               >
                 CONTINUAR <ArrowRight className="ml-2" size={20} />
