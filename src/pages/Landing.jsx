@@ -88,18 +88,15 @@ export default function Landing() {
             return;
           }
           
-          // Usuário logado mas sem cadastro - redirecionar para registro
+          // Usuário logado mas sem cadastro - não redirecionar, deixar na landing
           setLoading(false);
-          window.location.href = createPageUrl('StudentRegister');
         } else {
-          // Usuário não logado - redirecionar para registro
+          // Usuário não logado
           setLoading(false);
-          base44.auth.redirectToLogin(createPageUrl('StudentRegister'));
         }
       } catch (e) {
-        // Usuário não logado - redirecionar para registro
+        // Usuário não logado
         setLoading(false);
-        base44.auth.redirectToLogin(createPageUrl('StudentRegister'));
       }
     } catch (e) {
       console.log(e);
