@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { DollarSign, Calendar as CalendarIcon, QrCode, Wallet, CheckCircle2, Lock } from "lucide-react";
 
 export default function AdminPayouts() {
+  const navigate = useNavigate();
   const [settings, setSettings] = useState(null);
   const [instructors, setInstructors] = useState([]);
   const [lessons, setLessons] = useState([]);
@@ -185,6 +187,14 @@ export default function AdminPayouts() {
                 className="w-full bg-[#f0c41b] text-black hover:bg-[#d4aa00] font-bold"
               >
                 Desbloquear
+              </Button>
+              <Button 
+                type="button"
+                variant="outline"
+                className="w-full border-[#374151] text-white hover:bg-[#161b22]"
+                onClick={() => navigate(-1)}
+              >
+                Não sei / Voltar
               </Button>
             </form>
           </CardContent>

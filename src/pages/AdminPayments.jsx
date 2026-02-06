@@ -165,6 +165,14 @@ export default function AdminPayments() {
               >
                 Desbloquear
               </Button>
+              <Button 
+                type="button"
+                variant="outline"
+                className="w-full border-[#374151] text-white hover:bg-[#161b22]"
+                onClick={() => navigate(-1)}
+              >
+                Não sei / Voltar
+              </Button>
             </form>
           </CardContent>
         </Card>
