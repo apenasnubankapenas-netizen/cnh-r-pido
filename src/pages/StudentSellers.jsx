@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { UserCog, MessageSquare, Phone, Mail } from 'lucide-react';
+import { UserCog, MessageSquare, Phone, Mail, MessageCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
@@ -149,13 +149,24 @@ export default function StudentSellers() {
                     )}
                   </div>
 
-                  <Button
-                    onClick={() => startConversation(seller)}
-                    className="w-full bg-[#3b82f6] hover:bg-[#2563eb] text-white font-semibold"
-                  >
-                    <MessageSquare size={18} className="mr-2" />
-                    Iniciar Conversa
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => startConversation(seller)}
+                      className="flex-1 bg-[#3b82f6] hover:bg-[#2563eb] text-white font-semibold"
+                    >
+                      <MessageSquare size={18} className="mr-2" />
+                      Conversar
+                    </Button>
+                    {seller.whatsapp_link && (
+                      <Button
+                        onClick={() => window.open(seller.whatsapp_link, '_blank')}
+                        className="flex-1 bg-[#25D366] hover:bg-[#1fb855] text-white font-semibold"
+                      >
+                        <MessageCircle size={18} className="mr-2" />
+                        WhatsApp
+                      </Button>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
