@@ -1022,7 +1022,7 @@ export default function Layout({ children, currentPageName }) {
           
           {/* Indicador de visualização como instrutor */}
           {userType === 'superadmin' && selectedInstructorForView && (
-            <div className="mb-4 p-3 bg-[#a78bfa]/10 border border-[#a78bfa] rounded-lg flex items-center justify-between">
+            <div className="mb-4 p-3 bg-[#a78bfa]/10 border-2 border-[#a78bfa] rounded-lg flex items-center justify-between shadow-lg shadow-[#a78bfa]/20">
               <div>
                 <p className="text-sm text-[#a78bfa] font-semibold">Visualizando como Instrutor:</p>
                 <p className="text-white font-bold">{selectedInstructorForView.full_name}</p>
