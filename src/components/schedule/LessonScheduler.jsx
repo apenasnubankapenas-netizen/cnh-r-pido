@@ -87,7 +87,7 @@ export default function LessonScheduler({
     if (currentType === 'moto') return i.teaches_moto;
     if (currentType === 'onibus') return i.teaches_bus;
     if (currentType === 'caminhao') return i.teaches_truck;
-    if (currentType === 'carreta') return i.teaches_trailer;
+    if (currentType === 'carreta') return i.teaches_trailer || i.teaches_truck;
     return false;
   });
 
