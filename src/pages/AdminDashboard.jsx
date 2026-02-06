@@ -347,7 +347,6 @@ export default function AdminDashboard() {
           </Card>
         </Link>
 
-        {/* BLOQUEIO: Link de pagamentos oculto para instrutores */}
         {!isInstructor && (
           <Link to={createPageUrl('AdminPayments')}>
             <Card className="bg-[#1a2332] border-[#374151] hover:border-green-500 transition-all cursor-pointer">
