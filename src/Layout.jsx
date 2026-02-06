@@ -845,11 +845,11 @@ export default function Layout({ children, currentPageName }) {
         <nav className="p-3 space-y-1 pb-32">
           {menuItems.map((item, idx) => {
             // Separador visual
-            if (item.name === '---') {
-              return (
-                <div key={`separator-${idx}`} className="my-2 border-t border-[#374151]" />
-              );
-            }
+             if (item.name === '---') {
+               return (
+                 <div key={`separator-${idx}`} className="my-3 border-t border-gradient bg-gradient-to-r from-transparent via-[#0969da] to-transparent opacity-30" />
+               );
+             }
             
             const Icon = item.icon;
             const isActive = currentPageName === item.page;
