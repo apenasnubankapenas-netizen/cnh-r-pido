@@ -894,8 +894,118 @@ export default function StudentRegister() {
               </div>
             )}
 
+            {formData.category === 'carreta' && (
+              <div className="p-5 bg-gradient-to-br from-[#a855f7]/20 to-[#7c3aed]/20 rounded-lg border-2 border-[#a855f7]">
+                <div className="flex items-start gap-3 mb-4">
+                  <div className="w-8 h-8 rounded-full bg-[#a855f7] flex items-center justify-center flex-shrink-0 mt-1">
+                    <Check className="text-white" size={20} />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-bold text-lg mb-2">CATEGORIA E - CARRETA</h3>
+                    <p className="text-[#ddd6fe] text-sm">Pacote com 10 aulas práticas de carreta</p>
+                  </div>
+                </div>
+                
+                <div className="space-y-2 ml-11">
+                  {/* Exame Toxicológico - Checkbox */}
+                  <div 
+                    onClick={() => setCategoriaEChecks({...categoriaEChecks, toxicologicalDone: !categoriaEChecks.toxicologicalDone})}
+                    className={`p-3 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 ${
+                      categoriaEChecks.toxicologicalDone 
+                        ? 'border-[#a855f7] bg-[#a855f7]/10' 
+                        : 'border-[#374151] hover:border-[#a855f7]'
+                    }`}
+                  >
+                    <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
+                      categoriaEChecks.toxicologicalDone 
+                        ? 'bg-[#a855f7] border-[#a855f7]' 
+                        : 'border-[#374151]'
+                    }`}>
+                      {categoriaEChecks.toxicologicalDone && <Check className="text-white" size={14} />}
+                    </div>
+                    <span className="text-sm font-semibold text-white">💉 Já realizou exame toxicológico?</span>
+                  </div>
+                  
+                  {/* Exames Médicos - Checkbox */}
+                  <div 
+                    onClick={() => setCategoriaEChecks({...categoriaEChecks, medicalExamsDone: !categoriaEChecks.medicalExamsDone})}
+                    className={`p-3 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 ${
+                      categoriaEChecks.medicalExamsDone 
+                        ? 'border-[#a855f7] bg-[#a855f7]/10' 
+                        : 'border-[#374151] hover:border-[#a855f7]'
+                    }`}
+                  >
+                    <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
+                      categoriaEChecks.medicalExamsDone 
+                        ? 'bg-[#a855f7] border-[#a855f7]' 
+                        : 'border-[#374151]'
+                    }`}>
+                      {categoriaEChecks.medicalExamsDone && <Check className="text-white" size={14} />}
+                    </div>
+                    <span className="text-sm font-semibold text-white">🩺 Já realizou exames médicos e psicológicos?</span>
+                  </div>
+                  
+                  {/* Taxa do DETRAN - Checkbox */}
+                  <div 
+                    onClick={() => setCategoriaEChecks({...categoriaEChecks, detranPaid: !categoriaEChecks.detranPaid})}
+                    className={`p-3 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 ${
+                      categoriaEChecks.detranPaid 
+                        ? 'border-[#a855f7] bg-[#a855f7]/10' 
+                        : 'border-[#374151] hover:border-[#a855f7]'
+                    }`}
+                  >
+                    <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
+                      categoriaEChecks.detranPaid 
+                        ? 'bg-[#a855f7] border-[#a855f7]' 
+                        : 'border-[#374151]'
+                    }`}>
+                      {categoriaEChecks.detranPaid && <Check className="text-white" size={14} />}
+                    </div>
+                    <span className="text-sm font-semibold text-white">🏛️ Já pagou a taxa do DETRAN?</span>
+                  </div>
+                  
+                  {/* 10 Aulas Práticas de Carreta - Com botões de + e - */}
+                  <div className="p-4 bg-[#111827] rounded-lg border border-[#374151] mt-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="flex items-center gap-2">
+                        <Truck size={24} className="text-[#a855f7]" />
+                        <div>
+                          <span className="font-bold text-white block">Aulas Práticas de Carreta</span>
+                          <span className="text-xs text-[#fbbf24]">R$ {(settings?.lesson_price_trailer || 200).toFixed(2)} por aula</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Button 
+                          variant="outline" 
+                          size="icon" 
+                          className="border-[#374151] h-10 w-10"
+                          onClick={() => setLessonQuantities({...lessonQuantities, carreta: Math.max(10, lessonQuantities.carreta - 1)})}
+                          disabled={lessonQuantities.carreta <= 10}
+                        >
+                          <Minus size={18} />
+                        </Button>
+                        <span className="w-12 text-center font-bold text-xl text-white">{lessonQuantities.carreta}</span>
+                        <Button 
+                          variant="outline" 
+                          size="icon" 
+                          className="border-[#374151] h-10 w-10"
+                          onClick={() => setLessonQuantities({...lessonQuantities, carreta: lessonQuantities.carreta + 1})}
+                        >
+                          <Plus size={18} />
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="text-right text-sm mt-2">
+                      <span className="text-[#9ca3af]">Subtotal aulas: </span>
+                      <span className="text-[#fbbf24] font-bold">R$ {(lessonQuantities.carreta * (settings?.lesson_price_trailer || 200)).toFixed(2)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Aulas Avulsas Extras */}
-            {formData.category !== 'onibus' && (
+            {formData.category !== 'onibus' && formData.category !== 'carreta' && (
             <div>
               <h3 className="font-bold text-white text-lg mb-3">Deseja adicionar aulas extras?</h3>
               <p className="text-sm text-[#9ca3af] mb-4">Adicione mais aulas práticas conforme sua necessidade. Você também pode comprar aulas depois.</p>
