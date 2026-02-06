@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import InstructorSchedule from "../components/instructor/InstructorSchedule";
+import TodayLessonsManager from "../components/instructor/TodayLessonsManager";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -30,6 +31,7 @@ export default function AdminDashboard() {
   const [user, setUser] = useState(null);
   const [isInstructor, setIsInstructor] = useState(false);
   const [currentInstructor, setCurrentInstructor] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const navigate = useNavigate();
 
@@ -302,54 +304,28 @@ export default function AdminDashboard() {
         </CardContent>
       </Card>
 
-      {/* Aulas de Hoje */}
-      <Card className="bg-[#1a2332] border-[#374151]">
-        <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2 text-white">
-            <Calendar className="text-[#fbbf24]" />
-            {isInstructor ? 'Minhas Aulas de Hoje' : 'Aulas de Hoje'}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {(isInstructor ? instructorLessons.filter(l => {
-            const today = new Date().toISOString().split('T')[0];
-            return l.date === today;
-          }) : todayLessons).length > 0 ? (
-            <div className="space-y-2">
-              {(isInstructor ? instructorLessons.filter(l => {
-                const today = new Date().toISOString().split('T')[0];
-                return l.date === today;
-              }) : todayLessons).sort((a, b) => a.time.localeCompare(b.time)).map((lesson) => (
-                <div key={lesson.id} className="flex items-center justify-between p-3 bg-[#111827] rounded-lg border border-[#374151]">
-                  <div className="flex items-center gap-3">
-                    <div className="text-center min-w-[60px]">
-                      <p className="font-bold text-[#fbbf24]">{lesson.time}</p>
-                    </div>
-                    <div>
-                      <p className="font-medium text-white">{lesson.student_name}</p>
-                      <p className="text-xs text-white">
-                        {lesson.type === 'carro' ? '🚗' : '🏍️'} {lesson.instructor_name}
-                      </p>
-                    </div>
-                  </div>
-                  <Badge className={
-                    lesson.status === 'agendada' ? 'bg-blue-500/20 text-blue-400' :
-                    lesson.status === 'realizada' ? 'bg-green-500/20 text-green-400' :
-                    'bg-red-500/20 text-red-400'
-                  }>
-                    {lesson.status}
-                  </Badge>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8 text-white">
-              <Calendar className="mx-auto mb-2 text-[#fbbf24]" size={32} />
-              <p>Nenhuma aula agendada para hoje</p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      {/* Aulas de Hoje - Com Sistema de Fotos e Presença */}
+      {isInstructor && currentInstructor && (
+        <Card className="bg-[#1a2332] border-[#374151]">
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2 text-white">
+              <Calendar className="text-[#fbbf24]" />
+              Minhas Aulas de Hoje
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <TodayLessonsManager 
+              key={refreshKey}
+              lessons={instructorLessons} 
+              instructorId={currentInstructor.id}
+              onLessonUpdate={() => {
+                loadData();
+                setRefreshKey(prev => prev + 1);
+              }}
+            />
+          </CardContent>
+        </Card>
+      )}
 
       {isInstructor && (
         <Card className="bg-[#1a2332] border-[#374151]">
