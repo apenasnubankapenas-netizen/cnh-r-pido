@@ -965,7 +965,7 @@ export default function Layout({ children, currentPageName }) {
                     setPasswordError('');
                     setShowPasswordModal(true);
                   }}
-                  className="w-full px-3 py-2 bg-[#0969da] hover:bg-[#0550ae] rounded text-xs font-semibold text-white transition-colors"
+                  className="w-full px-3 py-2 bg-gradient-to-r from-[#a78bfa] to-[#8b5cf6] hover:shadow-lg hover:shadow-[#a78bfa]/50 rounded text-xs font-semibold text-white transition-all"
                 >
                   Gerar Código Instrutor
                 </button>
@@ -976,7 +976,7 @@ export default function Layout({ children, currentPageName }) {
                     setPasswordError('');
                     setShowPasswordModal(true);
                   }}
-                  className="w-full px-3 py-2 bg-[#34d399] hover:bg-[#10b981] rounded text-xs font-semibold text-black transition-colors"
+                  className="w-full px-3 py-2 bg-gradient-to-r from-[#ec4899] to-[#be185d] hover:shadow-lg hover:shadow-[#ec4899]/50 rounded text-xs font-semibold text-white transition-all"
                 >
                   Gerar Código Consultor
                 </button>
