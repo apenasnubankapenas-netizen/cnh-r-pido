@@ -63,7 +63,7 @@ export default function SellerLogin() {
     }
     const key = `seller_session_version:${user.email}`;
     localStorage.setItem(key, String(seller.session_version || 1));
-    navigate(createPageUrl('AdminSellerDashboard'));
+    navigate(createPageUrl('AdminDashboard'));
   };
 
   const verifyCode = async () => {
@@ -183,7 +183,7 @@ export default function SellerLogin() {
       // Salva sessão e redireciona
       const key = `seller_session_version:${loginEmail}`;
       localStorage.setItem(key, String(sellerData.session_version || 1));
-      navigate(createPageUrl('AdminSellerDashboard'));
+      navigate(createPageUrl('AdminDashboard'));
     } catch (err) {
       setError('Erro ao fazer login: ' + err.message);
       setLoggingIn(false);

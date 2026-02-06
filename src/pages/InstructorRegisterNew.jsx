@@ -169,7 +169,7 @@ export default function InstructorRegisterNew() {
       setSuccess('✅ Cadastro realizado! Verifique seu email para a senha.');
       
       setTimeout(() => {
-        navigate(createPageUrl('AdminInstructorDashboard'));
+        navigate(createPageUrl('InstructorLogin'));
       }, 2000);
     } catch (error) {
       console.error(error);

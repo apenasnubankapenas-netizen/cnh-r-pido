@@ -141,7 +141,7 @@ export default function SellerRegister() {
       setSuccess('✅ Cadastro realizado! Verifique seu email para a senha.');
       
       setTimeout(() => {
-        navigate(createPageUrl('AdminSellerDashboard'));
+        navigate(createPageUrl('SellerLogin'));
       }, 2000);
     } catch (error) {
       console.error(error);
