@@ -393,6 +393,66 @@ export default function AdminSettings() {
         </CardContent>
       </Card>
 
+      {/* Categoria D - Ônibus (Combo Completo) */}
+      <Card className="bg-[#1a2332] border-2 border-[#34d399]">
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2 text-[#34d399]">
+            <DollarSign />
+            Categoria D - Ônibus (Combo Completo)
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-xs text-[#9ca3af] mb-4">Processo completo com acompanhamento da Autoescola Educar</p>
+          <div className="grid md:grid-cols-5 gap-4">
+            <div>
+              <Label>💉 Exame Toxicológico (R$)</Label>
+              <Input 
+                type="number"
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={formData.category_d_toxicological_exam || 150}
+                onChange={(e) => setFormData({...formData, category_d_toxicological_exam: parseFloat(e.target.value)})}
+              />
+            </div>
+            <div>
+              <Label>🩺 Exames Médicos e Psicológicos (R$)</Label>
+              <Input 
+                type="number"
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={formData.category_d_medical_exam || 190}
+                onChange={(e) => setFormData({...formData, category_d_medical_exam: parseFloat(e.target.value)})}
+              />
+            </div>
+            <div>
+              <Label>🏛️ Taxa do DETRAN (R$)</Label>
+              <Input 
+                type="number"
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={formData.category_d_detran_fee || 304}
+                onChange={(e) => setFormData({...formData, category_d_detran_fee: parseFloat(e.target.value)})}
+              />
+            </div>
+            <div>
+              <Label>🚌 10 Aulas Práticas de Ônibus (R$)</Label>
+              <Input 
+                type="number"
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={formData.category_d_bus_lessons || 1810}
+                onChange={(e) => setFormData({...formData, category_d_bus_lessons: parseFloat(e.target.value)})}
+              />
+            </div>
+            <div className="p-3 bg-[#0d1117] rounded border-2 border-[#34d399] flex flex-col justify-end">
+              <p className="text-xs text-[#9ca3af] mb-1">💡 TOTAL</p>
+              <p className="text-2xl font-bold text-[#34d399]">
+                R$ {((formData.category_d_toxicological_exam || 150) + 
+                     (formData.category_d_medical_exam || 190) + 
+                     (formData.category_d_detran_fee || 304) + 
+                     (formData.category_d_bus_lessons || 1810)).toFixed(2)}
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Preços dos Pacotes - Visível para Clientes */}
       <Card className="bg-[#1a2332] border-[#374151]">
         <CardHeader>
