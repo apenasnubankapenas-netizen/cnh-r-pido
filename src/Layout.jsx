@@ -1224,9 +1224,9 @@ export default function Layout({ children, currentPageName }) {
       {/* Student Selector Modal */}
       {showStudentSelectorModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#1a2332] border-2 border-[#fbbf24] rounded-xl w-full max-w-2xl max-h-[80vh] overflow-hidden">
-            <div className="border-b border-[#374151] p-4 bg-gradient-to-r from-[#0969da] to-[#0550ae]">
-              <h2 className="text-lg font-bold text-white">Selecione um Aluno para Visualizar</h2>
+          <div className="bg-[#1a2332] border-2 border-[#10b981] rounded-xl w-full max-w-2xl max-h-[80vh] overflow-hidden shadow-lg shadow-[#10b981]/30">
+            <div className="border-b-2 border-[#10b981] p-4 bg-gradient-to-r from-[#10b981] to-[#059669]">
+               <h2 className="text-lg font-bold text-white">Selecione um Aluno para Visualizar</h2>
               <p className="text-sm text-[#cbd5e1] mt-1">Escolha qual aluno você deseja visualizar na página de {pendingStudentPage}</p>
             </div>
             <div className="p-6 overflow-y-auto max-h-[60vh]">
