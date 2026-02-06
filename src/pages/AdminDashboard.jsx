@@ -155,8 +155,14 @@ export default function AdminDashboard() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-white text-xs">Aulas Hoje</p>
-                <p className="text-2xl font-bold text-[#fbbf24]">{todayLessons.length}</p>
+                <p className="text-white text-xs">
+                  {isInstructor ? 'Minhas Aulas Hoje' : 'Aulas Hoje'}
+                </p>
+                <p className="text-2xl font-bold text-[#fbbf24]">
+                  {isInstructor && currentInstructor 
+                    ? todayLessons.filter(l => l.instructor_id === currentInstructor.id).length 
+                    : todayLessons.length}
+                </p>
               </div>
               <Calendar className="text-[#fbbf24]" size={32} />
             </div>
