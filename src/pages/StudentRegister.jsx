@@ -830,13 +830,59 @@ export default function StudentRegister() {
               </div>
             </div>
 
+            {formData.category === 'onibus' && (
+              <div className="p-5 bg-gradient-to-br from-[#34d399]/20 to-[#059669]/20 rounded-lg border-2 border-[#34d399]">
+                <div className="flex items-start gap-3 mb-3">
+                  <div className="w-8 h-8 rounded-full bg-[#34d399] flex items-center justify-center flex-shrink-0 mt-1">
+                    <Check className="text-white" size={20} />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-bold text-lg mb-2">CATEGORIA D - ÔNIBUS (Combo Completo)</h3>
+                    <p className="text-[#d1fae5] text-sm mb-4">Processo completo com acompanhamento</p>
+                  </div>
+                </div>
+                
+                <div className="space-y-2 ml-11">
+                  <div className="flex items-center justify-between p-3 bg-[#111827]/50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">💉</span>
+                      <span className="font-semibold text-white">Exame toxicológico</span>
+                    </div>
+                    <span className="text-[#34d399] font-bold">R$ {(settings?.category_d_toxicological_exam || 150).toFixed(2)}</span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-[#111827]/50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">🩺</span>
+                      <span className="font-semibold text-white">Exames médicos e psicológicos</span>
+                    </div>
+                    <span className="text-[#34d399] font-bold">R$ {(settings?.category_d_medical_exam || 190).toFixed(2)}</span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-[#111827]/50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">🏛️</span>
+                      <span className="font-semibold text-white">Taxa do DETRAN</span>
+                    </div>
+                    <span className="text-[#34d399] font-bold">R$ {(settings?.category_d_detran_fee || 304).toFixed(2)}</span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-[#111827]/50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">🚌</span>
+                      <span className="font-semibold text-white">10 aulas práticas de ônibus</span>
+                    </div>
+                    <span className="text-[#34d399] font-bold">R$ {(settings?.category_d_bus_lessons || 1810).toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Aulas Avulsas Extras */}
+            {formData.category !== 'onibus' && (
             <div>
               <h3 className="font-bold text-white text-lg mb-3">Deseja adicionar aulas extras?</h3>
               <p className="text-sm text-[#9ca3af] mb-4">Adicione mais aulas práticas conforme sua necessidade. Você também pode comprar aulas depois.</p>
               
               <div className="space-y-3">
-                {(['B', 'AB', 'onibus', 'carreta', 'inclusao_B'].includes(formData.category)) && (
+                {(['B', 'AB', 'carreta', 'inclusao_B'].includes(formData.category)) && (
                   <div className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
                     <div className="flex justify-between items-center mb-2">
                       <div className="flex items-center gap-2">
