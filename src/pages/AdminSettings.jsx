@@ -625,6 +625,53 @@ export default function AdminSettings() {
         </CardContent>
       </Card>
 
+      {/* Controle de Acesso a Pagamentos - APENAS SUPER ADMIN */}
+      {isSuperadmin && (
+        <Card className="bg-[#1a2332] border-red-500/50">
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2 text-red-400">
+              <DollarSign />
+              Controle de Acesso a Pagamentos (Super Admin)
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-[#9ca3af]">
+              Configure quais emails podem visualizar informações de pagamentos dos alunos.
+              O Super Admin (tcnhpara@gmail.com) sempre tem acesso.
+            </p>
+            <div>
+              <Label>Emails Autorizados (separados por vírgula)</Label>
+              <Textarea 
+                className="bg-[#111827] border-[#374151] mt-1"
+                value={(formData.authorized_payment_viewers || []).join(', ')}
+                onChange={(e) => setFormData({
+                  ...formData, 
+                  authorized_payment_viewers: e.target.value.split(',').map(email => email.trim()).filter(email => email)
+                })}
+                placeholder="exemplo@email.com, outro@email.com"
+                rows={3}
+              />
+              <p className="text-xs text-[#9ca3af] mt-2">
+                ⚠️ Apenas emails listados aqui + Super Admin terão acesso às informações financeiras dos alunos
+              </p>
+            </div>
+            
+            {(formData.authorized_payment_viewers || []).length > 0 && (
+              <div className="p-3 bg-[#111827] rounded border border-[#374151]">
+                <p className="text-xs text-[#9ca3af] mb-2">Emails autorizados atualmente:</p>
+                <div className="flex flex-wrap gap-2">
+                  {(formData.authorized_payment_viewers || []).map((email, idx) => (
+                    <Badge key={idx} className="bg-green-500/20 text-green-400">
+                      {email}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
       {/* Links Externos */}
       <Card className="bg-[#1a2332] border-[#374151]">
         <CardHeader>
