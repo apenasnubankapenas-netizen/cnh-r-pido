@@ -176,10 +176,14 @@ export default function StudentRegister() {
     
     // Categoria D tem preço fixo (combo completo)
     if (formData.category === 'onibus') {
-      return (settings.category_d_toxicological_exam || 150) +
-             (settings.category_d_medical_exam || 190) +
-             (settings.category_d_detran_fee || 304) +
-             (settings.category_d_bus_lessons || 1810);
+      let total = 0;
+      // 10 aulas práticas de ônibus (base)
+      total += (settings.lesson_price_bus || 181) * 10;
+      // Aulas extras de ônibus se houver
+      if (lessonQuantities.onibus > 10) {
+        total += (settings.lesson_price_bus || 181) * (lessonQuantities.onibus - 10);
+      }
+      return total;
     }
     
     // Preço base da categoria
