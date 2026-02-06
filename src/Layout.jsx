@@ -1078,7 +1078,7 @@ export default function Layout({ children, currentPageName }) {
       {/* Seller Selector Modal */}
       {showSellerSelectorModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#1a2332] border-2 border-[#34d399] rounded-xl w-full max-w-2xl max-h-[80vh] overflow-hidden">
+          <div className="bg-[#1a2332] border-2 border-[#34d399] rounded-xl w-full max-w-2xl max-h-[80vh] overflow-hidden shadow-lg shadow-[#34d399]/30">
             <div className="border-b-2 border-[#34d399] p-4 bg-gradient-to-r from-[#34d399] to-[#10b981]">
                <h2 className="text-lg font-bold text-white">Selecione um Colaborador para Visualizar</h2>
               <p className="text-sm text-white/80 mt-1">Escolha qual colaborador você deseja visualizar na página de {pendingSellerPage}</p>
