@@ -174,6 +174,14 @@ export default function StudentRegister() {
   const calculateTotal = () => {
     if (!settings) return 0;
     
+    // Categoria D tem preço fixo (combo completo)
+    if (formData.category === 'onibus') {
+      return (settings.category_d_toxicological_exam || 150) +
+             (settings.category_d_medical_exam || 190) +
+             (settings.category_d_detran_fee || 304) +
+             (settings.category_d_bus_lessons || 1810);
+    }
+    
     // Preço base da categoria
     let categoryPrice = 0;
     if (formData.category === 'A') categoryPrice = settings.category_a_price || 548;
@@ -181,7 +189,6 @@ export default function StudentRegister() {
     else if (formData.category === 'AB') categoryPrice = settings.category_ab_price || 992;
     else if (formData.category === 'inclusao_A') categoryPrice = settings.category_inclusao_a_price || 400;
     else if (formData.category === 'inclusao_B') categoryPrice = settings.category_inclusao_b_price || 400;
-    else if (formData.category === 'onibus') categoryPrice = settings.category_bus_price || 1500;
     else if (formData.category === 'caminhao') categoryPrice = settings.category_truck_price || 1800;
     else if (formData.category === 'carreta') categoryPrice = settings.category_trailer_price || 2200;
     
@@ -196,11 +203,6 @@ export default function StudentRegister() {
     // Moto (acima de 2)
     if (lessonQuantities.moto > 2) {
       extraCost += (lessonQuantities.moto - 2) * (settings.lesson_price_moto || settings.lesson_price || 98);
-    }
-    
-    // Ônibus (acima de 2)
-    if (lessonQuantities.onibus > 2) {
-      extraCost += (lessonQuantities.onibus - 2) * (settings.lesson_price_bus || 150);
     }
     
     // Caminhão (acima de 2)
