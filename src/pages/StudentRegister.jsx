@@ -761,7 +761,8 @@ export default function StudentRegister() {
                       newQuantities.caminhao = 2;
                     }
                     if (formData.category === 'carreta') {
-                      newQuantities.carreta = 2;
+                      newQuantities.carreta = 10; // Categoria E = 10 aulas obrigatórias
+                      setCategoriaEChecks({ toxicologicalDone: false, detranPaid: false, medicalExamsDone: false });
                     }
                     setLessonQuantities(newQuantities);
                     setStep(3);
