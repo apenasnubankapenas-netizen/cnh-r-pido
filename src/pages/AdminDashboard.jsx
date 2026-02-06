@@ -29,29 +29,11 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   
-  const { user, permissions, metadata, isInstructor, isSeller, isSuperAdmin } = useUserPermissions();
+  const { user, permissions, metadata, isInstructor } = useUserPermissions();
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Redirecionar instrutores para seu dashboard
-    if (isInstructor()) {
-      navigate(createPageUrl('AdminInstructorDashboard'));
-      return;
-    }
-    
-    // Redirecionar colaboradores para seu dashboard
-    if (isSeller()) {
-      navigate(createPageUrl('AdminSellerDashboard'));
-      return;
-    }
-    
-    // Apenas super admin pode acessar
-    if (!isSuperAdmin()) {
-      navigate(createPageUrl('Home'));
-      return;
-    }
-    
-    if (user) {
+    if (user && !loading) {
       loadData();
     }
   }, [user, permissions]);
