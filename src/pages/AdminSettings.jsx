@@ -717,6 +717,14 @@ export default function AdminSettings() {
               onChange={(e) => setFormData({...formData, detran_url: e.target.value})}
             />
           </div>
+          <Button
+            variant="outline"
+            className="w-full border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-white mt-4"
+            onClick={() => navigate(createPageUrl('StudentRegister'))}
+          >
+            <UserPlus size={18} className="mr-2" />
+            Ir para Cadastro de Aluno (Testes)
+          </Button>
         </CardContent>
       </Card>
 
