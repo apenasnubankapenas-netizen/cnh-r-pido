@@ -999,7 +999,7 @@ export default function StudentRegister() {
       {/* Step 4: Agendar Aulas */}
       {step === 4 && (
         <LessonScheduler
-          lessonsConfig={lessonQuantities}
+          lessonsConfig={Object.fromEntries(Object.entries(lessonQuantities).filter(([_, count]) => count > 0))}
           onSchedulesComplete={(schedules) => {
             setLessonSchedules(schedules);
             setTimeRemaining(600);
