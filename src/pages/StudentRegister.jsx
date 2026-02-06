@@ -1011,7 +1011,7 @@ export default function StudentRegister() {
               <p className="text-sm text-[#9ca3af] mb-4">Adicione mais aulas práticas conforme sua necessidade. Você também pode comprar aulas depois.</p>
               
               <div className="space-y-3">
-                {(['B', 'AB', 'carreta', 'inclusao_B'].includes(formData.category)) && (
+                {(['B', 'AB', 'inclusao_B'].includes(formData.category)) && (
                   <div className="p-4 bg-[#111827] rounded-lg border border-[#374151]">
                     <div className="flex justify-between items-center mb-2">
                       <div className="flex items-center gap-2">
