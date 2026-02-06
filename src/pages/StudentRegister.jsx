@@ -790,9 +790,9 @@ export default function StudentRegister() {
                   <div className="flex items-center justify-between p-3 bg-[#111827]/50 rounded-lg">
                     <div className="flex items-center gap-2">
                       <span className="text-lg">🚌</span>
-                      <span className="font-semibold text-white">10 aulas práticas de ônibus</span>
+                      <span className="font-semibold text-white">20 aulas práticas de ônibus</span>
                     </div>
-                    <span className="text-[#34d399] font-bold">R$ {(settings?.category_d_bus_lessons || 1810).toFixed(2)}</span>
+                    <span className="text-[#34d399] font-bold">R$ {(settings?.category_d_bus_lessons || 3620).toFixed(2)}</span>
                   </div>
                 </div>
               </div>
