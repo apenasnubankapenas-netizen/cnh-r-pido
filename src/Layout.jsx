@@ -1195,7 +1195,8 @@ export default function Layout({ children, currentPageName }) {
                           </div>
                         </div>
                         <div className="text-right">
-                          <div className={`text-xs font-semibold ${instructor.active ? 'text-green-400' : 'text-red-400'}`}>
+                          <div className={`text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1 ${instructor.active ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                            <div className={`w-2 h-2 rounded-full ${instructor.active ? 'bg-green-400' : 'bg-red-400'}`} />
                             {instructor.active ? 'Ativo' : 'Inativo'}
                           </div>
                         </div>
