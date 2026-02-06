@@ -964,7 +964,7 @@ export default function StudentRegister() {
                     <span className="text-sm font-semibold text-white">🏛️ Já pagou a taxa do DETRAN?</span>
                   </div>
                   
-                  {/* 10 Aulas Práticas de Carreta - FIXO */}
+                  {/* 10 Aulas Práticas de Carreta + Extras */}
                   <div className="p-4 bg-[#111827] rounded-lg border border-[#374151] mt-4">
                     <div className="flex justify-between items-center mb-2">
                       <div className="flex items-center gap-2">
@@ -974,11 +974,30 @@ export default function StudentRegister() {
                           <span className="text-xs text-[#fbbf24]">R$ {(settings?.lesson_price_trailer || 200).toFixed(2)} por aula</span>
                         </div>
                       </div>
-                      <span className="font-bold text-xl text-white">10 aulas</span>
+                      <div className="flex items-center gap-3">
+                        <Button 
+                          variant="outline" 
+                          size="icon" 
+                          className="border-[#374151] h-10 w-10"
+                          onClick={() => setLessonQuantities({...lessonQuantities, carreta: Math.max(10, lessonQuantities.carreta - 1)})}
+                          disabled={lessonQuantities.carreta <= 10}
+                        >
+                          <Minus size={18} />
+                        </Button>
+                        <span className="w-12 text-center font-bold text-xl text-white">{lessonQuantities.carreta}</span>
+                        <Button 
+                          variant="outline" 
+                          size="icon" 
+                          className="border-[#374151] h-10 w-10"
+                          onClick={() => setLessonQuantities({...lessonQuantities, carreta: lessonQuantities.carreta + 1})}
+                        >
+                          <Plus size={18} />
+                        </Button>
+                      </div>
                     </div>
                     <div className="text-right text-sm mt-2">
                       <span className="text-[#9ca3af]">Subtotal aulas: </span>
-                      <span className="text-[#fbbf24] font-bold">R$ {(10 * (settings?.lesson_price_trailer || 200)).toFixed(2)}</span>
+                      <span className="text-[#fbbf24] font-bold">R$ {(lessonQuantities.carreta * (settings?.lesson_price_trailer || 200)).toFixed(2)}</span>
                     </div>
                   </div>
                 </div>
