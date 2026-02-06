@@ -52,7 +52,18 @@ export default function AdminDashboard() {
       setPayments(paymentsData);
       setInstructors(instructorsData);
       setUser(currentUser);
-      if (currentUser?.role === 'admin') {
+      
+      // Verificar se admin está visualizando como instrutor
+      const savedInstructor = localStorage.getItem('admin_view_instructor');
+      let instructorToLoad = null;
+
+      if (savedInstructor && currentUser.role === 'admin') {
+        // Admin visualizando como instrutor
+        instructorToLoad = JSON.parse(savedInstructor);
+        setIsInstructor(true);
+        setCurrentInstructor(instructorToLoad);
+      } else if (currentUser?.role === 'admin') {
+        // Instrutor logado normalmente
         const instr = instructorsData.find(i => i.user_email === currentUser.email);
         if (instr) {
           setIsInstructor(true);
