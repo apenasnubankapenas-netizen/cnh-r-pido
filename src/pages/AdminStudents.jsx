@@ -38,7 +38,7 @@ export default function AdminStudents() {
   const [editData, setEditData] = useState({});
   const [user, setUser] = useState(null);
   const [instructorId, setInstructorId] = useState(null);
-  const [isInstructor, setIsInstructor] = useState(false);
+  const [canViewPayments, setCanViewPayments] = useState(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [exportingPDF, setExportingPDF] = useState(false);
@@ -62,10 +62,19 @@ export default function AdminStudents() {
     (async () => {
       try {
         if (!user) return;
+        
+        // Verificar autorização para ver pagamentos
+        if (user.email === 'tcnhpara@gmail.com') {
+          setCanViewPayments(true);
+        } else {
+          const settingsList = await base44.entities.AppSettings.list();
+          const authorizedEmails = settingsList[0]?.authorized_payment_viewers || [];
+          setCanViewPayments(authorizedEmails.includes(user.email));
+        }
+        
         const ins = await base44.entities.Instructor.filter({ user_email: user.email });
         if (ins.length > 0) {
           setInstructorId(ins[0].id);
-          setIsInstructor(true);
         }
       } catch (e) {}
     })();
@@ -316,8 +325,8 @@ export default function AdminStudents() {
                   {selectedStudent.cnh_front_photo && (
                     <TabsTrigger value="documentos" className="data-[state=active]:bg-[#1e40af]">Docs</TabsTrigger>
                   )}
-                  {/* BLOQUEIO: Aba de pagamentos OCULTA para instrutores */}
-                  {!isInstructor && (
+                  {/* BLOQUEIO: Aba de pagamentos APENAS para autorizados */}
+                  {canViewPayments && (
                     <TabsTrigger value="pagamentos" className="data-[state=active]:bg-[#1e40af]">Pagamentos</TabsTrigger>
                   )}
                 </TabsList>
@@ -357,8 +366,8 @@ export default function AdminStudents() {
                       <p className="font-medium">{selectedStudent.phone || '-'}</p>
                     </div>
 
-                    {/* BLOQUEIO: Informações financeiras OCULTAS para instrutores */}
-                    {!isInstructor && (
+                    {/* BLOQUEIO: Informações financeiras APENAS para autorizados */}
+                    {canViewPayments && (
                       <>
                         <div>
                           <Label className="text-[#9ca3af]">Total Pago</Label>
@@ -510,26 +519,26 @@ export default function AdminStudents() {
                   </TabsContent>
                   )}
 
-                  {/* BLOQUEIO: Aba de pagamentos disponível APENAS para não-instrutores */}
-                  {!isInstructor && (
-                  <TabsContent value="pagamentos" className="mt-4 space-y-4">
-                    <div className="space-y-3">
-                      <div className="p-3 bg-[#111827] rounded-lg">
-                        <Label className="text-[#9ca3af] text-xs">Total Pago</Label>
-                        <p className="text-2xl font-bold text-green-400">R$ {(selectedStudent.total_paid || 0).toFixed(2)}</p>
+                  {/* BLOQUEIO: Aba de pagamentos disponível APENAS para autorizados */}
+                  {canViewPayments && (
+                    <TabsContent value="pagamentos" className="mt-4 space-y-4">
+                      <div className="space-y-3">
+                        <div className="p-3 bg-[#111827] rounded-lg">
+                          <Label className="text-[#9ca3af] text-xs">Total Pago</Label>
+                          <p className="text-2xl font-bold text-green-400">R$ {(selectedStudent.total_paid || 0).toFixed(2)}</p>
+                        </div>
+                        <div className="p-3 bg-[#111827] rounded-lg">
+                          <Label className="text-[#9ca3af] text-xs">Status de Pagamento</Label>
+                          <Badge className={
+                            selectedStudent.payment_status === 'pago' ? 'bg-green-500/20 text-green-400 border-green-500/50' :
+                            selectedStudent.payment_status === 'parcial' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50' :
+                            'bg-red-500/20 text-red-400 border-red-500/50'
+                          }>
+                            {selectedStudent.payment_status || 'pendente'}
+                          </Badge>
+                        </div>
                       </div>
-                      <div className="p-3 bg-[#111827] rounded-lg">
-                        <Label className="text-[#9ca3af] text-xs">Status de Pagamento</Label>
-                        <Badge className={
-                          selectedStudent.payment_status === 'pago' ? 'bg-green-500/20 text-green-400 border-green-500/50' :
-                          selectedStudent.payment_status === 'parcial' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50' :
-                          'bg-red-500/20 text-red-400 border-red-500/50'
-                        }>
-                          {selectedStudent.payment_status || 'pendente'}
-                        </Badge>
-                      </div>
-                    </div>
-                  </TabsContent>
+                    </TabsContent>
                   )}
                   </Tabs>
                   </>
