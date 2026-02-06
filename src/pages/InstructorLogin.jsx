@@ -27,7 +27,7 @@ export default function InstructorLogin() {
             // Autenticado e é instrutor ativo, fazer login automático
             const key = `instructor_session_version:${me.email}`;
             localStorage.setItem(key, String(instructors[0].session_version || 1));
-            navigate(createPageUrl('AdminDashboard'));
+            navigate(createPageUrl('AdminInstructorDashboard'));
             return;
           } else if (instructors.length === 0) {
             // Email não está registrado como instrutor
