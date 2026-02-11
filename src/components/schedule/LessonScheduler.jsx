@@ -18,7 +18,7 @@ export default function LessonScheduler({
   const [currentType, setCurrentType] = useState('');
   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
   const [selectedDate, setSelectedDate] = useState('');
-  const [selectedTime, setSelectedTime] = useState('');
+  const [selectedTimes, setSelectedTimes] = useState([]);
   const [selectedInstructor, setSelectedInstructor] = useState('');
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [instructorLessons, setInstructorLessons] = useState([]);
@@ -111,10 +111,10 @@ export default function LessonScheduler({
     });
   };
 
-  const handleAddSchedule = () => {
-    if (!selectedDate || !selectedTime || !selectedInstructor || !currentType) return;
+  const handleAddSchedules = () => {
+    if (!selectedDate || selectedTimes.length === 0 || !selectedInstructor || !currentType) return;
     
-    // Bloquear tipos inválidos para Categoria D (ônibus) e E (carreta)
+    // Validações
     const categoryDTypesAllowed = ['onibus'];
     const categoryETypesAllowed = ['carreta'];
     const hasOnlyOnibusPending = Object.keys(lessonsConfig).length === 1 && lessonsConfig.onibus > 0;
@@ -130,30 +130,43 @@ export default function LessonScheduler({
       return;
     }
     
-    // Verificar se horário está disponível (não ocupado por alunos que já pagaram)
-    const occupied = allLessons.some(l => 
-      l.instructor_id === selectedInstructor && 
-      l.date === selectedDate && 
-      l.time === selectedTime && 
-      l.status === 'agendada' &&
-      !l.trial
-    );
+    const instructor = instructors.find(i => i.id === selectedInstructor);
+    const newSchedules = [];
     
-    if (occupied) {
-      alert('Este horário já está ocupado por outro aluno. Escolha outro horário.');
-      return;
-    }
-    
-    // Verificar se não está duplicando a mesma data/hora nos schedules temporários
-    const alreadyScheduled = schedules.some(s => 
-      s.date === selectedDate && 
-      s.time === selectedTime && 
-      s.instructor_id === selectedInstructor
-    );
-    
-    if (alreadyScheduled) {
-      alert('Você já agendou esta aula neste horário. Escolha outro horário.');
-      return;
+    // Criar agendamentos para cada horário selecionado
+    for (const time of selectedTimes) {
+      // Verificar se horário está disponível
+      const occupied = allLessons.some(l => 
+        l.instructor_id === selectedInstructor && 
+        l.date === selectedDate && 
+        l.time === time && 
+        l.status === 'agendada' &&
+        !l.trial
+      );
+      
+      if (occupied) {
+        alert(`Horário ${time} já está ocupado. Remova este horário.`);
+        return;
+      }
+      
+      const alreadyScheduled = schedules.some(s => 
+        s.date === selectedDate && 
+        s.time === time && 
+        s.instructor_id === selectedInstructor
+      );
+      
+      if (alreadyScheduled) {
+        alert(`Horário ${time} já foi agendado. Remova este horário.`);
+        return;
+      }
+      
+      newSchedules.push({
+        type: currentType,
+        date: selectedDate,
+        time: time,
+        instructor_id: selectedInstructor,
+        instructor_name: instructor?.full_name || ''
+      });
     }
     
     // Bloquear instrutor nas 2 primeiras aulas de cada tipo (carro e moto)
@@ -162,54 +175,33 @@ export default function LessonScheduler({
       setLockedInstructors(prev => ({ ...prev, [currentType]: selectedInstructor }));
     }
     
-    const instructor = instructors.find(i => i.id === selectedInstructor);
-    const newSchedule = {
-      type: currentType,
-      date: selectedDate,
-      time: selectedTime,
-      instructor_id: selectedInstructor,
-      instructor_name: instructor?.full_name || ''
-    };
-    
-    const updatedSchedules = [...schedules, newSchedule];
+    const updatedSchedules = [...schedules, ...newSchedules];
     setSchedules(updatedSchedules);
     
     // Verificar se todas as aulas foram agendadas
     const totalLessons = Object.values(lessonsConfig).reduce((a, b) => a + b, 0);
     
     if (updatedSchedules.length >= totalLessons) {
-      // Todas as aulas agendadas - finalizar
       onSchedulesComplete(updatedSchedules);
       return;
     }
     
-    // Scroll para o topo e mostrar modal
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    
-    // Mostrar modal após um pequeno delay para sincronizar com o scroll
-    setTimeout(() => {
-      setShowContinueModal(true);
-      setTimeout(() => setShowContinueModal(false), 5000);
-    }, 300);
-    
-    // Resetar campos para próxima aula
+    // Resetar campos
     setSelectedDate('');
-    setSelectedTime('');
+    setSelectedTimes([]);
     
-    // Verificar se ainda há aulas do tipo atual para agendar
+    // Verificar se ainda há aulas do tipo atual
     const currentTypeScheduled = updatedSchedules.filter(s => s.type === currentType).length;
     const currentTypeTotal = lessonsConfig[currentType] || 0;
     
     if (currentTypeScheduled >= currentTypeTotal) {
-      // Trocar para próximo tipo disponível
       const availTypes = getAvailableTypes();
       if (availTypes.length > 0) {
         setCurrentType(availTypes[0][0]);
       }
     }
-    // Se ainda há aulas do tipo atual, manter o tipo selecionado
     
-    // Liberar instrutor após 2 aulas do mesmo tipo
+    // Liberar instrutor após 2 aulas
     const typeScheduledAfter = updatedSchedules.filter(s => s.type === currentType).length;
     if (typeScheduledAfter >= 2 && (currentType === 'carro' || currentType === 'moto')) {
       setLockedInstructors(prev => {
@@ -219,8 +211,6 @@ export default function LessonScheduler({
       });
       setSelectedInstructor('');
     }
-    
-    setCurrentLessonIndex(currentLessonIndex + 1);
   };
 
   const totalLessons = Object.values(lessonsConfig).reduce((a, b) => a + b, 0);
@@ -257,56 +247,7 @@ export default function LessonScheduler({
         </div>
       )}
 
-      {/* Modal de Continuar Agendando - Centro da Tela */}
-      {showContinueModal && (
-        <>
-          {/* Overlay Escuro */}
-          <div className="fixed inset-0 bg-black/70 z-50 animate-fadeIn" />
-          
-          {/* Modal */}
-          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-[90%] max-w-md animate-scaleIn">
-            <div className="bg-gradient-to-r from-[#10b981] to-[#059669] border-4 border-[#fbbf24] rounded-2xl px-8 py-8 shadow-2xl shadow-[#10b981]/70">
-              <div className="flex flex-col items-center gap-4">
-                <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center animate-pulse">
-                  <svg className="w-12 h-12 text-[#10b981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-                <div className="text-center">
-                  <p className="text-white font-bold text-2xl mb-2">
-                    ✓ Aula {schedules.length} Agendada!
-                  </p>
-                  <p className="text-white font-semibold text-lg mb-3">
-                    Continue agendando a próxima aula
-                  </p>
-                  <div className="mt-3 px-5 py-2 bg-white rounded-full">
-                    <span className="text-[#10b981] font-bold text-base">
-                      {totalLessons - schedules.length} aula{totalLessons - schedules.length !== 1 ? 's' : ''} restante{totalLessons - schedules.length !== 1 ? 's' : ''}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <style>{`
-            @keyframes fadeIn {
-              from { opacity: 0; }
-              to { opacity: 1; }
-            }
-            @keyframes scaleIn {
-              from { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
-              to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-            }
-            .animate-fadeIn {
-              animation: fadeIn 0.3s ease-out;
-            }
-            .animate-scaleIn {
-              animation: scaleIn 0.3s ease-out;
-            }
-          `}</style>
-        </>
-      )}
+
 
       {/* Progress */}
       <Card className="bg-[#1a2332] border-[#fbbf24]/40">
@@ -325,13 +266,7 @@ export default function LessonScheduler({
             Aula {scheduledLessons + 1} de {totalLessons} total
             {currentType && ` • ${schedules.filter(s => s.type === currentType).length}/${lessonsConfig[currentType]} ${getTypeName(currentType)}`}
           </p>
-          {scheduledLessons > 0 && scheduledLessons < totalLessons && (
-            <div className="mt-3 p-2 bg-[#10b981]/20 border border-[#10b981] rounded-lg">
-              <p className="text-xs sm:text-sm text-[#10b981] font-semibold text-center">
-                ✓ Aula {scheduledLessons} agendada! Continue agendando a próxima aula abaixo:
-              </p>
-            </div>
-          )}
+
         </CardContent>
       </Card>
 
@@ -393,13 +328,11 @@ export default function LessonScheduler({
                       if (isAvailable) {
                         setCurrentType(type);
                         setSelectedDate('');
-                        setSelectedTime('');
-                        // Limpar instrutor apenas se não houver bloqueio para este tipo
+                        setSelectedTimes([]);
                         const typeScheduledCount = schedules.filter(s => s.type === type).length;
                         if (typeScheduledCount >= 2 || !lockedInstructors[type]) {
                           setSelectedInstructor('');
                         } else if (lockedInstructors[type]) {
-                          // Se há instrutor bloqueado para este tipo, selecionar automaticamente
                           setSelectedInstructor(lockedInstructors[type]);
                         }
                       }
@@ -658,7 +591,9 @@ export default function LessonScheduler({
 
               {selectedDate && (
                 <div>
-                  <label className="text-xs sm:text-sm text-[#9ca3af] block mb-2">Escolha o horário</label>
+                  <label className="text-xs sm:text-sm text-[#9ca3af] block mb-2">
+                    Escolha os horários ({selectedTimes.length} selecionado{selectedTimes.length !== 1 ? 's' : ''})
+                  </label>
                   <TimeGrid
                     timeSlots={availableTimeSlots}
                     bookedTimes={new Set([
@@ -671,8 +606,15 @@ export default function LessonScheduler({
                       ).map(l => l.time),
                       ...schedules.filter(s => s.date === selectedDate && s.instructor_id === selectedInstructor).map(s => s.time)
                     ])}
-                    selectedTime={selectedTime}
-                    onSelect={setSelectedTime}
+                    selectedTimes={selectedTimes}
+                    onSelect={(time) => {
+                      if (selectedTimes.includes(time)) {
+                        setSelectedTimes(selectedTimes.filter(t => t !== time));
+                      } else {
+                        setSelectedTimes([...selectedTimes, time]);
+                      }
+                    }}
+                    multiSelect={true}
                   />
                 </div>
               )}
@@ -691,10 +633,10 @@ export default function LessonScheduler({
             )}
             <Button
               className="flex-1 bg-[#f0c41b] text-white hover:bg-[#d4aa00] h-10 text-sm font-semibold uppercase"
-              onClick={handleAddSchedule}
-              disabled={!selectedDate || !selectedTime || !selectedInstructor || !currentType}
+              onClick={handleAddSchedules}
+              disabled={!selectedDate || selectedTimes.length === 0 || !selectedInstructor || !currentType}
             >
-              {schedules.length + 1 >= Object.values(lessonsConfig).reduce((a, b) => a + b, 0) ? '✓ Finalizar e Ver Pagamento' : `Adicionar Aula ${schedules.length + 1}/${totalLessons}`}
+              {schedules.length + selectedTimes.length >= Object.values(lessonsConfig).reduce((a, b) => a + b, 0) ? '✓ Finalizar e Ver Pagamento' : `Adicionar ${selectedTimes.length} Aula${selectedTimes.length !== 1 ? 's' : ''} (${schedules.length + selectedTimes.length}/${totalLessons})`}
             </Button>
           </div>
         </CardContent>
