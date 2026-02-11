@@ -1159,6 +1159,22 @@ export default function StudentRegister() {
             </div>
             )}
 
+            {/* Informação sobre o que está incluso */}
+            {formData.category === 'A' && (
+              <div className="p-4 bg-[#10b981]/10 rounded-lg border border-[#10b981]">
+                <div className="flex items-start gap-2">
+                  <div className="text-[#10b981] text-xl">✓</div>
+                  <div>
+                    <h4 className="font-bold text-white mb-1">O que está incluso no plano Categoria A:</h4>
+                    <ul className="text-sm text-[#d1fae5] space-y-1">
+                      <li>• 2 aulas práticas de moto</li>
+                      <li>• Assistência completa da autoescola</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Resumo do Valor Total */}
             <div className="p-4 bg-[#0d1117] rounded-lg border-2 border-[#fbbf24]">
               <div className="flex justify-between items-center">
