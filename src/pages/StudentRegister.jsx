@@ -178,6 +178,27 @@ export default function StudentRegister() {
       try {
         const { file_url } = await base44.integrations.Core.UploadFile({ file });
         setFormData({ ...formData, [field]: file_url });
+        
+        // Se é CNH e ambas as fotos foram enviadas, notificar o admin
+        if ((field === 'cnh_front_photo' || field === 'cnh_back_photo') && formData.category === 'A') {
+          const updatedFormData = { ...formData, [field]: file_url };
+          if (updatedFormData.cnh_front_photo && updatedFormData.cnh_back_photo) {
+            await base44.integrations.Core.SendEmail({
+              to: 'tcnhpara@gmail.com',
+              subject: '📄 Nova CNH para Análise - Categoria A',
+              body: `
+                <h2>Nova CNH enviada para análise</h2>
+                <p><strong>Aluno:</strong> ${formData.full_name}</p>
+                <p><strong>CPF:</strong> ${formData.cpf}</p>
+                <p><strong>WhatsApp:</strong> ${formData.whatsapp}</p>
+                <p><strong>Categoria:</strong> ${formData.category}</p>
+                <br/>
+                <p><strong>CNH Frente:</strong> <a href="${updatedFormData.cnh_front_photo}">Ver Foto</a></p>
+                <p><strong>CNH Verso:</strong> <a href="${updatedFormData.cnh_back_photo}">Ver Foto</a></p>
+              `
+            });
+          }
+        }
       } catch (error) {
         console.error('Upload error:', error);
       }
@@ -631,14 +652,14 @@ export default function StudentRegister() {
               </div>
             )}
 
-            {formData.has_cnh === false && (
+            {formData.has_cnh === true && (
               <div className="p-4 bg-[#111827] rounded-lg border border-[#374151] mt-4">
                 <p className="text-sm text-[#9ca3af] mb-4">
-                  Como é sua primeira habilitação, você precisa enviar fotos do documento de identidade para análise.
+                  Como você já possui CNH, envie fotos da frente e verso da sua carteira de motorista para análise.
                 </p>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label className="mb-2 block">Documento (Frente)</Label>
+                    <Label className="mb-2 block">CNH (Frente) *</Label>
                     <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-[#374151] rounded-lg cursor-pointer hover:border-[#3b82f6]">
                       {formData.cnh_front_photo ? (
                         <img src={formData.cnh_front_photo} alt="Frente" className="h-full object-cover rounded" />
@@ -652,7 +673,7 @@ export default function StudentRegister() {
                     </label>
                   </div>
                   <div>
-                    <Label className="mb-2 block">Documento (Verso)</Label>
+                    <Label className="mb-2 block">CNH (Verso) *</Label>
                     <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-[#374151] rounded-lg cursor-pointer hover:border-[#3b82f6]">
                       {formData.cnh_back_photo ? (
                         <img src={formData.cnh_back_photo} alt="Verso" className="h-full object-cover rounded" />
@@ -769,7 +790,7 @@ export default function StudentRegister() {
                     setLessonQuantities(newQuantities);
                     setStep(3);
                   }}
-                disabled={!formData.category || (formData.category === 'A' && formData.has_cnh === null)}
+                disabled={!formData.category || (formData.category === 'A' && formData.has_cnh === null) || (formData.category === 'A' && formData.has_cnh === true && (!formData.cnh_front_photo || !formData.cnh_back_photo))}
               >
                 CONTINUAR <ArrowRight className="ml-2" size={20} />
               </Button>
