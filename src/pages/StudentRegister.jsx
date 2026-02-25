@@ -610,13 +610,13 @@ export default function StudentRegister() {
                   const Icon = cat.icon;
                   return (
                     <div 
-                      key={cat.value}
-                      className={`flex items-center space-x-3 p-4 rounded-lg border cursor-pointer transition-all ${
-                        formData.category === cat.value 
-                          ? 'border-[#fbbf24] bg-[#fbbf24]/10' 
-                          : 'border-[#374151] hover:border-[#3b82f6]'
-                      }`}
-                      onClick={() => setFormData({...formData, category: cat.value, has_cnh: null})}
+                     key={cat.value}
+                     className={`flex items-center space-x-3 p-4 rounded-lg border cursor-pointer transition-all backdrop-blur-md ${
+                       formData.category === cat.value 
+                         ? 'border-white/20 bg-white/10' 
+                         : 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20'
+                     }`}
+                     onClick={() => setFormData({...formData, category: cat.value, has_cnh: null})}
                     >
                       <RadioGroupItem value={cat.value} id={cat.value} />
                       <Icon className="text-[#fbbf24]" size={24} />
@@ -631,7 +631,7 @@ export default function StudentRegister() {
             </RadioGroup>
 
             {formData.category === 'A' && (
-              <div className="p-4 bg-[#111827] rounded-lg border border-[#374151] mt-4">
+              <div className="p-4 bg-white/5 backdrop-blur-md rounded-lg border border-white/10 mt-4">
                 <Label className="mb-3 block">Você já possui CNH?</Label>
                 <div className="flex gap-4">
                   <Button
@@ -653,7 +653,7 @@ export default function StudentRegister() {
             )}
 
             {formData.has_cnh === true && (
-              <div className="p-4 bg-[#111827] rounded-lg border border-[#374151] mt-4">
+              <div className="p-4 bg-white/5 backdrop-blur-md rounded-lg border border-white/10 mt-4">
                 <p className="text-sm text-[#9ca3af] mb-4">
                   Como você já possui CNH, envie fotos da frente e verso da sua carteira de motorista para análise.
                 </p>
@@ -695,10 +695,10 @@ export default function StudentRegister() {
                 <Label className="mb-3 block text-white font-semibold">Você já fez os exames médicos?</Label>
                 <div 
                   onClick={() => setFormData({...formData, exam_done: !formData.exam_done})}
-                  className={`p-4 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 ${
+                  className={`p-4 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 backdrop-blur-md ${
                     formData.exam_done 
                       ? 'border-[#10b981] bg-[#10b981]/10' 
-                      : 'border-[#374151] hover:border-[#3b82f6]'
+                      : 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20'
                   }`}
                 >
                   <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all ${
@@ -716,10 +716,10 @@ export default function StudentRegister() {
                 <Label className="mb-3 block text-white font-semibold">Você já fez a prova teórica?</Label>
                 <div 
                   onClick={() => setFormData({...formData, theoretical_test_done: !formData.theoretical_test_done})}
-                  className={`p-4 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 ${
+                  className={`p-4 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 backdrop-blur-md ${
                     formData.theoretical_test_done 
                       ? 'border-[#10b981] bg-[#10b981]/10' 
-                      : 'border-[#374151] hover:border-[#3b82f6]'
+                      : 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20'
                   }`}
                 >
                   <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all ${
@@ -737,10 +737,10 @@ export default function StudentRegister() {
                 <Label className="mb-3 block text-white font-semibold">Você já fez a prova prática?</Label>
                 <div 
                   onClick={() => setFormData({...formData, practical_test_done: !formData.practical_test_done})}
-                  className={`p-4 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 ${
+                  className={`p-4 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 backdrop-blur-md ${
                     formData.practical_test_done 
                       ? 'border-[#10b981] bg-[#10b981]/10' 
-                      : 'border-[#374151] hover:border-[#3b82f6]'
+                      : 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20'
                   }`}
                 >
                   <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all ${
@@ -823,10 +823,10 @@ export default function StudentRegister() {
                   {/* Exame Toxicológico - Checkbox */}
                   <div 
                     onClick={() => setCategoriaDChecks({...categoriaDChecks, toxicologicalDone: !categoriaDChecks.toxicologicalDone})}
-                    className={`p-3 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 ${
+                    className={`p-3 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 backdrop-blur-md ${
                       categoriaDChecks.toxicologicalDone 
                         ? 'border-[#34d399] bg-[#34d399]/10' 
-                        : 'border-[#374151] hover:border-[#34d399]'
+                        : 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20'
                     }`}
                   >
                     <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
@@ -842,10 +842,10 @@ export default function StudentRegister() {
                   {/* Exames Médicos - Checkbox */}
                   <div 
                     onClick={() => setCategoriaDChecks({...categoriaDChecks, medicalExamsDone: !categoriaDChecks.medicalExamsDone})}
-                    className={`p-3 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 ${
+                    className={`p-3 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 backdrop-blur-md ${
                       categoriaDChecks.medicalExamsDone 
                         ? 'border-[#34d399] bg-[#34d399]/10' 
-                        : 'border-[#374151] hover:border-[#34d399]'
+                        : 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20'
                     }`}
                   >
                     <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
@@ -861,10 +861,10 @@ export default function StudentRegister() {
                   {/* Taxa do DETRAN - Checkbox */}
                   <div 
                     onClick={() => setCategoriaDChecks({...categoriaDChecks, detranPaid: !categoriaDChecks.detranPaid})}
-                    className={`p-3 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 ${
+                    className={`p-3 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 backdrop-blur-md ${
                       categoriaDChecks.detranPaid 
                         ? 'border-[#34d399] bg-[#34d399]/10' 
-                        : 'border-[#374151] hover:border-[#34d399]'
+                        : 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20'
                     }`}
                   >
                     <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
@@ -878,7 +878,7 @@ export default function StudentRegister() {
                   </div>
                   
                   {/* 10 Aulas Práticas de Ônibus - Com botões de + e - */}
-                  <div className="p-4 bg-[#111827] rounded-lg border border-[#374151] mt-4">
+                  <div className="p-4 bg-white/5 backdrop-blur-md rounded-lg border border-white/10 mt-4">
                     <div className="flex justify-between items-center mb-2">
                       <div className="flex items-center gap-2">
                         <Bus size={24} className="text-[#34d399]" />
@@ -933,10 +933,10 @@ export default function StudentRegister() {
                   {/* Exame Toxicológico - Checkbox */}
                   <div 
                     onClick={() => setCategoriaEChecks({...categoriaEChecks, toxicologicalDone: !categoriaEChecks.toxicologicalDone})}
-                    className={`p-3 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 ${
+                    className={`p-3 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 backdrop-blur-md ${
                       categoriaEChecks.toxicologicalDone 
                         ? 'border-[#a855f7] bg-[#a855f7]/10' 
-                        : 'border-[#374151] hover:border-[#a855f7]'
+                        : 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20'
                     }`}
                   >
                     <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
@@ -952,10 +952,10 @@ export default function StudentRegister() {
                   {/* Exames Médicos - Checkbox */}
                   <div 
                     onClick={() => setCategoriaEChecks({...categoriaEChecks, medicalExamsDone: !categoriaEChecks.medicalExamsDone})}
-                    className={`p-3 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 ${
+                    className={`p-3 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 backdrop-blur-md ${
                       categoriaEChecks.medicalExamsDone 
                         ? 'border-[#a855f7] bg-[#a855f7]/10' 
-                        : 'border-[#374151] hover:border-[#a855f7]'
+                        : 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20'
                     }`}
                   >
                     <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
@@ -971,10 +971,10 @@ export default function StudentRegister() {
                   {/* Taxa do DETRAN - Checkbox */}
                   <div 
                     onClick={() => setCategoriaEChecks({...categoriaEChecks, detranPaid: !categoriaEChecks.detranPaid})}
-                    className={`p-3 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 ${
+                    className={`p-3 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-3 backdrop-blur-md ${
                       categoriaEChecks.detranPaid 
                         ? 'border-[#a855f7] bg-[#a855f7]/10' 
-                        : 'border-[#374151] hover:border-[#a855f7]'
+                        : 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20'
                     }`}
                   >
                     <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
@@ -988,7 +988,7 @@ export default function StudentRegister() {
                   </div>
                   
                   {/* 10 Aulas Práticas de Carreta + Extras */}
-                  <div className="p-4 bg-[#111827] rounded-lg border border-[#374151] mt-4">
+                  <div className="p-4 bg-white/5 backdrop-blur-md rounded-lg border border-white/10 mt-4">
                     <div className="flex justify-between items-center mb-2">
                       <div className="flex items-center gap-2">
                         <Truck size={24} className="text-[#a855f7]" />
@@ -1244,11 +1244,11 @@ export default function StudentRegister() {
             <div className="space-y-2">
               <h3 className="font-semibold text-sm text-[#fbbf24]">Seus Dados</h3>
               <div className="grid grid-cols-2 gap-2 text-xs">
-                <div className="p-2 bg-[#111827] rounded">
+                <div className="p-2 bg-white/5 backdrop-blur-md rounded border border-white/10">
                   <span className="text-[#9ca3af]">Nome:</span>
                   <p className="font-medium truncate text-white">{formData.full_name}</p>
                 </div>
-                <div className="p-2 bg-[#111827] rounded">
+                <div className="p-2 bg-white/5 backdrop-blur-md rounded border border-white/10">
                   <span className="text-[#9ca3af]">Categoria:</span>
                   <p className="font-medium text-[#fbbf24]">{formData.category}</p>
                 </div>
@@ -1263,7 +1263,7 @@ export default function StudentRegister() {
                   const [year, month, day] = schedule.date.split('-');
                   const displayDate = `${day}/${month}/${year}`;
                   return (
-                    <div key={idx} className="p-2 bg-[#111827] rounded text-xs flex items-center justify-between">
+                    <div key={idx} className="p-2 bg-white/5 backdrop-blur-md rounded border border-white/10 text-xs flex items-center justify-between">
                       <span className="truncate flex-1">
                         <span className={schedule.type === 'carro' || schedule.type === 'moto' ? 'text-white' : ''}>{schedule.type.toUpperCase()}</span> - <span className="text-[#fbbf24] font-bold">{schedule.instructor_name}</span>
                       </span>
@@ -1293,7 +1293,7 @@ export default function StudentRegister() {
                     };
                     const typeLessons = lessonSchedules.filter(s => s.type === type);
                     return (
-                      <div key={type} className="p-3 bg-[#111827] rounded-lg border border-[#374151]">
+                      <div key={type} className="p-3 bg-white/5 backdrop-blur-md rounded-lg border border-white/10">
                         <div className="flex items-center gap-2 mb-2">
                           <MapPin className="text-[#fbbf24]" size={16} />
                           <span className="font-bold uppercase text-white">ENDEREÇO AULA {typeNames[type] || type.toUpperCase()}</span>
@@ -1307,7 +1307,7 @@ export default function StudentRegister() {
                             const [year, month, day] = lesson.date.split('-');
                             const displayDate = `${day}/${month}/${year}`;
                             return (
-                              <div key={idx} className="text-xs bg-[#0d1117] p-2 rounded border border-[#374151]">
+                              <div key={idx} className="text-xs bg-white/5 backdrop-blur-md p-2 rounded border border-white/10">
                                 <span className="text-[#fbbf24] font-bold">{displayDate}</span>
                                 <span className="text-white mx-2">•</span>
                                 <span className="text-white font-semibold">{lesson.time}</span>
@@ -1340,7 +1340,7 @@ export default function StudentRegister() {
             {settings && (
               <div className="space-y-2">
                 <h3 className="font-semibold text-sm text-[#fbbf24]">Resumo do Pagamento</h3>
-                <div className="p-3 bg-[#111827] rounded border border-[#374151]">
+                <div className="p-3 bg-white/5 backdrop-blur-md rounded border border-white/10">
                   <div className="space-y-2 text-xs sm:text-sm">
                     {formData.category === 'onibus' ? (
                        <>
@@ -1413,10 +1413,10 @@ export default function StudentRegister() {
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={() => setPaymentMethod('pix')}
-                  className={`p-3 rounded-lg border-2 transition-all ${
+                  className={`p-3 rounded-lg border-2 transition-all backdrop-blur-md ${
                     paymentMethod === 'pix' 
                       ? 'border-[#fbbf24] bg-[#fbbf24]/10' 
-                      : 'border-[#374151] hover:border-[#3b82f6]'
+                      : 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20'
                   }`}
                 >
                   <div className="text-center">
@@ -1426,10 +1426,10 @@ export default function StudentRegister() {
                 </button>
                 <button
                   onClick={() => setPaymentMethod('cartao')}
-                  className={`p-3 rounded-lg border-2 transition-all ${
+                  className={`p-3 rounded-lg border-2 transition-all backdrop-blur-md ${
                     paymentMethod === 'cartao' 
                       ? 'border-[#fbbf24] bg-[#fbbf24]/10' 
-                      : 'border-[#374151] hover:border-[#3b82f6]'
+                      : 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20'
                   }`}
                 >
                   <div className="text-center">
