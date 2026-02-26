@@ -173,24 +173,24 @@ export default function Home() {
       );
     }
     return (
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
+      <div className="max-w-4xl mx-auto px-3 sm:px-4 pb-6">
+        <div className="text-center mb-6 sm:mb-8 pt-2">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2">
             Bem-vindo à <span className="text-[#fbbf24]">CNH PARA TODOS</span>
           </h1>
-          <p className="text-[#9ca3af] italic">"Confie no Senhor de todo o seu coração e não se apoie em seu próprio entendimento" - Provérbios 3:5</p>
+          <p className="text-xs sm:text-sm text-[#9ca3af] italic px-4">"Confie no Senhor de todo o seu coração e não se apoie em seu próprio entendimento" - Provérbios 3:5</p>
         </div>
 
-        <Card className="bg-[#1a2332] border-[#374151] terminal-glow">
-          <CardHeader>
-            <CardTitle className="text-[#fbbf24] flex items-center gap-2">
-              <Car size={24} />
+        <Card className="bg-white/5 backdrop-blur-md border-white/10">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-[#fbbf24] flex items-center gap-2 text-base sm:text-lg">
+              <Car size={20} />
               Cadastro de Aluno
             </CardTitle>
           </CardHeader>
           <CardContent>
             <Link to={createPageUrl('StudentRegister')}>
-              <Button className="w-full bg-[#1e40af] hover:bg-[#3b82f6] text-white py-6 text-lg">
+              <Button className="w-full bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 hover:border-white/20 text-white py-5 sm:py-6 text-base sm:text-lg min-h-[56px] active:scale-[0.98]">
                 Fazer Cadastro
                 <ArrowRight className="ml-2" />
               </Button>
@@ -198,36 +198,36 @@ export default function Home() {
           </CardContent>
         </Card>
 
-        <div className="grid md:grid-cols-3 gap-4 mt-8">
-          <Card className="bg-[#1a2332] border-[#374151]">
-            <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Bike className="text-[#fbbf24]" />
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-6 sm:mt-8">
+          <Card className="bg-white/5 backdrop-blur-md border-white/10">
+            <CardContent className="p-4 sm:p-6 text-center">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                <Bike className="text-[#fbbf24]" size={20} />
               </div>
-              <h3 className="font-bold mb-1 text-[#fbbf24] text-lg">Categoria A</h3>
+              <h3 className="font-bold text-[#fbbf24] text-sm sm:text-base">Categoria A</h3>
 
             </CardContent>
           </Card>
           
-          <Card className="bg-[#1a2332] border-[#374151]">
-            <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Car className="text-[#fbbf24]" />
+          <Card className="bg-white/5 backdrop-blur-md border-white/10">
+            <CardContent className="p-4 sm:p-6 text-center">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                <Car className="text-[#fbbf24]" size={20} />
               </div>
-              <h3 className="font-bold mb-1 text-[#fbbf24] text-lg">Categoria B</h3>
+              <h3 className="font-bold text-[#fbbf24] text-sm sm:text-base">Categoria B</h3>
 
             </CardContent>
           </Card>
           
-          <Card className="bg-[#1a2332] border-[#374151]">
-            <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                <div className="flex">
-                  <Bike className="text-[#fbbf24]" size={18} />
-                  <Car className="text-[#fbbf24]" size={18} />
+          <Card className="bg-white/5 backdrop-blur-md border-white/10">
+            <CardContent className="p-4 sm:p-6 text-center">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                <div className="flex gap-1">
+                  <Bike className="text-[#fbbf24]" size={16} />
+                  <Car className="text-[#fbbf24]" size={16} />
                 </div>
               </div>
-              <h3 className="font-bold mb-1 text-[#fbbf24] text-lg">Categoria AB</h3>
+              <h3 className="font-bold text-[#fbbf24] text-sm sm:text-base">Categoria AB</h3>
 
             </CardContent>
           </Card>
@@ -308,26 +308,26 @@ export default function Home() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className="max-w-6xl mx-auto space-y-4 px-3 sm:px-4 pb-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 pt-2">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">
             Olá, <span className="text-[#fbbf24]">{student.full_name?.split(' ')[0]}</span>!
           </h1>
-          <p className="text-[#9ca3af] text-sm">RENACH: {student.renach}</p>
+          <p className="text-[#9ca3af] text-xs sm:text-sm">RENACH: {student.renach}</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 w-full md:w-auto">
           {student.payment_status === 'pago' ? (
-            <Link to={createPageUrl('MyLessons')}>
-              <Button className="bg-[#1e40af] hover:bg-[#3b82f6]">
+            <Link to={createPageUrl('MyLessons')} className="w-full md:w-auto">
+              <Button className="w-full bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 hover:border-white/20 min-h-[48px]">
                 <Calendar className="mr-2" size={18} />
                 Agendar Aula
               </Button>
             </Link>
           ) : (
             <Button 
-              className="bg-[#374151] cursor-not-allowed"
+              className="w-full bg-white/5 backdrop-blur-md border border-white/10 cursor-not-allowed min-h-[48px]"
               disabled
             >
               <Calendar className="mr-2" size={18} />
@@ -338,75 +338,75 @@ export default function Home() {
       </div>
 
       {/* Status Cards */}
-      <div className="grid md:grid-cols-4 gap-4">
-        <Card className="bg-[#1a2332] border-[#374151]">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-white text-xs">Progresso</p>
-                <p className="text-2xl font-bold text-[#fbbf24]">{progressPercentage()}%</p>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <Card className="bg-white/5 backdrop-blur-md border-white/10">
+          <CardContent className="p-3 sm:p-4">
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <p className="text-white text-[10px] sm:text-xs">Progresso</p>
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#1e40af]/20 rounded-full flex items-center justify-center">
+                  <CheckCircle className="text-[#3b82f6]" size={18} />
+                </div>
               </div>
-              <div className="w-12 h-12 bg-[#1e40af]/20 rounded-full flex items-center justify-center">
-                <CheckCircle className="text-[#3b82f6]" />
-              </div>
+              <p className="text-xl sm:text-2xl font-bold text-[#fbbf24]">{progressPercentage()}%</p>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-[#1a2332] border-[#374151]">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-white text-xs">Aulas Carro</p>
-                <p className="text-2xl font-bold text-white">{student.completed_car_lessons || 0}/{student.total_car_lessons || 0}</p>
+        <Card className="bg-white/5 backdrop-blur-md border-white/10">
+          <CardContent className="p-3 sm:p-4">
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <p className="text-white text-[10px] sm:text-xs">Aulas Carro</p>
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#1e40af]/20 rounded-full flex items-center justify-center">
+                  <Car className="text-[#3b82f6]" size={18} />
+                </div>
               </div>
-              <div className="w-12 h-12 bg-[#1e40af]/20 rounded-full flex items-center justify-center">
-                <Car className="text-[#3b82f6]" />
-              </div>
+              <p className="text-xl sm:text-2xl font-bold text-white">{student.completed_car_lessons || 0}/{student.total_car_lessons || 0}</p>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-[#1a2332] border-[#374151]">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-white text-xs">Aulas Moto</p>
-                <p className="text-2xl font-bold text-white">{student.completed_moto_lessons || 0}/{student.total_moto_lessons || 0}</p>
+        <Card className="bg-white/5 backdrop-blur-md border-white/10">
+          <CardContent className="p-3 sm:p-4">
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <p className="text-white text-[10px] sm:text-xs">Aulas Moto</p>
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#1e40af]/20 rounded-full flex items-center justify-center">
+                  <Bike className="text-[#3b82f6]" size={18} />
+                </div>
               </div>
-              <div className="w-12 h-12 bg-[#1e40af]/20 rounded-full flex items-center justify-center">
-                <Bike className="text-[#3b82f6]" />
-              </div>
+              <p className="text-xl sm:text-2xl font-bold text-white">{student.completed_moto_lessons || 0}/{student.total_moto_lessons || 0}</p>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-[#1a2332] border-[#374151]">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-white text-xs">Categoria</p>
-                <p className="text-2xl font-bold text-[#fbbf24]">{student.category || '-'}</p>
+        <Card className="bg-white/5 backdrop-blur-md border-white/10">
+          <CardContent className="p-3 sm:p-4">
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <p className="text-white text-[10px] sm:text-xs">Categoria</p>
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#fbbf24]/20 rounded-full flex items-center justify-center">
+                  <CreditCard className="text-[#fbbf24]" size={18} />
+                </div>
               </div>
-              <div className="w-12 h-12 bg-[#fbbf24]/20 rounded-full flex items-center justify-center">
-                <CreditCard className="text-[#fbbf24]" />
-              </div>
+              <p className="text-xl sm:text-2xl font-bold text-[#fbbf24]">{student.category || '-'}</p>
             </div>
           </CardContent>
         </Card>
       </div>
 
       {/* Histórico de Aulas */}
-      <Card className="bg-[#1a2332] border-[#374151]">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Clock className="text-[#fbbf24]" />
+      <Card className="bg-white/5 backdrop-blur-md border-white/10">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <Clock className="text-[#fbbf24]" size={20} />
             Histórico de Aulas
           </CardTitle>
         </CardHeader>
         <CardContent>
           {student.payment_status === 'pago' && upcomingLessons.length > 0 ? (
-            <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
+            <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1 -mr-1">
               {upcomingLessons.map((lesson) => {
                 const typeNames = {
                   carro: 'CARRO',
@@ -418,10 +418,10 @@ export default function Home() {
                 const loc = settings?.lesson_locations?.[lesson.type];
                 
                 return (
-                  <div key={lesson.id} className={`p-4 bg-[#111827] rounded-lg border-2 ${
+                  <div key={lesson.id} className={`p-3 sm:p-4 bg-white/5 backdrop-blur-md rounded-lg border ${
                     lesson.status === 'realizada' ? 'border-green-500' : 
                     lesson.status === 'falta' ? 'border-red-500' : 
-                    'border-[#374151]'
+                    'border-white/10'
                   }`}>
                     {/* Status da aula */}
                     {lesson.status === 'realizada' && (
@@ -501,24 +501,24 @@ export default function Home() {
                     )}
                     
                     {/* Cabeçalho da aula */}
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-3 flex-1">
-                        {lesson.type === 'carro' && <Car className="text-[#3b82f6]" size={24} />}
-                        {lesson.type === 'moto' && <Bike className="text-[#fbbf24]" size={24} />}
-                        {lesson.type === 'onibus' && <Bike className="text-green-400" size={24} />}
-                        {lesson.type === 'caminhao' && <Bike className="text-orange-400" size={24} />}
-                        {lesson.type === 'carreta' && <Bike className="text-purple-400" size={24} />}
-                        <div className="flex-1">
-                          <p className="font-bold text-white uppercase">{typeNames[lesson.type] || lesson.type}</p>
-                          <p className="text-sm text-[#9ca3af]">{lesson.instructor_name}</p>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3">
+                      <div className="flex items-center gap-2 sm:gap-3 flex-1">
+                        {lesson.type === 'carro' && <Car className="text-[#3b82f6]" size={20} />}
+                        {lesson.type === 'moto' && <Bike className="text-[#fbbf24]" size={20} />}
+                        {lesson.type === 'onibus' && <Bike className="text-green-400" size={20} />}
+                        {lesson.type === 'caminhao' && <Bike className="text-orange-400" size={20} />}
+                        {lesson.type === 'carreta' && <Bike className="text-purple-400" size={20} />}
+                        <div className="flex-1 min-w-0">
+                          <p className="font-bold text-white uppercase text-sm sm:text-base truncate">{typeNames[lesson.type] || lesson.type}</p>
+                          <p className="text-xs sm:text-sm text-[#9ca3af] truncate">{lesson.instructor_name}</p>
                         </div>
                       </div>
-                      <div className="text-right">
+                      <div className="text-left sm:text-right w-full sm:w-auto">
                         <p className="text-xs text-[#9ca3af] uppercase">
-                          {new Date(lesson.date + 'T00:00:00').toLocaleDateString('pt-BR', { weekday: 'long' })}
+                          {new Date(lesson.date + 'T00:00:00').toLocaleDateString('pt-BR', { weekday: 'short' })}
                         </p>
-                        <p className="font-medium text-white">{new Date(lesson.date).toLocaleDateString('pt-BR')}</p>
-                        <p className="text-sm text-[#fbbf24] font-bold">{lesson.time} - {getPeriodOfDay(lesson.time)}</p>
+                        <p className="font-medium text-white text-sm">{new Date(lesson.date).toLocaleDateString('pt-BR')}</p>
+                        <p className="text-xs sm:text-sm text-[#fbbf24] font-bold">{lesson.time} - {getPeriodOfDay(lesson.time)}</p>
                       </div>
                     </div>
 
@@ -527,7 +527,7 @@ export default function Home() {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="flex-1 border-green-500 text-green-500 hover:bg-green-500 hover:text-white"
+                        className="flex-1 border-green-500/30 bg-green-500/10 text-green-400 hover:bg-green-500 hover:text-white min-h-[44px] text-xs"
                         onClick={() => handleShareWhatsApp(lesson)}
                       >
                         <Share2 size={14} className="mr-1" />
@@ -536,7 +536,7 @@ export default function Home() {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="flex-1 border-[#3b82f6] text-[#3b82f6] hover:bg-[#3b82f6] hover:text-white"
+                        className="flex-1 border-white/10 bg-white/5 text-white hover:bg-white/10 hover:border-white/20 min-h-[44px] text-xs"
                         onClick={() => handleCopyInfo(lesson)}
                       >
                         {copiedId === lesson.id ? (
@@ -599,38 +599,44 @@ export default function Home() {
       </Card>
 
       {/* Quick Actions */}
-      <div className="grid md:grid-cols-3 gap-4">
-        <Link to={createPageUrl('Instructors')}>
-          <Card className="bg-[#1a2332] border-[#374151] hover:border-[#3b82f6] transition-all cursor-pointer">
-            <CardContent className="p-6 flex items-center gap-4">
-              <Users className="text-[#3b82f6]" size={32} />
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <Link to={createPageUrl('Instructors')} className="block">
+          <Card className="bg-white/5 backdrop-blur-md border-white/10 hover:bg-white/10 hover:border-white/20 transition-all cursor-pointer active:scale-[0.98]">
+            <CardContent className="p-4 flex items-center gap-3 min-h-[72px]">
+              <div className="w-12 h-12 bg-[#3b82f6]/20 rounded-full flex items-center justify-center flex-shrink-0">
+                <Users className="text-[#3b82f6]" size={24} />
+              </div>
               <div>
-                <h3 className="font-bold text-white">Instrutores</h3>
-                <p className="text-sm text-white">Conheça nossos instrutores</p>
+                <h3 className="font-bold text-white text-sm sm:text-base">Instrutores</h3>
+                <p className="text-xs sm:text-sm text-[#9ca3af]">Conheça nossos instrutores</p>
               </div>
             </CardContent>
           </Card>
         </Link>
 
-        <Link to={createPageUrl('Simulados')}>
-          <Card className="bg-[#1a2332] border-[#374151] hover:border-[#fbbf24] transition-all cursor-pointer">
-            <CardContent className="p-6 flex items-center gap-4">
-              <BookOpen className="text-[#fbbf24]" size={32} />
+        <Link to={createPageUrl('Simulados')} className="block">
+          <Card className="bg-white/5 backdrop-blur-md border-white/10 hover:bg-white/10 hover:border-white/20 transition-all cursor-pointer active:scale-[0.98]">
+            <CardContent className="p-4 flex items-center gap-3 min-h-[72px]">
+              <div className="w-12 h-12 bg-[#fbbf24]/20 rounded-full flex items-center justify-center flex-shrink-0">
+                <BookOpen className="text-[#fbbf24]" size={24} />
+              </div>
               <div>
-                <h3 className="font-bold text-white">Simulados</h3>
-                <p className="text-sm text-white">Pratique para a prova</p>
+                <h3 className="font-bold text-white text-sm sm:text-base">Simulados</h3>
+                <p className="text-xs sm:text-sm text-[#9ca3af]">Pratique para a prova</p>
               </div>
             </CardContent>
           </Card>
         </Link>
 
-        <Link to={createPageUrl('Chat')}>
-          <Card className="bg-[#1a2332] border-[#374151] hover:border-green-500 transition-all cursor-pointer">
-            <CardContent className="p-6 flex items-center gap-4">
-              <MessageSquare className="text-green-500" size={32} />
+        <Link to={createPageUrl('Chat')} className="block">
+          <Card className="bg-white/5 backdrop-blur-md border-white/10 hover:bg-white/10 hover:border-white/20 transition-all cursor-pointer active:scale-[0.98]">
+            <CardContent className="p-4 flex items-center gap-3 min-h-[72px]">
+              <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center flex-shrink-0">
+                <MessageSquare className="text-green-500" size={24} />
+              </div>
               <div>
-                <h3 className="font-bold text-white">Chat</h3>
-                <p className="text-sm text-white">Fale com a autoescola</p>
+                <h3 className="font-bold text-white text-sm sm:text-base">Chat</h3>
+                <p className="text-xs sm:text-sm text-[#9ca3af]">Fale com a autoescola</p>
               </div>
             </CardContent>
           </Card>

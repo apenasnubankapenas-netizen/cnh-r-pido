@@ -452,9 +452,9 @@ export default function StudentRegister() {
 
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto px-3 sm:px-4 pb-6">
       {/* Progress */}
-      <div className="flex items-center justify-center mb-6 sm:mb-8 overflow-x-auto px-2">
+      <div className="flex items-center justify-center mb-4 sm:mb-6 overflow-x-auto px-2 pt-2">
         {[1, 2, 3, 4, 5].map((s) => (
           <div key={s} className="flex items-center flex-shrink-0">
             <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-base font-bold ${
@@ -564,16 +564,16 @@ export default function StudentRegister() {
               <p className="text-xs text-[#9ca3af] mt-1">Se você recebeu um código de um consultor, informe aqui para ajudar o vendedor.</p>
             </div>
 
-            <div className="flex gap-3 mt-6">
+            <div className="flex gap-2 sm:gap-3 mt-6">
               <Button 
                 variant="outline" 
-                className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black px-6 py-6 text-base font-bold" 
+                className="border-white/10 bg-white/5 text-white hover:bg-white/10 hover:border-white/20 px-4 sm:px-6 py-5 sm:py-6 text-sm sm:text-base font-bold min-h-[56px] active:scale-[0.98]" 
                 onClick={() => navigate(createPageUrl('Landing'))}
               >
-                <ArrowLeft className="mr-2" size={20} /> CANCELAR
+                <ArrowLeft className="mr-1 sm:mr-2" size={18} /> CANCELAR
               </Button>
               <Button 
-                className="flex-1 bg-[#f0c41b] text-black hover:bg-[#d4aa00] px-6 py-6 text-base font-bold"
+                className="flex-1 bg-[#f0c41b] text-black hover:bg-[#d4aa00] px-4 sm:px-6 py-5 sm:py-6 text-sm sm:text-base font-bold min-h-[56px] active:scale-[0.98]"
                 onClick={() => {
                   setFormData({...formData, category: ''});
                   setStep(2);
@@ -587,7 +587,7 @@ export default function StudentRegister() {
                   !!cepError
                 }
               >
-                CONTINUAR <ArrowRight className="ml-2" size={20} />
+                CONTINUAR <ArrowRight className="ml-1 sm:ml-2" size={18} />
               </Button>
             </div>
           </CardContent>
@@ -755,16 +755,16 @@ export default function StudentRegister() {
               </div>
             </div>
 
-            <div className="flex gap-3 mt-6">
+            <div className="flex gap-2 sm:gap-3 mt-6">
               <Button 
                 variant="outline" 
-                className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black px-6 py-6 text-base font-bold" 
+                className="border-white/10 bg-white/5 text-white hover:bg-white/10 hover:border-white/20 px-4 sm:px-6 py-5 sm:py-6 text-sm sm:text-base font-bold min-h-[56px] active:scale-[0.98]" 
                 onClick={() => setStep(1)}
               >
-                <ArrowLeft className="mr-2" size={20} /> VOLTAR
+                <ArrowLeft className="mr-1 sm:mr-2" size={18} /> VOLTAR
               </Button>
               <Button 
-                className="flex-1 bg-[#f0c41b] text-black hover:bg-[#d4aa00] px-6 py-6 text-base font-bold"
+                className="flex-1 bg-[#f0c41b] text-black hover:bg-[#d4aa00] px-4 sm:px-6 py-5 sm:py-6 text-sm sm:text-base font-bold min-h-[56px] active:scale-[0.98]"
                 onClick={() => {
                     // Resetar quantidades baseado na categoria
                     const newQuantities = { carro: 0, moto: 0, onibus: 0, caminhao: 0, carreta: 0 };
@@ -792,7 +792,7 @@ export default function StudentRegister() {
                   }}
                 disabled={!formData.category || (formData.category === 'A' && formData.has_cnh === null) || (formData.category === 'A' && formData.has_cnh === true && (!formData.cnh_front_photo || !formData.cnh_back_photo))}
               >
-                CONTINUAR <ArrowRight className="ml-2" size={20} />
+                CONTINUAR <ArrowRight className="ml-1 sm:ml-2" size={18} />
               </Button>
             </div>
           </CardContent>
@@ -1184,22 +1184,22 @@ export default function StudentRegister() {
               <p className="text-xs text-[#9ca3af] mt-2">Pagamento será realizado no próximo passo</p>
             </div>
 
-            <div className="flex gap-3 mt-6">
+            <div className="flex gap-2 sm:gap-3 mt-6">
               <Button 
                 variant="outline" 
-                className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black px-6 py-6 text-base font-bold" 
+                className="border-white/10 bg-white/5 text-white hover:bg-white/10 hover:border-white/20 px-4 sm:px-6 py-5 sm:py-6 text-sm sm:text-base font-bold min-h-[56px] active:scale-[0.98]" 
                 onClick={() => setStep(2)}
               >
-                <ArrowLeft className="mr-2" size={20} /> VOLTAR
+                <ArrowLeft className="mr-1 sm:mr-2" size={18} /> VOLTAR
               </Button>
               <Button 
-                className="flex-1 bg-[#f0c41b] text-black hover:bg-[#d4aa00] px-6 py-6 text-base font-bold"
+                className="flex-1 bg-[#f0c41b] text-black hover:bg-[#d4aa00] px-4 sm:px-6 py-5 sm:py-6 text-sm sm:text-base font-bold min-h-[56px] active:scale-[0.98]"
                 onClick={() => {
                   setTimeRemaining(600);
                   setStep(4);
                 }}
               >
-                CONTINUAR <ArrowRight className="ml-2" size={20} />
+                CONTINUAR <ArrowRight className="ml-1 sm:ml-2" size={18} />
               </Button>
             </div>
           </CardContent>
@@ -1442,22 +1442,22 @@ export default function StudentRegister() {
 
 
 
-            <div className="flex gap-3 mt-6">
+            <div className="flex gap-2 mt-6">
               <Button 
                 variant="outline" 
-                className="border-[#fbbf24] text-[#fbbf24] hover:bg-[#fbbf24] hover:text-black px-4 sm:px-6 py-4 sm:py-6 text-sm sm:text-base font-bold flex-1 sm:flex-none" 
+                className="border-white/10 bg-white/5 text-white hover:bg-white/10 hover:border-white/20 px-3 sm:px-4 py-5 sm:py-6 text-xs sm:text-sm font-bold min-h-[56px] active:scale-[0.98]" 
                 onClick={() => setStep(4)}
               >
-                <ArrowLeft className="mr-2" size={18} /> VOLTAR
+                <ArrowLeft className="mr-1" size={16} /> VOLTAR
               </Button>
               <Button 
-                className="flex-1 bg-[#f0c41b] text-black hover:bg-[#d4aa00] px-4 sm:px-6 py-4 sm:py-6 text-sm sm:text-base font-bold"
+                className="flex-1 bg-[#f0c41b] text-black hover:bg-[#d4aa00] px-3 sm:px-4 py-5 sm:py-6 text-xs sm:text-sm font-bold min-h-[56px] active:scale-[0.98]"
                 onClick={handleSubmit}
                 disabled={loading || timeRemaining === 0 || !paymentMethod}
               >
-                {loading ? 'PROCESSANDO...' : timeRemaining === 0 ? 'TEMPO EXPIRADO' : !paymentMethod ? 'ESCOLHA O MÉTODO DE PAGAMENTO' : (
+                {loading ? 'PROCESSANDO...' : timeRemaining === 0 ? 'EXPIRADO' : !paymentMethod ? 'ESCOLHA PAGAMENTO' : (
                   <>
-                    <CreditCard className="mr-2" size={18} /> CONFIRMAR E PAGAR
+                    <CreditCard className="mr-1 sm:mr-2" size={16} /> CONFIRMAR E PAGAR
                   </>
                 )}
               </Button>
