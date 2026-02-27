@@ -39,7 +39,48 @@ export default function Home() {
 
   useEffect(() => {
     loadData();
+    checkMpReturn();
   }, []);
+
+  const checkMpReturn = async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const checkout = urlParams.get('checkout');
+    const paymentId = urlParams.get('payment_id');
+    if (checkout !== 'success' || !paymentId) return;
+
+    // Limpar URL
+    window.history.replaceState({}, '', window.location.pathname);
+
+    try {
+      const { data } = await base44.functions.invoke('checkMercadoPagoPayment', { paymentId });
+      if (data?.approved) {
+        // Processar cashback do vendedor se houver dados pendentes
+        const pendingSellerData = localStorage.getItem('pending_seller_data');
+        if (pendingSellerData) {
+          const { seller_id, student_id } = JSON.parse(pendingSellerData);
+          if (seller_id) {
+            const settingsData = await base44.entities.AppSettings.list();
+            const appSettings = settingsData[0];
+            const sellers = await base44.entities.Seller.filter({ id: seller_id });
+            if (sellers.length > 0) {
+              const seller = sellers[0];
+              await base44.entities.Seller.update(seller_id, {
+                cashback_balance: (seller.cashback_balance || 0) + (appSettings?.seller_cashback_amount || 10),
+                total_referrals: (seller.total_referrals || 0) + 1
+              });
+            }
+          }
+          localStorage.removeItem('pending_seller_data');
+        }
+        // Recarregar dados do aluno
+        loadData();
+      } else {
+        alert('⚠️ Pagamento ainda não confirmado. Se você pagou, aguarde alguns minutos e recarregue a página.');
+      }
+    } catch (e) {
+      console.error('Erro ao verificar pagamento MP:', e);
+    }
+  };
 
   const loadData = async () => {
     try {
