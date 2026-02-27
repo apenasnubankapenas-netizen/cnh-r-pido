@@ -173,10 +173,7 @@ export default function Landing() {
                   if (user && userType && userType !== 'new_user') {
                     navigate(getRedirectUrl());
                   } else {
-                    // Se não está logado ou é novo usuário, vai para login sem Google
-                    const loginUrl = base44.auth.redirectToLogin(createPageUrl('Landing'));
-                    // Adiciona parâmetro para desabilitar Google login
-                    window.location.href = loginUrl + '&disable_google=true';
+                    base44.auth.redirectToLogin(createPageUrl('Landing'));
                   }
                 }}
                 className="group relative w-full bg-gradient-to-r from-[#fbbf24] to-[#fcd34d] hover:from-[#fcd34d] hover:to-[#fbbf24] text-black p-6 sm:p-8 rounded-2xl shadow-2xl hover:shadow-[#fbbf24]/50 transition-all duration-300 active:scale-95 border-2 border-[#fbbf24]/50 min-h-[140px] sm:min-h-[160px] touch-manipulation"
@@ -355,8 +352,7 @@ export default function Landing() {
                 <Button 
                   className="bg-[#f0c41b] text-black hover:bg-[#d4aa00] px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg font-bold min-h-[56px] active:scale-[0.98]"
                   onClick={() => {
-                    const loginUrl = base44.auth.redirectToLogin(createPageUrl('StudentRegister'));
-                    window.location.href = loginUrl + '&disable_google=true';
+                    base44.auth.redirectToLogin(createPageUrl('StudentRegister'));
                   }}
                 >
                   Cadastrar Agora
