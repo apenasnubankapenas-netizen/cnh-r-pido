@@ -295,142 +295,76 @@ export default function StudentRegister() {
 
       const total = calculateTotal();
 
-      if (paymentMethod === 'pix') {
-        // PIX: Criar aluno diretamente e aprovar pagamento automaticamente
-        const { seller_code, ...studentPayload } = formData;
-        const studentData = {
-          ...studentPayload,
-          renach: `TEMP-${Date.now()}`,
-          user_email: user?.email,
-          ref_seller_id: referralSeller?.id,
-          ref_seller_name: referralSeller?.full_name,
-          ref_code_date: referralSeller ? todayStr : undefined,
-          total_paid: total,
-          payment_status: 'pago',
-          total_car_lessons: totalCarLessons,
-          total_moto_lessons: totalMotoLessons,
-          completed_car_lessons: 0,
-          completed_moto_lessons: 0,
-          cnh_approved: formData.has_cnh !== false,
-          all_lessons_completed: false,
-          admin_confirmed: false,
-          exam_done: false,
-          theoretical_test_done: false,
-          practical_test_done: false
-        };
+      // Criar aluno com status pendente
+      const { seller_code, ...studentPayload } = formData;
+      const studentData = {
+        ...studentPayload,
+        renach: `TEMP-${Date.now()}`,
+        user_email: user?.email,
+        ref_seller_id: referralSeller?.id,
+        ref_seller_name: referralSeller?.full_name,
+        ref_code_date: referralSeller ? todayStr : undefined,
+        total_paid: 0,
+        payment_status: 'pendente',
+        total_car_lessons: totalCarLessons,
+        total_moto_lessons: totalMotoLessons,
+        completed_car_lessons: 0,
+        completed_moto_lessons: 0,
+        cnh_approved: formData.has_cnh !== false,
+        all_lessons_completed: false,
+        admin_confirmed: false,
+        exam_done: false,
+        theoretical_test_done: false,
+        practical_test_done: false
+      };
 
-        const newStudent = await base44.entities.Student.create(studentData);
+      const newStudent = await base44.entities.Student.create(studentData);
 
-        // Criar aulas agendadas
-        for (const schedule of lessonSchedules) {
-          await base44.entities.Lesson.create({
-            student_id: newStudent.id,
-            student_name: formData.full_name,
-            student_renach: newStudent.renach,
-            instructor_id: schedule.instructor_id,
-            instructor_name: schedule.instructor_name,
-            date: schedule.date,
-            time: schedule.time,
-            type: schedule.type,
-            status: 'agendada',
-            trial: false
-          });
-        }
-
-        // Criar registro de pagamento
-        await base44.entities.Payment.create({
+      // Criar aulas agendadas
+      for (const schedule of lessonSchedules) {
+        await base44.entities.Lesson.create({
           student_id: newStudent.id,
           student_name: formData.full_name,
-          amount: total,
-          method: 'pix',
-          description: 'Pagamento inicial - Cadastro',
-          status: 'aprovado',
-          transaction_id: 'PIX_AUTO_' + Date.now()
+          student_renach: newStudent.renach,
+          instructor_id: schedule.instructor_id,
+          instructor_name: schedule.instructor_name,
+          date: schedule.date,
+          time: schedule.time,
+          type: schedule.type,
+          status: 'agendada',
+          trial: false
         });
+      }
 
-        // Adicionar cashback ao vendedor se houver
-        if (referralSeller && settings?.seller_cashback_amount) {
-          await base44.entities.Seller.update(referralSeller.id, {
-            cashback_balance: (referralSeller.cashback_balance || 0) + settings.seller_cashback_amount,
-            total_referrals: (referralSeller.total_referrals || 0) + 1
-          });
-        }
+      // Criar pagamento pendente
+      const payment = await base44.entities.Payment.create({
+        student_id: newStudent.id,
+        student_name: formData.full_name,
+        amount: total,
+        method: 'cartao',
+        description: 'Pagamento inicial - Cadastro',
+        status: 'pendente'
+      });
 
-        alert('✅ Cadastro concluído com sucesso! Pagamento PIX aprovado automaticamente.');
-        navigate(createPageUrl('Home'));
-        
+      // Salvar dados do vendedor para processar após pagamento
+      localStorage.setItem('pending_seller_data', JSON.stringify({
+        seller_id: referralSeller?.id,
+        student_id: newStudent.id
+      }));
+
+      // Redirecionar para Mercado Pago
+      const { data } = await base44.functions.invoke('createMercadoPagoCheckout', {
+        amount: total,
+        studentId: newStudent.id,
+        paymentId: payment.id,
+        purchaseType: 'inscricao',
+        purchaseQty: 1,
+      });
+      
+      if (data?.url) {
+        window.location.href = data.url;
       } else {
-        // Cartão: Criar aluno e aulas, depois redirecionar para Stripe
-        const { seller_code, ...studentPayload } = formData;
-        const studentData = {
-          ...studentPayload,
-          renach: `TEMP-${Date.now()}`,
-          user_email: user?.email,
-          ref_seller_id: referralSeller?.id,
-          ref_seller_name: referralSeller?.full_name,
-          ref_code_date: referralSeller ? todayStr : undefined,
-          total_paid: 0,
-          payment_status: 'pendente',
-          total_car_lessons: totalCarLessons,
-          total_moto_lessons: totalMotoLessons,
-          completed_car_lessons: 0,
-          completed_moto_lessons: 0,
-          cnh_approved: formData.has_cnh !== false,
-          all_lessons_completed: false,
-          admin_confirmed: false,
-          exam_done: false,
-          theoretical_test_done: false,
-          practical_test_done: false
-        };
-
-        const newStudent = await base44.entities.Student.create(studentData);
-
-        // Criar aulas agendadas
-        for (const schedule of lessonSchedules) {
-          await base44.entities.Lesson.create({
-            student_id: newStudent.id,
-            student_name: formData.full_name,
-            student_renach: newStudent.renach,
-            instructor_id: schedule.instructor_id,
-            instructor_name: schedule.instructor_name,
-            date: schedule.date,
-            time: schedule.time,
-            type: schedule.type,
-            status: 'agendada',
-            trial: false
-          });
-        }
-
-        // Criar pagamento pendente
-        const payment = await base44.entities.Payment.create({
-          student_id: newStudent.id,
-          student_name: formData.full_name,
-          amount: total,
-          method: 'cartao',
-          description: 'Pagamento inicial - Cadastro',
-          status: 'pendente'
-        });
-
-        // Salvar dados do vendedor para o webhook
-        localStorage.setItem('pending_seller_data', JSON.stringify({
-          seller_id: referralSeller?.id,
-          student_id: newStudent.id
-        }));
-
-        // Redirecionar direto para Stripe checkout
-        const { data } = await base44.functions.invoke('createStripeCheckout', {
-          amount: total,
-          studentId: newStudent.id,
-          paymentId: payment.id,
-          purchaseType: 'inscricao',
-          purchaseQty: 1,
-        });
-        
-        if (data?.url) {
-          window.location.href = data.url;
-        } else {
-          alert('Erro ao criar checkout do Stripe. Tente novamente.');
-        }
+        alert('Erro ao criar checkout do Mercado Pago. Tente novamente.');
       }
     } catch (error) {
       console.error(error);
