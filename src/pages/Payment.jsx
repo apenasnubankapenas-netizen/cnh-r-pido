@@ -143,12 +143,24 @@ export default function Payment() {
           return;
         }
 
-        // Stripe checkout
-        const { data } = await base44.functions.invoke('createStripeCheckout', {
+        // Mercado Pago checkout
+        const paymentRecord = await base44.entities.Payment.create({
+          student_id: createdStudent.id,
+          student_name: createdStudent.full_name,
+          amount,
+          method: 'cartao',
+          installments: parseInt(installments),
+          description: 'MP - Cadastro Inicial',
+          status: 'pendente'
+        });
+
+        const { data } = await base44.functions.invoke('createMercadoPagoCheckout', {
           amount,
           studentId: createdStudent.id,
+          paymentId: paymentRecord.id,
           purchaseType: 'inscricao',
           purchaseQty: 1,
+          installments: parseInt(installments),
         });
         const url = data?.url;
         if (url) {
@@ -178,10 +190,11 @@ export default function Payment() {
         return;
       }
 
-      const { data } = await base44.functions.invoke('createStripeCheckout', {
+      const { data } = await base44.functions.invoke('createMercadoPagoCheckout', {
         amount,
         purchaseType,
         purchaseQty,
+        installments: parseInt(installments),
       });
       const url = data?.url;
       if (url) {
