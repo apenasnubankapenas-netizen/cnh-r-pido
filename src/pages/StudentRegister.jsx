@@ -1342,40 +1342,10 @@ export default function StudentRegister() {
               </div>
             )}
 
-            {/* Método de Pagamento */}
-            <div className="space-y-2">
-              <h3 className="font-semibold text-sm text-[#fbbf24]">Método de Pagamento</h3>
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  onClick={() => setPaymentMethod('pix')}
-                  className={`p-3 rounded-lg border-2 transition-all backdrop-blur-md ${
-                    paymentMethod === 'pix' 
-                      ? 'border-[#fbbf24] bg-[#fbbf24]/10' 
-                      : 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20'
-                  }`}
-                >
-                  <div className="text-center">
-                    <div className="text-2xl mb-1">💳</div>
-                    <span className="text-sm font-semibold">PIX</span>
-                  </div>
-                </button>
-                <button
-                  onClick={() => setPaymentMethod('cartao')}
-                  className={`p-3 rounded-lg border-2 transition-all backdrop-blur-md ${
-                    paymentMethod === 'cartao' 
-                      ? 'border-[#fbbf24] bg-[#fbbf24]/10' 
-                      : 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20'
-                  }`}
-                >
-                  <div className="text-center">
-                    <div className="text-2xl mb-1">💳</div>
-                    <span className="text-sm font-semibold">Cartão</span>
-                  </div>
-                </button>
-              </div>
+            {/* Info pagamento */}
+            <div className="p-4 bg-[#10b981]/10 rounded-lg border border-[#10b981] text-sm text-[#d1fae5]">
+              💳 O pagamento é feito pelo <strong>Mercado Pago</strong> — aceitamos PIX, cartão de crédito/débito e outros métodos. Você será redirecionado após confirmar.
             </div>
-
-
 
             <div className="flex gap-2 mt-6">
               <Button 
@@ -1388,11 +1358,11 @@ export default function StudentRegister() {
               <Button 
                 className="flex-1 bg-[#f0c41b] text-black hover:bg-[#d4aa00] px-3 sm:px-4 py-5 sm:py-6 text-xs sm:text-sm font-bold min-h-[56px] active:scale-[0.98]"
                 onClick={handleSubmit}
-                disabled={loading || timeRemaining === 0 || !paymentMethod}
+                disabled={loading || timeRemaining === 0}
               >
-                {loading ? 'PROCESSANDO...' : timeRemaining === 0 ? 'EXPIRADO' : !paymentMethod ? 'ESCOLHA PAGAMENTO' : (
+                {loading ? 'REDIRECIONANDO...' : timeRemaining === 0 ? 'EXPIRADO' : (
                   <>
-                    <CreditCard className="mr-1 sm:mr-2" size={16} /> CONFIRMAR E PAGAR
+                    <CreditCard className="mr-1 sm:mr-2" size={16} /> PAGAR COM MERCADO PAGO
                   </>
                 )}
               </Button>
