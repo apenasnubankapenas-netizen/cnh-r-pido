@@ -90,7 +90,7 @@ export default function AdminStudents() {
   };
 
   const filteredStudents = students
-    .filter(s => !instructorId || lessons.some(l => l.instructor_id === instructorId && l.student_id === s.id))
+    .filter(s => !instructorId || lessons.some(l => l.instructor_id === instructorId && l.student_id === s.id) || user?.email === 'tcnhpara@gmail.com')
     .filter(s => 
       s.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       s.renach?.includes(searchTerm) ||
@@ -98,7 +98,8 @@ export default function AdminStudents() {
     );
 
   const getStudentLessons = (studentId) => {
-    return lessons.filter(l => l.student_id === studentId && (!instructorId || l.instructor_id === instructorId));
+    const isSuperAdmin = user?.email === 'tcnhpara@gmail.com';
+    return lessons.filter(l => l.student_id === studentId && (isSuperAdmin || !instructorId || l.instructor_id === instructorId));
   };
 
   const handleConfirmCompletion = async (student) => {
