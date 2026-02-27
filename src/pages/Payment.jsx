@@ -327,7 +327,7 @@ export default function Payment() {
        onClick={handlePayment}
        disabled={processing || (student && student.payment_status !== 'pago' && trialCount === 0)}
       >
-       {processing ? 'Processando…' : (paymentMethod === 'card' ? 'Pagar com cartão (Stripe)' : 'Confirmar Pagamento PIX')}
+       {processing ? 'Processando…' : (paymentMethod === 'card' ? 'Pagar com Mercado Pago' : 'Confirmar Pagamento PIX')}
       </Button>
     </div>
   );
