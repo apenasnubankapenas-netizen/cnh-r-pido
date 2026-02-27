@@ -63,7 +63,8 @@ export default function StudentRegister() {
   
   const [lessonSchedules, setLessonSchedules] = useState([]);
   const [timeRemaining, setTimeRemaining] = useState(600);
-  const [paymentMethod, setPaymentMethod] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('mercadopago');
+  const [mpCheckLoading, setMpCheckLoading] = useState(false);
   
   // Estados para Categoria D (Ônibus) e E (Carreta)
   const [categoriaDChecks, setCategoriaDChecks] = useState({
