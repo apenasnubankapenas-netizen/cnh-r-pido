@@ -4,62 +4,116 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
-
     if (!user) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { amount, description, student_id, student_name, installments } = await req.json();
+    const { amount, purchaseType, purchaseQty, studentId, paymentId, installments } = await req.json();
+    if (!amount || amount <= 0) {
+      return Response.json({ error: 'Invalid amount' }, { status: 400 });
+    }
 
-    const accessToken = Deno.env.get("MP_ACCESS_TOKEN");
+    const accessToken = Deno.env.get('MP_ACCESS_TOKEN');
+    if (!accessToken) {
+      return Response.json({ error: 'Mercado Pago not configured' }, { status: 500 });
+    }
 
-    const preference = {
+    let student;
+    let payment;
+
+    if (studentId && paymentId) {
+      const students = await base44.asServiceRole.entities.Student.filter({ id: studentId });
+      if (students.length === 0) {
+        return Response.json({ error: 'Student not found' }, { status: 404 });
+      }
+      student = students[0];
+
+      const payments = await base44.asServiceRole.entities.Payment.filter({ id: paymentId });
+      if (payments.length === 0) {
+        return Response.json({ error: 'Payment not found' }, { status: 404 });
+      }
+      payment = payments[0];
+    } else {
+      const students = await base44.entities.Student.filter({ user_email: user.email });
+      if (students.length === 0) {
+        return Response.json({ error: 'Student not found' }, { status: 404 });
+      }
+      student = students[0];
+
+      payment = await base44.entities.Payment.create({
+        student_id: student.id,
+        student_name: student.full_name,
+        amount: amount,
+        method: 'cartao',
+        installments: installments || 1,
+        description: purchaseType ? `MP - ${purchaseType} x${purchaseQty || 1}` : `MP - Categoria ${student.category}`,
+        status: 'pendente'
+      });
+    }
+
+    const origin = req.headers.get('origin') || 'https://cnhparatodos.base44.app';
+    const successUrl = `${origin}/Home?checkout=success&payment_id=${payment.id}`;
+    const failureUrl = `${origin}/StudentPayments?payment=failed`;
+    const pendingUrl = `${origin}/StudentPayments?payment=pending`;
+
+    const preferenceBody = {
       items: [
         {
-          title: description || "Pagamento CNH Para Todos",
+          title: purchaseType ? `Aulas de direção - ${purchaseType}` : `CNH Para Todos - Categoria ${student.category}`,
+          description: purchaseQty ? `Quantidade: ${purchaseQty}` : 'Matrícula e aulas',
           quantity: 1,
           unit_price: Number(amount),
-          currency_id: "BRL"
+          currency_id: 'BRL',
         }
       ],
       payer: {
+        name: student.full_name,
         email: user.email,
-        name: user.full_name || student_name
-      },
-      payment_methods: {
-        installments: installments || 10,
-        excluded_payment_types: []
       },
       back_urls: {
-        success: `${req.headers.get('origin') || 'https://cnhparatodos.base44.app'}/StudentPayments?status=approved&student_id=${student_id}`,
-        failure: `${req.headers.get('origin') || 'https://cnhparatodos.base44.app'}/StudentPayments?status=failure&student_id=${student_id}`,
-        pending: `${req.headers.get('origin') || 'https://cnhparatodos.base44.app'}/StudentPayments?status=pending&student_id=${student_id}`
+        success: successUrl,
+        failure: failureUrl,
+        pending: pendingUrl,
       },
-      auto_return: "approved",
-      external_reference: `${student_id}_${Date.now()}`,
-      statement_descriptor: "CNH PARA TODOS"
+      auto_return: 'approved',
+      external_reference: payment.id,
+      metadata: {
+        payment_id: payment.id,
+        student_id: student.id,
+        user_email: user.email,
+        purchase_type: purchaseType || '',
+        purchase_qty: String(purchaseQty || 1),
+      }
     };
 
-    const response = await fetch("https://api.mercadopago.com/checkout/preferences", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-        "X-Idempotency-Key": `${student_id}_${Date.now()}`
-      },
-      body: JSON.stringify(preference)
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return Response.json({ error: data.message || "Erro ao criar preferência MP" }, { status: 400 });
+    // Adicionar parcelamento se solicitado
+    if (installments && installments > 1) {
+      preferenceBody.payment_methods = {
+        installments: installments,
+        default_installments: installments,
+      };
     }
 
+    const response = await fetch('https://api.mercadopago.com/checkout/preferences', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(preferenceBody),
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      return Response.json({ error: err.message || 'MP error', details: err }, { status: 500 });
+    }
+
+    const preference = await response.json();
+
     return Response.json({
-      checkout_url: data.init_point,
-      sandbox_url: data.sandbox_init_point,
-      preference_id: data.id
+      url: preference.init_point,
+      id: preference.id,
+      payment_id: payment.id,
     });
 
   } catch (error) {
