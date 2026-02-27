@@ -262,17 +262,33 @@ export default function Payment() {
             <label className="flex items-center gap-2 p-3 rounded border border-[#374151] cursor-pointer text-white">
               <RadioGroupItem value="card" id="pm-card" />
               <CreditCard size={16} className="text-[#fbbf24]" /> 
-              <span className="text-white">Cartão (Stripe)</span>
+              <span className="text-white">Cartão / Pix MP</span>
             </label>
             <label className="flex items-center gap-2 p-3 rounded border border-[#374151] cursor-pointer text-white">
               <RadioGroupItem value="pix" id="pm-pix" />
               <QrCode size={16} className="text-[#fbbf24]" /> 
-              <span className="text-white">PIX</span>
+              <span className="text-white">PIX Manual</span>
             </label>
           </RadioGroup>
 
           {paymentMethod === 'card' && (
-            <p className="text-sm text-[#9ca3af]">Você será redirecionado ao Stripe para finalizar com cartão.</p>
+            <div className="space-y-3">
+              <p className="text-sm text-[#9ca3af]">Você será redirecionado ao Mercado Pago para finalizar com cartão, PIX ou outro método.</p>
+              <div>
+                <label className="text-sm text-[#9ca3af] block mb-2">Parcelamento (cartão)</label>
+                <select
+                  value={installments}
+                  onChange={e => setInstallments(e.target.value)}
+                  className="w-full bg-[#111827] border border-[#374151] rounded p-2 text-white text-sm"
+                >
+                  {[1,2,3,4,5,6,7,8,9,10].map(n => (
+                    <option key={n} value={String(n)}>
+                      {n}x de R$ {calculateInstallmentValue(n).toFixed(2)}{n > 1 ? ' (com juros)' : ' sem juros'}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
           )}
 
           {paymentMethod === 'pix' && (
