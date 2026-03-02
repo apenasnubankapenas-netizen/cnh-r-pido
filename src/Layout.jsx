@@ -453,8 +453,9 @@ export default function Layout({ children, currentPageName }) {
     enforceInstructorSession();
   }, [userType, user]);
 
-  // Redirect students away from admin pages
+  // Redirect students away from admin pages (mas não da Landing)
   useEffect(() => {
+    if (currentPageName === 'Landing') return;
     const adminPages = ['AdminDashboard','AdminStudents','AdminInstructors','AdminLessons','AdminChats','AdminPayments','AdminSellers','AdminSettings'];
     if (user && userType === 'student' && adminPages.includes(currentPageName)) {
       navigate(createPageUrl('Home'));
