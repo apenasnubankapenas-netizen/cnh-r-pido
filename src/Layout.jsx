@@ -494,12 +494,12 @@ export default function Layout({ children, currentPageName }) {
     return (
       <div className="min-h-screen bg-black/60 text-white font-mono backdrop-blur-sm">
         <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Bebas+Neue&display=swap');
         
         :root {
-          --bg-primary: #0a0e1a;
-          --bg-secondary: #0d1117;
-          --bg-card: #161b22;
+          --bg-primary: #050508;
+          --bg-secondary: #09090f;
+          --bg-card: #0f0f1a;
           --accent-blue: #0969da;
           --accent-blue-dark: #0550ae;
           --accent-blue-light: #2f81f7;
@@ -513,31 +513,70 @@ export default function Layout({ children, currentPageName }) {
         }
         
         * {
-          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+          font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
           font-weight: 500;
           letter-spacing: -0.01em;
         }
+
+        /* BRUTALISMO: borda grossa e sombra dura */
+        .brutal-card {
+          border: 3px solid #f0c41b !important;
+          box-shadow: 6px 6px 0px #f0c41b;
+          border-radius: 0 !important;
+          background: rgba(5,5,10,0.7) !important;
+          backdrop-filter: blur(18px) saturate(1.8);
+          -webkit-backdrop-filter: blur(18px) saturate(1.8);
+        }
+        .brutal-card-blue {
+          border: 3px solid #0969da !important;
+          box-shadow: 6px 6px 0px #0969da;
+          border-radius: 0 !important;
+          background: rgba(5,5,10,0.7) !important;
+          backdrop-filter: blur(18px) saturate(1.8);
+          -webkit-backdrop-filter: blur(18px) saturate(1.8);
+        }
+
+        /* LIQUID GLASS: superfícies translúcidas com blur forte */
+        .glass {
+          background: rgba(255,255,255,0.04) !important;
+          backdrop-filter: blur(20px) saturate(2);
+          -webkit-backdrop-filter: blur(20px) saturate(2);
+          border: 1.5px solid rgba(255,255,255,0.10) !important;
+        }
+        .glass-strong {
+          background: rgba(255,255,255,0.07) !important;
+          backdrop-filter: blur(32px) saturate(2.5) brightness(1.08);
+          -webkit-backdrop-filter: blur(32px) saturate(2.5) brightness(1.08);
+          border: 2px solid rgba(255,255,255,0.13) !important;
+        }
         
         body {
-          background: linear-gradient(135deg, #0a0e1a 0%, #0d1117 100%);
+          background: #050508;
           background-attachment: fixed;
         }
 
+        /* Fundo com imagem de carro em todas as páginas */
+        body::before {
+          content: '';
+          position: fixed;
+          inset: 0;
+          background: url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1920&q=80') center/cover no-repeat;
+          opacity: 0.13;
+          z-index: 0;
+          pointer-events: none;
+        }
+
+        #root { position: relative; z-index: 1; }
+
+        /* Tipografia Brutalista */
+        h1, h2, h3 { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.05em; }
+
         /* Focus visível acessível */
         a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
-          outline: 2px solid var(--accent-blue-light);
+          outline: 3px solid #f0c41b;
           outline-offset: 2px;
         }
 
-        /* Raio padronizado */
-        .rounded, .rounded-md, .rounded-lg, .rounded-xl { border-radius: var(--radius); }
-
-        /* Hierarquia tipográfica */
-        h1 { font-weight: 800; letter-spacing: -0.02em; }
-        h2 { font-weight: 700; letter-spacing: -0.015em; }
-        h3 { font-weight: 600; letter-spacing: -0.01em; }
-
-        /* Force light text adjustments: keep placeholders/caret, allow component colors */
         ::placeholder, input::placeholder, textarea::placeholder {
           color: #dbeafe !important; opacity: 1 !important;
         }
@@ -546,17 +585,17 @@ export default function Layout({ children, currentPageName }) {
         }
         .disabled, [disabled] { color: var(--text-primary, #e6edf3) !important; opacity: 0.7; }
 
-        /* Translucent surfaces */
+        /* Translucent surfaces override */
         .bg-\[\#1a2332\], .bg-\[\#111827\], .bg-\[\#161b22\], .bg-\[\#0d1117\] {
-          background-color: rgba(0, 0, 0, 0.38) !important;
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(10px);
+          background-color: rgba(0, 0, 0, 0.45) !important;
+          backdrop-filter: blur(20px) saturate(2);
+          -webkit-backdrop-filter: blur(20px) saturate(2);
           border-color: rgba(255, 255, 255, 0.08) !important;
         }
         `}</style>
 
         {/* Top Bar */}
-        <div className="fixed top-0 left-0 right-0 h-14 bg-black/40 border-b border-[#30363d] z-40 flex items-center justify-between px-3 backdrop-blur-md">
+        <div className="fixed top-0 left-0 right-0 h-14 border-b-4 border-[#f0c41b] z-40 flex items-center justify-between px-3" style={{background:'rgba(5,5,10,0.75)', backdropFilter:'blur(24px) saturate(2)'}}>
           <div className="flex items-center gap-2">
           </div>
 
