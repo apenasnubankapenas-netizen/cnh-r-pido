@@ -30,16 +30,7 @@ export default function Landing() {
     loadData();
   }, []);
 
-  useEffect(() => {
-    // Redirecionar automaticamente usuários logados
-    if (user && userType && userType !== 'new_user') {
-      navigate(getRedirectUrl());
-    }
-    // Novos usuários vão para o cadastro
-    if (user && userType === 'new_user') {
-      navigate(createPageUrl('StudentRegister'));
-    }
-  }, [user, userType, navigate]);
+  // Sem redirecionamento automático — o botão faz o redirecionamento
 
   const loadData = async () => {
     setLoading(false); // Mostra botões imediatamente
