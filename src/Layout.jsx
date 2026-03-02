@@ -472,8 +472,8 @@ export default function Layout({ children, currentPageName }) {
   // Novos usuários sem cadastro ficam na Landing (não redirecionar automaticamente)
   // O botão da Landing faz o redirect correto para StudentRegister
 
-   // Páginas públicas sem menu lateral (Landing, Login pages, Chat público)
-   const publicPages = ['Landing', 'AdminLogin', 'SuperAdminLogin', 'SellerLogin', 'SellerRegister', 'InstructorLogin', 'StudentRegister', 'InstructorRegister', 'InstructorRegisterNew'];
+  // Páginas públicas sem menu lateral
+  const publicPages = ['Landing', 'AdminLogin', 'SuperAdminLogin', 'SellerLogin', 'SellerRegister', 'InstructorLogin', 'StudentRegister', 'InstructorRegister', 'InstructorRegisterNew'];
   const isPublicPage = publicPages.includes(currentPageName);
   
   // Se não está logado
