@@ -843,7 +843,7 @@ export default function Layout({ children, currentPageName }) {
       </div>
 
       {/* Sidebar */}
-      <aside className={`fixed top-14 left-0 h-[calc(100vh-56px)] bg-black/30 backdrop-blur-md border-r border-[#30363d] z-30 transform transition-all duration-200 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 backdrop-blur-sm bg-opacity-95 overflow-y-auto ${isSidebarMinimized ? 'w-20' : 'w-64'}`}>
+      <aside className={`fixed top-14 left-0 h-[calc(100vh-56px)] z-30 transform transition-all duration-200 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 overflow-y-auto ${isSidebarMinimized ? 'w-20' : 'w-64'}`} style={{background:'rgba(5,5,10,0.72)', backdropFilter:'blur(28px) saturate(2)', borderRight:'4px solid #f0c41b', boxShadow:'4px 0 0 #f0c41b'}}>
         <div className="flex justify-end p-2 lg:hidden">
           <button
             onClick={() => setIsSidebarMinimized(!isSidebarMinimized)}
