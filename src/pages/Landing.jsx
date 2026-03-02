@@ -121,45 +121,52 @@ export default function Landing() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1a1f2e] via-[#0f1419] to-[#1a1f2e] relative overflow-hidden">
-      {/* Animated background gradient */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1e2a3a] via-[#1e40af]/20 to-[#1a2332]" />
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#fbbf24]/20 rounded-full filter blur-3xl animate-pulse" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#1e40af]/20 rounded-full filter blur-3xl animate-pulse" style={{animationDelay: '2s'}} />
+    <div className="min-h-screen relative overflow-hidden" style={{background:'#050508'}}>
+      {/* Car background */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1920&q=80"
+          alt=""
+          className="w-full h-full object-cover"
+          style={{opacity:0.22}}
+        />
+        <div className="absolute inset-0" style={{background:'linear-gradient(180deg, rgba(5,5,10,0.55) 0%, rgba(5,5,10,0.80) 60%, rgba(5,5,10,0.98) 100%)'}} />
       </div>
 
       {/* Hero Section */}
-      <div className="relative min-h-screen flex items-center justify-center px-3 sm:px-4 lg:px-8">
+      <div className="relative z-10 min-h-screen flex items-center justify-center px-3 sm:px-4 lg:px-8">
         <div className="max-w-6xl w-full">
           <div className="text-center mb-8 sm:mb-12">
-            {/* Logo Icon */}
+            {/* Logo Icon - Brutalismo */}
             <div className="flex justify-center mb-8">
-              <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-[#fbbf24] to-[#1e40af] rounded-2xl blur-xl opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
-                <div className="relative bg-gradient-to-br from-[#0d1117] to-[#1a2332] p-6 rounded-2xl border border-[#374151]">
-                  <Car className="h-16 w-16 text-[#fbbf24]" />
+              <div className="relative">
+                <div style={{border:'4px solid #f0c41b', boxShadow:'8px 8px 0px #f0c41b', background:'rgba(5,5,10,0.75)', backdropFilter:'blur(20px)', padding:'20px 24px'}}>
+                  <Car className="h-14 w-14 text-[#f0c41b]" />
                 </div>
               </div>
             </div>
             
-            {/* Title */}
-            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black mb-4 sm:mb-6 tracking-tight px-2">
-              <span className="bg-gradient-to-r from-white via-[#fbbf24] to-white bg-clip-text text-transparent animate-color-shift">
-                CNH PARA TODOS
+            {/* Title - Bebas Neue Brutalista */}
+            <h1 style={{fontFamily:"'Bebas Neue', sans-serif", letterSpacing:'0.08em'}} className="text-6xl sm:text-7xl md:text-9xl lg:text-[10rem] mb-4 sm:mb-6 px-2 text-white leading-none">
+              CNH{' '}
+              <span style={{color:'#f0c41b', textShadow:'4px 4px 0px rgba(240,196,27,0.3)'}}>
+                PARA
               </span>
+              {' '}TODOS
             </h1>
             
-            {/* Subtitle */}
-            <p className="text-base sm:text-lg md:text-xl text-[#cbd5e1] mb-3 sm:mb-4 max-w-2xl mx-auto font-medium px-4">
-              O futuro da sua habilitação está aqui
-            </p>
+            {/* Subtitle - glass pill */}
+            <div className="inline-block mb-3 sm:mb-4 px-5 py-2 mx-4" style={{background:'rgba(255,255,255,0.06)', backdropFilter:'blur(20px)', border:'2px solid rgba(255,255,255,0.12)'}}>
+              <p className="text-base sm:text-lg md:text-xl text-white font-semibold tracking-wide">
+                O futuro da sua habilitação está aqui
+              </p>
+            </div>
             <p className="text-sm sm:text-base text-[#94a3b8] mb-8 sm:mb-12 max-w-xl mx-auto px-4">
               Plataforma completa para gestão, acompanhamento e conquista da sua CNH com tecnologia de ponta
             </p>
           </div>
 
-          {/* Botão de Acesso */}
+          {/* Botão de Acesso - Brutalismo */}
           <div className="max-w-lg mx-auto mb-12 sm:mb-16 px-4">
             {loading ? (
               <div className="text-center py-12">
@@ -169,22 +176,22 @@ export default function Landing() {
               <button 
                 onClick={(e) => {
                   e.preventDefault();
-                  // Se já está logado, redireciona baseado no tipo de usuário
                   if (user && userType && userType !== 'new_user') {
                     navigate(getRedirectUrl());
                   } else {
                     base44.auth.redirectToLogin(createPageUrl('Landing'));
                   }
                 }}
-                className="group relative w-full bg-gradient-to-r from-[#fbbf24] to-[#fcd34d] hover:from-[#fcd34d] hover:to-[#fbbf24] text-black p-6 sm:p-8 rounded-2xl shadow-2xl hover:shadow-[#fbbf24]/50 transition-all duration-300 active:scale-95 border-2 border-[#fbbf24]/50 min-h-[140px] sm:min-h-[160px] touch-manipulation"
+                className="w-full text-black transition-all duration-150 active:scale-95 touch-manipulation"
+                style={{background:'#f0c41b', border:'4px solid #000', boxShadow:'8px 8px 0px #000', padding:'28px 32px', minHeight:'140px'}}
+                onMouseEnter={e => e.currentTarget.style.boxShadow='12px 12px 0px #000'}
+                onMouseLeave={e => e.currentTarget.style.boxShadow='8px 8px 0px #000'}
               >
                 <div className="flex flex-col items-center justify-center gap-3 sm:gap-4">
-                  <div className="bg-black/10 p-3 sm:p-4 rounded-xl">
-                    <ArrowRight className="h-8 w-8 sm:h-10 sm:w-10" />
-                  </div>
+                  <ArrowRight className="h-10 w-10 sm:h-12 sm:w-12" strokeWidth={3} />
                   <div className="text-center">
-                    <div className="text-2xl sm:text-3xl font-black mb-1 sm:mb-2">COMEÇAR AGORA</div>
-                    <div className="text-sm sm:text-base font-semibold opacity-90">
+                    <div style={{fontFamily:"'Bebas Neue', sans-serif", letterSpacing:'0.1em'}} className="text-3xl sm:text-4xl mb-1">COMEÇAR AGORA</div>
+                    <div className="text-sm sm:text-base font-bold opacity-80">
                       Acesse ou cadastre-se na plataforma
                     </div>
                   </div>
