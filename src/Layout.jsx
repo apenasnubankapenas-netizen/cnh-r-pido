@@ -675,12 +675,12 @@ export default function Layout({ children, currentPageName }) {
   return (
     <div className="min-h-screen bg-black/60 text-white font-mono backdrop-blur-sm">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Bebas+Neue&display=swap');
         
         :root {
-          --bg-primary: #0a0e1a;
-          --bg-secondary: #0d1117;
-          --bg-card: #161b22;
+          --bg-primary: #050508;
+          --bg-secondary: #09090f;
+          --bg-card: #0f0f1a;
           --accent-blue: #0969da;
           --accent-blue-dark: #0550ae;
           --accent-blue-light: #2f81f7;
@@ -694,103 +694,77 @@ export default function Layout({ children, currentPageName }) {
         }
         
         * {
-          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+          font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
           font-weight: 500;
           letter-spacing: -0.01em;
         }
+
+        h1, h2, h3 { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.05em; }
         
         body {
-          background: linear-gradient(135deg, #0a0e1a 0%, #0d1117 100%);
+          background: #050508;
           background-attachment: fixed;
         }
 
-        /* Focus visível acessível */
-        a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
-          outline: 2px solid var(--accent-blue-light);
-          outline-offset: 2px;
+        /* Fundo com imagem de carro */
+        body::before {
+          content: '';
+          position: fixed;
+          inset: 0;
+          background: url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1920&q=80') center/cover no-repeat;
+          opacity: 0.13;
+          z-index: 0;
+          pointer-events: none;
         }
+        #root { position: relative; z-index: 1; }
 
-        /* Raio padronizado */
-        .rounded, .rounded-md, .rounded-lg, .rounded-xl { border-radius: var(--radius); }
-
-        /* Hierarquia tipográfica */
-        h1 { font-weight: 800; letter-spacing: -0.02em; }
-        h2 { font-weight: 700; letter-spacing: -0.015em; }
-        h3 { font-weight: 600; letter-spacing: -0.01em; }
-        
+        /* BRUTALISMO */
         .terminal-glow {
-                        box-shadow: 0 0 10px var(--shadow-blue), 0 2px 6px rgba(0, 0, 0, 0.2);
-                        border: 1px solid rgba(9, 105, 218, 0.2);
-                      }
-        
+          border: 3px solid #0969da !important;
+          box-shadow: 5px 5px 0px #0969da;
+          border-radius: 0 !important;
+          background: rgba(5,5,10,0.7) !important;
+          backdrop-filter: blur(18px) saturate(2);
+          -webkit-backdrop-filter: blur(18px) saturate(2);
+        }
         .yellow-glow {
-                        box-shadow: 0 0 8px var(--shadow-yellow), 0 2px 4px rgba(0, 0, 0, 0.2);
-                      }
-        
+          border: 3px solid #f0c41b !important;
+          box-shadow: 5px 5px 0px #f0c41b;
+          border-radius: 0 !important;
+        }
         .terminal-border {
-                        border: 1px solid var(--accent-blue);
-                        box-shadow: 0 0 6px var(--shadow-blue);
-                      }
-        
-        .scan-line {
-          animation: scan 8s linear infinite;
+          border: 3px solid #0969da !important;
+          box-shadow: 4px 4px 0px #0969da;
+        }
+
+        /* LIQUID GLASS */
+        .glass {
+          background: rgba(255,255,255,0.04) !important;
+          backdrop-filter: blur(20px) saturate(2);
+          -webkit-backdrop-filter: blur(20px) saturate(2);
+          border: 1.5px solid rgba(255,255,255,0.10) !important;
         }
         
+        .scan-line { animation: scan 8s linear infinite; }
         @keyframes scan {
           0%, 100% { opacity: 0.05; transform: translateY(0); }
           50% { opacity: 0.1; transform: translateY(100vh); }
         }
-        
         @keyframes pulse-glow {
-          0%, 100% { box-shadow: 0 0 20px var(--shadow-blue); }
-          50% { box-shadow: 0 0 40px var(--shadow-blue); }
+          0%, 100% { box-shadow: 5px 5px 0px #0969da; }
+          50% { box-shadow: 8px 8px 0px #0969da, 0 0 30px rgba(9,105,218,0.5); }
         }
+        .pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
         
-        .pulse-glow {
-          animation: pulse-glow 3s ease-in-out infinite;
-        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #09090f; }
+        ::-webkit-scrollbar-thumb { background: #f0c41b; border-radius: 0; }
+        ::-webkit-scrollbar-thumb:hover { background: #0969da; }
         
-        ::-webkit-scrollbar {
-          width: 8px;
-          height: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-          background: var(--bg-secondary);
-          border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-          background: var(--accent-blue);
-          border-radius: 4px;
-          border: 2px solid var(--bg-secondary);
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-          background: var(--accent-blue-light);
-        }
-        
-        /* Typography */
-        h1 { font-weight: 800; letter-spacing: -0.02em; }
-        h2 { font-weight: 700; letter-spacing: -0.015em; }
-        h3 { font-weight: 600; letter-spacing: -0.01em; }
-        h4, h5, h6 { font-weight: 600; letter-spacing: -0.01em; }
-        
-        /* Button hover effects */
-        button {
-          transition: all 0.15s ease;
-          min-height: 40px;
-        }
-        
-        button:active {
-          transform: scale(0.98);
-        }
-        
-        /* Ajustes adicionais de acessibilidade */
+        button { transition: all 0.15s ease; min-height: 40px; }
+        button:active { transform: scale(0.98); }
         .text-muted { color: var(--text-secondary); }
-        .badge-outline { border-color: #4b5563; }
 
-        /* Force light text adjustments: keep placeholders/caret, allow component colors */
         ::placeholder, input::placeholder, textarea::placeholder {
           color: #dbeafe !important; opacity: 1 !important;
         }
@@ -799,14 +773,12 @@ export default function Layout({ children, currentPageName }) {
         }
         .disabled, [disabled] { color: var(--text-primary, #e6edf3) !important; opacity: 0.7; }
 
-        /* Translucent surfaces */
         .bg-\[\#1a2332\], .bg-\[\#111827\], .bg-\[\#161b22\], .bg-\[\#0d1117\] {
-          background-color: rgba(0, 0, 0, 0.38) !important;
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(10px);
-          border-color: rgba(255, 255, 255, 0.08) !important;
+          background-color: rgba(5, 5, 10, 0.55) !important;
+          backdrop-filter: blur(20px) saturate(2);
+          -webkit-backdrop-filter: blur(20px) saturate(2);
+          border-color: rgba(240, 196, 27, 0.15) !important;
         }
-
         `}</style>
 
         {/* Scan Line Effect */}
