@@ -203,171 +203,91 @@ export default function Landing() {
       </div>
 
       {/* Categorias */}
-      <div className="relative max-w-6xl mx-auto px-3 sm:px-4 pb-12 sm:pb-16">
+      <div className="relative z-10 max-w-6xl mx-auto px-3 sm:px-4 pb-12 sm:pb-16">
         <div className="mb-12 sm:mb-16">
-          <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 sm:mb-8 text-white">
-            Escolha sua <span className="text-[#fbbf24]">Categoria</span>
+          <h2 style={{fontFamily:"'Bebas Neue', sans-serif", letterSpacing:'0.08em'}} className="text-4xl sm:text-5xl text-center mb-6 sm:mb-8 text-white">
+            Escolha sua <span style={{color:'#f0c41b'}}>Categoria</span>
           </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-            <Card className="bg-white/5 backdrop-blur-md border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-[0.98]">
-              <CardContent className="p-4 sm:p-5 text-center">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#f0c41b]/20 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
-                  <Bike className="text-[#f0c41b]" size={24} />
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+            {[
+              { icon: <Bike size={26} />, label: 'Categoria A', sub: 'Moto', color: '#f0c41b' },
+              { icon: <Car size={26} />, label: 'Categoria B', sub: 'Carro', color: '#3b82f6' },
+              { icon: <div className="flex gap-1"><Car size={18} /><Bike size={18} /></div>, label: 'Categoria AB', sub: 'Carro + Moto', color: '#a78bfa', span: true },
+              { icon: <Bus size={26} />, label: 'Ônibus', sub: 'Categoria D', color: '#34d399' },
+              { icon: <Truck size={26} />, label: 'Carreta', sub: 'Categoria E', color: '#f87171' },
+            ].map((cat, i) => (
+              <div key={i}
+                className={`p-4 sm:p-5 text-center transition-all active:scale-[0.97] cursor-default ${cat.span ? 'col-span-2 sm:col-span-1' : ''}`}
+                style={{background:'rgba(255,255,255,0.05)', backdropFilter:'blur(22px) saturate(2)', border:`3px solid ${cat.color}`, boxShadow:`5px 5px 0px ${cat.color}`}}
+              >
+                <div className="flex items-center justify-center mb-2 sm:mb-3" style={{color: cat.color}}>
+                  {cat.icon}
                 </div>
-                <h3 className="font-bold text-white text-sm sm:text-base">Categoria A</h3>
-                <p className="text-[#9ca3af] text-xs sm:text-sm">Moto</p>
-
-                </CardContent>
-                </Card>
-
-                <Card className="bg-white/5 backdrop-blur-md border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-[0.98]">
-                <CardContent className="p-4 sm:p-5 text-center">
-                 <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
-                   <Car className="text-[#3b82f6]" size={24} />
-                 </div>
-                 <h3 className="font-bold text-white text-sm sm:text-base">Categoria B</h3>
-                 <p className="text-[#9ca3af] text-xs sm:text-sm">Carro</p>
-
-                </CardContent>
-                </Card>
-
-                <Card className="bg-white/5 backdrop-blur-md border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-[0.98] col-span-2 sm:col-span-1">
-                <CardContent className="p-4 sm:p-5 text-center">
-                 <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
-                   <div className="flex gap-1">
-                     <Car className="text-[#3b82f6]" size={20} />
-                     <Bike className="text-[#f0c41b]" size={20} />
-                   </div>
-                 </div>
-                 <h3 className="font-bold text-white text-sm sm:text-base">Categoria AB</h3>
-                 <p className="text-[#9ca3af] text-xs sm:text-sm">Carro + Moto</p>
-
-                </CardContent>
-                </Card>
-
-                <Card className="bg-white/5 backdrop-blur-md border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-[0.98]">
-                <CardContent className="p-4 sm:p-5 text-center">
-                 <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
-                   <Bus className="text-[#3b82f6]" size={24} />
-                 </div>
-                 <h3 className="font-bold text-white text-sm sm:text-base">Ônibus</h3>
-                 <p className="text-[#9ca3af] text-xs sm:text-sm">Categoria D</p>
-
-                </CardContent>
-                </Card>
-
-                <Card className="bg-white/5 backdrop-blur-md border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-[0.98]">
-                <CardContent className="p-4 sm:p-5 text-center">
-                 <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#1e40af]/20 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
-                   <Truck className="text-[#3b82f6]" size={24} />
-                 </div>
-                 <h3 className="font-bold text-white text-sm sm:text-base">Carreta</h3>
-                 <p className="text-[#9ca3af] text-xs sm:text-sm">Categoria E</p>
-
-              </CardContent>
-            </Card>
+                <h3 style={{fontFamily:"'Bebas Neue', sans-serif", letterSpacing:'0.05em', color:'#fff'}} className="text-lg sm:text-xl">{cat.label}</h3>
+                <p className="text-[#9ca3af] text-xs sm:text-sm">{cat.sub}</p>
+              </div>
+            ))}
           </div>
         </div>
 
         {/* Vantagens */}
         <div className="mb-12 sm:mb-16">
-          <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 sm:mb-8 text-white px-4">
-            Por que escolher a <span className="text-[#fbbf24]">CNH PARA TODOS?</span>
+          <h2 style={{fontFamily:"'Bebas Neue', sans-serif", letterSpacing:'0.08em'}} className="text-4xl sm:text-5xl text-center mb-6 sm:mb-8 text-white px-4">
+            Por que escolher a <span style={{color:'#f0c41b'}}>CNH PARA TODOS?</span>
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            <Card className="bg-white/5 backdrop-blur-md border-white/10 active:scale-[0.98] transition-transform">
-              <CardContent className="p-4 sm:p-6">
-                <CheckCircle className="text-[#3b82f6] mb-3 sm:mb-4" size={32} />
-                <h3 className="font-bold mb-2 text-base sm:text-lg text-white">Conforto e Comodidade</h3>
-                <p className="text-[#cbd5e1] text-sm sm:text-base">
-                  Agendamento 100% online: Marque suas aulas quando e onde quiser, sem burocracia e sem filas.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white/5 backdrop-blur-md border-white/10 active:scale-[0.98] transition-transform">
-              <CardContent className="p-4 sm:p-6">
-                <CheckCircle className="text-[#3b82f6] mb-3 sm:mb-4" size={32} />
-                <h3 className="font-bold mb-2 text-base sm:text-lg text-white">Flexibilidade Financeira</h3>
-                <p className="text-[#cbd5e1] text-sm sm:text-base">
-                  Pagamento facilitado: Parcelamos em até 10 vezes sem juros, tornando o investimento na sua habilitação muito mais acessível.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white/5 backdrop-blur-md border-white/10 active:scale-[0.98] transition-transform">
-              <CardContent className="p-4 sm:p-6">
-                <CheckCircle className="text-[#3b82f6] mb-3 sm:mb-4" size={32} />
-                <h3 className="font-bold mb-2 text-base sm:text-lg text-white">Segurança e Suporte</h3>
-                <p className="text-[#cbd5e1] text-sm sm:text-base">
-                  Notificações e lembretes automáticos: Nunca mais perca uma aula! Receba alertas por e-mail e WhatsApp com antecedência.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white/5 backdrop-blur-md border-white/10 active:scale-[0.98] transition-transform">
-              <CardContent className="p-4 sm:p-6">
-                <CheckCircle className="text-[#3b82f6] mb-3 sm:mb-4" size={32} />
-                <h3 className="font-bold mb-2 text-base sm:text-lg text-white">Instrutores Qualificados</h3>
-                <p className="text-[#cbd5e1] text-sm sm:text-base">
-                  Equipe experiente e preparada: Nossos instrutores são altamente qualificados, garantindo uma aprendizagem segura e eficiente.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white/5 backdrop-blur-md border-white/10 active:scale-[0.98] transition-transform">
-              <CardContent className="p-4 sm:p-6">
-                <CheckCircle className="text-[#3b82f6] mb-3 sm:mb-4" size={32} />
-                <h3 className="font-bold mb-2 text-base sm:text-lg text-white">Transparência e Controle</h3>
-                <p className="text-[#cbd5e1] text-sm sm:text-base">
-                  Acesso total ao progresso: Veja seu histórico de aulas, localizações e horários, tudo de forma clara e organizada.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white/5 backdrop-blur-md border-white/10 active:scale-[0.98] transition-transform">
-              <CardContent className="p-4 sm:p-6">
-                <CheckCircle className="text-[#3b82f6] mb-3 sm:mb-4" size={32} />
-                <h3 className="font-bold mb-2 text-base sm:text-lg text-white">Reagendamento Simplificado</h3>
-                <p className="text-[#cbd5e1] text-sm sm:text-base">
-                  Flexibilidade em caso de imprevistos: Se houver algum conflito, você pode reagendar suas aulas sem complicação, com total comodidade.
-                </p>
-              </CardContent>
-            </Card>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+            {[
+              { title: 'Conforto e Comodidade', text: 'Agendamento 100% online: Marque suas aulas quando e onde quiser, sem burocracia e sem filas.', color: '#3b82f6' },
+              { title: 'Flexibilidade Financeira', text: 'Parcelamos em até 10 vezes sem juros, tornando o investimento na sua habilitação muito mais acessível.', color: '#f0c41b' },
+              { title: 'Segurança e Suporte', text: 'Notificações e lembretes automáticos: Nunca mais perca uma aula! Receba alertas por e-mail e WhatsApp.', color: '#34d399' },
+              { title: 'Instrutores Qualificados', text: 'Equipe experiente: Nossos instrutores são altamente qualificados, garantindo aprendizagem segura e eficiente.', color: '#a78bfa' },
+              { title: 'Transparência e Controle', text: 'Acesso total ao progresso: Veja histórico de aulas, localizações e horários de forma clara.', color: '#f87171' },
+              { title: 'Reagendamento Simples', text: 'Se houver imprevistos, você pode reagendar suas aulas sem complicação, com total comodidade.', color: '#fb923c' },
+            ].map((v, i) => (
+              <div key={i} className="p-4 sm:p-6 transition-all active:scale-[0.98]"
+                style={{background:'rgba(255,255,255,0.05)', backdropFilter:'blur(22px) saturate(2)', border:`3px solid ${v.color}`, boxShadow:`5px 5px 0px ${v.color}`}}
+              >
+                <CheckCircle style={{color: v.color}} className="mb-3" size={28} />
+                <h3 style={{fontFamily:"'Bebas Neue', sans-serif", letterSpacing:'0.05em', color: v.color}} className="text-xl sm:text-2xl mb-2">{v.title}</h3>
+                <p className="text-[#cbd5e1] text-sm sm:text-base">{v.text}</p>
+              </div>
+            ))}
           </div>
         </div>
 
-
         {/* CTA Final */}
-        <div className="text-center max-w-4xl mx-auto">
-          <Card className="bg-gradient-to-r from-[#1e40af] to-[#3b82f6] border-none">
-            <CardContent className="p-6 sm:p-8">
-              <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">
-                Pronto para começar sua jornada?
-              </h2>
-              <p className="text-base sm:text-lg mb-5 sm:mb-6 opacity-90">
-                Cadastre-se agora e dê o primeiro passo rumo à sua habilitação
-              </p>
-              {user ? (
-                <Link to={createPageUrl('StudentRegister')}>
-                  <Button className="bg-[#f0c41b] text-black hover:bg-[#d4aa00] px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg font-bold min-h-[56px] active:scale-[0.98]">
-                    Fazer Meu Cadastro
-                    <ArrowRight className="ml-2" />
-                  </Button>
-                </Link>
-              ) : (
-                <Button 
-                  className="bg-[#f0c41b] text-black hover:bg-[#d4aa00] px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg font-bold min-h-[56px] active:scale-[0.98]"
-                  onClick={() => {
-                    base44.auth.redirectToLogin(createPageUrl('StudentRegister'));
-                  }}
+        <div className="text-center max-w-4xl mx-auto mb-8">
+          <div className="p-6 sm:p-10"
+            style={{background:'rgba(9,105,218,0.18)', backdropFilter:'blur(28px) saturate(2)', border:'4px solid #0969da', boxShadow:'8px 8px 0px #0969da'}}
+          >
+            <h2 style={{fontFamily:"'Bebas Neue', sans-serif", letterSpacing:'0.08em'}} className="text-4xl sm:text-5xl mb-3 sm:mb-4 text-white">
+              Pronto para começar sua jornada?
+            </h2>
+            <p className="text-base sm:text-lg mb-5 sm:mb-6 text-[#cbd5e1]">
+              Cadastre-se agora e dê o primeiro passo rumo à sua habilitação
+            </p>
+            {user ? (
+              <Link to={createPageUrl('StudentRegister')}>
+                <button className="text-black font-black text-lg px-8 py-4 transition-all active:scale-[0.97]"
+                  style={{background:'#f0c41b', border:'3px solid #000', boxShadow:'6px 6px 0px #000', fontFamily:"'Bebas Neue', sans-serif", letterSpacing:'0.08em', fontSize:'1.3rem'}}
+                  onMouseEnter={e => e.currentTarget.style.boxShadow='10px 10px 0px #000'}
+                  onMouseLeave={e => e.currentTarget.style.boxShadow='6px 6px 0px #000'}
                 >
-                  Cadastrar Agora
-                  <ArrowRight className="ml-2" />
-                </Button>
-              )}
-            </CardContent>
-          </Card>
+                  FAZER MEU CADASTRO →
+                </button>
+              </Link>
+            ) : (
+              <button
+                className="text-black font-black text-lg px-8 py-4 transition-all active:scale-[0.97]"
+                style={{background:'#f0c41b', border:'3px solid #000', boxShadow:'6px 6px 0px #000', fontFamily:"'Bebas Neue', sans-serif", letterSpacing:'0.08em', fontSize:'1.3rem'}}
+                onMouseEnter={e => e.currentTarget.style.boxShadow='10px 10px 0px #000'}
+                onMouseLeave={e => e.currentTarget.style.boxShadow='6px 6px 0px #000'}
+                onClick={() => base44.auth.redirectToLogin(createPageUrl('StudentRegister'))}
+              >
+                CADASTRAR AGORA →
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
