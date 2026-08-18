@@ -1,0 +1,158 @@
+{
+  "name": "Instructor",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string",
+      "description": "Nome completo do instrutor"
+    },
+    "cpf": {
+      "type": "string",
+      "description": "CPF do instrutor"
+    },
+    "birth_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Data de nascimento"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Telefone de contato"
+    },
+    "whatsapp_link": {
+      "type": "string",
+      "description": "Link do WhatsApp"
+    },
+    "photo": {
+      "type": "string",
+      "description": "Foto de perfil do instrutor"
+    },
+    "cover_photo": {
+      "type": "string",
+      "description": "Foto de capa do instrutor"
+    },
+    "bio": {
+      "type": "string",
+      "description": "Biografia/descri\u00e7\u00e3o do instrutor"
+    },
+    "teaches_car": {
+      "type": "boolean",
+      "description": "D\u00e1 aulas de carro"
+    },
+    "teaches_moto": {
+      "type": "boolean",
+      "description": "D\u00e1 aulas de moto"
+    },
+    "teaches_bus": {
+      "type": "boolean",
+      "description": "D\u00e1 aulas de \u00f4nibus"
+    },
+    "teaches_truck": {
+      "type": "boolean",
+      "description": "D\u00e1 aulas de caminh\u00e3o"
+    },
+    "teaches_trailer": {
+      "type": "boolean",
+      "description": "D\u00e1 aulas de carreta"
+    },
+    "videos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "V\u00eddeos do instrutor"
+    },
+    "images": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Imagens do instrutor"
+    },
+    "total_lessons": {
+      "type": "number",
+      "description": "Total de aulas ministradas"
+    },
+    "car_lessons_count": {
+      "type": "number",
+      "description": "Aulas de carro ministradas"
+    },
+    "moto_lessons_count": {
+      "type": "number",
+      "description": "Aulas de moto ministradas"
+    },
+    "earnings_car": {
+      "type": "number",
+      "description": "Ganhos com aulas de carro"
+    },
+    "earnings_moto": {
+      "type": "number",
+      "description": "Ganhos com aulas de moto"
+    },
+    "active": {
+      "type": "boolean",
+      "description": "Instrutor ativo"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email do usu\u00e1rio vinculado"
+    },
+    "registration_token": {
+      "type": "string",
+      "description": "Token para cadastro inicial"
+    },
+    "can_view_payments": {
+      "type": "boolean",
+      "description": "Permiss\u00e3o para ver pagamentos",
+      "default": false
+    },
+    "can_view_sellers": {
+      "type": "boolean",
+      "description": "Permiss\u00e3o para ver vendedores",
+      "default": false
+    },
+    "can_view_settings": {
+      "type": "boolean",
+      "description": "Permiss\u00e3o para ver configura\u00e7\u00f5es",
+      "default": false
+    },
+    "password": {
+      "type": "string",
+      "description": "Senha definida pelo superadmin para acesso via ADMIN"
+    },
+    "session_version": {
+      "type": "number",
+      "default": 1,
+      "description": "Vers\u00e3o da sess\u00e3o; ao mudar a senha, incremente para for\u00e7ar logout"
+    },
+    "contract_accepted": {
+      "type": "boolean",
+      "description": "Instrutor aceitou o contrato",
+      "default": false
+    },
+    "contract_accepted_at": {
+      "type": "string",
+      "description": "Data/hora ISO da aceita\u00e7\u00e3o do contrato"
+    },
+    "contract_text": {
+      "type": "string",
+      "description": "Texto do contrato assinado"
+    },
+    "pix_key": {
+      "type": "string",
+      "description": "Chave PIX do instrutor"
+    }
+  },
+  "required": [
+    "full_name",
+    "cpf"
+  ]
+}

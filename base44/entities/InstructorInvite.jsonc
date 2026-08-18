@@ -1,0 +1,22 @@
+{
+  "name": "InstructorInvite",
+  "type": "object",
+  "properties": {
+    "token": {
+      "type": "string",
+      "description": "Token do convite"
+    },
+    "used": {
+      "type": "boolean",
+      "description": "Convite j\u00e1 utilizado",
+      "default": false
+    },
+    "invited_email": {
+      "type": "string",
+      "description": "Email convidado (opcional)"
+    }
+  },
+  "required": [
+    "token"
+  ]
+}

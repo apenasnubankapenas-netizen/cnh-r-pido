@@ -1,0 +1,151 @@
+{
+  "name": "Lesson",
+  "type": "object",
+  "properties": {
+    "student_id": {
+      "type": "string",
+      "description": "ID do aluno"
+    },
+    "student_name": {
+      "type": "string",
+      "description": "Nome do aluno"
+    },
+    "student_renach": {
+      "type": "string",
+      "description": "RENACH do aluno"
+    },
+    "instructor_id": {
+      "type": "string",
+      "description": "ID do instrutor"
+    },
+    "instructor_name": {
+      "type": "string",
+      "description": "Nome do instrutor"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Data da aula"
+    },
+    "time": {
+      "type": "string",
+      "description": "Hor\u00e1rio da aula"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "carro",
+        "moto",
+        "onibus",
+        "caminhao",
+        "carreta"
+      ],
+      "description": "Tipo de aula"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "agendada",
+        "realizada",
+        "falta",
+        "cancelada",
+        "remarcada"
+      ],
+      "description": "Status da aula"
+    },
+    "instructor_comment": {
+      "type": "string",
+      "description": "Coment\u00e1rio do instrutor sobre a aula"
+    },
+    "instructor_rating": {
+      "type": "string",
+      "enum": [
+        "excelente",
+        "boa",
+        "regular",
+        "ruim"
+      ],
+      "description": "Avalia\u00e7\u00e3o da aula"
+    },
+    "missed_paid": {
+      "type": "boolean",
+      "description": "Falta paga para remarca\u00e7\u00e3o"
+    },
+    "notified": {
+      "type": "boolean",
+      "description": "Notifica\u00e7\u00e3o enviada"
+    },
+    "start_instructor_photo_url": {
+      "type": "string",
+      "description": "Selfie do instrutor no in\u00edcio"
+    },
+    "start_student_photo_url": {
+      "type": "string",
+      "description": "Foto do aluno no in\u00edcio"
+    },
+    "start_photos_timestamp": {
+      "type": "string",
+      "description": "Timestamp ISO das fotos de in\u00edcio"
+    },
+    "start_lat": {
+      "type": "number",
+      "description": "Latitude no in\u00edcio"
+    },
+    "start_lng": {
+      "type": "number",
+      "description": "Longitude no in\u00edcio"
+    },
+    "end_instructor_photo_url": {
+      "type": "string",
+      "description": "Selfie do instrutor no t\u00e9rmino"
+    },
+    "end_student_photo_url": {
+      "type": "string",
+      "description": "Foto do aluno no t\u00e9rmino"
+    },
+    "end_photos_timestamp": {
+      "type": "string",
+      "description": "Timestamp ISO das fotos de t\u00e9rmino"
+    },
+    "end_lat": {
+      "type": "number",
+      "description": "Latitude no t\u00e9rmino"
+    },
+    "end_lng": {
+      "type": "number",
+      "description": "Longitude no t\u00e9rmino"
+    },
+    "absence_instructor_photo_url": {
+      "type": "string",
+      "description": "Selfie do instrutor em caso de falta"
+    },
+    "absence_location_photo_url": {
+      "type": "string",
+      "description": "Foto do local em caso de falta"
+    },
+    "absence_photos_timestamp": {
+      "type": "string",
+      "description": "Timestamp ISO das fotos de falta"
+    },
+    "absence_lat": {
+      "type": "number",
+      "description": "Latitude em caso de falta"
+    },
+    "absence_lng": {
+      "type": "number",
+      "description": "Longitude em caso de falta"
+    },
+    "trial": {
+      "type": "boolean",
+      "description": "Aula de teste (n\u00e3o vis\u00edvel para instrutores)",
+      "default": false
+    }
+  },
+  "required": [
+    "student_id",
+    "instructor_id",
+    "date",
+    "time",
+    "type"
+  ]
+}

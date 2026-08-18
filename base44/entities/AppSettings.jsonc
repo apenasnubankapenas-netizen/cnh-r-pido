@@ -1,0 +1,229 @@
+{
+  "name": "AppSettings",
+  "type": "object",
+  "properties": {
+    "car_rental": {
+      "type": "number",
+      "description": "Aluguel do carro"
+    },
+    "moto_rental": {
+      "type": "number",
+      "description": "Aluguel da moto"
+    },
+    "registration_fee": {
+      "type": "number",
+      "description": "Taxa de cadastro"
+    },
+    "lesson_price": {
+      "type": "number",
+      "description": "Pre\u00e7o da aula pr\u00e1tica padr\u00e3o"
+    },
+    "lesson_price_car": {
+      "type": "number",
+      "description": "Pre\u00e7o da aula de carro"
+    },
+    "lesson_price_moto": {
+      "type": "number",
+      "description": "Pre\u00e7o da aula de moto"
+    },
+    "lesson_price_bus": {
+      "type": "number",
+      "description": "Pre\u00e7o da aula de \u00f4nibus"
+    },
+    "lesson_price_truck": {
+      "type": "number",
+      "description": "Pre\u00e7o da aula de caminh\u00e3o"
+    },
+    "lesson_price_trailer": {
+      "type": "number",
+      "description": "Pre\u00e7o da aula de carreta"
+    },
+    "theoretical_course_price": {
+      "type": "number",
+      "description": "Pre\u00e7o do curso te\u00f3rico"
+    },
+    "instructor_car_commission": {
+      "type": "number",
+      "description": "Comiss\u00e3o instrutor carro"
+    },
+    "instructor_moto_commission": {
+      "type": "number",
+      "description": "Comiss\u00e3o instrutor moto"
+    },
+    "instructor_bus_commission": {
+      "type": "number",
+      "description": "Comiss\u00e3o instrutor \u00f4nibus"
+    },
+    "instructor_truck_commission": {
+      "type": "number",
+      "description": "Comiss\u00e3o instrutor caminh\u00e3o"
+    },
+    "instructor_trailer_commission": {
+      "type": "number",
+      "description": "Comiss\u00e3o instrutor carreta"
+    },
+    "category_a_price": {
+      "type": "number",
+      "description": "Pre\u00e7o Categoria A"
+    },
+    "category_b_price": {
+      "type": "number",
+      "description": "Pre\u00e7o Categoria B"
+    },
+    "category_ab_price": {
+      "type": "number",
+      "description": "Pre\u00e7o Categoria AB"
+    },
+    "category_inclusao_a_price": {
+      "type": "number",
+      "description": "Pre\u00e7o Categoria Inclus\u00e3o A"
+    },
+    "category_inclusao_b_price": {
+      "type": "number",
+      "description": "Pre\u00e7o Categoria Inclus\u00e3o B"
+    },
+    "category_bus_price": {
+      "type": "number",
+      "description": "Pre\u00e7o Categoria \u00d4nibus"
+    },
+    "category_truck_price": {
+      "type": "number",
+      "description": "Pre\u00e7o Categoria Caminh\u00e3o"
+    },
+    "category_trailer_price": {
+      "type": "number",
+      "description": "Pre\u00e7o Categoria Carreta"
+    },
+    "pix_key": {
+      "type": "string",
+      "description": "Chave PIX"
+    },
+    "bank_info": {
+      "type": "string",
+      "description": "Informa\u00e7\u00f5es banc\u00e1rias"
+    },
+    "practical_test_location": {
+      "type": "object",
+      "properties": {
+        "lat": {
+          "type": "number"
+        },
+        "lng": {
+          "type": "number"
+        },
+        "address": {
+          "type": "string"
+        }
+      },
+      "description": "Localiza\u00e7\u00e3o da prova pr\u00e1tica"
+    },
+    "lesson_locations": {
+      "type": "object",
+      "description": "Locais de realiza\u00e7\u00e3o das aulas por categoria",
+      "properties": {
+        "carro": {
+          "type": "object",
+          "properties": {
+            "lat": {
+              "type": "number"
+            },
+            "lng": {
+              "type": "number"
+            },
+            "address": {
+              "type": "string"
+            }
+          }
+        },
+        "moto": {
+          "type": "object",
+          "properties": {
+            "lat": {
+              "type": "number"
+            },
+            "lng": {
+              "type": "number"
+            },
+            "address": {
+              "type": "string"
+            }
+          }
+        },
+        "onibus": {
+          "type": "object",
+          "properties": {
+            "lat": {
+              "type": "number"
+            },
+            "lng": {
+              "type": "number"
+            },
+            "address": {
+              "type": "string"
+            }
+          }
+        },
+        "caminhao": {
+          "type": "object",
+          "properties": {
+            "lat": {
+              "type": "number"
+            },
+            "lng": {
+              "type": "number"
+            },
+            "address": {
+              "type": "string"
+            }
+          }
+        },
+        "carreta": {
+          "type": "object",
+          "properties": {
+            "lat": {
+              "type": "number"
+            },
+            "lng": {
+              "type": "number"
+            },
+            "address": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "lesson_time_config": {
+      "type": "object",
+      "description": "Configura\u00e7\u00e3o global de hor\u00e1rios das aulas (apenas SUPERADMIN edita)",
+      "properties": {
+        "day_start": {
+          "type": "string",
+          "description": "Hora de in\u00edcio do dia no formato HH:mm"
+        },
+        "day_end": {
+          "type": "string",
+          "description": "Hora de t\u00e9rmino do dia no formato HH:mm"
+        },
+        "slot_minutes": {
+          "type": "number",
+          "description": "Dura\u00e7\u00e3o de cada aula em minutos (ex.: 50 ou 60)"
+        }
+      }
+    },
+    "simulado_url": {
+      "type": "string",
+      "description": "URL do simulado"
+    },
+    "detran_url": {
+      "type": "string",
+      "description": "URL agendamento Detran"
+    },
+    "seller_cashback_amount": {
+      "type": "number",
+      "description": "Valor do cashback por novo cadastro via c\u00f3digo de vendedor",
+      "default": 10
+    }
+  },
+  "required": []
+}

@@ -1,0 +1,52 @@
+{
+  "name": "Payment",
+  "type": "object",
+  "properties": {
+    "student_id": {
+      "type": "string",
+      "description": "ID do aluno"
+    },
+    "student_name": {
+      "type": "string",
+      "description": "Nome do aluno"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Valor pago"
+    },
+    "method": {
+      "type": "string",
+      "enum": [
+        "pix",
+        "cartao"
+      ],
+      "description": "M\u00e9todo de pagamento"
+    },
+    "installments": {
+      "type": "number",
+      "description": "N\u00famero de parcelas"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descri\u00e7\u00e3o do pagamento"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pendente",
+        "aprovado",
+        "recusado"
+      ],
+      "description": "Status do pagamento"
+    },
+    "transaction_id": {
+      "type": "string",
+      "description": "ID da transa\u00e7\u00e3o"
+    }
+  },
+  "required": [
+    "student_id",
+    "amount",
+    "method"
+  ]
+}

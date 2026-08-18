@@ -1,0 +1,153 @@
+{
+  "name": "Student",
+  "type": "object",
+  "properties": {
+    "renach": {
+      "type": "string",
+      "description": "N\u00famero do RENACH do aluno"
+    },
+    "cpf": {
+      "type": "string",
+      "description": "CPF do aluno"
+    },
+    "full_name": {
+      "type": "string",
+      "description": "Nome completo do aluno"
+    },
+    "cep": {
+      "type": "string",
+      "description": "CEP do aluno"
+    },
+    "address_street": {
+      "type": "string",
+      "description": "Rua do aluno (preenchida automaticamente pelo CEP)"
+    },
+    "address_neighborhood": {
+      "type": "string",
+      "description": "Bairro do aluno (preenchido automaticamente pelo CEP)"
+    },
+    "address_city": {
+      "type": "string",
+      "description": "Cidade do aluno (preenchida automaticamente pelo CEP)"
+    },
+    "address_state": {
+      "type": "string",
+      "description": "UF do aluno (preenchida automaticamente pelo CEP)"
+    },
+    "whatsapp": {
+      "type": "string",
+      "description": "WhatsApp do aluno"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Telefone de contato"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "A",
+        "B",
+        "AB",
+        "inclusao_A",
+        "inclusao_B",
+        "onibus",
+        "carreta"
+      ],
+      "description": "Categoria escolhida"
+    },
+    "has_cnh": {
+      "type": "boolean",
+      "description": "Se j\u00e1 possui CNH"
+    },
+    "cnh_front_photo": {
+      "type": "string",
+      "description": "Foto frente da CNH"
+    },
+    "cnh_back_photo": {
+      "type": "string",
+      "description": "Foto verso da CNH"
+    },
+    "cnh_approved": {
+      "type": "boolean",
+      "description": "CNH aprovada pelo super admin"
+    },
+    "total_car_lessons": {
+      "type": "number",
+      "description": "Total de aulas de carro contratadas"
+    },
+    "total_moto_lessons": {
+      "type": "number",
+      "description": "Total de aulas de moto contratadas"
+    },
+    "completed_car_lessons": {
+      "type": "number",
+      "description": "Aulas de carro realizadas"
+    },
+    "completed_moto_lessons": {
+      "type": "number",
+      "description": "Aulas de moto realizadas"
+    },
+    "theoretical_course": {
+      "type": "boolean",
+      "description": "Comprou curso te\u00f3rico EAD"
+    },
+    "exam_done": {
+      "type": "boolean",
+      "description": "Exames realizados"
+    },
+    "theoretical_test_done": {
+      "type": "boolean",
+      "description": "Prova te\u00f3rica realizada"
+    },
+    "practical_test_done": {
+      "type": "boolean",
+      "description": "Prova pr\u00e1tica realizada"
+    },
+    "all_lessons_completed": {
+      "type": "boolean",
+      "description": "Todas as aulas finalizadas"
+    },
+    "admin_confirmed": {
+      "type": "boolean",
+      "description": "Admin confirmou finaliza\u00e7\u00e3o"
+    },
+    "total_paid": {
+      "type": "number",
+      "description": "Total pago"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "pendente",
+        "parcial",
+        "pago"
+      ],
+      "description": "Status do pagamento"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email do usu\u00e1rio vinculado"
+    },
+    "ref_seller_id": {
+      "type": "string",
+      "description": "ID do vendedor indicado (se houver)"
+    },
+    "ref_seller_name": {
+      "type": "string",
+      "description": "Nome do vendedor indicado"
+    },
+    "ref_code_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Data do c\u00f3digo utilizado"
+    }
+  },
+  "required": [
+    "renach",
+    "cpf",
+    "full_name",
+    "whatsapp",
+    "cep",
+    "phone"
+  ]
+}

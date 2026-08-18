@@ -1,0 +1,31 @@
+{
+  "name": "InstructorComment",
+  "type": "object",
+  "properties": {
+    "instructor_id": {
+      "type": "string",
+      "description": "ID do instrutor"
+    },
+    "student_id": {
+      "type": "string",
+      "description": "ID do aluno"
+    },
+    "student_name": {
+      "type": "string",
+      "description": "Nome do aluno"
+    },
+    "rating": {
+      "type": "number",
+      "description": "Nota de 0 a 5 (opcional)"
+    },
+    "comment": {
+      "type": "string",
+      "description": "Coment\u00e1rio"
+    }
+  },
+  "required": [
+    "instructor_id",
+    "student_id",
+    "comment"
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "name": "InstructorPayout",
+  "type": "object",
+  "properties": {
+    "instructor_id": {
+      "type": "string",
+      "description": "ID do instrutor"
+    },
+    "instructor_name": {
+      "type": "string",
+      "description": "Nome do instrutor"
+    },
+    "period_start": {
+      "type": "string",
+      "format": "date",
+      "description": "In\u00edcio do per\u00edodo (YYYY-MM-DD)"
+    },
+    "period_end": {
+      "type": "string",
+      "format": "date",
+      "description": "Fim do per\u00edodo (YYYY-MM-DD)"
+    },
+    "lessons_count_car": {
+      "type": "number",
+      "description": "Qtd de aulas de carro realizadas no per\u00edodo",
+      "default": 0
+    },
+    "lessons_count_moto": {
+      "type": "number",
+      "description": "Qtd de aulas de moto realizadas no per\u00edodo",
+      "default": 0
+    },
+    "amount_due": {
+      "type": "number",
+      "description": "Valor a pagar no per\u00edodo"
+    },
+    "method": {
+      "type": "string",
+      "enum": [
+        "pix",
+        "dinheiro"
+      ],
+      "description": "Forma de pagamento"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pendente",
+        "pago"
+      ],
+      "default": "pendente",
+      "description": "Status do pagamento ao instrutor"
+    },
+    "pix_key_snapshot": {
+      "type": "string",
+      "description": "Chave PIX usada no momento da gera\u00e7\u00e3o"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Observa\u00e7\u00f5es"
+    },
+    "paid_at": {
+      "type": "string",
+      "description": "Data/hora ISO da confirma\u00e7\u00e3o de pagamento"
+    }
+  },
+  "required": [
+    "instructor_id",
+    "instructor_name",
+    "period_start",
+    "period_end",
+    "amount_due",
+    "method"
+  ]
+}

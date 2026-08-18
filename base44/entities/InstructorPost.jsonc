@@ -1,0 +1,31 @@
+{
+  "name": "InstructorPost",
+  "type": "object",
+  "properties": {
+    "instructor_id": {
+      "type": "string",
+      "description": "ID do instrutor"
+    },
+    "instructor_name": {
+      "type": "string",
+      "description": "Nome do instrutor"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "URL da foto postada"
+    },
+    "caption": {
+      "type": "string",
+      "description": "Legenda da foto"
+    },
+    "likes_count": {
+      "type": "number",
+      "description": "N\u00famero de curtidas",
+      "default": 0
+    }
+  },
+  "required": [
+    "instructor_id",
+    "image_url"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "name": "Seller",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string",
+      "description": "Nome completo do vendedor"
+    },
+    "email": {
+      "type": "string",
+      "description": "Email do vendedor"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Telefone"
+    },
+    "whatsapp_link": {
+      "type": "string",
+      "description": "Link do WhatsApp do vendedor"
+    },
+    "active": {
+      "type": "boolean",
+      "description": "Vendedor ativo"
+    },
+    "password": {
+      "type": "string",
+      "description": "Senha definida pelo superadmin para acesso via ADMIN"
+    },
+    "session_version": {
+      "type": "number",
+      "default": 1,
+      "description": "Vers\u00e3o da sess\u00e3o do vendedor; ao mudar a senha, incremente para for\u00e7ar logout"
+    },
+    "cashback_balance": {
+      "type": "number",
+      "default": 0,
+      "description": "Saldo de cashback acumulado por indica\u00e7\u00f5es"
+    },
+    "total_referrals": {
+      "type": "number",
+      "default": 0,
+      "description": "Total de alunos cadastrados com o c\u00f3digo deste vendedor"
+    }
+  },
+  "required": [
+    "full_name",
+    "email"
+  ]
+}
